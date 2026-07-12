@@ -1,5 +1,5 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","1","TC-AUTH-001: Đăng nhập thành công với Downloader hợp lệ @smoke","chromium-downloader","2026-07-12","skipped","2026-07-12","Authentication — Login","","",""
-"","6","authenticate as creator","setup-creator","2026-07-12","failed","2026-07-12","","","",""
-"","7","authenticate and save session state","setup-downloader","2026-07-12","failed","2026-07-12","","","",""
+"","20229","authenticate and save session state","setup-downloader","2026-07-12","failed","2026-07-12","","","",""
+"","0","TC-AUTH-001: Đăng nhập thành công với Downloader hợp lệ @smoke","chromium-downloader","2026-07-12","skipped","2026-07-12","Authentication — Login","","",""
 "","0","TC01 - Trang ranking hiển thị đúng heading và URL","chromium-creator","2026-07-12","skipped","2026-07-12","Creator Ranking Page","","",""
+"","20242","authenticate as creator","setup-creator","2026-07-12","failed","2026-07-12","","","",""
