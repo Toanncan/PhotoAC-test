@@ -98,7 +98,9 @@ export default defineConfig({
       name: 'setup-downloader',
       testMatch: '**/downloader.setup.ts',
       use: {
-        // Must explicitly include httpCredentials — setup projects don't inherit global use
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1920, height: 1080 },
+        // Must explicitly include httpCredentials — setup projects need this for staging HTTP Basic Auth
         ...(HTTP_USER && HTTP_PASS
           ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
           : {}),
@@ -110,7 +112,9 @@ export default defineConfig({
       name: 'setup-creator',
       testMatch: '**/creator.setup.ts',
       use: {
-        // Must explicitly include httpCredentials — setup projects don't inherit global use
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1920, height: 1080 },
+        // Must explicitly include httpCredentials — setup projects need this for staging HTTP Basic Auth
         ...(HTTP_USER && HTTP_PASS
           ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
           : {}),
