@@ -9,13 +9,6 @@ import { DOWNLOADER_AUTH_STATE_PATH, ensureAuthDirExists } from '../../fixtures/
  * All browsers configured with `storageState: '.auth/user.json'` will reuse this session.
  */
 test('authenticate and save session state', async ({ page }) => {
-  // Log all 403/5xx responses to help debug CI blocking issues
-  page.on('response', response => {
-    if (response.status() === 403 || response.status() >= 500) {
-      console.error(`[AUTH-SETUP] HTTP ${response.status()} at: ${response.url()}`);
-    }
-  });
-
   // Ensure .auth directory exists
   ensureAuthDirExists();
 

@@ -145,42 +145,54 @@ export default defineConfig({
       testMatch: '**/creator/**/*.spec.ts',
     },
 
-    // Firefox — Cross-browser validation
-    // {
-    //   name: 'firefox',
-    //   use: {
-    //     ...devices['Desktop Firefox'],
-    //     viewport: { width: 1920, height: 1080 },
-    //     storageState: '.auth/user.json',
-    //   },
-    //   dependencies: ['setup'],
-    // },
+    // ── Firefox Downloader ────────────────────────────────────────────────────
+    // Reuses the same storageState from setup-downloader (session is browser-agnostic)
+    {
+      name: 'firefox-downloader',
+      use: {
+        ...devices['Desktop Firefox'],
+        viewport: { width: 1920, height: 1080 },
+        storageState: DOWNLOADER_AUTH_STATE_PATH,
+      },
+      dependencies: ['setup-downloader'],
+      testIgnore: '**/creator/**/*.spec.ts',
+    },
 
-    // // WebKit / Safari
-    // {
-    //   name: 'webkit',
-    //   use: {
-    //     ...devices['Desktop Safari'],
-    //     viewport: { width: 1920, height: 1080 },
-    //     storageState: '.auth/user.json',
-    //   },
-    //   dependencies: ['setup'],
-    // },
+    // ── Firefox Creator ───────────────────────────────────────────────────────
+    {
+      name: 'firefox-creator',
+      use: {
+        ...devices['Desktop Firefox'],
+        viewport: { width: 1920, height: 1080 },
+        storageState: CREATOR_AUTH_STATE_PATH,
+      },
+      dependencies: ['setup-creator'],
+      testMatch: '**/creator/**/*.spec.ts',
+    },
 
-    // Creator Portal — Independent project (no shared auth state)
-    // Uses real Chrome browser channel with HTTP Basic Auth credentials from .env
-    // {
-    //   name: 'creator',
-    //   testMatch: '**/creator/**/*.spec.ts',
-    //   use: {
-    //     channel: 'chrome',
-    //     viewport: { width: 1920, height: 1080 },
-    //     // HTTP Basic Auth for staging server — fill HTTP_USER/HTTP_PASS in .env
-    //     ...(HTTP_USER && HTTP_PASS
-    //       ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS, origin: BASE_URL } }
-    //       : {}),
-    //   },
-    // },
+    // ── WebKit (Safari) Downloader ────────────────────────────────────────────
+    {
+      name: 'webkit-downloader',
+      use: {
+        ...devices['Desktop Safari'],
+        viewport: { width: 1920, height: 1080 },
+        storageState: DOWNLOADER_AUTH_STATE_PATH,
+      },
+      dependencies: ['setup-downloader'],
+      testIgnore: '**/creator/**/*.spec.ts',
+    },
+
+    // ── WebKit Creator ────────────────────────────────────────────────────────
+    {
+      name: 'webkit-creator',
+      use: {
+        ...devices['Desktop Safari'],
+        viewport: { width: 1920, height: 1080 },
+        storageState: CREATOR_AUTH_STATE_PATH,
+      },
+      dependencies: ['setup-creator'],
+      testMatch: '**/creator/**/*.spec.ts',
+    },
   ],
 
   // Output folder for test artifacts
