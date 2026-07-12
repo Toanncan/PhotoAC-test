@@ -9,6 +9,10 @@ const BASE_URL = process.env.BASE_URL || 'https://test-lien.photo-ac.com';
 const HTTP_USER = process.env.HTTP_USER || '';
 const HTTP_PASS = process.env.HTTP_PASS || '';
 
+console.log('HTTP_USER:', process.env.HTTP_USER ? 'exists' : 'missing');
+console.log('HTTP_PASS:', process.env.HTTP_PASS ? 'exists' : 'missing');
+console.log('BASE_URL:', process.env.BASE_URL);
+
 export default defineConfig({
   // Global setup: runs once before all tests (generates environment.properties for Allure)
   globalSetup: './src/utils/global-setup.ts',
