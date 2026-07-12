@@ -40,6 +40,8 @@ jobs:
       TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
       ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+      HTTP_USER: ${{ secrets.HTTP_USER }}
+      HTTP_PASS: ${{ secrets.HTTP_PASS }}
       ENV: staging
       CI: true
 
