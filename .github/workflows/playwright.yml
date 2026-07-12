@@ -52,6 +52,13 @@ jobs:
       - name: Setup Cloudflare WARP (Bypass CloudFront IP block)
         uses: fscarmen/warp-on-actions@v1.1
 
+      - name: Debug Network (Print IP and Curl Target)
+        run: |
+          echo "=== Runner Public IP ==="
+          curl -s https://ifconfig.me
+          echo -e "\n=== Target Server Connection Test ==="
+          curl -I -s https://test-lien.photo-ac.com || true
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
