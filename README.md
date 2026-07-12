@@ -1,6 +1,6 @@
 # 📸 photo-ac-test — Playwright E2E Automation Framework
 
-> **E2E Web UI Automation Framework** dành cho website **[https://test-lien.photo-ac.com/](https://test-lien.photo-ac.com/)**
+> **E2E Web UI Automation Framework** 
 >
 > 🚀 **Công nghệ sử dụng:** Playwright + TypeScript (Strict Mode) | **Báo cáo:** Allure Report + HTML Report
 
@@ -107,7 +107,7 @@ npx playwright install --with-deps
      ```
 2. Mở file `.env` vừa tạo và điền thông tin tài khoản test của bạn:
    ```env
-   BASE_URL=https://test-lien.photo-ac.com
+   BASE_URL=link test.
    
    # Thông tin tài khoản Download Member (người tải ảnh)
    TEST_USER_EMAIL=your-email@example.com
@@ -123,7 +123,7 @@ npx playwright install --with-deps
 
 ## 🧪 Thực thi Automation Test (Running Tests)
 
-Hệ thống cung cấp sẵn các câu lệnh script trong [package.json](file:///d:/Js/photo-ac-test/package.json):
+Hệ thống cung cấp sẵn các câu lệnh script trong [package.json]:
 
 | Lệnh chạy | Mô tả |
 | :--- | :--- |
