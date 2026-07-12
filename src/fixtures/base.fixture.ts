@@ -34,8 +34,21 @@ export const test = base.extend<PageFixtures>({
    * auto: true → runs automatically for every test without explicit declaration.
    */
   allureMetadata: [async ({ }, use, testInfo) => {
+    // ── Determine Role ───────────────────────────────────────────────────────
+    const filePath = testInfo.file.toLowerCase();
+    const projectName = testInfo.project.name.toLowerCase();
+
+    let role = 'Common';
+    if (filePath.includes('downloader') || projectName.includes('downloader')) {
+      role = 'Downloader';
+    } else if (filePath.includes('creator') || projectName.includes('creator')) {
+      role = 'Creator';
+    } else if (filePath.includes('admin') || projectName.includes('admin')) {
+      role = 'Admin';
+    }
+
     // ── Suite hierarchy ─────────────────────────────────────────────────────
-    await allure.parentSuite('Photo AC');
+    await allure.parentSuite(`Photo AC - ${role}`);
     await allure.suite(path.basename(testInfo.file, path.extname(testInfo.file)));
     await allure.subSuite(testInfo.project.name);
 

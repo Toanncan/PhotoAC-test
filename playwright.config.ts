@@ -84,11 +84,6 @@ export default defineConfig({
     // Timeout for navigations
     navigationTimeout: 30_000,
     headless: process.env.CI ? true : false,
-
-    // Bypass bot detection in headless mode
-    launchOptions: {
-      args: ['--disable-blink-features=AutomationControlled'],
-    },
   },
 
   // Configure projects for major browsers
@@ -100,6 +95,8 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1920, height: 1080 },
+        // Chromium-only flag — must NOT be in global use (breaks Firefox/WebKit)
+        launchOptions: { args: ['--disable-blink-features=AutomationControlled'] },
         // Must explicitly include httpCredentials — setup projects need this for staging HTTP Basic Auth
         ...(HTTP_USER && HTTP_PASS
           ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
@@ -114,6 +111,8 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1920, height: 1080 },
+        // Chromium-only flag — must NOT be in global use (breaks Firefox/WebKit)
+        launchOptions: { args: ['--disable-blink-features=AutomationControlled'] },
         // Must explicitly include httpCredentials — setup projects need this for staging HTTP Basic Auth
         ...(HTTP_USER && HTTP_PASS
           ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
@@ -128,6 +127,8 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         viewport: { width: 1920, height: 1080 },
         storageState: DOWNLOADER_AUTH_STATE_PATH,
+        // Chromium-only flag — must NOT be in global use (breaks Firefox/WebKit)
+        launchOptions: { args: ['--disable-blink-features=AutomationControlled'] },
       },
       dependencies: ['setup-downloader'],
       testIgnore: '**/creator/**/*.spec.ts',
@@ -140,6 +141,8 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         viewport: { width: 1920, height: 1080 },
         storageState: CREATOR_AUTH_STATE_PATH,
+        // Chromium-only flag — must NOT be in global use (breaks Firefox/WebKit)
+        launchOptions: { args: ['--disable-blink-features=AutomationControlled'] },
       },
       dependencies: ['setup-creator'],
       testMatch: '**/creator/**/*.spec.ts',
