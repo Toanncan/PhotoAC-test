@@ -60,7 +60,7 @@ export default defineConfig({
 
     // HTTP Basic Auth for staging server (if required)
     ...(HTTP_USER && HTTP_PASS
-      ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS, origin: BASE_URL } }
+      ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
       : {}),
 
     // Viewport size — Desktop standard
@@ -84,6 +84,11 @@ export default defineConfig({
     // Timeout for navigations
     navigationTimeout: 30_000,
     headless: process.env.CI ? true : false,
+
+    // Bypass bot detection in headless mode
+    launchOptions: {
+      args: ['--disable-blink-features=AutomationControlled'],
+    },
   },
 
   // Configure projects for major browsers
