@@ -19,14 +19,14 @@ export abstract class BasePage {
    * @param path - Relative path (e.g., '/login') or absolute URL
    */
   async navigate(path: string = '/'): Promise<void> {
-    await this.page.goto(path);
+    await this.page.goto(path, { waitUntil: 'domcontentloaded' });
   }
 
   /**
    * Wait for the page to reach a stable network state.
    */
   async waitForPageLoad(): Promise<void> {
-    await this.page.waitForLoadState('domcontentloaded', { timeout: 20_000 });
+    await this.page.waitForLoadState('domcontentloaded', { timeout: 15_000 });
   }
 
   // ─── Element Interaction ─────────────────────────────────────────────────

@@ -23,7 +23,7 @@ test.describe('Authentication — Login', () => {
     const password = process.env.TEST_USER_PASSWORD ?? '';
 
     // Act
-    await loginPage.loginWithDownloader(email, password);
+    await loginPage.loginAsDownloader(email, password);
 
     // Assert
     await test.step('Verify redirect to authenticated area after login', async () => {

@@ -87,7 +87,7 @@ export class CreatorLoginPage extends BasePage {
       });
 
       await test.step('Wait for redirect to Creator Dashboard', async () => {
-        await this.page.waitForURL(/\/creator\/dashboard/, { timeout: 20_000 });
+        await this.page.waitForURL(/\/creator\/dashboard/, { waitUntil: 'domcontentloaded', timeout: 20_000 });
       });
     });
   }

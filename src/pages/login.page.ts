@@ -55,7 +55,7 @@ export class LoginPage extends BasePage {
    * @param email - User email address
    * @param password - User password
    */
-  async loginWithDownloader(email: string, password: string): Promise<void> {
+  async loginAsDownloader(email: string, password: string): Promise<void> {
     await test.step(`Login with downloader, account : ${email}`, async () => {
       await this.goToDownloaderLoginPage();
       await this.fillInput(this.emailInput, email);

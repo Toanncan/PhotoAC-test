@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
+import { DOWNLOADER_AUTH_STATE_PATH, CREATOR_AUTH_STATE_PATH } from './src/fixtures/auth.fixture';
 
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '.env') });
@@ -8,10 +9,6 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 const BASE_URL = process.env.BASE_URL || 'https://test-lien.photo-ac.com';
 const HTTP_USER = process.env.HTTP_USER || '';
 const HTTP_PASS = process.env.HTTP_PASS || '';
-
-console.log('HTTP_USER:', process.env.HTTP_USER ? 'exists' : 'missing');
-console.log('HTTP_PASS:', process.env.HTTP_PASS ? 'exists' : 'missing');
-console.log('BASE_URL:', process.env.BASE_URL);
 
 export default defineConfig({
   // Global setup: runs once before all tests (generates environment.properties for Allure)
@@ -91,21 +88,40 @@ export default defineConfig({
 
   // Configure projects for major browsers
   projects: [
-    // Setup project for authentication state
+    // Setup project for Downloader session
     {
-      name: 'setup',
-      testMatch: '**/auth.setup.ts',
+      name: 'setup-downloader',
+      testMatch: '**/downloader.setup.ts',
     },
 
-    // Chromium — Primary browser
+    // Setup project for Creator session
     {
-      name: 'chromium',
+      name: 'setup-creator',
+      testMatch: '**/creator.setup.ts',
+    },
+
+    // Chromium Downloader — Tests running under Downloader session
+    {
+      name: 'chromium-downloader',
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1920, height: 1080 },
-        storageState: '.auth/user.json',
+        storageState: DOWNLOADER_AUTH_STATE_PATH,
       },
-      // dependencies: ['setup'],
+      dependencies: ['setup-downloader'],
+      testIgnore: '**/creator/**/*.spec.ts',
+    },
+
+    // Chromium Creator — Tests running under Creator session
+    {
+      name: 'chromium-creator',
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1920, height: 1080 },
+        storageState: CREATOR_AUTH_STATE_PATH,
+      },
+      dependencies: ['setup-creator'],
+      testMatch: '**/creator/**/*.spec.ts',
     },
 
     // Firefox — Cross-browser validation

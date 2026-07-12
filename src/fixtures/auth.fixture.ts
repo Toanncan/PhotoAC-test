@@ -13,15 +13,18 @@
 import * as path from 'path';
 import * as fs from 'fs';
 
-/** Path to the persisted authentication state file */
-export const AUTH_STATE_PATH = path.resolve('.auth', 'user.json');
+/** Path to the persisted downloader authentication state file */
+export const DOWNLOADER_AUTH_STATE_PATH = path.resolve('.auth', 'downloader.json');
+
+/** Path to the persisted creator authentication state file */
+export const CREATOR_AUTH_STATE_PATH = path.resolve('.auth', 'creator.json');
 
 /**
  * Ensure the .auth directory exists.
  * Call this before saving storageState.
  */
 export const ensureAuthDirExists = (): void => {
-  const authDir = path.dirname(AUTH_STATE_PATH);
+  const authDir = path.resolve('.auth');
   if (!fs.existsSync(authDir)) {
     fs.mkdirSync(authDir, { recursive: true });
   }
