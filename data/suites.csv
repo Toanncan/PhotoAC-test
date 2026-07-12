@@ -1,4 +1,4 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","20599","TC-AUTH-001: Đăng nhập thành công với Downloader hợp lệ @smoke","Photo AC","2026-07-12","failed","2026-07-12","chromium","login.spec","",""
-"","20241","authenticate and save session state","setup","2026-07-12","failed","2026-07-12","","","",""
-"","53","TC01 - Trang ranking hiển thị đúng heading và URL","Photo AC","2026-07-12","failed","2026-07-12","chromium","ranking.spec","",""
+"","64","TC01 - Trang ranking hiển thị đúng heading và URL","Photo AC","2026-07-12","failed","2026-07-12","chromium","ranking.spec","",""
+"","20240","authenticate and save session state","setup","2026-07-12","failed","2026-07-12","","","",""
+"","20861","TC-AUTH-001: Đăng nhập thành công với Downloader hợp lệ @smoke","Photo AC","2026-07-12","failed","2026-07-12","chromium","login.spec","",""
