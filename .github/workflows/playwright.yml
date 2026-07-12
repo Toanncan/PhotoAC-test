@@ -58,6 +58,10 @@ jobs:
           curl -s https://ifconfig.me
           echo -e "\n=== Target Server Connection Test ==="
           curl -I -s https://test-lien.photo-ac.com || true
+          echo -e "\n=== Check Environment Variables Length ==="
+          echo "BASE_URL length: ${#BASE_URL}"
+          echo "HTTP_USER length: ${#HTTP_USER}"
+          echo "HTTP_PASS length: ${#HTTP_PASS}"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
