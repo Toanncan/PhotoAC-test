@@ -94,41 +94,51 @@ export default defineConfig({
   // Configure projects for major browsers
   projects: [
     // Setup project for Downloader session
-    // {
-    //   name: 'setup-downloader',
-    //   testMatch: '**/downloader.setup.ts',
-    // },
+    {
+      name: 'setup-downloader',
+      testMatch: '**/downloader.setup.ts',
+      use: {
+        // Must explicitly include httpCredentials — setup projects don't inherit global use
+        ...(HTTP_USER && HTTP_PASS
+          ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
+          : {}),
+      },
+    },
 
-    // // Setup project for Creator session
-    // {
-    //   name: 'setup-creator',
-    //   testMatch: '**/creator.setup.ts',
-    // },
+    // Setup project for Creator session
+    {
+      name: 'setup-creator',
+      testMatch: '**/creator.setup.ts',
+      use: {
+        // Must explicitly include httpCredentials — setup projects don't inherit global use
+        ...(HTTP_USER && HTTP_PASS
+          ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
+          : {}),
+      },
+    },
 
     // Chromium Downloader — Tests running under Downloader session
     {
       name: 'chromium-downloader',
-      testMatch: '**/downloader/**/*.spec.ts',
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1920, height: 1080 },
         storageState: DOWNLOADER_AUTH_STATE_PATH,
       },
-      // dependencies: ['setup-downloader'],
-      // testIgnore: '**/creator/**/*.spec.ts',
+      dependencies: ['setup-downloader'],
+      testIgnore: '**/creator/**/*.spec.ts',
     },
 
     // Chromium Creator — Tests running under Creator session
     {
       name: 'chromium-creator',
-      testMatch: '**/creator/**/*.spec.ts',
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1920, height: 1080 },
         storageState: CREATOR_AUTH_STATE_PATH,
       },
-      // dependencies: ['setup-creator'],
-      // testMatch: '**/creator/**/*.spec.ts',
+      dependencies: ['setup-creator'],
+      testMatch: '**/creator/**/*.spec.ts',
     },
 
     // Firefox — Cross-browser validation
