@@ -54,12 +54,22 @@ jobs:
 
       - name: Verify WARP IP changed
         run: |
-          echo "=== Public IP after WARP ==="
-          curl -s https://ifconfig.me || curl -s https://api.ipify.org
+          echo "=== Public IPv4 after WARP (forced) ==="
+          curl -4 -s https://ifconfig.me || curl -4 -s https://api.ipify.org
           echo ""
-          echo "=== Check if IP is NOT in GitHub/Azure range ==="
-          IP=$(curl -s https://ifconfig.me)
-          echo "Current IP: $IP"
+          echo "=== Public IPv6 after WARP ==="
+          curl -6 -s https://ifconfig.me || echo "(no IPv6)"
+          echo ""
+          echo "=== HTTP Status from target server (IPv4) ==="
+          STATUS=$(curl -4 -o /dev/null -w "%{http_code}" -s \
+            -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' \
+            https://test-lien.photo-ac.com)
+          echo "HTTP Status: $STATUS"
+          if [ "$STATUS" = "403" ]; then
+            echo "⚠️  Server is still blocking this IP — WAF may block WARP ranges too"
+          elif [ "$STATUS" = "200" ] || [ "$STATUS" = "302" ]; then
+            echo "✅ Server accessible via IPv4 WARP"
+          fi
 
       - name: Debug Network (Print IP and Curl Target)
         run: |

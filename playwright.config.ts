@@ -96,6 +96,7 @@ export default defineConfig({
         '--disable-web-security',
         '--disable-features=IsolateOrigins,site-per-process',
         '--lang=ja-JP,ja',
+        '--disable-ipv6',  // Force IPv4 — avoid CloudFront blocking WARP IPv6 ranges
       ],
     },
 
