@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files — NEVER commit actual credentials
+.env
+.env.local
+.env.*.local
+
+# TypeScript build output
+dist/
+
+# Playwright artifacts (generated at runtime)
+playwright-report/
+test-results/
+.auth/
+
+# Allure Report artifacts (generated at runtime)
+allure-results/*
+allure-report/*
+# Keep .gitkeep files
+!allure-results/.gitkeep
+!allure-report/.gitkeep
+
+# IDE / OS files
+.vscode/
+.idea/
+*.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*_debug.txt
+debug_output.txt

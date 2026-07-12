@@ -1,0 +1,13 @@
+- generic [ref=f136e4]:
+  - heading "会員ログイン" [level=3] [ref=f136e5]
+  - paragraph [ref=f136e6]: ご登録頂いたメールアドレスとパスワードを入力してください。
+  - link "⇒パスワードをお忘れの方へ" [ref=f136e8] [cursor=pointer]:
+    - /url: /auth/forgotpassword
+  - generic [ref=f136e9]:
+    - emphasis [ref=f136e11]: メールアドレス：
+    - textbox [ref=f136e13]
+    - emphasis [ref=f136e15]: パスワード：
+    - textbox [ref=f136e17]
+    - button "Submit" [ref=f136e19]
+  - link "⇒無料登録がまだの方はこちら" [ref=f136e21] [cursor=pointer]:
+    - /url: https://test-accounts.ac-illust.com/signup?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252Fcreator%252Fauth%252Flogin&lang=jp

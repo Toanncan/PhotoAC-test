@@ -1,0 +1,1196 @@
+- generic [active] [ref=e1]:
+  - paragraph [ref=e3]:
+    - text: 当Webサイトはよりよいユーザー体験を実現するためにCookieを使用しています。これ以降ページを遷移した場合、Cookieの設定および使用に同意したことになります。詳細についてはプライバシーポリシーをご覧ください。
+    - link "詳細" [ref=e4] [cursor=pointer]:
+      - /url: /main/privacy
+    - link "同意" [ref=e5] [cursor=pointer]:
+      - /url: ""
+  - banner [ref=e6]:
+    - link [ref=e9] [cursor=pointer]:
+      - /url: https://acworks.co.jp/three_cities_agreements/
+    - generic [ref=e13]:
+      - generic [ref=e15]:
+        - link "写真AC 写真ACは写真素材が無料！ 商用利用もOK！" [ref=e16] [cursor=pointer]:
+          - /url: /
+          - img "写真AC" [ref=e17]
+          - generic [ref=e18]:
+            - paragraph [ref=e19]: 写真ACは写真素材が無料！
+            - paragraph [ref=e20]: 商用利用もOK！
+        - text: 
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - button "会員登録（無料）" [ref=e24] [cursor=pointer]
+          - text: 
+        - button "ログイン" [ref=e26] [cursor=pointer]:
+          - generic [ref=e27]: 
+          - text: ログイン
+        - button "クリックしてACアプリケーションのリストを表示" [ref=e29] [cursor=pointer]:
+          - img [ref=e30]
+    - text: 
+  - generic [ref=e32]:
+    - button "閉じると開く" [ref=e33] [cursor=pointer]:
+      - generic [ref=e34]: 
+    - iframe [ref=e39]:
+      
+  - text:      
+  - generic:      
+  - generic [ref=e40]:
+    - generic [ref=e42]:
+      - button "画像で検索する" [ref=e43] [cursor=pointer]:
+        - img [ref=e44]
+      - generic [ref=e46]: 画像で検索する
+    - separator [ref=e47]
+    - generic [ref=e48]:
+      - paragraph [ref=e49]: 画像から似ている画像を検索できます。
+      - paragraph [ref=e50]: ※5MBまでのJPGまたはPNGファイルのみ
+      - generic [ref=e51]:
+        - listitem [ref=e52]:
+          - img [ref=e53]
+        - listitem [ref=e60]:
+          - generic [ref=e61]: ファイルを選択
+  - generic [ref=e62]:
+    - button [ref=e64] [cursor=pointer]:
+      - img [ref=e65]
+    - generic [ref=e68]:
+      - generic [ref=e69]:
+        - button [ref=e70] [cursor=pointer]:
+          - img [ref=e71]
+        - textbox "キーワード（例：女性）" [ref=e74]
+      - generic [ref=e75]:
+        - link "文章で検索 文章で検索 文章で検索" [ref=e77] [cursor=pointer]:
+          - /url: https://test-lien.photo-ac.com/premium/campaign?target=premium_sozai
+          - img "文章で検索" [ref=e78]
+          - text: 文章で検索
+          - img "文章で検索" [ref=e79]
+        - button "画像で検索" [ref=e81] [cursor=pointer]:
+          - generic [ref=e82]: 
+          - text: 画像で検索
+    - separator [ref=e83]
+    - generic [ref=e84]:
+      - generic [ref=e85]: 並び順
+      - generic [ref=e86]:
+        - generic [ref=e87]:
+          - radio "関連性の高い順" [checked] [ref=e88] [cursor=pointer]
+          - generic [ref=e89] [cursor=pointer]: 関連性の高い順
+        - generic [ref=e90]:
+          - radio "新着順" [ref=e91] [cursor=pointer]
+          - generic [ref=e92] [cursor=pointer]: 新着順
+        - generic [ref=e93]:
+          - radio "人気順" [disabled] [ref=e94] [cursor=pointer]
+          - generic [ref=e95] [cursor=pointer]: 人気順
+    - generic [ref=e97]:
+      - generic [ref=e98]: カテゴリー
+      - listbox [ref=e99]:
+        - option "人物" [ref=e100]
+        - option "ビジネス" [ref=e101]
+        - option "動物・生き物" [ref=e102]
+        - option "花・植物" [ref=e103]
+        - option "食べ物・飲み物" [ref=e104]
+        - option "町並み・建物" [ref=e105]
+        - option "医療・福祉" [ref=e106]
+        - option "交通・乗り物" [ref=e107]
+        - option "季節・行事" [ref=e108]
+        - option "自然・風景" [ref=e109]
+        - option "スポーツ" [ref=e110]
+        - option "エコ・環境" [ref=e111]
+        - option "美容・健康" [ref=e112]
+        - option "住宅・インテリア" [ref=e113]
+        - option "年賀状" [ref=e114]
+        - option "テクスチャ・背景" [ref=e115]
+        - option "小物・雑貨" [ref=e116]
+        - option "クレイアート" [ref=e117]
+        - option "外国" [ref=e118]
+        - option "ロマンティック" [ref=e119]
+        - option "スプラッター" [ref=e120]
+    - generic [ref=e122]:
+      - generic [ref=e123]: 除外カテゴリー
+      - listbox [ref=e124]:
+        - option "人物" [ref=e125]
+        - option "ビジネス" [ref=e126]
+        - option "動物・生き物" [ref=e127]
+        - option "花・植物" [ref=e128]
+        - option "食べ物・飲み物" [ref=e129]
+        - option "町並み・建物" [ref=e130]
+        - option "医療・福祉" [ref=e131]
+        - option "交通・乗り物" [ref=e132]
+        - option "季節・行事" [ref=e133]
+        - option "自然・風景" [ref=e134]
+        - option "スポーツ" [ref=e135]
+        - option "エコ・環境" [ref=e136]
+        - option "美容・健康" [ref=e137]
+        - option "住宅・インテリア" [ref=e138]
+        - option "年賀状" [ref=e139]
+        - option "テクスチャ・背景" [ref=e140]
+        - option "小物・雑貨" [ref=e141]
+        - option "クレイアート" [ref=e142]
+        - option "外国" [ref=e143]
+        - option "ロマンティック" [ref=e144]
+        - option "スプラッター" [ref=e145]
+    - generic [ref=e146]:
+      - generic [ref=e147]: 除外キーワード
+      - textbox "除外キーワードを入力" [ref=e148]
+    - generic [ref=e150]:
+      - checkbox "AI生成ツール使用素材を除く" [checked] [ref=e151] [cursor=pointer]
+      - generic [ref=e152] [cursor=pointer]: AI生成ツール使用素材を除く
+    - separator [ref=e153]
+    - generic [ref=e154]:
+      - generic [ref=e155]: 縦長・横長の選択
+      - generic [ref=e156]:
+        - generic [ref=e157]:
+          - radio "全て" [checked] [ref=e158] [cursor=pointer]
+          - generic [ref=e159] [cursor=pointer]: 全て
+        - generic [ref=e160]:
+          - radio "縦長" [ref=e161] [cursor=pointer]
+          - generic [ref=e162] [cursor=pointer]: 縦長
+        - generic [ref=e163]:
+          - radio "横長" [ref=e164] [cursor=pointer]
+          - generic [ref=e165] [cursor=pointer]: 横長
+    - generic [ref=e166]:
+      - generic [ref=e167]: 画像種別
+      - combobox [ref=e168]:
+        - option "全ての画像" [selected]
+        - option "Mediumサイズ以上がある"
+        - option "Largeサイズがある"
+        - option "PSDがある"
+    - generic [ref=e169]:
+      - generic [ref=e170]: クリエイター名
+      - textbox "クリエイター名を入力" [ref=e171]
+    - generic [ref=e172]:
+      - generic [ref=e173]: 除外クリエイター名
+      - textbox "除外クリエイター名を入力" [ref=e174]
+    - generic [ref=e175]:
+      - generic [ref=e176]: 素材ID
+      - textbox "素材のIDを入力" [ref=e177]
+    - generic [ref=e178]:
+      - generic [ref=e179]: 色
+      - generic [ref=e180]:
+        - generic [ref=e181]:
+          - radio "全て" [checked] [ref=e182] [cursor=pointer]
+          - generic [ref=e183] [cursor=pointer]: 全て
+        - generic [ref=e184]:
+          - generic [ref=e185]:
+            - button [ref=e187] [cursor=pointer]
+            - button [ref=e189] [cursor=pointer]
+            - button [ref=e191] [cursor=pointer]
+            - button [ref=e193] [cursor=pointer]
+            - button [ref=e195] [cursor=pointer]
+          - generic [ref=e196]:
+            - button [ref=e198] [cursor=pointer]
+            - button [ref=e200] [cursor=pointer]
+            - button [ref=e202] [cursor=pointer]
+            - button [ref=e204] [cursor=pointer]
+            - button [ref=e206] [cursor=pointer]
+          - generic [ref=e207]:
+            - button [ref=e209] [cursor=pointer]
+            - button [ref=e211] [cursor=pointer]
+            - button [ref=e213] [cursor=pointer]
+            - button [ref=e215] [cursor=pointer]
+    - generic [ref=e220]:
+      - generic [ref=e221]: モデル人数
+      - generic [ref=e222]:
+        - generic [ref=e223]:
+          - radio "全て" [checked] [ref=e224] [cursor=pointer]
+          - generic [ref=e225] [cursor=pointer]: 全て
+        - generic [ref=e226]:
+          - radio "無人" [ref=e227] [cursor=pointer]
+          - generic [ref=e228] [cursor=pointer]: 無人
+        - generic [ref=e229]:
+          - radio "1人" [ref=e230] [cursor=pointer]
+          - generic [ref=e231] [cursor=pointer]: 1人
+        - generic [ref=e232]:
+          - radio "2人" [ref=e233] [cursor=pointer]
+          - generic [ref=e234] [cursor=pointer]: 2人
+        - generic [ref=e235]:
+          - radio "3人以上" [ref=e236] [cursor=pointer]
+          - generic [ref=e237] [cursor=pointer]: 3人以上
+    - generic [ref=e238]:
+      - generic [ref=e239]: モデル年代
+      - combobox [ref=e240]:
+        - option "全ての年代" [selected]
+        - option "赤ちゃん"
+        - option "子供"
+        - option "若者"
+        - option "大人"
+        - option "中高年"
+        - option "高齢者"
+    - generic [ref=e241]:
+      - generic [ref=e242]: モデルリリース
+      - generic [ref=e243]:
+        - generic [ref=e244]:
+          - radio "全て" [checked] [ref=e245] [cursor=pointer]
+          - generic [ref=e246] [cursor=pointer]: 全て
+        - generic [ref=e247]:
+          - radio "取得済のみ" [ref=e248] [cursor=pointer]
+          - generic [ref=e249] [cursor=pointer]: 取得済のみ
+    - generic [ref=e250]:
+      - generic [ref=e251]: プロパティリリース
+      - generic [ref=e252]:
+        - generic [ref=e253]:
+          - radio "全て" [checked] [ref=e254] [cursor=pointer]
+          - generic [ref=e255] [cursor=pointer]: 全て
+        - generic [ref=e256]:
+          - radio "取得済のみ" [ref=e257] [cursor=pointer]
+          - generic [ref=e258] [cursor=pointer]: 取得済のみ
+    - generic [ref=e259]:
+      - generic [ref=e261] [cursor=pointer]: 完全一致
+      - checkbox "完全一致" [ref=e263] [cursor=pointer]
+    - button "検 索" [ref=e265] [cursor=pointer]
+  - text:     
+  - generic [ref=e267]:
+    - generic [ref=e268]:
+      - list [ref=e270]:
+        - listitem [ref=e272]:
+          - img "写真AC" [ref=e273]
+      - generic [ref=e275]:
+        - heading "高品質な写真が無料でダウンロードできます" [level=1] [ref=e276]
+        - generic [ref=e278]:
+          - heading "加工や商用利用もOK" [level=6] [ref=e280]
+          - heading "モデル許可済み人物写真" [level=6] [ref=e282]
+          - heading "総会員数1600万人突破" [level=6] [ref=e284]
+        - generic [ref=e285]:
+          - generic [ref=e286]: AI検索(β版)
+          - generic [ref=e288]:
+            - button "search_btn" [ref=e289] [cursor=pointer]:
+              - generic [ref=e290]: 
+            - button "AI Search is off" [disabled] [ref=e291]:
+              - img "AI Search is off" [ref=e292]
+            - searchbox "キーワード（例：女性）" [ref=e293]
+            - generic [ref=e295] [cursor=pointer]:
+              - text: 詳細検索
+              - generic: ▼
+            - link "画像検索" [ref=e297] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e298]:
+                - generic [ref=e299]: 
+                - generic [ref=e300]: 画像検索
+        - generic [ref=e301]:
+          - link "夏" [ref=e302] [cursor=pointer]:
+            - /url: /main/search?q=夏&utm_source=top_keyword
+            - img [ref=e303]
+            - text: 夏
+          - link "ビジネス" [ref=e305] [cursor=pointer]:
+            - /url: /main/search?q=ビジネス&utm_source=top_keyword
+            - img [ref=e306]
+            - text: ビジネス
+          - link "女性" [ref=e308] [cursor=pointer]:
+            - /url: /main/search?q=女性&utm_source=top_keyword
+            - img [ref=e309]
+            - text: 女性
+          - link "オフィス" [ref=e311] [cursor=pointer]:
+            - /url: /main/search?q=オフィス&utm_source=top_keyword
+            - img [ref=e312]
+            - text: オフィス
+          - link "猫" [ref=e314] [cursor=pointer]:
+            - /url: /main/search?q=猫&utm_source=top_keyword
+            - img [ref=e315]
+            - text: 猫
+    - generic [ref=e318]:
+      - link "写真AC 人気日本人モデル" [ref=e320] [cursor=pointer]:
+        - /url: https://www.photo-ac.com/models/
+        - img "写真AC" [ref=e321]
+        - generic [ref=e322]: 人気日本人モデル
+      - link "写真AC 花火" [ref=e324] [cursor=pointer]:
+        - /url: https://www.photo-ac.com/main/search?exclude_ai=on&layout=vertical&personalized=1&by_ai=&q=%E8%8A%B1%E7%81%AB&pp=70&srt=dlrank&nq=&orientation=all&sizesec=all&creator=&ngcreator=&qid=&color=all&model_count=-1&age=all&mdlrlrsec=all&prprlrsec=all
+        - img "写真AC" [ref=e325]
+        - generic [ref=e326]: 花火
+      - link "写真AC ひまわり" [ref=e328] [cursor=pointer]:
+        - /url: https://www.photo-ac.com/main/search?exclude_ai=on&layout=vertical&personalized=1&by_ai=&q=%E3%81%B2%E3%81%BE%E3%82%8F%E3%82%8A&pp=70&srt=dlrank&nq=&orientation=all&sizesec=all&creator=&ngcreator=&qid=&color=all&model_count=-1&age=all&mdlrlrsec=all&prprlrsec=all
+        - img "写真AC" [ref=e329]
+        - generic [ref=e330]: ひまわり
+      - link "写真AC スイカ" [ref=e332] [cursor=pointer]:
+        - /url: https://www.photo-ac.com/main/search?exclude_ai=on&layout=vertical&personalized=1&by_ai=&q=%E3%82%B9%E3%82%A4%E3%82%AB&pp=70&srt=dlrank&nq=&orientation=all&sizesec=all&creator=&ngcreator=&qid=&color=all&model_count=-1&age=all&mdlrlrsec=all&prprlrsec=all
+        - img "写真AC" [ref=e333]
+        - generic [ref=e334]: スイカ
+    - generic [ref=e338]:
+      - generic [ref=e339]:
+        - generic [ref=e341]:
+          - link "広告を非表示にする 広告を非表示にする" [ref=e343] [cursor=pointer]:
+            - /url: javascript:void(0);
+            - img "広告を非表示にする" [ref=e344]
+            - generic [ref=e345]: 広告を非表示にする
+          - iframe [ref=e348]:
+            
+        - generic [ref=e349]:
+          - heading "無料写真ダウンロード" [level=4] [ref=e350]
+          - generic [ref=e351]:
+            - paragraph [ref=e352]:
+              - link "無料会員登録" [ref=e353] [cursor=pointer]:
+                - /url: https://test-accounts.ac-illust.com/signup?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252F&lang=jp
+            - paragraph [ref=e354]:
+              - link "ログイン" [ref=e355] [cursor=pointer]:
+                - /url: https://test-accounts.ac-illust.com/login?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252F&lang=jp
+          - paragraph [ref=e356]:
+            - text: 写真をダウンロードするには写真ACに
+            - link "ログイン" [ref=e357] [cursor=pointer]:
+              - /url: https://test-accounts.ac-illust.com/login?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252F&lang=jp
+            - text: してください。会員登録がまだの方は
+            - link "無料登録" [ref=e358] [cursor=pointer]:
+              - /url: https://test-accounts.ac-illust.com/signup?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252F&lang=jp
+            - text: を!会員登録後、ログインすることで、約12,131,438点以上のフリー写真素材の中から、無料画像をダウンロードしていただけるようになります。商用利用も可能です。
+        - generic [ref=e359]:
+          - heading "写真素材メニュー" [level=4] [ref=e360]
+          - button "写真カテゴリー" [ref=e362] [cursor=pointer]:
+            - text: 写真カテゴリー
+            - generic [ref=e363]: 
+          - link "人気写真ランキング" [ref=e365] [cursor=pointer]:
+            - /url: /ranking
+          - link "モデルから写真を検索" [ref=e367] [cursor=pointer]:
+            - /url: /models/
+          - link "おすすめ特集一覧" [ref=e369] [cursor=pointer]:
+            - /url: /pickup/1
+          - link "新着写真一覧" [ref=e371] [cursor=pointer]:
+            - /url: /main/latest
+          - link "公開中のコレクション" [ref=e373] [cursor=pointer]:
+            - /url: /main/collections
+        - generic [ref=e374]:
+          - heading "画像生成AI" [level=4] [ref=e375]
+          - link "AC写真AIラボ NEW" [ref=e377] [cursor=pointer]:
+            - /url: /image-generator/
+            - text: AC写真AIラボ
+            - generic [ref=e378]: NEW
+          - link "AI人物素材" [ref=e380] [cursor=pointer]:
+            - /url: /main/genface
+        - generic [ref=e381]:
+          - heading "クリエイターメニュー" [level=4] [ref=e382]
+          - link "クリエイター投稿（新規登録）" [ref=e384] [cursor=pointer]:
+            - /url: /creator/auth/register
+          - link "クリエイターログイン" [ref=e386] [cursor=pointer]:
+            - /url: "#"
+          - link "ポイント換金ランキング" [ref=e388] [cursor=pointer]:
+            - /url: /ranking/prize
+          - link "クリエイター一覧" [ref=e390] [cursor=pointer]:
+            - /url: /creators/
+        - generic [ref=e391]:
+          - heading "プレミアム会員サービス" [level=4] [ref=e392]
+          - link "プレミアム会員登録" [ref=e394] [cursor=pointer]:
+            - /url: https://test-lien.photo-ac.com/premium/campaign?target=premium_sozai
+          - link "法人・複数名向けプラン" [ref=e396] [cursor=pointer]:
+            - /url: https://test-lien.photo-ac.com/premium/business
+          - link "商品化ライセンス" [ref=e398] [cursor=pointer]:
+            - /url: /main/extra_license_terms
+          - link "あんしんサポート" [ref=e400] [cursor=pointer]:
+            - /url: /indemnity/
+        - generic [ref=e401]:
+          - heading "ヘルプ＆ガイド" [level=4] [ref=e402]
+          - link "写真ACとは" [ref=e404] [cursor=pointer]:
+            - /url: /main/guide/#group-site
+          - link "写真の権利" [ref=e406] [cursor=pointer]:
+            - /url: /main/rights
+          - link "ヘルプ" [ref=e408] [cursor=pointer]:
+            - /url: https://help.freebie-ac.jp
+          - link "利用規約" [ref=e410] [cursor=pointer]:
+            - /url: /main/terms
+        - link "Interview" [ref=e414] [cursor=pointer]:
+          - /url: /interview
+          - img "Interview" [ref=e415]
+        - generic [ref=e416]:
+          - heading "おすすめ無料サービス" [level=4] [ref=e417]
+          - link "デザインテンプレート" [ref=e419] [cursor=pointer]:
+            - /url: https://www.design-ac.net/
+            - text: デザインテンプレート
+            - generic [ref=e420]: 
+          - link "ファイル転送・共有" [ref=e422] [cursor=pointer]:
+            - /url: https://ac-data.info/
+            - text: ファイル転送・共有
+            - generic [ref=e423]: 
+          - link "今日の運勢" [ref=e425] [cursor=pointer]:
+            - /url: https://uranai-ac.com/
+            - text: 今日の運勢
+            - generic [ref=e426]: 
+          - link "プレゼン資料作成AI" [ref=e428] [cursor=pointer]:
+            - /url: https://www.design-ac.net/design/new-presentation?src=homepage-btn
+            - text: プレゼン資料作成AI
+            - generic [ref=e429]: 
+        - iframe [ref=e430]:
+          
+        - generic [ref=e432]:
+          - link "広告を非表示にする 広告を非表示にする" [ref=e434] [cursor=pointer]:
+            - /url: javascript:void(0);
+            - img "広告を非表示にする" [ref=e435]
+            - generic [ref=e436]: 広告を非表示にする
+          - iframe [ref=e439]:
+            
+        - generic [ref=e440]:
+          - heading "人気キーワード（タグ）" [level=4] [ref=e441]:
+            - button "人気キーワード（タグ）" [ref=e442] [cursor=pointer]:
+              - text: 人気キーワード（タグ）
+              - generic [ref=e443]: 
+          - generic [ref=e444]:
+            - generic [ref=e445]:
+              - link "夏" [ref=e446] [cursor=pointer]:
+                - /url: /main/search?q=夏&utm_source=top_keyword
+              - link "ビジネス" [ref=e447] [cursor=pointer]:
+                - /url: /main/search?q=ビジネス&utm_source=top_keyword
+              - link "女性" [ref=e448] [cursor=pointer]:
+                - /url: /main/search?q=女性&utm_source=top_keyword
+              - link "オフィス" [ref=e449] [cursor=pointer]:
+                - /url: /main/search?q=オフィス&utm_source=top_keyword
+              - link "猫" [ref=e450] [cursor=pointer]:
+                - /url: /main/search?q=猫&utm_source=top_keyword
+              - link "ハワイ 海" [ref=e451] [cursor=pointer]:
+                - /url: /main/search?q=ハワイ 海&utm_source=top_keyword
+              - link "和紙" [ref=e452] [cursor=pointer]:
+                - /url: /main/search?q=和紙&utm_source=top_keyword
+              - link "炎" [ref=e453] [cursor=pointer]:
+                - /url: /main/search?q=炎&utm_source=top_keyword
+              - link "七夕" [ref=e454] [cursor=pointer]:
+                - /url: /main/search?q=七夕&utm_source=top_keyword
+              - link "花火" [ref=e455] [cursor=pointer]:
+                - /url: /main/search?q=花火&utm_source=top_keyword
+              - link "ひまわり" [ref=e456] [cursor=pointer]:
+                - /url: /main/search?q=ひまわり&utm_source=top_keyword
+              - link "夏祭り" [ref=e457] [cursor=pointer]:
+                - /url: /main/search?q=夏祭り&utm_source=top_keyword
+              - link "花" [ref=e458] [cursor=pointer]:
+                - /url: /main/search?q=花&utm_source=top_keyword
+              - link "パソコン" [ref=e459] [cursor=pointer]:
+                - /url: /main/search?q=パソコン&utm_source=top_keyword
+              - link "桜" [ref=e460] [cursor=pointer]:
+                - /url: /main/search?q=桜&utm_source=top_keyword
+              - link "スマホ" [ref=e461] [cursor=pointer]:
+                - /url: /main/search?q=スマホ&utm_source=top_keyword
+              - link "コーヒー" [ref=e462] [cursor=pointer]:
+                - /url: /main/search?q=コーヒー&utm_source=top_keyword
+              - link "青空" [ref=e463] [cursor=pointer]:
+                - /url: /main/search?q=青空&utm_source=top_keyword
+              - link "リビング" [ref=e464] [cursor=pointer]:
+                - /url: /main/search?q=リビング&utm_source=top_keyword
+              - link "家族" [ref=e465] [cursor=pointer]:
+                - /url: /main/search?q=家族&utm_source=top_keyword
+              - link "梅雨" [ref=e466] [cursor=pointer]:
+                - /url: /main/search?q=梅雨&utm_source=top_keyword
+              - link "ビジネスマン" [ref=e467] [cursor=pointer]:
+                - /url: /main/search?q=ビジネスマン&utm_source=top_keyword
+              - link "コワーキングスペース" [ref=e468] [cursor=pointer]:
+                - /url: /main/search?q=コワーキングスペース&utm_source=top_keyword
+              - link "犬" [ref=e469] [cursor=pointer]:
+                - /url: /main/search?q=犬&utm_source=top_keyword
+              - link "サッカー" [ref=e470] [cursor=pointer]:
+                - /url: /main/search?q=サッカー&utm_source=top_keyword
+              - link "相続" [ref=e471] [cursor=pointer]:
+                - /url: /main/search?q=相続&utm_source=top_keyword
+              - link "テクスチャ" [ref=e472] [cursor=pointer]:
+                - /url: /main/search?q=テクスチャ&utm_source=top_keyword
+              - link "介護" [ref=e473] [cursor=pointer]:
+                - /url: /main/search?q=介護&utm_source=top_keyword
+              - link "廃墟" [ref=e474] [cursor=pointer]:
+                - /url: /main/search?q=廃墟&utm_source=top_keyword
+              - link "和柄" [ref=e475] [cursor=pointer]:
+                - /url: /main/search?q=和柄&utm_source=top_keyword
+              - link "7月" [ref=e476] [cursor=pointer]:
+                - /url: /main/search?q=7月&utm_source=top_keyword
+              - link "うなぎ" [ref=e477] [cursor=pointer]:
+                - /url: /main/search?q=うなぎ&utm_source=top_keyword
+              - link "作業員" [ref=e478] [cursor=pointer]:
+                - /url: /main/search?q=作業員&utm_source=top_keyword
+              - link "木目 テクスチャ" [ref=e479] [cursor=pointer]:
+                - /url: /main/search?q=木目 テクスチャ&utm_source=top_keyword
+              - link "カフェ" [ref=e480] [cursor=pointer]:
+                - /url: /main/search?q=カフェ&utm_source=top_keyword
+              - link "シニア" [ref=e481] [cursor=pointer]:
+                - /url: /main/search?q=シニア&utm_source=top_keyword
+              - link "メロン" [ref=e482] [cursor=pointer]:
+                - /url: /main/search?q=メロン&utm_source=top_keyword
+              - link "保育士" [ref=e483] [cursor=pointer]:
+                - /url: /main/search?q=保育士&utm_source=top_keyword
+              - link "ビーチ" [ref=e484] [cursor=pointer]:
+                - /url: /main/search?q=ビーチ&utm_source=top_keyword
+              - link "事務" [ref=e485] [cursor=pointer]:
+                - /url: /main/search?q=事務&utm_source=top_keyword
+              - link "氷" [ref=e486] [cursor=pointer]:
+                - /url: /main/search?q=氷&utm_source=top_keyword
+              - link "海" [ref=e487] [cursor=pointer]:
+                - /url: /main/search?q=海&utm_source=top_keyword
+              - link "エアコン" [ref=e488] [cursor=pointer]:
+                - /url: /main/search?q=エアコン&utm_source=top_keyword
+              - link "木目" [ref=e489] [cursor=pointer]:
+                - /url: /main/search?q=木目&utm_source=top_keyword
+              - link "夏空" [ref=e490] [cursor=pointer]:
+                - /url: /main/search?q=夏空&utm_source=top_keyword
+              - link "歯医者" [ref=e491] [cursor=pointer]:
+                - /url: /main/search?q=歯医者&utm_source=top_keyword
+              - link "psd" [ref=e492] [cursor=pointer]:
+                - /url: /main/search?q=psd&utm_source=top_keyword
+              - link "子供" [ref=e493] [cursor=pointer]:
+                - /url: /main/search?q=子供&utm_source=top_keyword
+              - link "ビジネス 女性" [ref=e494] [cursor=pointer]:
+                - /url: /main/search?q=ビジネス 女性&utm_source=top_keyword
+              - link "水しぶき" [ref=e495] [cursor=pointer]:
+                - /url: /main/search?q=水しぶき&utm_source=top_keyword
+            - paragraph [ref=e496]:
+              - button "もっと見る" [ref=e497] [cursor=pointer]:
+                - text: もっと見る
+                - generic [ref=e498]: 
+              - text: 
+        - generic [ref=e499]:
+          - heading "メディア" [level=4] [ref=e500]
+          - heading "テレビでご紹介いただきました！" [level=4] [ref=e501]
+          - iframe [ref=e502]:
+            - img [ref=f2e2]
+          - paragraph [ref=e503]: かんさい情報ネット ten. | 読売テレビ
+        - heading "ブログ" [level=4] [ref=e505]
+        - generic [ref=e506]:
+          - heading "SNS" [level=4] [ref=e507]
+          - link "ACワークス公式 X" [ref=e509] [cursor=pointer]:
+            - /url: https://x.com/ACworks2011
+          - link "Mr.ビー X" [ref=e511] [cursor=pointer]:
+            - /url: https://x.com/mrb_ac
+        - generic [ref=e513]:
+          - link "広告を非表示にする 広告を非表示にする" [ref=e515] [cursor=pointer]:
+            - /url: javascript:void(0);
+            - img "広告を非表示にする" [ref=e516]
+            - generic [ref=e517]: 広告を非表示にする
+          - iframe [ref=e520]:
+            
+      - generic [ref=e521]:
+        - generic [ref=e523]:
+          - generic [ref=e524]:
+            - paragraph [ref=e525]:
+              - link "Ads by ACworks" [ref=e526] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e527]:
+              - link "商品化ライセンスご紹介" [ref=e529] [cursor=pointer]:
+                - /url: https://blog.acworks.co.jp/2019/06/25/ex/
+                - img "商品化ライセンスご紹介" [ref=e531]
+              - link "「AI検索機能(β版)」ご紹介" [ref=e533] [cursor=pointer]:
+                - /url: https://blog.acworks.co.jp/2024/01/29/ai-search-function/
+                - img "「AI検索機能(β版)」ご紹介" [ref=e535]
+              - link "検索フィルターの使い方" [ref=e537] [cursor=pointer]:
+                - /url: https://blog.acworks.co.jp/2023/01/12/how-to-use-search-filter/
+                - img "検索フィルターの使い方" [ref=e539]
+            - paragraph [ref=e540]:
+              - link "広告をもっと見る" [ref=e541] [cursor=pointer]:
+                - /url: /main/advertisements
+                - text: 広告をもっと見る
+                - generic [ref=e542]: 
+          - link "広告を非表示にする 広告を非表示にする" [ref=e546] [cursor=pointer]:
+            - /url: javascript:void(0);
+            - img "広告を非表示にする" [ref=e547]
+            - generic [ref=e548]: 広告を非表示にする
+        - generic [ref=e549]:
+          - paragraph [ref=e551]: 人気写真
+          - generic [ref=e553]:
+            - figure [ref=e554]:
+              - generic [ref=e555]: 
+              - img "打ち合わせをする女性 ミーティング,面談,商談の写真素材" [ref=e556]
+              - text: 
+            - figure [ref=e557]:
+              - generic [ref=e558]: 
+              - img "カメラ目線で微笑む女性 女性,女,レディの写真素材" [ref=e559]
+              - text: 
+            - figure [ref=e560]:
+              - generic [ref=e561]: 
+              - img "ハートを持つ女性二人 女性,ハート,笑顔の写真素材" [ref=e562]
+              - text: 
+            - figure [ref=e563]:
+              - generic [ref=e564]: 
+              - img "オンラインコミュニケーションをする親子 ステイホーム,親子,部屋の写真素材" [ref=e565]
+              - text: 
+            - figure [ref=e566]:
+              - generic [ref=e567]: 
+              - img "オフィスで打合せをするビジネスマン ビジネスマン,ビジネス,打合せの写真素材" [ref=e568]
+              - text: 
+            - figure [ref=e569]:
+              - generic [ref=e570]:
+                - img "プレミアム素材" [ref=e572]
+                - text: 
+              - img "ソファーに座る三世代ファミリー7 家族,三世代ファミリー,三世代の写真素材" [ref=e573]
+            - figure [ref=e574]:
+              - generic [ref=e575]:
+                - img "プレミアム素材" [ref=e577]
+                - text: 
+              - img "笑顔で考える女性 女性,女子大生,日本人の写真素材" [ref=e578]
+            - figure [ref=e579]:
+              - generic [ref=e580]: 
+              - img "お昼寝する赤ちゃん 赤ちゃん,寝ている,寝るの写真素材" [ref=e581]
+              - text: 
+          - link "人気の投稿写真を詳しく見る" [ref=e583] [cursor=pointer]:
+            - /url: /main/trends?page=1&pp=70&srt=dlrank&referer=more_ranking
+            - text: 人気の投稿写真を詳しく見る
+            - generic [ref=e584]: 
+        - generic [ref=e585]:
+          - paragraph [ref=e587]: デザインに統一感を持たせましょう
+          - paragraph [ref=e588]:
+            - text: チラシやウェブサイト、資料など、どのようなデザインにも統一感が大切です。
+            - text: クリエイターのマイカテゴリーからテーマごとに写真を見つけることができます。同じスタイルの素材をダウンロードしてみましょう。
+          - generic [ref=e589]: ※週間ダウンロードランキングからランダムに表示（クリエイター広告出稿者優遇）
+          - generic [ref=e590]:
+            - figure "日本人3世代ファミリー" [ref=e591]:
+              - generic [ref=e593]:
+                - img "日本人 三世代 家族" [ref=e594]
+                - generic [ref=e595]:
+                  - img "日本人 三世代 家族" [ref=e596]
+                  - img "日本人 三世代 家族" [ref=e597]
+              - link "日本人3世代ファミリー" [ref=e599] [cursor=pointer]:
+                - /url: /main/search?q=日本人 三世代 家族&qt=&qid=&creator=ACworks&ngcreator=&nq=&srt=dlrank&orientation=all&sizesec=all&color=all&model_count=-1&age=all&mdlrlrsec=all&prprlrsec=all&sl=ja
+            - figure "脱毛関係" [ref=e600]:
+              - generic [ref=e601]:
+                - generic [ref=e602]:
+                  - img "脱毛" [ref=e603]
+                  - generic [ref=e604]:
+                    - img "脱毛" [ref=e605]
+                    - img "脱毛" [ref=e606]
+                - text: 
+              - link "脱毛関係" [ref=e608] [cursor=pointer]:
+                - /url: /main/search?q=脱毛&qt=&qid=&creator=Ni_photo&ngcreator=&nq=&srt=dlrank&orientation=all&sizesec=all&color=all&model_count=-1&age=all&mdlrlrsec=all&prprlrsec=all&sl=ja
+            - figure "冬" [ref=e609]:
+              - generic [ref=e610]:
+                - generic [ref=e611]:
+                  - img "クリスマス" [ref=e612]
+                  - generic [ref=e613]:
+                    - img "クリスマス" [ref=e614]
+                    - img "クリスマス" [ref=e615]
+                - text: 
+              - link "冬" [ref=e617] [cursor=pointer]:
+                - /url: /main/search?q=クリスマス&qt=&qid=&creator=%E5%86%99%E3%83%A1%E5%A4%AA%E9%83%8E&ngcreator=&nq=&srt=dlrank&orientation=all&sizesec=all&color=all&model_count=-1&age=all&mdlrlrsec=all&prprlrsec=all&sl=ja
+            - figure "タワーマンション" [ref=e618]:
+              - generic [ref=e619]:
+                - generic [ref=e620]:
+                  - img "タワーマンション" [ref=e621]
+                  - generic [ref=e622]:
+                    - img "タワーマンション" [ref=e623]
+                    - img "タワーマンション" [ref=e624]
+                - text: 
+              - link "タワーマンション" [ref=e626] [cursor=pointer]:
+                - /url: /main/search?q=タワーマンション&qt=&qid=&creator=GreenTree&ngcreator=&nq=&srt=dlrank&orientation=all&sizesec=all&color=all&model_count=-1&age=all&mdlrlrsec=all&prprlrsec=all&sl=ja
+            - figure "いろんな木目の背景素材" [ref=e627]:
+              - generic [ref=e628]:
+                - generic [ref=e629]:
+                  - img "木目" [ref=e630]
+                  - generic [ref=e631]:
+                    - img "木目" [ref=e632]
+                    - img "木目" [ref=e633]
+                - text: 
+              - link "いろんな木目の背景素材" [ref=e635] [cursor=pointer]:
+                - /url: /main/search?q=木目&qt=&qid=&creator=%E3%81%84%E3%81%AE%E3%81%85&ngcreator=&nq=&srt=dlrank&orientation=all&sizesec=all&color=all&model_count=-1&age=all&mdlrlrsec=all&prprlrsec=all&sl=ja
+            - figure "ティータイム" [ref=e636]:
+              - generic [ref=e637]:
+                - generic [ref=e638]:
+                  - img "ティータイム" [ref=e639]
+                  - generic [ref=e640]:
+                    - img "ティータイム" [ref=e641]
+                    - img "ティータイム" [ref=e642]
+                - text: 
+              - link "ティータイム" [ref=e644] [cursor=pointer]:
+                - /url: /main/search?q=ティータイム&qt=&qid=&creator=%E3%83%81%E3%83%A7%E3%82%B3%E3%83%A9%E3%83%86&ngcreator=&nq=&srt=dlrank&orientation=all&sizesec=all&color=all&model_count=-1&age=all&mdlrlrsec=all&prprlrsec=all&sl=ja
+            - figure "美容系" [ref=e645]:
+              - generic [ref=e646]:
+                - generic [ref=e647]:
+                  - img "美容" [ref=e648]
+                  - generic [ref=e649]:
+                    - img "美容" [ref=e650]
+                    - img "美容" [ref=e651]
+                - text: 
+              - link "美容系" [ref=e653] [cursor=pointer]:
+                - /url: /main/search?q=美容&qt=&qid=&creator=jyosuiism&ngcreator=&nq=&srt=dlrank&orientation=all&sizesec=all&color=all&model_count=-1&age=all&mdlrlrsec=all&prprlrsec=all&sl=ja
+            - figure "和紙" [ref=e654]:
+              - generic [ref=e655]:
+                - generic [ref=e656]:
+                  - img "和紙" [ref=e657]
+                  - generic [ref=e658]:
+                    - img "和紙" [ref=e659]
+                    - img "和紙" [ref=e660]
+                - text: 
+              - link "和紙" [ref=e662] [cursor=pointer]:
+                - /url: /main/search?q=和紙&qt=&qid=&creator=uni*uni&ngcreator=&nq=&srt=dlrank&orientation=all&sizesec=all&color=all&model_count=-1&age=all&mdlrlrsec=all&prprlrsec=all&sl=ja
+          - link "詳しく見る" [ref=e664] [cursor=pointer]:
+            - /url: main/creator_categories
+            - text: 詳しく見る
+            - generic [ref=e665]: 
+        - generic [ref=e667]:
+          - link "広告を非表示にする 広告を非表示にする" [ref=e669] [cursor=pointer]:
+            - /url: javascript:void(0);
+            - img "広告を非表示にする" [ref=e670]
+            - generic [ref=e671]: 広告を非表示にする
+          - iframe [ref=e674]:
+            
+        - generic [ref=e675]:
+          - paragraph [ref=e677]: 写真カテゴリー
+          - generic [ref=e678]:
+            - generic [ref=e680]:
+              - link "カテゴリ。- 人物 人物" [ref=e683] [cursor=pointer]:
+                - /url: /main/search?c_id=1&c_name=%E4%BA%BA%E7%89%A9&referer=c_search&utm_source=categories
+                - img "カテゴリ。- 人物" [ref=e684]
+                - generic [ref=e685]: 人物
+              - link "カテゴリ。- ビジネス ビジネス" [ref=e688] [cursor=pointer]:
+                - /url: /main/search?c_id=2&c_name=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9&referer=c_search&utm_source=categories
+                - img "カテゴリ。- ビジネス" [ref=e689]
+                - generic [ref=e690]: ビジネス
+              - link "カテゴリ。- 動物・生き物 動物・生き物" [ref=e693] [cursor=pointer]:
+                - /url: /main/search?c_id=3&c_name=%E5%8B%95%E7%89%A9%E3%83%BB%E7%94%9F%E3%81%8D%E7%89%A9&referer=c_search&utm_source=categories
+                - img "カテゴリ。- 動物・生き物" [ref=e694]
+                - generic [ref=e695]: 動物・生き物
+              - link "カテゴリ。- 花・植物 花・植物" [ref=e698] [cursor=pointer]:
+                - /url: /main/search?c_id=4&c_name=%E8%8A%B1%E3%83%BB%E6%A4%8D%E7%89%A9&referer=c_search&utm_source=categories
+                - img "カテゴリ。- 花・植物" [ref=e699]
+                - generic [ref=e700]: 花・植物
+              - link "カテゴリ。- 食べ物・飲み物 食べ物・飲み物" [ref=e703] [cursor=pointer]:
+                - /url: /main/search?c_id=5&c_name=%E9%A3%9F%E3%81%B9%E7%89%A9%E3%83%BB%E9%A3%B2%E3%81%BF%E7%89%A9&referer=c_search&utm_source=categories
+                - img "カテゴリ。- 食べ物・飲み物" [ref=e704]
+                - generic [ref=e705]: 食べ物・飲み物
+              - link "カテゴリ。- 町並み・建物 町並み・建物" [ref=e708] [cursor=pointer]:
+                - /url: /main/search?c_id=6&c_name=%E7%94%BA%E4%B8%A6%E3%81%BF%E3%83%BB%E5%BB%BA%E7%89%A9&referer=c_search&utm_source=categories
+                - img "カテゴリ。- 町並み・建物" [ref=e709]
+                - generic [ref=e710]: 町並み・建物
+              - link "カテゴリ。- 医療・福祉 医療・福祉" [ref=e713] [cursor=pointer]:
+                - /url: /main/search?c_id=7&c_name=%E5%8C%BB%E7%99%82%E3%83%BB%E7%A6%8F%E7%A5%89&referer=c_search&utm_source=categories
+                - img "カテゴリ。- 医療・福祉" [ref=e714]
+                - generic [ref=e715]: 医療・福祉
+              - link "カテゴリ。- 交通・乗り物 交通・乗り物" [ref=e718] [cursor=pointer]:
+                - /url: /main/search?c_id=8&c_name=%E4%BA%A4%E9%80%9A%E3%83%BB%E4%B9%97%E3%82%8A%E7%89%A9&referer=c_search&utm_source=categories
+                - img "カテゴリ。- 交通・乗り物" [ref=e719]
+                - generic [ref=e720]: 交通・乗り物
+              - link "カテゴリ。- 季節・行事 季節・行事" [ref=e723] [cursor=pointer]:
+                - /url: /main/search?c_id=9&c_name=%E5%AD%A3%E7%AF%80%E3%83%BB%E8%A1%8C%E4%BA%8B&referer=c_search&utm_source=categories
+                - img "カテゴリ。- 季節・行事" [ref=e724]
+                - generic [ref=e725]: 季節・行事
+              - link "カテゴリ。- 自然・風景 自然・風景" [ref=e728] [cursor=pointer]:
+                - /url: /main/search?c_id=10&c_name=%E8%87%AA%E7%84%B6%E3%83%BB%E9%A2%A8%E6%99%AF&referer=c_search&utm_source=categories
+                - img "カテゴリ。- 自然・風景" [ref=e729]
+                - generic [ref=e730]: 自然・風景
+              - link "カテゴリ。- スポーツ スポーツ" [ref=e733] [cursor=pointer]:
+                - /url: /main/search?c_id=11&c_name=%E3%82%B9%E3%83%9D%E3%83%BC%E3%83%84&referer=c_search&utm_source=categories
+                - img "カテゴリ。- スポーツ" [ref=e734]
+                - generic [ref=e735]: スポーツ
+              - link "カテゴリ。- エコ・環境 エコ・環境" [ref=e738] [cursor=pointer]:
+                - /url: /main/search?c_id=12&c_name=%E3%82%A8%E3%82%B3%E3%83%BB%E7%92%B0%E5%A2%83&referer=c_search&utm_source=categories
+                - img "カテゴリ。- エコ・環境" [ref=e739]
+                - generic [ref=e740]: エコ・環境
+              - link "カテゴリ。- 美容・健康 美容・健康" [ref=e743] [cursor=pointer]:
+                - /url: /main/search?c_id=13&c_name=%E7%BE%8E%E5%AE%B9%E3%83%BB%E5%81%A5%E5%BA%B7&referer=c_search&utm_source=categories
+                - img "カテゴリ。- 美容・健康" [ref=e744]
+                - generic [ref=e745]: 美容・健康
+              - link "カテゴリ。- 住宅・インテリア 住宅・インテリア" [ref=e748] [cursor=pointer]:
+                - /url: /main/search?c_id=14&c_name=%E4%BD%8F%E5%AE%85%E3%83%BB%E3%82%A4%E3%83%B3%E3%83%86%E3%83%AA%E3%82%A2&referer=c_search&utm_source=categories
+                - img "カテゴリ。- 住宅・インテリア" [ref=e749]
+                - generic [ref=e750]: 住宅・インテリア
+              - link "カテゴリ。- 年賀状 年賀状" [ref=e753] [cursor=pointer]:
+                - /url: /main/search?c_id=15&c_name=%E5%B9%B4%E8%B3%80%E7%8A%B6&referer=c_search&utm_source=categories
+                - img "カテゴリ。- 年賀状" [ref=e754]
+                - generic [ref=e755]: 年賀状
+              - link "カテゴリ。- テクスチャ・背景 テクスチャ・背景" [ref=e758] [cursor=pointer]:
+                - /url: /main/search?c_id=16&c_name=%E3%83%86%E3%82%AF%E3%82%B9%E3%83%81%E3%83%A3%E3%83%BB%E8%83%8C%E6%99%AF&referer=c_search&utm_source=categories
+                - img "カテゴリ。- テクスチャ・背景" [ref=e759]
+                - generic [ref=e760]: テクスチャ・背景
+              - link "カテゴリ。- 小物・雑貨 小物・雑貨" [ref=e763] [cursor=pointer]:
+                - /url: /main/search?c_id=18&c_name=%E5%B0%8F%E7%89%A9%E3%83%BB%E9%9B%91%E8%B2%A8&referer=c_search&utm_source=categories
+                - img "カテゴリ。- 小物・雑貨" [ref=e764]
+                - generic [ref=e765]: 小物・雑貨
+              - link "カテゴリ。- クレイアート クレイアート" [ref=e768] [cursor=pointer]:
+                - /url: /main/search?c_id=19&c_name=%E3%82%AF%E3%83%AC%E3%82%A4%E3%82%A2%E3%83%BC%E3%83%88&referer=c_search&utm_source=categories
+                - img "カテゴリ。- クレイアート" [ref=e769]
+                - generic [ref=e770]: クレイアート
+              - link "カテゴリ。- 外国 外国" [ref=e773] [cursor=pointer]:
+                - /url: /main/search?c_id=20&c_name=%E5%A4%96%E5%9B%BD&referer=c_search&utm_source=categories
+                - img "カテゴリ。- 外国" [ref=e774]
+                - generic [ref=e775]: 外国
+              - link "カテゴリ。- PSD素材 PSD素材" [ref=e778] [cursor=pointer]:
+                - /url: /main/search?sizesec=psd&referer=category_psd&srt=dlrank&utm_source=categories
+                - img "カテゴリ。- PSD素材" [ref=e779]
+                - generic [ref=e780]: PSD素材
+            - button [ref=e781] [cursor=pointer]:
+              - img [ref=e783]
+        - generic [ref=e785]:
+          - paragraph [ref=e787]: 写真ACだけのオリジナルおすすめ写真特集！
+          - paragraph [ref=e788]:
+            - text: プロのカメラマンが撮影した写真ACのおすすめ特集を一挙公開！
+            - text: 無料で使える高品質な写真を豊富なテーマごとに厳選してご用意しています。
+          - generic [ref=e789]:
+            - generic [ref=e790]:
+              - figure "日本人女性のライフスタイル" [ref=e791]:
+                - link "日本人女性のライフスタイル" [ref=e792] [cursor=pointer]:
+                  - /url: https://www.photo-ac.com/main/search?q=womanjplifestyle3ac&by_ai=&sizesec=all&orientation=all&color=&model_count=-1&age=all&mdlrlrsec=all&prprlrsec=all&creator=&ngcreator=&nq=&qid=&exclude_ai=on&srt=dlrank&pp=70&utm_source=pickup
+                  - img "日本人女性のライフスタイル" [ref=e793]
+              - figure "シニア女性の介護" [ref=e794]:
+                - link "シニア女性の介護" [ref=e795] [cursor=pointer]:
+                  - /url: https://www.photo-ac.com/main/search?q=carejpac&by_ai=&sizesec=all&orientation=all&color=all&model_count=-1&age=all&mdlrlrsec=all&prprlrsec=all&creator=acworks&ngcreator=&nq=&qid=&exclude_ai=on&srt=dlrank&pp=70&utm_source=pickup
+                  - img "シニア女性の介護" [ref=e796]
+              - figure "家族の問題" [ref=e797]:
+                - link "家族の問題" [ref=e798] [cursor=pointer]:
+                  - /url: https://www.photo-ac.com/main/search?q=problemsac&by_ai=&sizesec=all&orientation=all&color=all&model_count=-1&age=all&mdlrlrsec=all&prprlrsec=all&creator=acworks&ngcreator=&nq=&qid=&exclude_ai=on&layout=vertical&srt=dlrank&pp=70&utm_source=pickup
+                  - img "家族の問題" [ref=e799]
+              - figure "シンプル女性ポートレート" [ref=e800]:
+                - link "シンプル女性ポートレート" [ref=e801] [cursor=pointer]:
+                  - /url: https://www.photo-ac.com/main/search?q=beautyjp2ac&by_ai=&sizesec=all&orientation=all&color=all&model_count=-1&age=all&mdlrlrsec=all&prprlrsec=all&creator=acworks&ngcreator=&nq=&qid=&exclude_ai=on&srt=dlrank&pp=70&utm_source=pickup
+                  - img "シンプル女性ポートレート" [ref=e802]
+            - link "おすすめ写真特集をもっと見る" [ref=e804] [cursor=pointer]:
+              - /url: /pickup/1
+              - text: おすすめ写真特集をもっと見る
+              - generic [ref=e805]: 
+        - generic [ref=e806]:
+          - generic [ref=e807]:
+            - paragraph [ref=e808]: グループサイトの無料サービスはご存知ですか？
+            - text: イラストや動画、デザインツールなど、一つのアカウントで全て使えます。
+          - generic [ref=e809]:
+            - link "シルエット・ピクトグラム テンプレート・デザインツール" [ref=e812] [cursor=pointer]:
+              - /url: https://test-an.editor-ac.com
+              - img "シルエット・ピクトグラム" [ref=e813]
+              - generic [ref=e814]: テンプレート・デザインツール
+            - link "イラスト・ベクター画像 イラスト・ベクター画像" [ref=e817] [cursor=pointer]:
+              - /url: https://www.ac-illust.com
+              - img "イラスト・ベクター画像" [ref=e818]
+              - generic [ref=e819]: イラスト・ベクター画像
+            - link "シルエット・ピクトグラム シルエット・ピクトグラム" [ref=e822] [cursor=pointer]:
+              - /url: https://www.silhouette-ac.com
+              - img "シルエット・ピクトグラム" [ref=e823]
+              - generic [ref=e824]: シルエット・ピクトグラム
+            - generic [ref=e825]:
+              - generic [ref=e826]:
+                - generic:
+                  - img
+              - link "シルエット・ピクトグラム 動画・エフェクト" [ref=e827] [cursor=pointer]:
+                - /url: https://video-ac.com/
+                - img "シルエット・ピクトグラム" [ref=e828]
+                - generic [ref=e829]: 動画・エフェクト
+        - generic [ref=e830]:
+          - paragraph [ref=e832]: もう画像選びで悩まないでください
+          - generic [ref=e834]:
+            - generic [ref=e835]:
+              - generic [ref=e836]:
+                - img "Notification" [ref=e837]
+                - generic [ref=e838]:
+                  - paragraph [ref=e839]: 無料でダウンロード
+                  - paragraph [ref=e840]: 1213万枚以上の写真素材から無料でダウンロード可能！毎日数千枚の写真素材が追加されます。
+              - generic [ref=e841]:
+                - img "Notification" [ref=e842]
+                - generic [ref=e843]:
+                  - paragraph [ref=e844]: クレジット表記不要
+                  - paragraph [ref=e845]: 無料だとクレジット表記が必要なサイトが多い中、写真ACは無料でもクレジット表記不要です。
+              - generic [ref=e846]:
+                - img "Notification" [ref=e847]
+                - generic [ref=e848]:
+                  - paragraph [ref=e849]: 商用利用可能
+                  - paragraph [ref=e850]: 加工も自由で商用利用も可能だから、チラシやポスター、パンフレットなど、さまざまなビジネスにご利用いただけます。
+            - link "広告を非表示にする 広告を非表示にする" [ref=e855] [cursor=pointer]:
+              - /url: javascript:void(0);
+              - img "広告を非表示にする" [ref=e856]
+              - generic [ref=e857]: 広告を非表示にする
+        - generic [ref=e858]:
+          - paragraph [ref=e860]: こんな方におすすめです
+          - generic [ref=e862]:
+            - generic [ref=e863]:
+              - generic [ref=e864]:
+                - img "top human 1" [ref=e865]
+                - generic [ref=e866]:
+                  - paragraph [ref=e867]: WEB担当者
+                  - paragraph [ref=e868]:
+                    - text: ウェブサイトやブログの
+                    - text: アイキャッチ画像がほしい
+              - generic [ref=e869]:
+                - img "top human 2" [ref=e870]
+                - generic [ref=e871]:
+                  - paragraph [ref=e872]: 会社員
+                  - paragraph [ref=e873]:
+                    - text: プレゼンテーションのスライドに
+                    - text: 画像を使って分かりやすくしたい
+              - generic [ref=e874]:
+                - img "top human 3" [ref=e875]
+                - generic [ref=e876]:
+                  - paragraph [ref=e877]: インフルエンサー
+                  - paragraph [ref=e878]:
+                    - text: SNSへの投稿が
+                    - text: テキストだけで物足りない
+              - generic [ref=e879]:
+                - img "top human 4" [ref=e880]
+                - generic [ref=e881]:
+                  - paragraph [ref=e882]: 作 家
+                  - paragraph [ref=e883]:
+                    - text: 電子書籍や印刷物の挿絵に
+                    - text: 商用利用できる画像がほしい
+              - generic [ref=e884]:
+                - img "top human 5" [ref=e885]
+                - generic [ref=e886]:
+                  - paragraph [ref=e887]: プログラマー
+                  - paragraph [ref=e888]:
+                    - text: アプリケーションのUIデザインに
+                    - text: 使う画像やアイコンがほしい
+            - generic [ref=e889]:
+              - generic [ref=e890]:
+                - img "top human 6" [ref=e891]
+                - generic [ref=e892]:
+                  - paragraph [ref=e893]: 教育関係者
+                  - paragraph [ref=e894]:
+                    - text: 学習教材や教育資料に入れる
+                    - text: 挿絵やイメージがほしい
+              - generic [ref=e895]:
+                - img "top human 7" [ref=e896]
+                - generic [ref=e897]:
+                  - paragraph [ref=e898]: 記 者
+                  - paragraph [ref=e899]:
+                    - text: メディア記事やニュース記事に
+                    - text: 使う画像がほしい
+              - generic [ref=e900]:
+                - img "top human 8" [ref=e901]
+                - generic [ref=e902]:
+                  - paragraph [ref=e903]: ショップ運営
+                  - paragraph [ref=e904]:
+                    - text: 広告キャンペーンに使える
+                    - text: インパクトのある画像がほしい
+              - generic [ref=e905]:
+                - img "top human 9" [ref=e906]
+                - generic [ref=e907]:
+                  - paragraph [ref=e908]: ハンドメイド販売
+                  - paragraph [ref=e909]:
+                    - link "商品化ライセンス" [ref=e910] [cursor=pointer]:
+                      - /url: /main/extra_license_introduction
+                    - text: を購入して
+                    - text: ハンドメイド作品の販売したい
+        - generic [ref=e913] [cursor=pointer]:
+          - generic [ref=e915]:
+            - img "logo45 designAC" [ref=e916]
+            - paragraph [ref=e917]: デザインをもっと簡単に
+            - paragraph [ref=e919]:
+              - text: デザインACならいつでもどこでも、手軽にデザインできます。
+              - text: 豊富なテンプレートからオリジナルのデザインを作成。
+              - text: PC、スマートフォンにも対応の無料デザインツールです。
+            - link "今すぐデザインを作成" [ref=e920]:
+              - /url: https://www.design-ac.net/templates/new
+          - img "banner designAC" [ref=e922]
+        - generic [ref=e923]:
+          - generic [ref=e924]:
+            - paragraph [ref=e925]: まだ時間をムダにしますか？
+            - paragraph [ref=e926]: 効率よく画像を探して、インプットの時間を確保し、納期のプレッシャーから逃れましょう。
+          - generic [ref=e927]:
+            - button "プレミアム個人プラン picture premium personal picture check 検索無制限 picture check ダウンロード無制限 picture check 待たずにダウンロード picture check まとめてダウンロード picture check 商品化ライセンス利用可能 picture check あんしんサポート 個人プランを詳しくみる" [ref=e928] [cursor=pointer]:
+              - paragraph [ref=e930]: プレミアム個人プラン
+              - generic [ref=e931]:
+                - img "picture premium personal" [ref=e932]
+                - generic [ref=e933]:
+                  - generic [ref=e934]:
+                    - img "picture check" [ref=e936]
+                    - paragraph [ref=e938]: 検索無制限
+                  - generic [ref=e939]:
+                    - img "picture check" [ref=e941]
+                    - paragraph [ref=e943]: ダウンロード無制限
+                  - generic [ref=e944]:
+                    - img "picture check" [ref=e946]
+                    - paragraph [ref=e948]: 待たずにダウンロード
+                  - generic [ref=e949]:
+                    - img "picture check" [ref=e951]
+                    - paragraph [ref=e953]: まとめてダウンロード
+                  - generic [ref=e954]:
+                    - img "picture check" [ref=e956]
+                    - paragraph [ref=e958]: 商品化ライセンス利用可能
+                  - generic [ref=e959]:
+                    - img "picture check" [ref=e961]
+                    - paragraph [ref=e963]: あんしんサポート
+                - link "個人プランを詳しくみる" [ref=e965]:
+                  - /url: https://test-lien.photo-ac.com/premium/campaign?target=premium_sozai
+            - button "チームでお得な法人プラン picture premium business ＼ 大企業から行政まで利用中 ／ 個人プランの全ての機能に加え、 picture check 法人名義でのご利用 picture check メンバー招待機能 picture check 広告非表示オプション無料 picture check コレクションの共有 法人プランを詳しくみる" [ref=e966] [cursor=pointer]:
+              - paragraph [ref=e968]: チームでお得な法人プラン
+              - generic [ref=e969]:
+                - img "picture premium business" [ref=e970]
+                - generic [ref=e971]:
+                  - paragraph [ref=e972]: ＼ 大企業から行政まで利用中 ／
+                  - generic [ref=e973]:
+                    - paragraph [ref=e974]: 個人プランの全ての機能に加え、
+                    - generic [ref=e975]:
+                      - img "picture check" [ref=e977]
+                      - paragraph [ref=e979]: 法人名義でのご利用
+                    - generic [ref=e980]:
+                      - img "picture check" [ref=e982]
+                      - paragraph [ref=e984]: メンバー招待機能
+                    - generic [ref=e985]:
+                      - img "picture check" [ref=e987]
+                      - paragraph [ref=e989]: 広告非表示オプション無料
+                    - generic [ref=e990]:
+                      - img "picture check" [ref=e992]
+                      - paragraph [ref=e994]: コレクションの共有
+                - link "法人プランを詳しくみる" [ref=e996]:
+                  - /url: https://test-lien.photo-ac.com/premium/business
+        - generic [ref=e997]:
+          - paragraph [ref=e999]: 日本最大級のフリー素材サイト
+          - generic [ref=e1000]:
+            - generic [ref=e1001]:
+              - generic [ref=e1003]:
+                - img "Total users" [ref=e1004]
+                - generic [ref=e1005]:
+                  - paragraph [ref=e1006]: 登録ユーザー
+                  - paragraph [ref=e1007]: 0人以上
+              - generic [ref=e1009]:
+                - img "Downloads" [ref=e1010]
+                - generic [ref=e1011]:
+                  - paragraph [ref=e1012]: 総ダウンロード
+                  - paragraph [ref=e1013]: 204,000,000回以上
+              - generic [ref=e1015]:
+                - img "Total creators" [ref=e1016]
+                - generic [ref=e1017]:
+                  - paragraph [ref=e1018]: 登録クリエイター
+                  - paragraph [ref=e1019]: 370,000人以上
+              - generic [ref=e1021]:
+                - img "Donations" [ref=e1022]
+                - generic [ref=e1023]:
+                  - paragraph [ref=e1024]: 寄付金総額
+                  - paragraph [ref=e1025]: 69,900,000円以上
+            - generic [ref=e1026]: ※グループサイト合計
+        - generic [ref=e1029]:
+          - generic [ref=e1032]:
+            - link "広告を非表示にする 広告を非表示にする" [ref=e1034] [cursor=pointer]:
+              - /url: javascript:void(0);
+              - img "広告を非表示にする" [ref=e1035]
+              - generic [ref=e1036]: 広告を非表示にする
+            - iframe [ref=e1039]:
+              
+          - generic [ref=e1042]:
+            - link "広告を非表示にする 広告を非表示にする" [ref=e1044] [cursor=pointer]:
+              - /url: javascript:void(0);
+              - img "広告を非表示にする" [ref=e1045]
+              - generic [ref=e1046]: 広告を非表示にする
+            - iframe [ref=e1049]:
+              
+        - generic [ref=e1050]:
+          - paragraph [ref=e1052]: ACワークスからのお知らせ
+          - iframe [ref=e1053]:
+            - img [ref=f3e2]
+        - link "acworks banner" [ref=e1055] [cursor=pointer]:
+          - /url: https://acworks.co.jp/
+          - img "acworks banner" [ref=e1056]
+        - generic [ref=e1057]:
+          - paragraph [ref=e1058]: あなたのダウンロードが社会に貢献します
+          - paragraph [ref=e1059]: あなたが写真素材を1ダウンロードするたびに0.1円を
+          - paragraph [ref=e1060]: ACワークス株式会社より、ユーザーの皆さまが希望する団体へ寄付いたします。
+          - generic [ref=e1061]:
+            - generic [ref=e1063]:
+              - img [ref=e1064]
+              - generic [ref=e1065]:
+                - paragraph [ref=e1066]:
+                  - text: 2024年の寄付金総額
+                  - generic [ref=e1067]: 800万円超
+                - paragraph [ref=e1068]:
+                  - text: これまでの累計寄付金総額
+                  - generic [ref=e1069]: 6100万円超
+            - paragraph [ref=e1070]: "[2025年3月時点]"
+          - link "これまでの寄付金総額をみる" [ref=e1072] [cursor=pointer]:
+            - /url: https://acworks.co.jp/csr/
+    - contentinfo [ref=e1074]:
+      - generic [ref=e1077]:
+        - generic [ref=e1078]: 昨日のダウンロード数：52,527
+        - generic [ref=e1079]: 先月のダウンロード数：1,386,171
+        - generic [ref=e1080]: 総会員数：1600万人を突破しました
+      - generic [ref=e1082]:
+        - generic [ref=e1083]:
+          - generic [ref=e1084]:
+            - generic [ref=e1085]: 写真ACについて 
+            - list [ref=e1086]:
+              - listitem [ref=e1087]:
+                - link "写真ACとは" [ref=e1088] [cursor=pointer]:
+                  - /url: /main/guide/
+              - listitem [ref=e1089]:
+                - link "運営会社" [ref=e1090] [cursor=pointer]:
+                  - /url: /main/about/
+              - listitem [ref=e1091]:
+                - link "個人情報保護方針" [ref=e1092] [cursor=pointer]:
+                  - /url: /main/privacy/
+              - listitem [ref=e1093]:
+                - link "特定個人情報基本方針" [ref=e1094] [cursor=pointer]:
+                  - /url: /main/policy_personal_info/
+              - listitem [ref=e1095]:
+                - link "特定商取引法に基づく表記" [ref=e1096] [cursor=pointer]:
+                  - /url: /main/commercial_transactions/
+              - listitem [ref=e1097]:
+                - link "サイトマップ" [ref=e1098] [cursor=pointer]:
+                  - /url: /main/sitemap
+              - listitem [ref=e1099]:
+                - link "セキュリティポリシー" [ref=e1100] [cursor=pointer]:
+                  - /url: https://acworks.co.jp/security-policy/
+          - generic [ref=e1101]:
+            - generic [ref=e1102]: 会員登録 
+            - list [ref=e1103]:
+              - listitem [ref=e1104]:
+                - link "無料会員登録" [ref=e1105] [cursor=pointer]:
+                  - /url: https://test-accounts.ac-illust.com/signup?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252F&lang=jp
+              - listitem [ref=e1106]:
+                - link "プレミアム会員登録" [ref=e1107] [cursor=pointer]:
+                  - /url: https://test-accounts.ac-illust.com/signup?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252F&lang=jp&fromButton=premium_action
+              - listitem [ref=e1108]:
+                - link "無料クリエイター会員登録" [ref=e1109] [cursor=pointer]:
+                  - /url: /creator/auth/register
+          - generic [ref=e1110]:
+            - generic [ref=e1111]: プレミアム会員サービス 
+            - list [ref=e1112]:
+              - listitem [ref=e1113]:
+                - link "プレミアム会員登録" [ref=e1114] [cursor=pointer]:
+                  - /url: https://test-lien.photo-ac.com/premium/campaign?target=premium_sozai
+              - listitem [ref=e1115]:
+                - link "法人・複数名向けプラン" [ref=e1116] [cursor=pointer]:
+                  - /url: https://test-lien.photo-ac.com/premium/business
+              - listitem [ref=e1117]:
+                - link "商品化ライセンス" [ref=e1118] [cursor=pointer]:
+                  - /url: /main/extra_license_terms/
+              - listitem [ref=e1119]:
+                - link "あんしんサポート" [ref=e1120] [cursor=pointer]:
+                  - /url: /indemnity/
+          - generic [ref=e1121]:
+            - generic [ref=e1122]: ヘルプ＆ガイド 
+            - list [ref=e1123]:
+              - listitem [ref=e1124]:
+                - link "ヘルプ" [ref=e1125] [cursor=pointer]:
+                  - /url: https://help.freebie-ac.jp/
+              - listitem [ref=e1126]:
+                - link "利用規約" [ref=e1127] [cursor=pointer]:
+                  - /url: /main/terms/
+              - listitem [ref=e1128]:
+                - link "プレミアム会員利用規約" [ref=e1129] [cursor=pointer]:
+                  - /url: /main/terms_premium/
+              - listitem [ref=e1130]:
+                - link "AC写真AIラボ利用規約" [ref=e1131] [cursor=pointer]:
+                  - /url: /image-generator/terms
+          - generic [ref=e1132]:
+            - generic [ref=e1133]: グループサイト 
+            - list [ref=e1134]:
+              - listitem [ref=e1135]:
+                - link "イラストAC" [ref=e1136] [cursor=pointer]:
+                  - /url: https://www.ac-illust.com/
+              - listitem [ref=e1137]:
+                - link "シルエットAC" [ref=e1138] [cursor=pointer]:
+                  - /url: https://www.silhouette-ac.com/
+              - listitem [ref=e1139]:
+                - link "フリービーAC" [ref=e1140] [cursor=pointer]:
+                  - /url: https://www.freebie-ac.jp/
+              - listitem [ref=e1141]:
+                - link "年賀状AC" [ref=e1142] [cursor=pointer]:
+                  - /url: https://www.new-year.bz/
+              - listitem [ref=e1143]:
+                - link "動画AC" [ref=e1144] [cursor=pointer]:
+                  - /url: https://video-ac.com
+              - listitem [ref=e1145]:
+                - link "デザインAC" [ref=e1146] [cursor=pointer]:
+                  - /url: https://www.design-ac.net/
+              - listitem [ref=e1147]:
+                - link "ACデータ" [ref=e1148] [cursor=pointer]:
+                  - /url: https://ac-data.info/
+              - listitem [ref=e1149]:
+                - link "明細AC" [ref=e1150] [cursor=pointer]:
+                  - /url: https://meisai-ac.com/
+        - generic [ref=e1151]:
+          - link "twitter_btn" [ref=e1152] [cursor=pointer]:
+            - /url: https://x.com/ACworks2011
+            - button "twitter_btn" [ref=e1153]:
+              - img [ref=e1154]
+          - link "facebook_btn" [ref=e1156] [cursor=pointer]:
+            - /url: https://www.facebook.com/ACworks2011/
+            - button "facebook_btn" [ref=e1157]:
+              - generic [ref=e1158]: 
+          - link "pinterest_btn" [ref=e1159] [cursor=pointer]:
+            - /url: https://www.pinterest.jp/acworks/
+            - button "pinterest_btn" [ref=e1160]:
+              - generic [ref=e1161]: 
+          - link "blog_btn" [ref=e1162] [cursor=pointer]:
+            - /url: http://blog.acworks.co.jp/
+            - button "blog_btn" [ref=e1163]:
+              - generic [ref=e1164]: 
+          - link "feedback_modal_btn" [ref=e1165] [cursor=pointer]:
+            - /url: "#feedbackModal"
+            - button "feedback_modal_btn" [ref=e1166]:
+              - generic [ref=e1167]: 
+              - text: ご意見・ご要望
+        - generic [ref=e1169]:
+          - text: © 2011-2026
+          - link "写真AC" [ref=e1170] [cursor=pointer]:
+            - /url: https://test-lien.photo-ac.com/
+  - generic [ref=e1171] [cursor=pointer]:
+    - generic:
+      - paragraph: ご質問は
+      - paragraph: こちらから！
+    - img "chat-icon" [ref=e1173]
+    - generic [ref=e1174]: ×

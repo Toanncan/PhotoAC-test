@@ -1,0 +1,66 @@
+[    1353ms] [LOG] [FLUX-DEBUG] About to create flux instance @ https://flux-cdn.com/client/1000158/photo-ac_1367.min.js:0
+[    1353ms] [LOG] [FLUX-DEBUG] fluxFactory called @ https://flux-cdn.com/client/1000158/photo-ac_1367.min.js:0
+[    1353ms] [LOG] [FLUX-DEBUG] Persistence created @ https://flux-cdn.com/client/1000158/photo-ac_1367.min.js:0
+[    1353ms] [LOG] [FLUX-DEBUG] Flux instance created @ https://flux-cdn.com/client/1000158/photo-ac_1367.min.js:0
+[    1353ms] [LOG] [FLUX-DEBUG] flux instance created, isInitialized: false @ https://flux-cdn.com/client/1000158/photo-ac_1367.min.js:0
+[    1353ms] [LOG] [FLUX-DEBUG] flux.init called with clientID: 1367 config: {plugins: Array(1)} @ https://flux-cdn.com/client/1000158/photo-ac_1367.min.js:0
+[    1353ms] [LOG] [FLUX-DEBUG] clientID set to: 1367 @ https://flux-cdn.com/client/1000158/photo-ac_1367.min.js:0
+[    1354ms] [LOG] [FLUX-DEBUG] isInitialized set to true @ https://flux-cdn.com/client/1000158/photo-ac_1367.min.js:0
+[    1354ms] [LOG] [FLUX-DEBUG] trackPageView is enabled, calling trackPageview() @ https://flux-cdn.com/client/1000158/photo-ac_1367.min.js:0
+[    1356ms] [LOG] [FLUX-DEBUG] No queued events to process @ https://flux-cdn.com/client/1000158/photo-ac_1367.min.js:0
+[    1356ms] [LOG] [FLUX-DEBUG] flux.init completed successfully @ https://flux-cdn.com/client/1000158/photo-ac_1367.min.js:0
+[    1628ms] [WARNING] Failed to execute 'write' on 'Document': It isn't possible to write into a document from an asynchronously-loaded external script unless it is explicitly opened. @ https://www.googleadservices.com/pagead/conversion.js?v=20210910:27
+[    1684ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://test-lien.photo-ac.com/:0
+[    1778ms] [ERROR] Access to XMLHttpRequest at 'https://test.freebie-ac.jp/api/pinnedpost.php?type=x' from origin 'https://test-lien.photo-ac.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://test-lien.photo-ac.com/:0
+[    1779ms] [ERROR] Failed to fetch Twitter timeline:  @ https://test-lien.photo-ac.com/assets/js/app-common.js?v=20260616:76
+[    1779ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://test.freebie-ac.jp/api/pinnedpost.php?type=x:0
+[    1794ms] [WARNING] [GPT] PubAdsService.enableSingleRequest is deprecated, use googletag.setConfig({singleRequest: ...}) instead.
+https://goo.gle/gpt-message#170 @ https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202607070101/pubads_impl.js?cb=31099590:18
+[    1798ms] [WARNING] [GPT] Slot.getTargeting is deprecated, use Slot.getConfig('targeting') instead.
+https://goo.gle/gpt-message#201 @ https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202607070101/pubads_impl.js?cb=31099590:18
+[    2354ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ https://ib.adnxs.com/ut/v3/prebid:0
+[    2778ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    2778ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    3034ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    2778ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    3034ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    3201ms] [ERROR] Access to fetch at 'https://sp.gmossp-sp.jp/ads/ssp.ad?space_id=g944371&r=0.36774981077361024' from origin 'https://test-lien.photo-ac.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://test-lien.photo-ac.com/:0
+[    3201ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://sp.gmossp-sp.jp/ads/ssp.ad?space_id=g944371&r=0.36774981077361024:0
+[    2778ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    3034ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    3326ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    2778ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    3034ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    3326ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    2778ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    3034ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    3326ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    2778ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    3034ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    3326ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    3422ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    3526ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    3566ms] [ERROR] Access to fetch at 'https://sp.gmossp-sp.jp/ads/ssp.ad?space_id=g946135&r=0.7520555209622468' from origin 'https://test-lien.photo-ac.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://test-lien.photo-ac.com/:0
+[    3567ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://sp.gmossp-sp.jp/ads/ssp.ad?space_id=g946135&r=0.7520555209622468:0
+[    3584ms] [ERROR] Access to fetch at 'https://sp.gmossp-sp.jp/ads/ssp.ad?space_id=g945954&r=0.007640571608965252' from origin 'https://test-lien.photo-ac.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://test-lien.photo-ac.com/:0
+[    3584ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://sp.gmossp-sp.jp/ads/ssp.ad?space_id=g945954&r=0.007640571608965252:0
+[    3598ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    3604ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    3618ms] [ERROR] Access to fetch at 'https://sp.gmossp-sp.jp/ads/ssp.ad?space_id=g945954&r=0.9200956485046521' from origin 'https://test-lien.photo-ac.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://test-lien.photo-ac.com/:0
+[    3618ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://sp.gmossp-sp.jp/ads/ssp.ad?space_id=g945954&r=0.9200956485046521:0
+[    3976ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ https://btloader.com/tag?aax_id=AAX8H6U9H&upapi=true:0
+[    4194ms] [ERROR] Not signed in with the identity provider. @ https://test-lien.photo-ac.com/:0
+[    5035ms] [ERROR] [GSI_LOGGER]: FedCM get() rejects with AbortError: signal is aborted without reason @ https://accounts.google.com/gsi/client:87
+[    5680ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://match.rundsp.com/redirect?ex=openx:0
+[    7575ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ https://secure.adnxs.com/getuid?https%3A%2F%2Frtb-csync.smartadserver.com%2Fredir%2F%3Fissi%3D1%26partnerid%3D86%26partneruserid%3D$UID&gdpr=0&gdpr_consent=:0
+[    7623ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ https://ib.adnxs.com/async_usersync?cbfn=queuePixels:0
+[    7730ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ https://secure.adnxs.com/getuid?https%3a%2f%2fssp-sync.criteo.com%2fuser-sync%2fmatch%3fp%3d94VfxF9KMXdxQnhIdm5GZWVET3YxUCUyQlB1SFR4STQ3M2VISGd0dklNQThNSkdRTXMlM0Q%26u%3d%24UID&gdpr=0&gdpr_consent=:0
+[    7869ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ https://ib.adnxs.com/getuid?https://id5-sync.com/c/102/2/8/2.gif?puid=$UID&gdpr=0&gdpr_consent=:0
+[    7981ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ https://um.simpli.fi/ox_match:0
+[   16872ms] Invalid regular expression: missing /
+[   16924ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://test-lien.photo-ac.com/creator/dashboard/:0
+[   16924ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://test-lien.photo-ac.com/creator/dashboard/:0
+[   16924ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://test-lien.photo-ac.com/creator/dashboard/:0
+[   17012ms] [ERROR] Access to XMLHttpRequest at 'https://test.freebie-ac.jp/api/pinnedpost.php?type=x' from origin 'https://test-lien.photo-ac.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://test-lien.photo-ac.com/creator/dashboard/:0
+[   17014ms] [ERROR] Failed to fetch Twitter timeline:  @ https://test-lien.photo-ac.com/assets/js/app-common.js?v=20260616:76
+[   17016ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://test.freebie-ac.jp/api/pinnedpost.php?type=x:0

@@ -1,0 +1,56 @@
+- generic [ref=f137e2]:
+  - generic [ref=f137e3]:
+    - navigation [ref=f137e8]:
+      - strong [ref=f137e9]:
+        - text: 総会員数
+        - generic [ref=f137e10]: 1600万人
+        - text: 突破！
+      - list [ref=f137e12]:
+        - link "ACワークス株式会社は大阪市港区・東京都港区・埼玉県久喜市と連携協定を締結しました" [ref=f137e14] [cursor=pointer]:
+          - /url: https://acworks.co.jp/three_cities_agreements/
+        - listitem [ref=f137e15]:
+          - link "SNS" [ref=f137e16] [cursor=pointer]:
+            - /url: "#"
+            - strong [ref=f137e17]: SNS
+        - listitem [ref=f137e18]:
+          - link "ヘルプ" [ref=f137e19] [cursor=pointer]:
+            - /url: https://help.freebie-ac.jp/
+            - strong [ref=f137e20]: ヘルプ
+    - alert [ref=f137e23]:
+      - generic [ref=f137e24]:
+        - generic [ref=f137e25]: 
+        - paragraph [ref=f137e27]: ログインに失敗しました。正しいメールアドレス・パスワードをご入力ください。
+      - button "Close" [ref=f137e28] [cursor=pointer]:
+        - img [ref=f137e29]
+    - generic [ref=f137e32]:
+      - link "写真ACで無料ダウンロード！" [ref=f137e33] [cursor=pointer]:
+        - /url: /
+        - img "写真ACで無料ダウンロード！" [ref=f137e34]
+      - heading "ログイン" [level=1] [ref=f137e35]:
+        - strong [ref=f137e36]: ログイン
+      - generic [ref=f137e38]:
+        - generic [ref=f137e39]: クリエイターでログイン
+        - textbox "メールアドレス" [ref=f137e40]: toancan3695@gmail.com
+        - textbox "パスワード" [ref=f137e41]: manhtoan123
+        - generic [ref=f137e42]:
+          - generic [ref=f137e43]:
+            - checkbox "自動ログイン" [checked] [ref=f137e44] [cursor=pointer]
+            - generic [ref=f137e45] [cursor=pointer]: 自動ログイン
+          - link "パスワードをお忘れですか？" [ref=f137e47] [cursor=pointer]:
+            - /url: /auth/forgotpassword
+        - button "ログイン" [ref=f137e48] [cursor=pointer]
+      - generic [ref=f137e49]:
+        - generic [ref=f137e50]:
+          - separator [ref=f137e51]
+          - generic [ref=f137e52]: または
+          - separator [ref=f137e53]
+        - paragraph [ref=f137e54]: SNSでログイン
+        - generic [ref=f137e55]:
+          - img [ref=f137e57] [cursor=pointer]
+          - img "google" [ref=f137e60] [cursor=pointer]
+          - generic [ref=f137e62] [cursor=pointer]: 
+      - paragraph [ref=f137e63]:
+        - link "新規クリエイター登録" [ref=f137e64] [cursor=pointer]:
+          - /url: /creator/auth/register
+  - paragraph [ref=f137e66]: Copyright ACworks Co.,Ltd. All rights reserved.
+  - text: 

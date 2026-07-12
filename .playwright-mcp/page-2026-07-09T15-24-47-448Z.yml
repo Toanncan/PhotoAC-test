@@ -1,0 +1,695 @@
+- generic [active] [ref=f298e1]:
+  - banner [ref=f298e2]:
+    - generic [ref=f298e5]:
+      - link "photoAC" [ref=f298e7] [cursor=pointer]:
+        - /url: /
+        - img "photoAC" [ref=f298e8]
+      - generic [ref=f298e9]:
+        - link [ref=f298e10] [cursor=pointer]:
+          - /url: /creator/advertising
+          - img [ref=f298e11]
+        - button "Avatar クリエイター ToanCanさん " [ref=f298e14] [cursor=pointer]:
+          - img "Avatar" [ref=f298e16]
+          - generic [ref=f298e17]:
+            - generic [ref=f298e18]: クリエイター
+            - generic [ref=f298e19]: ToanCanさん
+          - text: 
+  - generic:       
+  - text:     
+  - main [ref=f298e20]:
+    - generic [ref=f298e21]:
+      - generic [ref=f298e25]:
+        - generic [ref=f298e26]:
+          - link "写真を投稿する" [ref=f298e27] [cursor=pointer]:
+            - /url: /creator/upload
+            - img [ref=f298e28]
+            - text: 写真を投稿する
+          - list [ref=f298e32]:
+            - heading "メニュー" [level=4] [ref=f298e33]
+            - listitem [ref=f298e34]:
+              - link "マイページ" [ref=f298e35] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/creator/dashboard
+            - listitem [ref=f298e36]:
+              - link "投稿写真一覧" [ref=f298e37] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/creator/list
+            - listitem [ref=f298e38]:
+              - link "関連写真の管理" [ref=f298e39] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/creator/theme
+            - listitem [ref=f298e40]:
+              - link "モデルリリース登録" [ref=f298e41] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/creator/account/modelreleases
+            - listitem [ref=f298e42]:
+              - link "プロパティリリース登録" [ref=f298e43] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/creator/account/propertyreleases
+            - listitem [ref=f298e44]:
+              - link "コメント管理" [ref=f298e45] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/creator/comments
+            - listitem [ref=f298e46]:
+              - link "ファン登録・管理" [ref=f298e47] [cursor=pointer]:
+                - /url: "#"
+                - text: ファン登録・管理
+                - generic [ref=f298e48]: 
+            - listitem [ref=f298e49]:
+              - link "クリエイター広告" [ref=f298e50] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/creator/advertising
+            - listitem [ref=f298e51]:
+              - link "新着リクエスト" [ref=f298e52] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/creator/mtrequests
+            - listitem [ref=f298e53]:
+              - link "ランキング" [ref=f298e54] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/creator/ranking
+            - listitem [ref=f298e55]:
+              - link "会員情報設定・編集" [ref=f298e56] [cursor=pointer]:
+                - /url: "#"
+                - text: 会員情報設定・編集
+                - generic [ref=f298e57]: 
+            - listitem [ref=f298e58]:
+              - link "換金申請" [ref=f298e59] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/creator/exchange
+            - listitem [ref=f298e60]:
+              - link "商品化ライセンス管理" [ref=f298e61] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/creator/extralicence
+            - listitem [ref=f298e62]:
+              - link "ACアソシエイト連携" [ref=f298e63] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/creator/associate/setting
+            - listitem [ref=f298e64]:
+              - link "ログアウト" [ref=f298e65] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/auth/logout/
+          - list [ref=f298e66]:
+            - heading "ヘルプ" [level=4] [ref=f298e67]
+            - listitem [ref=f298e68]:
+              - link "ヘルプ" [ref=f298e69] [cursor=pointer]:
+                - /url: https://help.freebie-ac.jp/category/5/写真クリエイター
+                - text: ヘルプ
+                - generic [ref=f298e70]: 
+          - list [ref=f298e71]:
+            - heading "おすすめ無料サービス" [level=4] [ref=f298e72]
+            - listitem [ref=f298e73]:
+              - link "デザインテンプレート" [ref=f298e74] [cursor=pointer]:
+                - /url: https://www.design-ac.net/
+                - text: デザインテンプレート
+                - generic [ref=f298e75]: 
+            - listitem [ref=f298e76]:
+              - link "ファイル転送・共有" [ref=f298e77] [cursor=pointer]:
+                - /url: https://ac-data.info/
+                - text: ファイル転送・共有
+                - generic [ref=f298e78]: 
+            - listitem [ref=f298e79]:
+              - link "ブログ" [ref=f298e80] [cursor=pointer]:
+                - /url: http://blog.acworks.co.jp/category/for-photographer/
+                - text: ブログ
+                - generic [ref=f298e81]: 
+            - listitem [ref=f298e82]:
+              - link "今日の運勢" [ref=f298e83] [cursor=pointer]:
+                - /url: https://uranai-ac.com/
+                - text: 今日の運勢
+                - generic [ref=f298e84]: 
+            - listitem [ref=f298e85]:
+              - link "プレゼン資料作成AI" [ref=f298e86] [cursor=pointer]:
+                - /url: https://www.design-ac.net/design/new-presentation?src=homepage-btn
+                - text: プレゼン資料作成AI
+                - generic [ref=f298e87]: 
+          - iframe [ref=f298e88]:
+            - generic [active] [ref=f299e1]:
+              - generic "YouTube Video Player" [ref=f299e3]:
+                - generic [ref=f299e9]: Presentation AI Overview
+              - generic [ref=f299e10]:
+                - generic:
+                  - generic:
+                    - button "Hide player controls" [ref=f299e11] [cursor=pointer]
+                    - generic [ref=f299e13]:
+                      - generic:
+                        - generic [ref=f299e16]:
+                          - generic [ref=f299e18]:
+                            - generic [ref=f299e19]:
+                              - link "[Design AC] AI Presentation Document Feature Video Presentation" [ref=f299e20] [cursor=pointer]:
+                                - /url: https://www.youtube.com/watch?v=yCXxVBZxYOc
+                              - link "ACワークス株式会社" [ref=f299e21] [cursor=pointer]:
+                                - /url: /channel/UCKvFM_IKCWkbxvh2BLL8YYg
+                                - generic [ref=f299e22]: ACワークス株式会社
+                            - generic [ref=f299e23]:
+                              - button [ref=f299e24] [cursor=pointer]
+                              - generic [ref=f299e26]:
+                                - generic: ACワークス株式会社
+                                - generic: 2.36K subscribers
+                          - generic [ref=f299e27]:
+                            - button "Unmute" [ref=f299e29] [cursor=pointer]:
+                              - img "Unmute" [ref=f299e30]
+                            - button "Subtitles/CC turned on" [pressed] [ref=f299e33] [cursor=pointer]:
+                              - generic [ref=f299e36]:
+                                - img
+                        - generic [ref=f299e38]:
+                          - button "Rewind 10 seconds" [ref=f299e39] [cursor=pointer]
+                          - button "Pause video" [ref=f299e41] [cursor=pointer]:
+                            - generic [ref=f299e44]:
+                              - img
+                          - button "Fast forward 10 seconds" [ref=f299e45] [cursor=pointer]
+                      - button "Enter full screen" [ref=f299e50] [cursor=pointer]
+                      - slider "Seek slider" [ref=f299e54] [cursor=pointer]
+                      - generic:
+                        - link "Watch on YouTube" [ref=f299e67] [cursor=pointer]:
+                          - /url: https://www.youtube.com/watch?v=yCXxVBZxYOc
+                          - img [ref=f299e71]:
+                            - generic [ref=f299e73]:
+                              - img
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - link:
+                                      - /url: https://www.youtube.com/watch?v=DWgyKy-wrGo&feature=endscreen
+                                      - generic:
+                                        - generic:
+                                          - generic:
+                                            - generic: 3:00:24
+                                    - generic:
+                                      - generic:
+                                        - generic:
+                                          - link "【ACNH】Summer Lofi Café☕️🌴｜Relaxing Piano, Guitar & Ocean Sounds | Study・Work・Relax【3 Hour】 1 year ago":
+                                            - /url: https://www.youtube.com/watch?v=DWgyKy-wrGo&feature=endscreen
+                                            - heading "【ACNH】Summer Lofi Café☕️🌴｜Relaxing Piano, Guitar & Ocean Sounds | Study・Work・Relax【3 Hour】" [level=3]
+                                            - generic:
+                                              - generic:
+                                                - generic: 1 year ago
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - link:
+                                      - /url: https://www.youtube.com/watch?v=Kd01GtuwnP8&feature=endscreen
+                                      - generic:
+                                        - generic:
+                                          - generic:
+                                            - generic: 2:22:38
+                                    - generic:
+                                      - generic:
+                                        - generic:
+                                          - link "Смешарики | Самые весёлые серии. Смотреть онлайн. Мультики для детей. 0+ 3 years ago":
+                                            - /url: https://www.youtube.com/watch?v=Kd01GtuwnP8&feature=endscreen
+                                            - heading "Смешарики | Самые весёлые серии. Смотреть онлайн. Мультики для детей. 0+" [level=3]
+                                            - generic:
+                                              - generic:
+                                                - generic: 3 years ago
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - link:
+                                      - /url: https://www.youtube.com/watch?v=HCH9O9fUIFw&feature=endscreen
+                                      - generic:
+                                        - generic:
+                                          - generic:
+                                            - generic: 1:53:28
+                                    - generic:
+                                      - generic:
+                                        - generic:
+                                          - link "CỰC HIẾM.. BOLERO 5.0* 08/07/2026 GIỌNG CA VÀNG HAY NHẤT VIỆT NAM ➤ Lk Ca Nhạc Trữ Tình MỚI ĐÉT 2026 1 day ago":
+                                            - /url: https://www.youtube.com/watch?v=HCH9O9fUIFw&feature=endscreen
+                                            - heading "CỰC HIẾM.. BOLERO 5.0* 08/07/2026 GIỌNG CA VÀNG HAY NHẤT VIỆT NAM ➤ Lk Ca Nhạc Trữ Tình MỚI ĐÉT 2026" [level=3]
+                                            - generic:
+                                              - generic:
+                                                - generic: 1 day ago
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - link:
+                                      - /url: https://www.youtube.com/watch?v=z-qigE1ym40&feature=endscreen
+                                      - generic:
+                                        - generic:
+                                          - generic:
+                                            - generic: 3:49:59
+                                    - generic:
+                                      - generic:
+                                        - generic:
+                                          - 'link "Beautiful Relaxing Music - Stop Overthinking, Stress Relief Music, Sleep Music, Calming Music #242 Streamed 1 year ago"':
+                                            - /url: https://www.youtube.com/watch?v=z-qigE1ym40&feature=endscreen
+                                            - 'heading "Beautiful Relaxing Music - Stop Overthinking, Stress Relief Music, Sleep Music, Calming Music #242" [level=3]'
+                                            - generic:
+                                              - generic:
+                                                - generic: Streamed 1 year ago
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - link:
+                                      - /url: https://www.youtube.com/watch?v=hcyo1iKAfkM&feature=endscreen
+                                      - generic:
+                                        - generic:
+                                          - generic:
+                                            - generic: 25:16
+                                    - generic:
+                                      - generic:
+                                        - generic:
+                                          - 'link "Super Typhoon Bavi with 215 km/h gusts approaches: China braces for worst-case disaster scenario 6 hours ago"':
+                                            - /url: https://www.youtube.com/watch?v=hcyo1iKAfkM&feature=endscreen
+                                            - 'heading "Super Typhoon Bavi with 215 km/h gusts approaches: China braces for worst-case disaster scenario" [level=3]'
+                                            - generic:
+                                              - generic:
+                                                - generic: 6 hours ago
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - link:
+                                      - /url: https://www.youtube.com/watch?v=LmnrtigZh20&feature=endscreen
+                                      - generic:
+                                        - generic:
+                                          - generic:
+                                            - generic: 15:14
+                                    - generic:
+                                      - generic:
+                                        - generic:
+                                          - link "Assuming \"Big is Safe\" is a Huge Mistake! Here Are the Top 10 Publicly Traded Companies With the ... 3 weeks ago":
+                                            - /url: https://www.youtube.com/watch?v=LmnrtigZh20&feature=endscreen
+                                            - heading "Assuming \"Big is Safe\" is a Huge Mistake! Here Are the Top 10 Publicly Traded Companies With the ..." [level=3]
+                                            - generic:
+                                              - generic:
+                                                - generic: 3 weeks ago
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - link:
+                                      - /url: https://www.youtube.com/watch?v=rVP6FUM1Gx4&feature=endscreen
+                                      - generic:
+                                        - generic:
+                                          - generic:
+                                            - generic: 2:48:58
+                                    - generic:
+                                      - generic:
+                                        - generic:
+                                          - link "Лосяш. Лучшие серии | Смешарики 2D. МЕГА сборник 2024! 2 years ago":
+                                            - /url: https://www.youtube.com/watch?v=rVP6FUM1Gx4&feature=endscreen
+                                            - heading "Лосяш. Лучшие серии | Смешарики 2D. МЕГА сборник 2024!" [level=3]
+                                            - generic:
+                                              - generic:
+                                                - generic: 2 years ago
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - link:
+                                      - /url: https://www.youtube.com/watch?v=XO7K0GEl6d4&feature=endscreen
+                                      - generic:
+                                        - generic:
+                                          - generic:
+                                            - generic: 32:14
+                                    - generic:
+                                      - generic:
+                                        - generic:
+                                          - link "The Red Bear Team Goes Catching Snails for Delicious Green Peppercorn Grilling, Suddenly Quan Hip... 4 hours ago":
+                                            - /url: https://www.youtube.com/watch?v=XO7K0GEl6d4&feature=endscreen
+                                            - heading "The Red Bear Team Goes Catching Snails for Delicious Green Peppercorn Grilling, Suddenly Quan Hip..." [level=3]
+                                            - generic:
+                                              - generic:
+                                                - generic: 4 hours ago
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - link:
+                                      - /url: https://www.youtube.com/watch?v=djh5vwXLFOo&feature=endscreen
+                                      - generic:
+                                        - generic:
+                                          - generic:
+                                            - generic: 3:48:03
+                                    - generic:
+                                      - generic:
+                                        - generic:
+                                          - 'link "Gratitude: Soaking Worship, Prayer Music & Healing Music With Scriptures 🌿 CHRISTIAN Piano Streamed 2 months ago"':
+                                            - /url: https://www.youtube.com/watch?v=djh5vwXLFOo&feature=endscreen
+                                            - 'heading "Gratitude: Soaking Worship, Prayer Music & Healing Music With Scriptures 🌿 CHRISTIAN Piano" [level=3]'
+                                            - generic:
+                                              - generic:
+                                                - generic: Streamed 2 months ago
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - link:
+                                      - /url: https://www.youtube.com/watch?v=ad8A1VLDKaU&feature=endscreen
+                                      - generic:
+                                        - generic:
+                                          - generic:
+                                            - generic: 3:07:46
+                                    - generic:
+                                      - generic:
+                                        - generic:
+                                          - link "【ACNH】Summer Lofi Café｜Relaxing Piano & Water Sounds｜Study・Work・Relax・Sleep【3 Hours】 11 months ago":
+                                            - /url: https://www.youtube.com/watch?v=ad8A1VLDKaU&feature=endscreen
+                                            - heading "【ACNH】Summer Lofi Café｜Relaxing Piano & Water Sounds｜Study・Work・Relax・Sleep【3 Hours】" [level=3]
+                                            - generic:
+                                              - generic:
+                                                - generic: 11 months ago
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - link:
+                                      - /url: https://www.youtube.com/watch?v=TKmllByzCtU&feature=endscreen
+                                      - generic:
+                                        - generic:
+                                          - generic:
+                                            - generic: 1:00:05
+                                    - generic:
+                                      - generic:
+                                        - generic:
+                                          - link "Cyberpunk Hi-Tech Glitchy Neon Gamepad Background video | Footage | Screensaver 5 years ago":
+                                            - /url: https://www.youtube.com/watch?v=TKmllByzCtU&feature=endscreen
+                                            - heading "Cyberpunk Hi-Tech Glitchy Neon Gamepad Background video | Footage | Screensaver" [level=3]
+                                            - generic:
+                                              - generic:
+                                                - generic: 5 years ago
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - link:
+                                      - /url: https://www.youtube.com/watch?v=J8K3bb4eHvw&feature=endscreen
+                                      - generic:
+                                        - generic:
+                                          - generic:
+                                            - generic: 3:44:24
+                                    - generic:
+                                      - generic:
+                                        - generic:
+                                          - link "Aesthetic Aura Background 3 hours 2 years ago":
+                                            - /url: https://www.youtube.com/watch?v=J8K3bb4eHvw&feature=endscreen
+                                            - heading "Aesthetic Aura Background 3 hours" [level=3]
+                                            - generic:
+                                              - generic:
+                                                - generic: 2 years ago
+          - list [ref=f298e89]:
+            - heading "SNS" [level=4] [ref=f298e90]
+            - listitem [ref=f298e91]:
+              - link "ACワークス公式 X" [ref=f298e92] [cursor=pointer]:
+                - /url: https://x.com/ACworks2011
+            - listitem [ref=f298e93]:
+              - link "Mr.ビー X" [ref=f298e94] [cursor=pointer]:
+                - /url: https://x.com/mrb_ac
+            - listitem
+        - generic [ref=f298e96]:
+          - heading "ランキング" [level=1] [ref=f298e98]
+          - alert [ref=f298e99]:
+            - generic [ref=f298e100]:
+              - generic [ref=f298e101]: 
+              - paragraph [ref=f298e103]: ポイントを計測中です。結果の反映まで今しばらくお待ちください。
+            - button "Close" [ref=f298e104] [cursor=pointer]:
+              - img [ref=f298e105]
+          - generic [ref=f298e108]:
+            - generic [ref=f298e109]: ■ダウンロードランキング ※全201,380人中のランキングです。
+            - table [ref=f298e111]:
+              - rowgroup [ref=f298e112]:
+                - row "期間 【前日】 【週間】 【月間】 【通算】" [ref=f298e113]:
+                  - columnheader "期間" [ref=f298e114]
+                  - columnheader "【前日】" [ref=f298e115]
+                  - columnheader "【週間】" [ref=f298e116]
+                  - columnheader "【月間】" [ref=f298e117]
+                  - columnheader "【通算】" [ref=f298e118]
+                - row "ダウンロード数 --DL --DL --DL 0DL" [ref=f298e119]:
+                  - cell "ダウンロード数" [ref=f298e120]
+                  - cell "--DL" [ref=f298e121]:
+                    - paragraph [ref=f298e122]: "--DL"
+                  - cell "--DL" [ref=f298e123]:
+                    - paragraph [ref=f298e124]: "--DL"
+                  - cell "--DL" [ref=f298e125]:
+                    - paragraph [ref=f298e126]: "--DL"
+                  - cell "0DL" [ref=f298e127]:
+                    - paragraph [ref=f298e128]: 0DL
+                - row "ランキング --位 --位 --位 --位" [ref=f298e129]:
+                  - cell "ランキング" [ref=f298e130]
+                  - cell "--位" [ref=f298e131]:
+                    - link "--位" [ref=f298e132] [cursor=pointer]:
+                      - /url: /ranking/downloads/daily
+                  - cell "--位" [ref=f298e133]:
+                    - link "--位" [ref=f298e134] [cursor=pointer]:
+                      - /url: /ranking/downloads/weekly
+                  - cell "--位" [ref=f298e135]:
+                    - link "--位" [ref=f298e136] [cursor=pointer]:
+                      - /url: /ranking/downloads/monthly
+                  - cell "--位" [ref=f298e137]:
+                    - link "--位" [ref=f298e138] [cursor=pointer]:
+                      - /url: /ranking/total/downloads
+            - generic [ref=f298e139]: ■ライセンス販売数 ※全201,380人中のランキングです。
+            - table [ref=f298e141]:
+              - rowgroup [ref=f298e142]:
+                - row "期間 【前日】 【週間】 【月間】 【通算】" [ref=f298e143]:
+                  - columnheader "期間" [ref=f298e144]
+                  - columnheader "【前日】" [ref=f298e145]
+                  - columnheader "【週間】" [ref=f298e146]
+                  - columnheader "【月間】" [ref=f298e147]
+                  - columnheader "【通算】" [ref=f298e148]
+                - row "ダウンロード数 --DL --DL --DL --DL" [ref=f298e149]:
+                  - cell "ダウンロード数" [ref=f298e150]
+                  - cell "--DL" [ref=f298e151]
+                  - cell "--DL" [ref=f298e152]
+                  - cell "--DL" [ref=f298e153]
+                  - cell "--DL" [ref=f298e154]
+                - row "獲得ポイント数 --pt --pt --pt --pt" [ref=f298e155]:
+                  - cell "獲得ポイント数" [ref=f298e156]
+                  - cell "--pt" [ref=f298e157]
+                  - cell "--pt" [ref=f298e158]
+                  - cell "--pt" [ref=f298e159]
+                  - cell "--pt" [ref=f298e160]
+            - generic [ref=f298e161]: ■ページビューランキング ※全201,380人中のランキングです。
+            - table [ref=f298e163]:
+              - rowgroup [ref=f298e164]:
+                - row "期間 【前日】 【週間】 【月間】 【通算】" [ref=f298e165]:
+                  - columnheader "期間" [ref=f298e166]
+                  - columnheader "【前日】" [ref=f298e167]
+                  - columnheader "【週間】" [ref=f298e168]
+                  - columnheader "【月間】" [ref=f298e169]
+                  - columnheader "【通算】" [ref=f298e170]
+                - row "PV数 --PV --PV --PV --PV" [ref=f298e171]:
+                  - cell "PV数" [ref=f298e172]
+                  - cell "--PV" [ref=f298e173]
+                  - cell "--PV" [ref=f298e174]
+                  - cell "--PV" [ref=f298e175]
+                  - cell "--PV" [ref=f298e176]
+                - row "ランキング --位 --位 --位 --位" [ref=f298e177]:
+                  - cell "ランキング" [ref=f298e178]
+                  - cell "--位" [ref=f298e179]:
+                    - link "--位" [ref=f298e180] [cursor=pointer]:
+                      - /url: /ranking/pageviews/daily
+                  - cell "--位" [ref=f298e181]:
+                    - link "--位" [ref=f298e182] [cursor=pointer]:
+                      - /url: /ranking/pageviews/weekly
+                  - cell "--位" [ref=f298e183]:
+                    - link "--位" [ref=f298e184] [cursor=pointer]:
+                      - /url: /ranking/pageviews/monthly
+                  - cell "--位" [ref=f298e185]:
+                    - link "--位" [ref=f298e186] [cursor=pointer]:
+                      - /url: /ranking/total/pageviews
+            - generic [ref=f298e187]: ■写真掲載数・NICE!数・ファン数ランキング ※全201,380人中のランキングです。
+            - table [ref=f298e189]:
+              - rowgroup [ref=f298e190]:
+                - row "項目 写真総数 NICE!数 ファン人数" [ref=f298e191]:
+                  - columnheader "項目" [ref=f298e192]
+                  - columnheader "写真総数" [ref=f298e193]
+                  - columnheader "NICE!数" [ref=f298e194]
+                  - columnheader "ファン人数" [ref=f298e195]
+                - row "数 --点 --回 --人" [ref=f298e196]:
+                  - cell "数" [ref=f298e197]
+                  - cell "--点" [ref=f298e198]
+                  - cell "--回" [ref=f298e199]
+                  - cell "--人" [ref=f298e200]
+                - row "ランキング --位 --位 --位" [ref=f298e201]:
+                  - cell "ランキング" [ref=f298e202]
+                  - cell "--位" [ref=f298e203]:
+                    - link "--位" [ref=f298e204] [cursor=pointer]:
+                      - /url: /ranking/total/uploads
+                  - cell "--位" [ref=f298e205]:
+                    - link "--位" [ref=f298e206] [cursor=pointer]:
+                      - /url: /ranking/total/nices
+                  - cell "--位" [ref=f298e207]:
+                    - link "--位" [ref=f298e208] [cursor=pointer]:
+                      - /url: /ranking/total/fans
+            - generic [ref=f298e209]: ■英語版サイトダウンロードランキング ※全201,380人中のランキングです。
+            - table [ref=f298e211]:
+              - rowgroup [ref=f298e212]:
+                - row "期間 【前日】 【週間】 【月間】 【通算】" [ref=f298e213]:
+                  - columnheader "期間" [ref=f298e214]
+                  - columnheader "【前日】" [ref=f298e215]
+                  - columnheader "【週間】" [ref=f298e216]
+                  - columnheader "【月間】" [ref=f298e217]
+                  - columnheader "【通算】" [ref=f298e218]
+                - row "DL数 --DL --DL --DL --DL" [ref=f298e219]:
+                  - cell "DL数" [ref=f298e220]
+                  - cell "--DL" [ref=f298e221]
+                  - cell "--DL" [ref=f298e222]
+                  - cell "--DL" [ref=f298e223]
+                  - cell "--DL" [ref=f298e224]
+                - row
+                - row "ランキング --位 --位 --位 --位" [ref=f298e225]:
+                  - cell "ランキング" [ref=f298e226]
+                  - cell "--位" [ref=f298e227]:
+                    - link "--位" [ref=f298e228] [cursor=pointer]:
+                      - /url: /ranking/globaldl/daily
+                  - cell "--位" [ref=f298e229]:
+                    - link "--位" [ref=f298e230] [cursor=pointer]:
+                      - /url: /ranking/globaldl/weekly
+                  - cell "--位" [ref=f298e231]:
+                    - link "--位" [ref=f298e232] [cursor=pointer]:
+                      - /url: /ranking/globaldl/monthly
+                  - cell "--位" [ref=f298e233]:
+                    - link "--位" [ref=f298e234] [cursor=pointer]:
+                      - /url: /ranking/total/globaldl
+            - paragraph [ref=f298e235]: ※集計は、毎日深夜に1回行います。
+            - heading "毎日レポートをお送りしましょうか？" [level=2] [ref=f298e237]
+            - paragraph [ref=f298e238]: 日々の各種ランキング、報酬獲得状況を、1日1回メールでお届けすることが可能です。このデイリーレポートの配信をご希望の場合は、下記のチェックボックスをクリックして、デイリーレポートの配信を有効にしてください。不要になった場合は、チェックを外して配信の解除をお願いします。
+            - paragraph [ref=f298e239]: ※「daily-report@photo-ac.com」より送信されます。
+            - paragraph [ref=f298e240]: ※有効になっている場合でも、一定回数メールが送信できなかった場合は自動的に配信を解除いたします。あらかじめご了承お願いいたします。
+            - generic [ref=f298e241]:
+              - checkbox "デイリーレポートを受け取る" [ref=f298e242] [cursor=pointer]
+              - generic [ref=f298e243] [cursor=pointer]: デイリーレポートを受け取る
+            - generic [ref=f298e244]:
+              - checkbox "マンスリーレポートを受け取る（毎月1日配信）" [ref=f298e245] [cursor=pointer]
+              - generic [ref=f298e246] [cursor=pointer]: マンスリーレポートを受け取る（毎月1日配信）
+      - generic:
+        - generic:  
+      - generic [ref=f298e247]:
+        - generic [ref=f298e250]:
+          - generic [ref=f298e251]: 昨日のダウンロード数：52,527
+          - generic [ref=f298e252]: 先月のダウンロード数：1,386,171
+          - generic [ref=f298e253]: 総会員数：1600万人を突破しました
+        - generic [ref=f298e255]:
+          - generic [ref=f298e256]:
+            - generic [ref=f298e257]:
+              - generic [ref=f298e258]: 写真ACについて 
+              - list [ref=f298e259]:
+                - listitem [ref=f298e260]:
+                  - link "写真ACとは" [ref=f298e261] [cursor=pointer]:
+                    - /url: /main/guide/
+                - listitem [ref=f298e262]:
+                  - link "運営会社" [ref=f298e263] [cursor=pointer]:
+                    - /url: /main/about/
+                - listitem [ref=f298e264]:
+                  - link "個人情報保護方針" [ref=f298e265] [cursor=pointer]:
+                    - /url: /main/privacy/
+                - listitem [ref=f298e266]:
+                  - link "特定個人情報基本方針" [ref=f298e267] [cursor=pointer]:
+                    - /url: /main/policy_personal_info/
+                - listitem [ref=f298e268]:
+                  - link "特定商取引法に基づく表記" [ref=f298e269] [cursor=pointer]:
+                    - /url: /main/commercial_transactions/
+                - listitem [ref=f298e270]:
+                  - link "サイトマップ" [ref=f298e271] [cursor=pointer]:
+                    - /url: /main/sitemap
+                - listitem [ref=f298e272]:
+                  - link "セキュリティポリシー" [ref=f298e273] [cursor=pointer]:
+                    - /url: https://acworks.co.jp/security-policy/
+            - generic [ref=f298e274]:
+              - generic [ref=f298e275]: 会員登録 
+              - list [ref=f298e276]:
+                - listitem [ref=f298e277]:
+                  - link "無料会員登録" [ref=f298e278] [cursor=pointer]:
+                    - /url: https://test-accounts.ac-illust.com/signup?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252Fcreator%252Franking&lang=jp
+                - listitem [ref=f298e279]:
+                  - link "プレミアム会員登録" [ref=f298e280] [cursor=pointer]:
+                    - /url: https://test-lien.photo-ac.com/premium/campaign?target=premium_sozai
+                - listitem [ref=f298e281]:
+                  - link "無料クリエイター会員登録" [ref=f298e282] [cursor=pointer]:
+                    - /url: /creator/auth/register
+            - generic [ref=f298e283]:
+              - generic [ref=f298e284]: プレミアム会員サービス 
+              - list [ref=f298e285]:
+                - listitem [ref=f298e286]:
+                  - link "プレミアム会員登録" [ref=f298e287] [cursor=pointer]:
+                    - /url: https://test-lien.photo-ac.com/premium/campaign?target=premium_sozai
+                - listitem [ref=f298e288]:
+                  - link "法人・複数名向けプラン" [ref=f298e289] [cursor=pointer]:
+                    - /url: https://test-lien.photo-ac.com/premium/business
+                - listitem [ref=f298e290]:
+                  - link "商品化ライセンス" [ref=f298e291] [cursor=pointer]:
+                    - /url: /main/extra_license_terms/
+                - listitem [ref=f298e292]:
+                  - link "あんしんサポート" [ref=f298e293] [cursor=pointer]:
+                    - /url: /indemnity/
+            - generic [ref=f298e294]:
+              - generic [ref=f298e295]: ヘルプ＆ガイド 
+              - list [ref=f298e296]:
+                - listitem [ref=f298e297]:
+                  - link "ヘルプ" [ref=f298e298] [cursor=pointer]:
+                    - /url: https://help.freebie-ac.jp/
+                - listitem [ref=f298e299]:
+                  - link "利用規約" [ref=f298e300] [cursor=pointer]:
+                    - /url: /main/terms/
+                - listitem [ref=f298e301]:
+                  - link "プレミアム会員利用規約" [ref=f298e302] [cursor=pointer]:
+                    - /url: /main/terms_premium/
+                - listitem [ref=f298e303]:
+                  - link "AC写真AIラボ利用規約" [ref=f298e304] [cursor=pointer]:
+                    - /url: /image-generator/terms
+            - generic [ref=f298e305]:
+              - generic [ref=f298e306]: グループサイト 
+              - list [ref=f298e307]:
+                - listitem [ref=f298e308]:
+                  - link "イラストAC" [ref=f298e309] [cursor=pointer]:
+                    - /url: https://www.ac-illust.com/
+                - listitem [ref=f298e310]:
+                  - link "シルエットAC" [ref=f298e311] [cursor=pointer]:
+                    - /url: https://www.silhouette-ac.com/
+                - listitem [ref=f298e312]:
+                  - link "フリービーAC" [ref=f298e313] [cursor=pointer]:
+                    - /url: https://www.freebie-ac.jp/
+                - listitem [ref=f298e314]:
+                  - link "年賀状AC" [ref=f298e315] [cursor=pointer]:
+                    - /url: https://www.new-year.bz/
+                - listitem [ref=f298e316]:
+                  - link "動画AC" [ref=f298e317] [cursor=pointer]:
+                    - /url: https://video-ac.com
+                - listitem [ref=f298e318]:
+                  - link "デザインAC" [ref=f298e319] [cursor=pointer]:
+                    - /url: https://www.design-ac.net/
+                - listitem [ref=f298e320]:
+                  - link "ACデータ" [ref=f298e321] [cursor=pointer]:
+                    - /url: https://ac-data.info/
+                - listitem [ref=f298e322]:
+                  - link "明細AC" [ref=f298e323] [cursor=pointer]:
+                    - /url: https://meisai-ac.com/
+          - generic [ref=f298e324]:
+            - link "twitter_btn" [ref=f298e325] [cursor=pointer]:
+              - /url: https://x.com/ACworks2011
+              - button "twitter_btn" [ref=f298e326]:
+                - img [ref=f298e327]
+            - link "facebook_btn" [ref=f298e329] [cursor=pointer]:
+              - /url: https://www.facebook.com/ACworks2011/
+              - button "facebook_btn" [ref=f298e330]:
+                - generic [ref=f298e331]: 
+            - link "pinterest_btn" [ref=f298e332] [cursor=pointer]:
+              - /url: https://www.pinterest.jp/acworks/
+              - button "pinterest_btn" [ref=f298e333]:
+                - generic [ref=f298e334]: 
+            - link "blog_btn" [ref=f298e335] [cursor=pointer]:
+              - /url: http://blog.acworks.co.jp/
+              - button "blog_btn" [ref=f298e336]:
+                - generic [ref=f298e337]: 
+            - link "feedback_modal_btn" [ref=f298e338] [cursor=pointer]:
+              - /url: "#feedbackModal"
+              - button "feedback_modal_btn" [ref=f298e339]:
+                - generic [ref=f298e340]: 
+                - text: ご意見・ご要望
+          - generic [ref=f298e342]:
+            - text: © 2011-2026
+            - link "写真AC" [ref=f298e343] [cursor=pointer]:
+              - /url: https://test-lien.photo-ac.com/
+    - generic [ref=f298e346]:
+      - generic "ボタンホーム" [ref=f298e347]:
+        - link "ホーム" [ref=f298e348] [cursor=pointer]:
+          - /url: /
+          - img [ref=f298e349]
+      - generic "ボタンのアップロード" [ref=f298e351]:
+        - link [ref=f298e352] [cursor=pointer]:
+          - /url: /creator/upload
+          - img [ref=f298e353]
+      - generic "ボタン一覧" [ref=f298e357]:
+        - link [ref=f298e358] [cursor=pointer]:
+          - /url: /creator/list
+          - img [ref=f298e359]
+      - img [ref=f298e369] [cursor=pointer]
+  - link:
+    - /url: ""
+  - text:      

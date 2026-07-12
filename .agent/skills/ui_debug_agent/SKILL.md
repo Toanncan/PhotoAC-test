@@ -1,0 +1,193 @@
+---
+name: UI Debug Agent
+description: Skill inspect web applications bang browser tools, phan tich DOM elements, xac dinh locators on dinh, debug UI automation failures, va ho tro sinh Page Object classes.
+---
+
+# UI Debug Agent
+
+## Mô Tả
+
+Skill chuyên biệt giúp agent inspect ứng dụng web trực tiếp trên browser thực, phân tích DOM, thu thập locators ổn định, và debug các vấn đề UI automation.
+
+Agent có thể:
+- Mở browser thực, navigate đến bất kỳ URL nào
+- Inspect DOM elements — xác định attributes, hierarchy, state
+- Thu thập locators ổn định cho Playwright TypeScript
+- Debug automation failures (element not found, click intercepted, timeout)
+- Capture UI state (snapshot, screenshot) để phân tích
+- Phân tích dynamic content, iframe, shadow DOM, SPA navigation
+
+---
+
+## Khi Nào Sử Dụng
+
+Sử dụng skill này khi:
+- Cần **khám phá UI** của trang web/module mới
+- Cần **tìm locator** cho element cụ thể
+- Cần **debug** test automation fail do UI thay đổi
+- Cần **xác minh** locator có hoạt động trên DOM thực không
+- Cần **phân tích DOM** để hiểu cấu trúc UI (forms, tables, modals)
+- Cần **capture evidence** (screenshot) cho test report
+
+Từ khóa kích hoạt: "inspect UI", "tim locator", "debug element", "mo browser xem", "kiem tra DOM"
+
+---
+
+## Trình Tự Lệnh MCP (BẮT BUỘC)
+
+Khi sử dụng Playwright MCP để debug UI, **LUÔN** tuân theo thứ tự:
+
+```
+1. browser_navigate(url)            — Mo trang
+2. browser_resize(1920, 1080)       — Desktop viewport
+3. browser_wait_for(text/time)      — Cho page load
+4. browser_snapshot()               — Thu thap DOM (phan tich + tim locator)
+5. browser_click/type/hover(ref)    — Tuong tac (neu can)
+6. browser_take_screenshot()        — Chup anh (evidence khi fail hoac milestone)
+```
+
+### Quy Tắc Quan Trọng
+
+| Quy tắc | Chi tiết |
+|---|---|
+| KHÔNG navigate lại nếu đã ở đúng trang | Tránh reload ngoài ý muốn |
+| LUÔN resize ngay sau navigate | `browser_resize(1920, 1080)` — đảm bảo desktop viewport |
+| LUÔN wait trước khi snapshot | Chờ page load hoàn tất |
+| Dùng snapshot để phân tích | Snapshot trả về accessibility tree — nhanh, chính xác, có `ref` để tương tác |
+| Dùng screenshot để báo cáo | Screenshot là hình ảnh — dùng khi cần evidence visual |
+
+---
+
+## Snapshot và Screenshot
+
+| | `browser_snapshot` | `browser_take_screenshot` |
+|---|---|---|
+| **Trả về** | Accessibility tree (text + ref IDs) | Hình ảnh (PNG/JPEG) |
+| **Mục đích** | Phân tích DOM, tìm locator, xác định element | Visual evidence, báo cáo, debug layout |
+| **Khi nào dùng** | Luôn dùng trước khi tương tác | Chỉ khi fail hoặc milestone quan trọng |
+| **Có ref để interact** | Có — dùng ref để click/type/hover | Không — chỉ là hình ảnh |
+| **Tốc độ** | Nhanh | Chậm hơn |
+
+Ưu tiên `snapshot` cho phân tích, dùng `screenshot` cho evidence.
+
+---
+
+## Quy Trình Inspect UI
+
+### 1. Mở và Chuẩn Bị Trang
+
+```
+browser_navigate → URL target
+browser_resize → 1920 x 1080
+browser_wait_for → cho indicator page da load (text hoac thoi gian)
+```
+
+Nếu trang yêu cầu đăng nhập:
+- Hỏi user credentials HOẶC dùng fixture sẵn có trong project
+- KHÔNG đọc file `.env` trực tiếp (quy tắc bảo mật)
+
+### 2. Thu Thập Cấu Trúc DOM
+
+```
+browser_snapshot → accessibility tree
+```
+
+Từ snapshot, xác định:
+- **Các element chính:** buttons, inputs, links, headings, tables
+- **Attributes quan trọng:** role, name, label, placeholder, testid
+- **Hierarchy:** quan hệ parent - child
+- **State:** visible, enabled, disabled, checked, expanded
+
+### 3. Xác Định Locators
+
+Với mỗi element cần locator, áp dụng **thứ tự ưu tiên** Playwright:
+
+| Thứ tự | Locator | Ví dụ | Khi nào dùng |
+|---|---|---|---|
+| 1 | `getByRole()` | `getByRole('button', {name: 'Submit'})` | Element có role + accessible name rõ ràng |
+| 2 | `getByLabel()` | `getByLabel('Email')` | Form input có label |
+| 3 | `getByPlaceholder()` | `getByPlaceholder('Enter email')` | Input có placeholder, không có label |
+| 4 | `getByText()` | `getByText('Welcome back')` | Text content unique |
+| 5 | `getByTestId()` | `getByTestId('submit-btn')` | Element có data-testid attribute |
+| 6 | CSS | `page.locator('.submit-button')` | Không có semantic option nào phù hợp |
+| 7 | XPath | `page.locator('//div[@class="x"]')` | Lựa chọn cuối cùng — tránh dùng |
+
+### 4. Xác Minh Locator
+
+Sau khi xác định locator, **bắt buộc xác minh** trên DOM thực tế:
+
+```
+browser_snapshot → tim element bang ref
+browser_click/type(ref) → thu tuong tac
+browser_snapshot → xac nhan ket qua
+```
+
+**Locator được chấp nhận khi:**
+- Unique trên page (chỉ match 1 element)
+- Ổn định qua nhiều lần reload
+- Không chứa dynamic class (css-xxx, sc-xxx)
+- Không chứa positional xpath (`//div[3]/button[2]`)
+- Không phụ thuộc auto-generated attribute
+
+---
+
+## Xử Lý Tình Huống Đặc Biệt
+
+### Trang Yêu Cầu Đăng Nhập
+- Dùng fixture login sẵn có trong project hoặc hỏi user credentials
+- KHÔNG đọc `.env` trực tiếp
+- Sau khi login, navigate đến trang cần inspect
+
+### Modal / Dialog / Popup
+- Modal thường là overlay trên page chính
+- `browser_snapshot` sẽ thấy modal content trong accessibility tree
+- Tương tác với modal elements bằng ref từ snapshot
+- Chờ modal animation hoàn thành trước khi interact
+
+### Iframe
+- `browser_snapshot` có thể không thấy content trong iframe
+- Dùng Playwright frame locator: `page.frameLocator('#iframe-id')`
+
+### Shadow DOM
+- Playwright `locator()` tự động pierce shadow DOM
+
+### Dynamic Content (SPA / AJAX)
+- Chờ content load bằng `browser_wait_for(text)` trước khi snapshot
+- Nếu content load lazy — scroll xuống trước, rồi snapshot
+
+### Tables / Lists (nhiều elements lặp)
+- Dùng `nth()` hoặc `filter()` để target element cụ thể
+- Ví dụ: `page.getByRole('row').filter({hasText: 'John'}).getByRole('button', {name: 'Edit'})`
+
+---
+
+## Các Lỗi Thường Gặp (NGHIÊM CẤM)
+
+| Sai | Đúng | Lý do |
+|---|---|---|
+| Đoán locator từ tên tính năng | Inspect DOM thực tế rồi mới lấy locator | Locator chính xác 100% |
+| Dùng screenshot để chọn locator | Dùng snapshot (accessibility tree) | Snapshot có ref, screenshot thì không |
+| Copy locator từ code cũ không xác minh | Luôn xác minh locator trên browser hiện tại | DOM có thể đã thay đổi |
+| Dùng dynamic class `.css-1abc` | Dùng role/label/testid | Dynamic class thay đổi mỗi build |
+| Dùng positional xpath `//div[3]` | Dùng relative xpath hoặc CSS | Positional xpath dễ vỡ |
+| Chụp screenshot liên tục | Chỉ screenshot khi fail hoặc milestone | Tốn resource, chậm |
+
+---
+
+## Output
+
+Skill này có thể trả về:
+- **Locator recommendations** — bảng primary + fallback cho mỗi element
+- **DOM analysis** — cấu trúc element, attributes, state, hierarchy
+- **Page Object suggestions** — class structure phù hợp cho trang đã inspect
+- **Screenshots** — evidence visual tại các milestone
+- **Debug findings** — nguyên nhân element not found / click fail + cách fix
+
+---
+
+## Tham Chiếu Rules
+
+Agent PHẢI tuân thủ:
+- `.agent/rules/locator_strategy.md` — Chiến lược chọn locator
+- `.agent/rules/playwright_rules.md` — Quy tắc browser setup
+- `.agent/rules/automation_rules.md` — Quy tắc automation chung

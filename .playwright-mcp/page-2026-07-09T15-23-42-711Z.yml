@@ -1,0 +1,50 @@
+- generic [ref=f263e2]:
+  - generic [ref=f263e3]:
+    - navigation [ref=f263e8]:
+      - strong [ref=f263e9]:
+        - text: 総会員数
+        - generic [ref=f263e10]: 1600万人
+        - text: 突破！
+      - list [ref=f263e12]:
+        - link "ACワークス株式会社は大阪市港区・東京都港区・埼玉県久喜市と連携協定を締結しました" [ref=f263e14] [cursor=pointer]:
+          - /url: https://acworks.co.jp/three_cities_agreements/
+        - listitem [ref=f263e15]:
+          - link "SNS" [ref=f263e16] [cursor=pointer]:
+            - /url: "#"
+            - strong [ref=f263e17]: SNS
+        - listitem [ref=f263e18]:
+          - link "ヘルプ" [ref=f263e19] [cursor=pointer]:
+            - /url: https://help.freebie-ac.jp/
+            - strong [ref=f263e20]: ヘルプ
+    - generic [ref=f263e22]:
+      - link "写真ACで無料ダウンロード！" [ref=f263e23] [cursor=pointer]:
+        - /url: /
+        - img "写真ACで無料ダウンロード！" [ref=f263e24]
+      - heading "ログイン" [level=1] [ref=f263e25]:
+        - strong [ref=f263e26]: ログイン
+      - generic [ref=f263e28]:
+        - generic [ref=f263e29]: クリエイターでログイン
+        - textbox "メールアドレス" [ref=f263e30]: toancan3695@gmail.com
+        - textbox "パスワード" [ref=f263e31]: manhtoan123
+        - generic [ref=f263e32]:
+          - generic [ref=f263e33]:
+            - checkbox "自動ログイン" [checked] [ref=f263e34] [cursor=pointer]
+            - generic [ref=f263e35] [cursor=pointer]: 自動ログイン
+          - link "パスワードをお忘れですか？" [ref=f263e37] [cursor=pointer]:
+            - /url: /auth/forgotpassword
+        - button "ログイン" [ref=f263e38] [cursor=pointer]
+      - generic [ref=f263e39]:
+        - generic [ref=f263e40]:
+          - separator [ref=f263e41]
+          - generic [ref=f263e42]: または
+          - separator [ref=f263e43]
+        - paragraph [ref=f263e44]: SNSでログイン
+        - generic [ref=f263e45]:
+          - img [ref=f263e47] [cursor=pointer]
+          - img "google" [ref=f263e50] [cursor=pointer]
+          - generic [ref=f263e52] [cursor=pointer]: 
+      - paragraph [ref=f263e53]:
+        - link "新規クリエイター登録" [ref=f263e54] [cursor=pointer]:
+          - /url: /creator/auth/register
+  - paragraph [ref=f263e56]: Copyright ACworks Co.,Ltd. All rights reserved.
+  - text: 

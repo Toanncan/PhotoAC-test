@@ -1,0 +1,2 @@
+[    1370ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://test-accounts.ac-illust.com/login?return_to=https%3A%2F%2Ftest-lien.photo-ac.com%2Fcreator%2Franking:0
+[   30112ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://test-accounts.ac-illust.com/login?return_to=https%3A%2F%2Ftest-lien.photo-ac.com%2Fcreator%2Franking:0
