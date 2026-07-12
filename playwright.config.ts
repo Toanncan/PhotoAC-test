@@ -85,67 +85,50 @@ export default defineConfig({
     navigationTimeout: 30_000,
     headless: process.env.CI ? true : false,
 
-    // Bypass bot detection in headless mode on CI
+    // Bypass bot detection in headless mode
     launchOptions: {
-      args: [
-        '--disable-blink-features=AutomationControlled',
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-        '--disable-web-security',
-        '--disable-features=IsolateOrigins,site-per-process',
-        '--lang=ja-JP,ja',
-        '--disable-ipv6',  // Force IPv4 — avoid CloudFront blocking WARP IPv6 ranges
-      ],
-    },
-
-    // Spoof realistic browser headers to avoid CloudFront/WAF blocking
-    extraHTTPHeaders: {
-      'Accept-Language': 'ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7',
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-      'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
-      'sec-ch-ua-mobile': '?0',
-      'sec-ch-ua-platform': '"Windows"',
+      args: ['--disable-blink-features=AutomationControlled'],
     },
   },
 
   // Configure projects for major browsers
   projects: [
     // Setup project for Downloader session
-    {
-      name: 'setup-downloader',
-      testMatch: '**/downloader.setup.ts',
-    },
+    // {
+    //   name: 'setup-downloader',
+    //   testMatch: '**/downloader.setup.ts',
+    // },
 
-    // Setup project for Creator session
-    {
-      name: 'setup-creator',
-      testMatch: '**/creator.setup.ts',
-    },
+    // // Setup project for Creator session
+    // {
+    //   name: 'setup-creator',
+    //   testMatch: '**/creator.setup.ts',
+    // },
 
     // Chromium Downloader — Tests running under Downloader session
     {
       name: 'chromium-downloader',
+      testMatch: '**/downloader/**/*.spec.ts',
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1920, height: 1080 },
         storageState: DOWNLOADER_AUTH_STATE_PATH,
       },
-      dependencies: ['setup-downloader'],
-      testIgnore: '**/creator/**/*.spec.ts',
+      // dependencies: ['setup-downloader'],
+      // testIgnore: '**/creator/**/*.spec.ts',
     },
 
     // Chromium Creator — Tests running under Creator session
     {
       name: 'chromium-creator',
+      testMatch: '**/creator/**/*.spec.ts',
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1920, height: 1080 },
         storageState: CREATOR_AUTH_STATE_PATH,
       },
-      dependencies: ['setup-creator'],
-      testMatch: '**/creator/**/*.spec.ts',
+      // dependencies: ['setup-creator'],
+      // testMatch: '**/creator/**/*.spec.ts',
     },
 
     // Firefox — Cross-browser validation

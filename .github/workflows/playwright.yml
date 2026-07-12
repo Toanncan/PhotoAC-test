@@ -52,34 +52,12 @@ jobs:
       - name: Setup Cloudflare WARP (Bypass CloudFront IP block)
         uses: fscarmen/warp-on-actions@v1.1
 
-      - name: Verify WARP IP changed
-        run: |
-          echo "=== Public IPv4 after WARP (forced) ==="
-          curl -4 -s https://ifconfig.me || curl -4 -s https://api.ipify.org
-          echo ""
-          echo "=== Public IPv6 after WARP ==="
-          curl -6 -s https://ifconfig.me || echo "(no IPv6)"
-          echo ""
-          echo "=== HTTP Status from target server (IPv4) ==="
-          STATUS=$(curl -4 -o /dev/null -w "%{http_code}" -s \
-            -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' \
-            https://test-lien.photo-ac.com)
-          echo "HTTP Status: $STATUS"
-          if [ "$STATUS" = "403" ]; then
-            echo "⚠️  Server is still blocking this IP — WAF may block WARP ranges too"
-          elif [ "$STATUS" = "200" ] || [ "$STATUS" = "302" ]; then
-            echo "✅ Server accessible via IPv4 WARP"
-          fi
-
       - name: Debug Network (Print IP and Curl Target)
         run: |
           echo "=== Runner Public IP ==="
           curl -s https://ifconfig.me
-          echo -e "\n=== Target Server Connection Test (with real browser UA) ==="
-          curl -I -s \
-            -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' \
-            -H 'Accept-Language: ja-JP,ja;q=0.9' \
-            https://test-lien.photo-ac.com || true
+          echo -e "\n=== Target Server Connection Test ==="
+          curl -I -s https://test-lien.photo-ac.com || true
           echo -e "\n=== Check Environment Variables Length ==="
           echo "BASE_URL length: ${#BASE_URL}"
           echo "HTTP_USER length: ${#HTTP_USER}"
