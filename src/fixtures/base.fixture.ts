@@ -28,11 +28,6 @@ type PageFixtures = {
  */
 export const test = base.extend<PageFixtures>({
 
-  /**
-   * allureMetadata — Auto fixture to inject project info into every Allure report.
-   * Adds: suite hierarchy, environment, base URL, browser info.
-   * auto: true → runs automatically for every test without explicit declaration.
-   */
   allureMetadata: [async ({ }, use, testInfo) => {
     // ── Determine Role ───────────────────────────────────────────────────────
     const filePath = testInfo.file.toLowerCase();
@@ -47,10 +42,21 @@ export const test = base.extend<PageFixtures>({
       role = 'Admin';
     }
 
-    // ── Suite hierarchy ─────────────────────────────────────────────────────
+    // ── Determine Browser Name ───────────────────────────────────────────────
+    let browserName = 'Other';
+    if (projectName.includes('chromium')) {
+      browserName = 'Chromium';
+    } else if (projectName.includes('firefox')) {
+      browserName = 'Firefox';
+    } else if (projectName.includes('webkit')) {
+      browserName = 'WebKit';
+    } else {
+      browserName = testInfo.project.name;
+    }
+
     await allure.parentSuite(`Photo AC - ${role}`);
     await allure.suite(path.basename(testInfo.file, path.extname(testInfo.file)));
-    await allure.subSuite(testInfo.project.name);
+    await allure.subSuite(browserName);
 
     // ── Categorization ───────────────────────────────────────────────────────
     await allure.layer('e2e');

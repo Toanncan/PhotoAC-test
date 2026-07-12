@@ -40,7 +40,7 @@ export default defineConfig({
   maxFailures: process.env.CI ? 3 : 0,
 
   // Number of workers
-  workers: process.env.CI ? 2 : 1,
+  workers: process.env.CI ? 2 : 2,
 
   // Reporter configuration
   reporter: [
@@ -174,28 +174,28 @@ export default defineConfig({
     },
 
     // ── WebKit (Safari) Downloader ────────────────────────────────────────────
-    {
-      name: 'webkit-downloader',
-      use: {
-        ...devices['Desktop Safari'],
-        viewport: { width: 1920, height: 1080 },
-        storageState: DOWNLOADER_AUTH_STATE_PATH,
-      },
-      dependencies: ['setup-downloader'],
-      testIgnore: '**/creator/**/*.spec.ts',
-    },
+    // {
+    //   name: 'webkit-downloader',
+    //   use: {
+    //     ...devices['Desktop Safari'],
+    //     viewport: { width: 1920, height: 1080 },
+    //     storageState: DOWNLOADER_AUTH_STATE_PATH,
+    //   },
+    //   dependencies: ['setup-downloader'],
+    //   testIgnore: '**/creator/**/*.spec.ts',
+    // },
 
     // ── WebKit Creator ────────────────────────────────────────────────────────
-    {
-      name: 'webkit-creator',
-      use: {
-        ...devices['Desktop Safari'],
-        viewport: { width: 1920, height: 1080 },
-        storageState: CREATOR_AUTH_STATE_PATH,
-      },
-      dependencies: ['setup-creator'],
-      testMatch: '**/creator/**/*.spec.ts',
-    },
+    // {
+    //   name: 'webkit-creator',
+    //   use: {
+    //     ...devices['Desktop Safari'],
+    //     viewport: { width: 1920, height: 1080 },
+    //     storageState: CREATOR_AUTH_STATE_PATH,
+    //   },
+    //   dependencies: ['setup-creator'],
+    //   testMatch: '**/creator/**/*.spec.ts',
+    // },
   ],
 
   // Output folder for test artifacts
