@@ -42,6 +42,8 @@ jobs:
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
       HTTP_USER: ${{ secrets.HTTP_USER }}
       HTTP_PASS: ${{ secrets.HTTP_PASS }}
+      CREATOR_EMAIL: ${{ secrets.CREATOR_EMAIL }}
+      CREATOR_PASSWORD: ${{ secrets.CREATOR_PASSWORD }}
       ENV: staging
       CI: true
 
