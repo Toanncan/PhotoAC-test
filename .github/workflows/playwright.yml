@@ -52,12 +52,24 @@ jobs:
       - name: Setup Cloudflare WARP (Bypass CloudFront IP block)
         uses: fscarmen/warp-on-actions@v1.1
 
+      - name: Verify WARP IP changed
+        run: |
+          echo "=== Public IP after WARP ==="
+          curl -s https://ifconfig.me || curl -s https://api.ipify.org
+          echo ""
+          echo "=== Check if IP is NOT in GitHub/Azure range ==="
+          IP=$(curl -s https://ifconfig.me)
+          echo "Current IP: $IP"
+
       - name: Debug Network (Print IP and Curl Target)
         run: |
           echo "=== Runner Public IP ==="
           curl -s https://ifconfig.me
-          echo -e "\n=== Target Server Connection Test ==="
-          curl -I -s https://test-lien.photo-ac.com || true
+          echo -e "\n=== Target Server Connection Test (with real browser UA) ==="
+          curl -I -s \
+            -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' \
+            -H 'Accept-Language: ja-JP,ja;q=0.9' \
+            https://test-lien.photo-ac.com || true
           echo -e "\n=== Check Environment Variables Length ==="
           echo "BASE_URL length: ${#BASE_URL}"
           echo "HTTP_USER length: ${#HTTP_USER}"

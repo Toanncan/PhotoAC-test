@@ -85,9 +85,27 @@ export default defineConfig({
     navigationTimeout: 30_000,
     headless: process.env.CI ? true : false,
 
-    // Bypass bot detection in headless mode
+    // Bypass bot detection in headless mode on CI
     launchOptions: {
-      args: ['--disable-blink-features=AutomationControlled'],
+      args: [
+        '--disable-blink-features=AutomationControlled',
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--disable-web-security',
+        '--disable-features=IsolateOrigins,site-per-process',
+        '--lang=ja-JP,ja',
+      ],
+    },
+
+    // Spoof realistic browser headers to avoid CloudFront/WAF blocking
+    extraHTTPHeaders: {
+      'Accept-Language': 'ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+      'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
     },
   },
 
