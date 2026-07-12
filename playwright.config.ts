@@ -83,7 +83,8 @@ export default defineConfig({
 
     // Timeout for navigations
     navigationTimeout: 30_000,
-    headless: process.env.CI ? true : false,
+    // headless: process.env.CI ? true : false,
+    headless: false
   },
 
   // Configure projects for major browsers
