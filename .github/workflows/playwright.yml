@@ -49,6 +49,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup Cloudflare WARP (Bypass CloudFront IP block)
+        uses: fscarmen/warp-on-actions@v1.1
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
