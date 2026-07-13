@@ -6,9 +6,9 @@ import { DOWNLOADER_AUTH_STATE_PATH, CREATOR_AUTH_STATE_PATH } from './src/fixtu
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
-const BASE_URL = process.env.BASE_URL || 'https://test-lien.photo-ac.com';
-const HTTP_USER = process.env.HTTP_USER || '';
-const HTTP_PASS = process.env.HTTP_PASS || '';
+const BASE_URL = process.env.BASE_URL;
+const HTTP_USER = process.env.HTTP_USER;
+const HTTP_PASS = process.env.HTTP_PASS;
 
 export default defineConfig({
   // Global setup: runs once before all tests (generates environment.properties for Allure)

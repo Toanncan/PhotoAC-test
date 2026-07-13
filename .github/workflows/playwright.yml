@@ -2,7 +2,7 @@ name: PhotoAC-Test
 
 on:
   push:
-    branches: [dev, master]
+    branches: [dev]
   pull_request:
     branches: [dev, master]
 
@@ -50,21 +50,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Setup Cloudflare WARP (Bypass CloudFront IP block)
-        uses: fscarmen/warp-on-actions@v1.1
-
-      - name: Debug Network (Print IP and Curl Target)
-        run: |
-          echo "=== Runner Public IP ==="
-          curl -s https://ifconfig.me
-          echo -e "\n=== Target Server Connection Test ==="
-          curl -I -s https://test-lien.photo-ac.com || true
-          echo -e "\n=== Check Environment Variables Length ==="
-          echo "BASE_URL length: ${#BASE_URL}"
-          echo "HTTP_USER length: ${#HTTP_USER}"
-          echo "HTTP_PASS length: ${#HTTP_PASS}"
-
+        
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:

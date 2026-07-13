@@ -44,7 +44,7 @@ async function globalSetup(): Promise<void> {
   const envPropsPath = path.join(allureResultsDir, 'environment.properties');
   fs.writeFileSync(envPropsPath, content, 'utf-8');
 
-  console.log(`✅ [global-setup] environment.properties written to: ${envPropsPath}`);
+  console.log(`[global-setup] environment.properties written to: ${envPropsPath}`);
 }
 
 /**

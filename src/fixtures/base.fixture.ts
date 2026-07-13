@@ -65,7 +65,6 @@ export const test = base.extend<PageFixtures>({
     // ── Environment parameters (visible in Allure report sidebar) ────────────
     await allure.parameter('Environment', envConfig.env);
     await allure.parameter('Base URL', envConfig.baseUrl);
-    await allure.parameter('Browser', testInfo.project.name);
 
     await use();
   }, { auto: true }],
