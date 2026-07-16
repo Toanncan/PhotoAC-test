@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
-import { DOWNLOADER_AUTH_STATE_PATH, CREATOR_AUTH_STATE_PATH } from './src/fixtures/auth.fixture';
+import { DOWNLOADER_AUTH_STATE_PATH, CREATOR_AUTH_STATE_PATH, DOWNLOADER_AUTH_STATE_FIREFOX_PATH, CREATOR_AUTH_STATE_FIREFOX_PATH } from './src/fixtures/auth.fixture';
 
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '.env') });
@@ -120,6 +120,34 @@ export default defineConfig({
       },
     },
 
+    // Setup project for Downloader session (Firefox — separate storageState)
+    {
+      name: 'setup-downloader-firefox',
+      testMatch: '**/downloader-firefox.setup.ts',
+      use: {
+        ...devices['Desktop Firefox'],
+        viewport: { width: 1920, height: 1080 },
+        // Must explicitly include httpCredentials for staging HTTP Basic Auth
+        ...(HTTP_USER && HTTP_PASS
+          ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
+          : {}),
+      },
+    },
+
+    // Setup project for Creator session (Firefox — separate storageState)
+    {
+      name: 'setup-creator-firefox',
+      testMatch: '**/creator-firefox.setup.ts',
+      use: {
+        ...devices['Desktop Firefox'],
+        viewport: { width: 1920, height: 1080 },
+        // Must explicitly include httpCredentials for staging HTTP Basic Auth
+        ...(HTTP_USER && HTTP_PASS
+          ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
+          : {}),
+      },
+    },
+
     // Chromium Downloader — Tests running under Downloader session
     {
       name: 'chromium-downloader',
@@ -129,6 +157,10 @@ export default defineConfig({
         storageState: DOWNLOADER_AUTH_STATE_PATH,
         // Chromium-only flag — must NOT be in global use (breaks Firefox/WebKit)
         launchOptions: { args: ['--disable-blink-features=AutomationControlled'] },
+        // Required for staging HTTP Basic Auth — without this, site returns 401 before checking cookies
+        ...(HTTP_USER && HTTP_PASS
+          ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
+          : {}),
       },
       dependencies: ['setup-downloader'],
       testIgnore: '**/creator/**/*.spec.ts',
@@ -155,9 +187,15 @@ export default defineConfig({
       use: {
         ...devices['Desktop Firefox'],
         viewport: { width: 1920, height: 1080 },
-        storageState: DOWNLOADER_AUTH_STATE_PATH,
+        // Use Firefox-specific storageState — Chromium cookies are not compatible with Firefox
+        storageState: DOWNLOADER_AUTH_STATE_FIREFOX_PATH,
+        ...(HTTP_USER && HTTP_PASS
+          ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
+          : {}),
       },
-      dependencies: ['setup-downloader'],
+      // Also wait for chromium-downloader to finish first to avoid session conflict
+      // (same account cannot be logged in on 2 browsers simultaneously)
+      dependencies: ['setup-downloader-firefox', 'chromium-downloader'],
       testIgnore: '**/creator/**/*.spec.ts',
     },
 
@@ -167,9 +205,13 @@ export default defineConfig({
       use: {
         ...devices['Desktop Firefox'],
         viewport: { width: 1920, height: 1080 },
-        storageState: CREATOR_AUTH_STATE_PATH,
+        // Use Firefox-specific storageState — Chromium cookies are not compatible with Firefox
+        storageState: CREATOR_AUTH_STATE_FIREFOX_PATH,
+        ...(HTTP_USER && HTTP_PASS
+          ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
+          : {}),
       },
-      dependencies: ['setup-creator'],
+      dependencies: ['setup-creator-firefox'],
       testMatch: '**/creator/**/*.spec.ts',
     },
 

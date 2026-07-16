@@ -16,6 +16,7 @@ dist/
 playwright-report/
 test-results/
 .auth/
+.playwright-mcp/
 
 # Allure Report artifacts (generated at runtime)
 allure-results/*

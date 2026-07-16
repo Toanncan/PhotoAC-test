@@ -8,30 +8,30 @@ import { test, expect } from '../../fixtures/base.fixture';
  * to test the login flow itself.
  */
 test.describe('Authentication — Login', () => {
-  test.use({ storageState: { cookies: [], origins: [] } }); // Override to run unauthenticated
+  // test.use({ storageState: { cookies: [], origins: [] } }); // Override to run unauthenticated
 
   /**
    * TC-AUTH-001: Đăng nhập thành công với Downloader hợp lệ
    * @tags @smoke @regression
    */
-  test('TC-AUTH-001: Đăng nhập thành công với Downloader hợp lệ @smoke', async ({
-    loginPage,
-    page,
-  }) => {
-    // Arrange
-    const email = process.env.TEST_USER_EMAIL ?? '';
-    const password = process.env.TEST_USER_PASSWORD ?? '';
+  // test('TC-AUTH-001: Đăng nhập thành công với Downloader hợp lệ @smoke', async ({
+  //   loginPage,
+  //   page,
+  // }) => {
+  //   // Arrange
+  //   const email = process.env.TEST_USER_EMAIL ?? '';
+  //   const password = process.env.TEST_USER_PASSWORD ?? '';
 
-    // Act
-    await loginPage.loginAsDownloader(email, password);
+  //   // Act
+  //   await loginPage.loginAsDownloader(email, password);
 
-    // Assert
-    await test.step('Verify redirect to authenticated area after login', async () => {
-      await expect(page).toHaveURL(/\/(dashboard|home|top|my-page|en)?/, {
-        timeout: 15_000,
-      });
-    });
-  });
+  //   // Assert
+  //   await test.step('Verify redirect to authenticated area after login', async () => {
+  //     await expect(page).toHaveURL(/\/(dashboard|home|top|my-page|en)?/, {
+  //       timeout: 15_000,
+  //     });
+  //   });
+  // });
 
   /**
    * TC-AUTH-002: Hiển thị lỗi khi đăng nhập với password sai

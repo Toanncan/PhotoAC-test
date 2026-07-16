@@ -1,5 +1,5 @@
 import { type Page, test } from '@playwright/test';
-import { BasePage } from './base.page';
+import { BasePage } from './common/base.page';
 
 /**
  * DashboardPage — Page Object for the main dashboard / home page after login.

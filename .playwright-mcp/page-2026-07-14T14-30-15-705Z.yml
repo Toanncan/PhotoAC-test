@@ -1,0 +1,386 @@
+- generic [active] [ref=f15e1]:
+  - banner [ref=f15e2]:
+    - generic [ref=f15e3]:
+      - generic [ref=f15e5]:
+        - link [ref=f15e7] [cursor=pointer]:
+          - /url: /
+          - img "photoAC" [ref=f15e8]
+        - generic:   
+      - generic [ref=f15e10]:
+        - link "ホーム" [ref=f15e12] [cursor=pointer]:
+          - /url: /
+        - link "コレクション" [ref=f15e17] [cursor=pointer]:
+          - /url: /user/bookmarks/
+          - generic [ref=f15e18]: 
+        - generic [ref=f15e20]:
+          - button [ref=f15e21] [cursor=pointer]:
+            - generic [ref=f15e22]: 
+            - paragraph [ref=f15e23]:
+              - text: お気に入り
+              - generic [ref=f15e24]: 
+          - text:  
+        - generic [ref=f15e27]:
+          - button "プレミアムサービス プレミアム (個人) a***************************mさん " [ref=f15e28] [cursor=pointer]:
+            - generic [ref=f15e29]:
+              - generic [ref=f15e30]:
+                - img "プレミアムサービス" [ref=f15e31]
+                - generic [ref=f15e32]: プレミアム (個人)
+              - generic [ref=f15e33]: a***************************mさん
+            - text: 
+          - text:  
+        - generic [ref=f15e34]: ヘルプ
+  - text: 
+  - generic:     
+  - text:      
+  - generic [ref=f15e43]:
+    - generic [ref=f15e44]:
+      - generic [ref=f15e47]:
+        - generic [ref=f15e48]:
+          - link [ref=f15e50] [cursor=pointer]:
+            - /url: /creator/auth/register
+            - img "creator-register" [ref=f15e51]
+          - list [ref=f15e52]:
+            - heading "メニュー" [level=4] [ref=f15e53]
+            - listitem [ref=f15e54]:
+              - link "マイページ" [ref=f15e55] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/user/dashboard
+            - listitem [ref=f15e56]:
+              - link "プロフィールページ編集" [ref=f15e57] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/user/profile/edit
+            - listitem [ref=f15e58]:
+              - link "コレクション" [ref=f15e59] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/user/bookmarks
+            - listitem [ref=f15e60]:
+              - link "ダウンロード履歴" [ref=f15e61] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/user/downloads
+            - listitem [ref=f15e62]:
+              - link "購入済みの素材" [ref=f15e63] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/user/order/history
+            - listitem [ref=f15e64]:
+              - link "コメント一覧" [ref=f15e65] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/user/comments
+            - listitem [ref=f15e66]:
+              - link "ファン一覧" [ref=f15e67] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/user/following
+            - listitem [ref=f15e68]:
+              - link "非表示クリエイター一覧" [ref=f15e69] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/user/hiddencreators
+            - listitem [ref=f15e70]:
+              - link "領収書発行" [ref=f15e71] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/user/receipts
+            - listitem [ref=f15e72]:
+              - link "プレミアム会員特典 プレミアム会員特典" [ref=f15e73] [cursor=pointer]:
+                - /url: /user/present
+                - generic [ref=f15e74]: プレミアム会員特典
+                - img "プレミアム会員特典" [ref=f15e75]
+            - listitem [ref=f15e76]:
+              - link "クレジットカード情報登録・編集" [ref=f15e77] [cursor=pointer]:
+                - /url: /user/creditcard
+            - listitem [ref=f15e78]:
+              - link "今週のメルマガ素材 今週のメルマガ素材" [ref=f15e79] [cursor=pointer]:
+                - /url: /user/mailmaga
+                - generic [ref=f15e80]: 今週のメルマガ素材
+                - img "今週のメルマガ素材" [ref=f15e81]
+            - listitem [ref=f15e82]:
+              - link "ログアウト" [ref=f15e83] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/auth/logout
+          - list [ref=f15e84]:
+            - heading "ヘルプ" [level=4] [ref=f15e85]
+            - listitem [ref=f15e86]:
+              - link "ヘルプ" [ref=f15e87] [cursor=pointer]:
+                - /url: https://help.freebie-ac.jp/category/2/プレミアム会員
+                - text: ヘルプ
+                - generic [ref=f15e88]: 
+          - list [ref=f15e89]:
+            - heading "プレミアム会員サービス" [level=4] [ref=f15e90]
+            - listitem [ref=f15e91]:
+              - link "法人・複数名向けプラン" [ref=f15e92] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/premium/business
+            - listitem [ref=f15e93]:
+              - link "商品化ライセンス" [ref=f15e94] [cursor=pointer]:
+                - /url: /main/extra_license_terms
+            - listitem [ref=f15e95]:
+              - link "あんしんサポート" [ref=f15e96] [cursor=pointer]:
+                - /url: /indemnity/
+          - list [ref=f15e97]:
+            - heading "おすすめ無料サービス" [level=4] [ref=f15e98]
+            - listitem [ref=f15e99]:
+              - link "デザインテンプレート" [ref=f15e100] [cursor=pointer]:
+                - /url: https://www.design-ac.net/
+                - text: デザインテンプレート
+                - generic [ref=f15e101]: 
+            - listitem [ref=f15e102]:
+              - link "ファイル転送・共有" [ref=f15e103] [cursor=pointer]:
+                - /url: https://ac-data.info/
+                - text: ファイル転送・共有
+                - generic [ref=f15e104]: 
+            - listitem [ref=f15e105]:
+              - link "ブログ" [ref=f15e106] [cursor=pointer]:
+                - /url: http://blog.acworks.co.jp/category/for-photographer/
+                - text: ブログ
+                - generic [ref=f15e107]: 
+            - listitem [ref=f15e108]:
+              - link "今日の運勢" [ref=f15e109] [cursor=pointer]:
+                - /url: https://uranai-ac.com/
+                - text: 今日の運勢
+                - generic [ref=f15e110]: 
+            - listitem [ref=f15e111]:
+              - link "プレゼン資料作成AI" [ref=f15e112] [cursor=pointer]:
+                - /url: https://www.design-ac.net/design/new-presentation?src=homepage-btn
+                - text: プレゼン資料作成AI
+                - generic [ref=f15e113]: 
+          - iframe [ref=f15e114]:
+            - generic [ref=f17e1]:
+              - generic "YouTube Video Player" [ref=f17e3]: Presentation AI Overview
+              - generic [ref=f17e10]:
+                - generic:
+                  - generic:
+                    - button "Hide player controls" [ref=f17e11] [cursor=pointer]
+                    - generic [ref=f17e13]:
+                      - generic:
+                        - generic [ref=f17e16]:
+                          - generic [ref=f17e18]:
+                            - generic [ref=f17e19]:
+                              - link "[Design AC] AI Presentation Document Feature Video Presentation" [ref=f17e20] [cursor=pointer]:
+                                - /url: https://www.youtube.com/watch?v=yCXxVBZxYOc
+                              - link "ACワークス株式会社" [ref=f17e21] [cursor=pointer]:
+                                - /url: /channel/UCKvFM_IKCWkbxvh2BLL8YYg
+                            - generic [ref=f17e23]:
+                              - button [ref=f17e24] [cursor=pointer]
+                              - generic [ref=f17e26]:
+                                - generic: ACワークス株式会社
+                                - generic: 2.36K subscribers
+                          - generic [ref=f17e27]:
+                            - button "Mute" [ref=f17e29] [cursor=pointer]:
+                              - img "Mute" [ref=f17e30]
+                            - button "Subtitles/CC turned on" [pressed] [ref=f17e33] [cursor=pointer]
+                        - generic [ref=f17e37]:
+                          - generic:
+                            - button "Rewind 10 seconds"
+                            - generic:
+                              - button "Play video"
+                            - button "Fast forward 10 seconds"
+                      - button "Enter full screen" [ref=f17e44] [cursor=pointer]
+                      - slider "Seek slider" [ref=f17e48] [cursor=pointer]
+                      - link "Watch on YouTube" [ref=f17e59] [cursor=pointer]:
+                        - /url: https://www.youtube.com/watch?v=yCXxVBZxYOc
+          - list [ref=f15e115]:
+            - heading "SNS" [level=4] [ref=f15e116]
+            - listitem [ref=f15e117]:
+              - link "ACワークス公式 X" [ref=f15e118] [cursor=pointer]:
+                - /url: https://x.com/ACworks2011
+            - listitem [ref=f15e119]:
+              - link "Mr.ビー X" [ref=f15e120] [cursor=pointer]:
+                - /url: https://x.com/mrb_ac
+            - listitem
+        - generic [ref=f15e121]:
+          - heading "領収書発行" [level=1] [ref=f15e123]
+          - generic [ref=f15e125]:
+            - generic [ref=f15e127]:
+              - table [ref=f15e128]:
+                - rowgroup [ref=f15e129]:
+                  - row [ref=f15e130]:
+                    - cell "宛名" [ref=f15e131]
+                    - cell [ref=f15e132]:
+                      - generic [ref=f15e133]:
+                        - generic [ref=f15e134]:
+                          - text: 会社名
+                          - textbox [ref=f15e135]: auto_company_test
+                        - generic [ref=f15e136]:
+                          - text: 担当者名
+                          - textbox [ref=f15e137]: auto_person_test
+                        - generic [ref=f15e138]:
+                          - button "宛名保存" [ref=f15e139] [cursor=pointer]
+                          - link "" [ref=f15e140] [cursor=pointer]:
+                            - /url: "#"
+                  - row [ref=f15e142]:
+                    - cell "対象" [ref=f15e143]
+                    - cell "ACプレミアム会員サービス毎月更新、広告非表示サービス 2026年08月13日〜2026年09月12日（自動更新） ACプレミアム会員広告非表示サービス 毎月更新 2026年07月13日〜2026年08月12日（自動更新） ACプレミアム会員サービス 毎月更新 2026年07月13日〜2026年08月12日（自動更新） ACプレミアム会員広告非表示サービス 毎年更新 2026年07月13日〜2027年07月12日（自動更新） ACプレミアム会員サービス 毎年更新 2026年07月13日〜2027年07月12日（自動更新） ACプレミアム会員サービス 毎月更新 2026年07月13日〜2026年08月12日（自動更新） ACプレミアム会員広告非表示サービス 毎月更新 2026年07月13日〜2026年08月12日（自動更新） ACプレミアム会員サービス 毎月更新 2026年07月13日〜2026年08月12日（自動更新） ACプレミアム会員サービス 毎年更新 2026年07月13日〜2027年07月12日（自動更新） ACプレミアム会員サービス 毎年更新 2026年07月13日〜2027年07月12日（自動更新）" [ref=f15e144]:
+                      - generic [ref=f15e145]:
+                        - radio "ACプレミアム会員サービス毎月更新、広告非表示サービス 2026年08月13日〜2026年09月12日（自動更新）" [ref=f15e146] [cursor=pointer]
+                        - generic [ref=f15e147] [cursor=pointer]: ACプレミアム会員サービス毎月更新、広告非表示サービス 2026年08月13日〜2026年09月12日（自動更新）
+                      - generic [ref=f15e148]:
+                        - radio "ACプレミアム会員広告非表示サービス 毎月更新 2026年07月13日〜2026年08月12日（自動更新）" [ref=f15e149] [cursor=pointer]
+                        - generic [ref=f15e150] [cursor=pointer]: ACプレミアム会員広告非表示サービス 毎月更新 2026年07月13日〜2026年08月12日（自動更新）
+                      - generic [ref=f15e151]:
+                        - radio "ACプレミアム会員サービス 毎月更新 2026年07月13日〜2026年08月12日（自動更新）" [ref=f15e152] [cursor=pointer]
+                        - generic [ref=f15e153] [cursor=pointer]: ACプレミアム会員サービス 毎月更新 2026年07月13日〜2026年08月12日（自動更新）
+                      - generic [ref=f15e154]:
+                        - radio "ACプレミアム会員広告非表示サービス 毎年更新 2026年07月13日〜2027年07月12日（自動更新）" [ref=f15e155] [cursor=pointer]
+                        - generic [ref=f15e156] [cursor=pointer]: ACプレミアム会員広告非表示サービス 毎年更新 2026年07月13日〜2027年07月12日（自動更新）
+                      - generic [ref=f15e157]:
+                        - radio "ACプレミアム会員サービス 毎年更新 2026年07月13日〜2027年07月12日（自動更新）" [ref=f15e158] [cursor=pointer]
+                        - generic [ref=f15e159] [cursor=pointer]: ACプレミアム会員サービス 毎年更新 2026年07月13日〜2027年07月12日（自動更新）
+                      - generic [ref=f15e160]:
+                        - radio "ACプレミアム会員サービス 毎月更新 2026年07月13日〜2026年08月12日（自動更新）" [ref=f15e161] [cursor=pointer]
+                        - generic [ref=f15e162] [cursor=pointer]: ACプレミアム会員サービス 毎月更新 2026年07月13日〜2026年08月12日（自動更新）
+                      - generic [ref=f15e163]:
+                        - radio "ACプレミアム会員広告非表示サービス 毎月更新 2026年07月13日〜2026年08月12日（自動更新）" [ref=f15e164] [cursor=pointer]
+                        - generic [ref=f15e165] [cursor=pointer]: ACプレミアム会員広告非表示サービス 毎月更新 2026年07月13日〜2026年08月12日（自動更新）
+                      - generic [ref=f15e166]:
+                        - radio "ACプレミアム会員サービス 毎月更新 2026年07月13日〜2026年08月12日（自動更新）" [ref=f15e167] [cursor=pointer]
+                        - generic [ref=f15e168] [cursor=pointer]: ACプレミアム会員サービス 毎月更新 2026年07月13日〜2026年08月12日（自動更新）
+                      - generic [ref=f15e169]:
+                        - radio "ACプレミアム会員サービス 毎年更新 2026年07月13日〜2027年07月12日（自動更新）" [ref=f15e170] [cursor=pointer]
+                        - generic [ref=f15e171] [cursor=pointer]: ACプレミアム会員サービス 毎年更新 2026年07月13日〜2027年07月12日（自動更新）
+                      - generic [ref=f15e172]:
+                        - radio "ACプレミアム会員サービス 毎年更新 2026年07月13日〜2027年07月12日（自動更新）" [ref=f15e173] [cursor=pointer]
+                        - generic [ref=f15e174] [cursor=pointer]: ACプレミアム会員サービス 毎年更新 2026年07月13日〜2027年07月12日（自動更新）
+              - button "ダウンロード" [ref=f15e176] [cursor=pointer]
+              - list [ref=f15e178]:
+                - listitem [ref=f15e179]:
+                  - link "1" [ref=f15e180] [cursor=pointer]:
+                    - /url: "#"
+                - listitem [ref=f15e181]:
+                  - link "2" [ref=f15e182] [cursor=pointer]:
+                    - /url: https://test-lien.photo-ac.com/user/receipts/page/10/2
+                - listitem [ref=f15e183]:
+                  - generic [ref=f15e184]: ...
+                  - link [ref=f15e185] [cursor=pointer]:
+                    - /url: https://test-lien.photo-ac.com/user/receipts/page/10/2
+                    - generic [ref=f15e186]: 
+            - paragraph [ref=f15e187]: ※2017年2月16日以降から対応しております。それ以前のご請求分につきましては、クレジットカード会社様からのご利用明細票を代わりとしていただいております。
+          - text: 
+      - generic:  
+      - contentinfo [ref=f15e188]:
+        - generic [ref=f15e191]:
+          - generic [ref=f15e192]: 昨日のダウンロード数：27,199
+          - generic [ref=f15e193]: 先月のダウンロード数：1,386,171
+          - generic [ref=f15e194]: 総会員数：1600万人を突破しました
+        - generic [ref=f15e196]:
+          - generic [ref=f15e197]:
+            - generic [ref=f15e198]:
+              - generic [ref=f15e199]: 写真ACについて 
+              - list [ref=f15e200]:
+                - listitem [ref=f15e201]:
+                  - link "写真ACとは" [ref=f15e202] [cursor=pointer]:
+                    - /url: /main/guide/
+                - listitem [ref=f15e203]:
+                  - link "運営会社" [ref=f15e204] [cursor=pointer]:
+                    - /url: /main/about/
+                - listitem [ref=f15e205]:
+                  - link "個人情報保護方針" [ref=f15e206] [cursor=pointer]:
+                    - /url: /main/privacy/
+                - listitem [ref=f15e207]:
+                  - link "特定個人情報基本方針" [ref=f15e208] [cursor=pointer]:
+                    - /url: /main/policy_personal_info/
+                - listitem [ref=f15e209]:
+                  - link "特定商取引法に基づく表記" [ref=f15e210] [cursor=pointer]:
+                    - /url: /main/commercial_transactions/
+                - listitem [ref=f15e211]:
+                  - link "サイトマップ" [ref=f15e212] [cursor=pointer]:
+                    - /url: /main/sitemap
+                - listitem [ref=f15e213]:
+                  - link "セキュリティポリシー" [ref=f15e214] [cursor=pointer]:
+                    - /url: https://acworks.co.jp/security-policy/
+            - generic [ref=f15e215]:
+              - generic [ref=f15e216]: 会員登録 
+              - list [ref=f15e217]:
+                - listitem [ref=f15e218]:
+                  - link "無料会員登録" [ref=f15e219] [cursor=pointer]:
+                    - /url: https://test-accounts.ac-illust.com/signup?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252Fuser%252Freceipts&lang=jp
+                - listitem [ref=f15e220]:
+                  - link "プレミアム会員登録" [ref=f15e221] [cursor=pointer]:
+                    - /url: https://test-lien.photo-ac.com/premium/campaign?target=premium_sozai
+                - listitem [ref=f15e222]:
+                  - link "無料クリエイター会員登録" [ref=f15e223] [cursor=pointer]:
+                    - /url: /creator/auth/register
+            - generic [ref=f15e224]:
+              - generic [ref=f15e225]: プレミアム会員サービス 
+              - list [ref=f15e226]:
+                - listitem [ref=f15e227]:
+                  - link "プレミアム会員登録" [ref=f15e228] [cursor=pointer]:
+                    - /url: https://test-lien.photo-ac.com/premium/campaign?target=premium_sozai
+                - listitem [ref=f15e229]:
+                  - link "法人・複数名向けプラン" [ref=f15e230] [cursor=pointer]:
+                    - /url: https://test-lien.photo-ac.com/premium/business
+                - listitem [ref=f15e231]:
+                  - link "商品化ライセンス" [ref=f15e232] [cursor=pointer]:
+                    - /url: /main/extra_license_terms/
+                - listitem [ref=f15e233]:
+                  - link "あんしんサポート" [ref=f15e234] [cursor=pointer]:
+                    - /url: /indemnity/
+            - generic [ref=f15e235]:
+              - generic [ref=f15e236]: ヘルプ＆ガイド 
+              - list [ref=f15e237]:
+                - listitem [ref=f15e238]:
+                  - link "ヘルプ" [ref=f15e239] [cursor=pointer]:
+                    - /url: https://help.freebie-ac.jp/
+                - listitem [ref=f15e240]:
+                  - link "利用規約" [ref=f15e241] [cursor=pointer]:
+                    - /url: /main/terms/
+                - listitem [ref=f15e242]:
+                  - link "プレミアム会員利用規約" [ref=f15e243] [cursor=pointer]:
+                    - /url: /main/terms_premium/
+                - listitem [ref=f15e244]:
+                  - link "AC写真AIラボ利用規約" [ref=f15e245] [cursor=pointer]:
+                    - /url: /image-generator/terms
+            - generic [ref=f15e246]:
+              - generic [ref=f15e247]: グループサイト 
+              - list [ref=f15e248]:
+                - listitem [ref=f15e249]:
+                  - link "イラストAC" [ref=f15e250] [cursor=pointer]:
+                    - /url: https://www.ac-illust.com/
+                - listitem [ref=f15e251]:
+                  - link "シルエットAC" [ref=f15e252] [cursor=pointer]:
+                    - /url: https://www.silhouette-ac.com/
+                - listitem [ref=f15e253]:
+                  - link "フリービーAC" [ref=f15e254] [cursor=pointer]:
+                    - /url: https://www.freebie-ac.jp/
+                - listitem [ref=f15e255]:
+                  - link "年賀状AC" [ref=f15e256] [cursor=pointer]:
+                    - /url: https://www.new-year.bz/
+                - listitem [ref=f15e257]:
+                  - link "動画AC" [ref=f15e258] [cursor=pointer]:
+                    - /url: https://video-ac.com
+                - listitem [ref=f15e259]:
+                  - link "デザインAC" [ref=f15e260] [cursor=pointer]:
+                    - /url: https://www.design-ac.net/
+                - listitem [ref=f15e261]:
+                  - link "ACデータ" [ref=f15e262] [cursor=pointer]:
+                    - /url: https://ac-data.info/
+                - listitem [ref=f15e263]:
+                  - link "明細AC" [ref=f15e264] [cursor=pointer]:
+                    - /url: https://meisai-ac.com/
+          - generic [ref=f15e265]:
+            - link [ref=f15e266] [cursor=pointer]:
+              - /url: https://x.com/ACworks2011
+              - button "twitter_btn" [ref=f15e267]
+            - link [ref=f15e270] [cursor=pointer]:
+              - /url: https://www.facebook.com/ACworks2011/
+              - button "facebook_btn" [ref=f15e271]:
+                - generic [ref=f15e272]: 
+            - link [ref=f15e273] [cursor=pointer]:
+              - /url: https://www.pinterest.jp/acworks/
+              - button "pinterest_btn" [ref=f15e274]:
+                - generic [ref=f15e275]: 
+            - link [ref=f15e276] [cursor=pointer]:
+              - /url: http://blog.acworks.co.jp/
+              - button "blog_btn" [ref=f15e277]:
+                - generic [ref=f15e278]: 
+            - link [ref=f15e279] [cursor=pointer]:
+              - /url: "#feedbackModal"
+              - button "feedback_modal_btn" [ref=f15e280]:
+                - generic [ref=f15e281]: 
+                - text: ご意見・ご要望
+          - generic [ref=f15e283]:
+            - text: © 2011-2026
+            - link "写真AC" [ref=f15e284] [cursor=pointer]:
+              - /url: https://test-lien.photo-ac.com/
+    - generic [ref=f15e286]:
+      - text:  
+      - generic [ref=f15e287]:
+        - link [ref=f15e289] [cursor=pointer]:
+          - /url: /user/downloads
+          - generic [ref=f15e294]: ダウンロード履歴
+        - link [ref=f15e296] [cursor=pointer]:
+          - /url: javascript:void(0);
+          - generic [ref=f15e302]: ライセンスまとめて購入
+        - link [ref=f15e305] [cursor=pointer]:
+          - /url: javascript:void(0);
+          - generic [ref=f15e311]: まとめてダウンロード
+  - link:
+    - /url: ""
+  - link:
+    - /url: ""
+  - text:   
