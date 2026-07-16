@@ -1,18 +1,7 @@
 import { type Page, type Locator, test } from '@playwright/test';
-import { BasePage } from './base.page';
+import { BasePage } from '../common/base.page';
 
-/**
- * RankingPage — Page Object for the Creator Ranking page.
- *
- * URL: https://test-lien.photo-ac.com/creator/ranking
- * Verified DOM locators from live browser inspection on 2026-07-09.
- *
- * Page structure (4 ranking tables):
- * 1. ダウンロードランキング (Download Ranking)
- * 2. ライセンス販売数 (License Sales Count)
- * 3. ページビューランキング (Page View Ranking)
- * 4. 写真掲載数・NICE!数・ファン数ランキング (Upload/Nice/Fan Ranking)
- */
+
 export class RankingPage extends BasePage {
   // ─── URL ─────────────────────────────────────────────────────────────────
 
@@ -146,7 +135,7 @@ export class RankingPage extends BasePage {
   async goToRankingPage(): Promise<void> {
     await test.step('Navigate to Creator Ranking page', async () => {
       await this.navigate(this.PAGE_URL);
-      await this.waitForPageLoad();
+      // await this.waitForPageLoad();
     });
   }
 

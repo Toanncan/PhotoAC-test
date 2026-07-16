@@ -13,11 +13,17 @@
 import * as path from 'path';
 import * as fs from 'fs';
 
-/** Path to the persisted downloader authentication state file */
+/** Path to the persisted downloader authentication state file (Chromium) */
 export const DOWNLOADER_AUTH_STATE_PATH = path.resolve('.auth', 'downloader.json');
 
-/** Path to the persisted creator authentication state file */
+/** Path to the persisted creator authentication state file (Chromium) */
 export const CREATOR_AUTH_STATE_PATH = path.resolve('.auth', 'creator.json');
+
+/** Path to the persisted downloader authentication state file (Firefox) */
+export const DOWNLOADER_AUTH_STATE_FIREFOX_PATH = path.resolve('.auth', 'downloader-firefox.json');
+
+/** Path to the persisted creator authentication state file (Firefox) */
+export const CREATOR_AUTH_STATE_FIREFOX_PATH = path.resolve('.auth', 'creator-firefox.json');
 
 /**
  * Ensure the .auth directory exists.

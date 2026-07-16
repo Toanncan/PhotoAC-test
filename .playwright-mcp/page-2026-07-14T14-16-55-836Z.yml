@@ -1,0 +1,78 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e6]:
+    - strong [ref=e7]:
+      - text: 総会員数
+      - generic [ref=e8]: 1600万人
+      - text: 突破！
+    - list [ref=e10]:
+      - listitem [ref=e11]:
+        - link [ref=e12] [cursor=pointer]:
+          - /url: "#"
+          - strong [ref=e13]: 素材サイト
+      - listitem [ref=e14]:
+        - link [ref=e15] [cursor=pointer]:
+          - /url: https://ac-data.info/
+          - strong [ref=e16]: ファイル転送
+      - listitem [ref=e17]:
+        - link [ref=e18] [cursor=pointer]:
+          - /url: https://www.design-ac.net/
+          - strong [ref=e19]: デザインツール
+      - listitem [ref=e20]:
+        - link [ref=e21] [cursor=pointer]:
+          - /url: https://www.ac-associate.com/
+          - strong [ref=e22]: アフィリエイト
+      - listitem [ref=e23]:
+        - link [ref=e24] [cursor=pointer]:
+          - /url: "#"
+          - strong [ref=e25]: 画像ツール
+      - listitem [ref=e26]:
+        - link [ref=e27] [cursor=pointer]:
+          - /url: "#"
+          - strong [ref=e28]: SNS
+      - listitem [ref=e29]:
+        - link [ref=e30] [cursor=pointer]:
+          - /url: https://help.freebie-ac.jp/
+          - strong [ref=e31]: ヘルプ
+  - generic:  
+  - generic [ref=e34]:
+    - link [ref=e35] [cursor=pointer]:
+      - /url: https://test-lien.photo-ac.com
+      - img "写真ACで無料ダウンロード！" [ref=e36]
+    - heading [level=1] [ref=e37]:
+      - strong [ref=e38]: ログイン
+    - generic [ref=e40]:
+      - generic [ref=e41]: ダウンロードユーザーでログイン
+      - textbox "メールアドレス" [ref=e42]
+      - generic [ref=e43]:
+        - textbox "パスワード" [ref=e44]
+        - text: 
+      - generic [ref=e45]:
+        - generic [ref=e46]:
+          - checkbox "自動ログイン" [checked] [ref=e47]
+          - generic [ref=e48] [cursor=pointer]: 自動ログイン
+        - link "パスワードをお忘れですか？" [ref=e49] [cursor=pointer]:
+          - /url: /password-reset?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252Fuser%252Freceipts
+      - button "ログイン" [ref=e50] [cursor=pointer]
+    - generic [ref=e51]:
+      - generic [ref=e52]:
+        - separator [ref=e53]
+        - generic [ref=e54]: または
+        - separator [ref=e55]
+      - paragraph [ref=e56]: SNS アカウントで登録
+      - generic [ref=e57]:
+        - link [ref=e58] [cursor=pointer]:
+          - /url: /auth/twitter?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252Fuser%252Freceipts
+        - link [ref=e60] [cursor=pointer]:
+          - /url: /auth/google?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252Fuser%252Freceipts
+          - img "google" [ref=e61]
+        - link "" [ref=e62] [cursor=pointer]:
+          - /url: /auth/facebook?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252Fuser%252Freceipts
+        - link "" [ref=e64] [cursor=pointer]:
+          - /url: "#"
+    - paragraph [ref=e66]:
+      - link "新規アカウントを作成" [ref=e67] [cursor=pointer]:
+        - /url: /signup?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252Fuser%252Freceipts
+    - generic [ref=e69]:
+      - img "ACworks" [ref=e70]
+      - paragraph [ref=e71]: 1つのアカウントでACワークスの全サービスが利用できます。
+  - generic [ref=e72]: Copyright © 2026 ACworks Co.,Ltd. All rights reserved.

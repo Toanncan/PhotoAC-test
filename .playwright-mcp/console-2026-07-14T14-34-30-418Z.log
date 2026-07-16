@@ -1,0 +1,7 @@
+[    1484ms] Invalid regular expression: missing /
+[    1505ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://test-lien.photo-ac.com/user/receipts:0
+[    1505ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://test-lien.photo-ac.com/user/receipts:0
+[    1505ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://test-lien.photo-ac.com/user/receipts:0
+[    1588ms] [ERROR] Access to XMLHttpRequest at 'https://test.freebie-ac.jp/api/pinnedpost.php?type=x' from origin 'https://test-lien.photo-ac.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://test-lien.photo-ac.com/user/receipts:0
+[    1588ms] [ERROR] Failed to fetch Twitter timeline:  @ https://test-lien.photo-ac.com/assets/js/app-common.js?v=20260616:76
+[    1588ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://test.freebie-ac.jp/api/pinnedpost.php?type=x:0

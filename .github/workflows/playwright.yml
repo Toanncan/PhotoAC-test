@@ -70,7 +70,7 @@ jobs:
       # PR → chỉ chạy chromium để tiết kiệm thời gian
       - name: Run Playwright tests (PR - Chromium only)
         if: github.event_name == 'pull_request'
-        run: npx playwright test --project=chromium
+        run: npx playwright test --project=chromium-downloader --project=chromium-creator
 
       # Push to main/develop/dev → chạy tất cả browsers
       - name: Run Playwright tests (Push - All browsers)

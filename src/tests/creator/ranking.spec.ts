@@ -13,15 +13,15 @@ import { envConfig } from '../../utils/env.config';
  * 3. Verify no font rendering errors (tofu/garbled characters)
  */
 test.describe('Creator Ranking Page', () => {
-  test.use({ storageState: { cookies: [], origins: [] } }); // Override to run unauthenticated
+  // test.use({ storageState: { cookies: [], origins: [] } }); // Override to run unauthenticated
 
-  test.beforeEach(async ({ creatorLoginPage }) => {
-    // Login as creator before each test
-    await creatorLoginPage.loginAsCreator(
-      envConfig.creatorUser.email,
-      envConfig.creatorUser.password,
-    );
-  });
+  // test.beforeEach(async ({ loginPage }) => {
+  //   // Login as creator before each test
+  //   await loginPage.loginAsCreator(
+  //     envConfig.creatorUser.email,
+  //     envConfig.creatorUser.password,
+  //   );
+  // });
 
   // ─── TC01: Page Navigation & Heading ─────────────────────────────────────
 
