@@ -1,0 +1,5 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","12300","authenticate as creator","setup-creator","2026-07-16","passed","2026-07-16","","","",""
+"","10758","TC001 - Nhập thông tin宛名, lưu, chọn radio, tải PDF và verify nội dung","Photo AC - Downloader","2026-07-16","passed","2026-07-16","Chromium","receipts.spec","",""
+"","13277","Authenticate as downloader","setup-downloader","2026-07-16","passed","2026-07-16","","","",""
+"","5972","TC01 - Trang ranking hiển thị đúng heading và URL","Photo AC - Creator","2026-07-16","passed","2026-07-16","Chromium","ranking.spec","",""
