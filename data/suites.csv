@@ -1,7 +1,0 @@
-"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","15049","authenticate as creator","setup-creator","2026-07-15","passed","2026-07-15","","","",""
-"","13201","TC01 - Trang ranking hiển thị đúng heading và URL","Photo AC - Creator","2026-07-15","passed","2026-07-15","Firefox","ranking.spec","",""
-"","6651","TC-AUTH-001: Đăng nhập thành công với Downloader hợp lệ @smoke","Photo AC - Downloader","2026-07-15","passed","2026-07-15","Chromium","login.spec","",""
-"","15096","TC01 - Trang ranking hiển thị đúng heading và URL","Photo AC - Creator","2026-07-15","passed","2026-07-15","Chromium","ranking.spec","",""
-"","8336","TC-AUTH-001: Đăng nhập thành công với Downloader hợp lệ @smoke","Photo AC - Downloader","2026-07-15","passed","2026-07-15","Firefox","login.spec","",""
-"","7174","authenticate and save session state","setup-downloader","2026-07-15","passed","2026-07-15","","","",""
