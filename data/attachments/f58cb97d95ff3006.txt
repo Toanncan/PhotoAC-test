@@ -1,2 +1,0 @@
-会員種別 Text: 会員種別	無料会員（プレミアム会員に登録する）
-Membership Amounts: []
