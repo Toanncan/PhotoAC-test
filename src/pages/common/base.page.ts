@@ -8,8 +8,14 @@ import { type Page, type Locator, expect } from '@playwright/test';
 export abstract class BasePage {
   protected readonly page: Page;
 
+  protected readonly photoAiModelContent: Locator;
+
+  protected readonly closeButton: Locator;
+
   constructor(page: Page) {
     this.page = page;
+    this.photoAiModelContent = this.page.locator('.photo-ai-lab-modal__content');
+    this.closeButton = this.page.getByRole('button', { name: '閉じる' }).nth(1);
   }
 
   // ─── Navigation ──────────────────────────────────────────────────────────
@@ -153,5 +159,11 @@ export abstract class BasePage {
       path: name ? `test-results/${name}.png` : undefined,
       fullPage: true,
     });
+  }
+
+  async closePhotoAiModelContent() {
+    if (await this.photoAiModelContent.isVisible()) {
+      await this.closeButton.click();
+    }
   }
 }

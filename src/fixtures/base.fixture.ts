@@ -1,10 +1,11 @@
 import { test as base, expect } from '@playwright/test';
 import * as allure from 'allure-js-commons';
 import * as path from 'path';
-import { LoginPage } from '../pages/login.page';
+import { LoginPage } from '../pages/common/login.page';
 import { DashboardPage } from '../pages/dashboard.page';
 import { CreatorLoginPage } from '../pages/creator-login.page';
-import { RankingPage } from '../pages/ranking.page';
+import { RankingPage } from '../pages/creator/ranking.page';
+import { ReceiptsPage } from '../pages/downloader/receipts.page';
 import { envConfig } from '../utils/env.config';
 
 /**
@@ -16,6 +17,7 @@ type PageFixtures = {
   dashboardPage: DashboardPage;
   creatorLoginPage: CreatorLoginPage;
   rankingPage: RankingPage;
+  receiptsPage: ReceiptsPage;
   allureMetadata: void;
   screenshotOnPass: void;
 };
@@ -91,6 +93,12 @@ export const test = base.extend<PageFixtures>({
   rankingPage: async ({ page }, use) => {
     const rankingPage = new RankingPage(page);
     await use(rankingPage);
+  },
+
+  // Provides a ReceiptsPage instance for receipt issuance tests
+  receiptsPage: async ({ page }, use) => {
+    const receiptsPage = new ReceiptsPage(page);
+    await use(receiptsPage);
   },
 
   /**

@@ -1,5 +1,5 @@
 import { type Page, test } from '@playwright/test';
-import { BasePage } from './base.page';
+import { BasePage } from './common/base.page';
 
 /**
  * CreatorLoginPage — Page Object for the Creator login screen.
@@ -56,7 +56,7 @@ export class CreatorLoginPage extends BasePage {
   async goToCreatorLoginPage(): Promise<void> {
     await test.step('Navigate to Homepage', async () => {
       await this.navigate('/');
-      await this.waitForPageLoad();
+      // await this.waitForPageLoad();
     });
   }
 
