@@ -132,6 +132,7 @@ export default defineConfig({
           ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
           : {}),
       },
+      dependencies: ['chromium-downloader'],
     },
 
     // Setup project for Creator session (Firefox — separate storageState)
@@ -195,7 +196,7 @@ export default defineConfig({
       },
       // Also wait for chromium-downloader to finish first to avoid session conflict
       // (same account cannot be logged in on 2 browsers simultaneously)
-      dependencies: ['setup-downloader-firefox', 'chromium-downloader'],
+      dependencies: ['setup-downloader-firefox'],
       testIgnore: '**/creator/**/*.spec.ts',
     },
 
