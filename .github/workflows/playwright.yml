@@ -44,6 +44,9 @@ jobs:
       HTTP_PASS: ${{ secrets.HTTP_PASS }}
       CREATOR_EMAIL: ${{ secrets.CREATOR_EMAIL }}
       CREATOR_PASSWORD: ${{ secrets.CREATOR_PASSWORD }}
+      # Gmail API credentials (base64 encoded)
+      GMAIL_CREDENTIALS: ${{ secrets.GMAIL_CREDENTIALS }}
+      GMAIL_TOKEN: ${{ secrets.GMAIL_TOKEN }}
       ENV: staging
       CI: true
 
@@ -62,6 +65,14 @@ jobs:
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium firefox webkit
+
+      # Setup Gmail API credentials (decode from base64 secrets)
+      - name: Setup Gmail API credentials
+        if: env.GMAIL_CREDENTIALS != ''
+        run: |
+          echo "$GMAIL_CREDENTIALS" | base64 -d > credentials.json
+          echo "$GMAIL_TOKEN" | base64 -d > gmail-token.json
+          echo "Gmail API credentials configured"
 
       # Clean old reports trước khi chạy
       - name: Clean old results
