@@ -70,26 +70,26 @@ jobs:
       # PR → chỉ chạy chromium để tiết kiệm thời gian
       - name: Run Playwright tests (PR - Chromium only)
         if: github.event_name == 'pull_request'
-        run: npx playwright test --project=chromium-downloader --project=chromium-creator
+        run: npm run test:chromium
 
-      # Push to main/develop/dev → chạy tất cả browsers
+      # Push to dev → chạy tất cả browsers
       - name: Run Playwright tests (Push - All browsers)
         if: github.event_name == 'push'
-        run: npx playwright test
+        run: npm run test
 
       # Schedule → chạy tất cả browsers (regression nightly)
       - name: Run Playwright tests (Scheduled - All browsers)
         if: github.event_name == 'schedule'
-        run: npx playwright test
+        run: npm run test
 
       # Manual trigger → chọn browser theo input
       - name: Run Playwright tests (Manual trigger)
         if: github.event_name == 'workflow_dispatch'
         run: |
           if [ "${{ github.event.inputs.browser }}" = "all" ]; then
-            npx playwright test
+            npm run test
           else
-            npx playwright test --project=${{ github.event.inputs.browser }}
+            npm run test:${{ github.event.inputs.browser }}
           fi
 
       # ── Allure Report ────────────────────────────────────────────────────────
