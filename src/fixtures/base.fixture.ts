@@ -6,6 +6,7 @@ import { DashboardPage } from '../pages/dashboard.page';
 import { CreatorLoginPage } from '../pages/creator-login.page';
 import { RankingPage } from '../pages/creator/ranking.page';
 import { ReceiptsPage } from '../pages/downloader/receipts.page';
+import { ProfileEditPage } from '../pages/downloader/profile-edit.page';
 import { envConfig } from '../utils/env.config';
 
 /**
@@ -18,6 +19,7 @@ type PageFixtures = {
   creatorLoginPage: CreatorLoginPage;
   rankingPage: RankingPage;
   receiptsPage: ReceiptsPage;
+  profileEditPage: ProfileEditPage;
   allureMetadata: void;
   screenshotOnPass: void;
 };
@@ -99,6 +101,12 @@ export const test = base.extend<PageFixtures>({
   receiptsPage: async ({ page }, use) => {
     const receiptsPage = new ReceiptsPage(page);
     await use(receiptsPage);
+  },
+
+  // Provides a ProfileEditPage instance for profile edit page tests
+  profileEditPage: async ({ page }, use) => {
+    const profileEditPage = new ProfileEditPage(page);
+    await use(profileEditPage);
   },
 
   /**

@@ -36,3 +36,7 @@ Thumbs.db
 *.temp
 *_debug.txt
 debug_output.txt
+
+# Gmail API credentials — NEVER commit
+credentials.json
+gmail-token.json

@@ -122,4 +122,79 @@ export class ReceiptsPage extends BasePage {
     const label = this.page.locator(`label[for="outid_${index}"]`);
     return this.getText(label);
   }
+
+  /**
+   * Extract the monetary amount from a billing item's radio label.
+   * Parses formats like: ¥1,980 / ￥1,980 / 1,980円 / 1980円
+   * Excludes date patterns (e.g., 2026年 is NOT an amount).
+   * @param index - 0-based index of the billing item
+   * @returns Numeric amount string without commas (e.g., '1980'), or empty string
+   */
+  async getBillingAmountText(index: number): Promise<string> {
+    const labelText = await this.getRadioLabelText(index);
+    // Match Japanese Yen patterns, excluding year patterns like 2026年
+    const amountRegex = /[¥￥]\s*([\d,]+)|([\d,]+)\s*円/;
+    const match = labelText.match(amountRegex);
+    if (match) {
+      const amount = (match[1] || match[2]).replace(/,/g, '');
+      // Filter out year-like numbers (4 digits starting with 19xx or 20xx)
+      if (!/^(19|20)\d{2}$/.test(amount)) {
+        return amount;
+      }
+    }
+    return '';
+  }
+
+  /**
+   * Search the entire receipts page for monetary amount text.
+   * Scans all visible text on the page for ¥ or 円 patterns.
+   * @returns Array of amounts found (numeric strings without commas)
+   */
+  async getAllAmountsOnPage(): Promise<string[]> {
+    const pageText = await this.page.locator('body').innerText();
+    const amountRegex = /[¥￥]\s*([\d,]+)|([\d,]+)\s*円/g;
+    const amounts: string[] = [];
+    let match;
+    while ((match = amountRegex.exec(pageText)) !== null) {
+      const amount = (match[1] || match[2]).replace(/,/g, '');
+      // Filter out year-like numbers (4 digits starting with 19xx or 20xx)
+      if (!/^(19|20)\d{2}$/.test(amount)) {
+        amounts.push(amount);
+      }
+    }
+    return amounts;
+  }
+
+  /**
+   * Get the first billing amount found on the page.
+   * Tries radio label first, falls back to scanning full page.
+   * @param index - 0-based billing item index
+   * @returns Numeric amount string, or empty string if not found
+   */
+  async getFirstBillingAmount(index: number = 0): Promise<string> {
+    // Try extracting from radio label first
+    const labelAmount = await this.getBillingAmountText(index);
+    if (labelAmount) return labelAmount;
+
+    // Fallback: scan entire page for amounts
+    const pageAmounts = await this.getAllAmountsOnPage();
+    return pageAmounts.length > 0 ? pageAmounts[0] : '';
+  }
+
+  /**
+   * Get all billing items info from the page (label text for all radio buttons).
+   * Useful for debugging and logging.
+   * @returns Array of label texts
+   */
+  async getAllBillingItemTexts(): Promise<string[]> {
+    const labels = this.page.locator('label[for^="outid_"]');
+    const count = await labels.count();
+    const texts: string[] = [];
+    for (let i = 0; i < count; i++) {
+      const text = await labels.nth(i).innerText();
+      texts.push(text.trim());
+    }
+    return texts;
+  }
 }
+
