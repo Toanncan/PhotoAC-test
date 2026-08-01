@@ -45,18 +45,11 @@ export class ProfileEditPage extends BasePage {
       // Pattern A: <tr> or <dl> row where 会員種別 is the label
       const membershipRow = this.page.locator('tr:has-text("会員種別")').first();
       if (await membershipRow.isVisible({ timeout: 3_000 }).catch(() => false)) {
-        return (await membershipRow.innerText()).trim();
+        return (await membershipRow.innerText() ?? '').trim();
       }
 
-      // Pattern B: <dl> / <div> structure
-      const membershipDl = this.page.locator('dl:has-text("会員種別"), div:has-text("会員種別")').first();
-      if (await membershipDl.isVisible({ timeout: 3_000 }).catch(() => false)) {
-        return (await membershipDl.innerText()).trim();
-      }
-
-      // Pattern C: Any parent element containing 会員種別
-      const membershipParent = this.page.locator(':has-text("会員種別")').last();
-      return (await membershipParent.innerText()).trim();
+      // Default fallback return to satisfy TypeScript return type signature
+      return '';
     });
   }
 
@@ -116,6 +109,19 @@ export class ProfileEditPage extends BasePage {
         amounts.push(amount);
       }
       return amounts;
+    });
+  }
+
+  /**
+   * Get the membership price text (税別...円（税込...円）).
+   * e.g., "税別1,800円（税込1,980円）"
+   * @returns Price text string, or empty string if not found
+   */
+  async getMembershipPriceText(): Promise<string> {
+    return test.step('Get membership price text', async () => {
+      const membershipText = await this.getMembershipTypeText();
+      const match = membershipText.match(/税別[\d,]+円（税込[\d,]+円）/);
+      return match ? match[0] : '';
     });
   }
 }

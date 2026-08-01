@@ -10,18 +10,18 @@ dotenv.config({ path: path.resolve(process.cwd(), '.env') });
  */
 export const envConfig = {
   /** Base URL of the application under test */
-  baseUrl: process.env.BASE_URL,
+  baseUrl: process.env.BASE_URL || '',
 
   /** Test user credentials (download member) */
   testUser: {
-    email: process.env.TEST_USER_EMAIL,
-    password: process.env.TEST_USER_PASSWORD,
+    email: process.env.TEST_USER_EMAIL!,
+    password: process.env.TEST_USER_PASSWORD!,
   },
 
   /** Creator credentials */
   creatorUser: {
-    email: process.env.CREATOR_EMAIL,
-    password: process.env.CREATOR_PASSWORD,
+    email: process.env.CREATOR_EMAIL!,
+    password: process.env.CREATOR_PASSWORD!,
   },
 
   /** Admin credentials */

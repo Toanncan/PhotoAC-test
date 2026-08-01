@@ -99,15 +99,25 @@ export async function searchGmailEmails(
     if (after) searchOptions.after = new Date(after);
     if (before) searchOptions.before = new Date(before);
 
-    const emails = await gmail.check_inbox(
-      CREDENTIALS_PATH,
-      TOKEN_PATH,
-      searchOptions,
-    );
+    // Silence console.log temporarily during gmail-tester check_inbox execution to avoid pollution in reports
+    const originalConsoleLog = console.log;
+    console.log = () => { };
 
-    return emails || [];
+    try {
+      const emails = await gmail.check_inbox(
+        CREDENTIALS_PATH,
+        TOKEN_PATH,
+        searchOptions,
+      );
+      return emails || [];
+    } finally {
+      // Always restore original console.log
+      console.log = originalConsoleLog;
+    }
   } catch (error) {
-    console.error('[Gmail Utils] Error searching emails:', error);
+    // console.error('[Gmail Utils] Error searching emails:', error);
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(message);
     return [];
   }
 }
@@ -175,3 +185,30 @@ export function extractAmountsFromText(emailBody: string): string[] {
 
   return amounts;
 }
+
+/**
+ * Extract Order ID (注文ID) from email body text.
+ * Matches: 注文ID：PRMPD-7506a55ab5416ad8
+ *
+ * @param emailBody - Plain text or HTML body
+ * @returns Order ID string, or empty string if not found
+ */
+export function extractOrderId(emailBody: string): string {
+  const cleanText = emailBody.replace(/<[^>]*>/g, ' ');
+  const match = cleanText.match(/注文ID[：:]\s*([A-Za-z0-9-]+)/);
+  return match ? match[1].trim() : '';
+}
+
+/**
+ * Extract Price/Fee text (料金) from email body text.
+ * Matches: 料金：税別17,182円（税込18,900円）
+ *
+ * @param emailBody - Plain text or HTML body
+ * @returns Price string, or empty string if not found
+ */
+export function extractPriceText(emailBody: string): string {
+  const cleanText = emailBody.replace(/<[^>]*>/g, ' ');
+  const match = cleanText.match(/料金[：:]\s*([^\s\r\n]+)/);
+  return match ? match[1].trim() : '';
+}
+
