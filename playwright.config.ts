@@ -104,7 +104,7 @@ export default defineConfig({
       },
     },
 
-    // Setup project for Creator session
+    // // Setup project for Creator session
     {
       name: 'setup-creator',
       testMatch: '**/creator.setup.ts',
@@ -120,34 +120,34 @@ export default defineConfig({
       },
     },
 
-    // Setup project for Downloader session (Firefox — separate storageState)
-    {
-      name: 'setup-downloader-firefox',
-      testMatch: '**/downloader-firefox.setup.ts',
-      use: {
-        ...devices['Desktop Firefox'],
-        viewport: { width: 1920, height: 1080 },
-        // Must explicitly include httpCredentials for staging HTTP Basic Auth
-        ...(HTTP_USER && HTTP_PASS
-          ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
-          : {}),
-      },
-      dependencies: ['chromium-downloader'],
-    },
+    // // Setup project for Downloader session (Firefox — separate storageState)
+    // {
+    //   name: 'setup-downloader-firefox',
+    //   testMatch: '**/downloader-firefox.setup.ts',
+    //   use: {
+    //     ...devices['Desktop Firefox'],
+    //     viewport: { width: 1920, height: 1080 },
+    //     // Must explicitly include httpCredentials for staging HTTP Basic Auth
+    //     ...(HTTP_USER && HTTP_PASS
+    //       ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
+    //       : {}),
+    //   },
+    //   dependencies: ['chromium-downloader'],
+    // },
 
-    // Setup project for Creator session (Firefox — separate storageState)
-    {
-      name: 'setup-creator-firefox',
-      testMatch: '**/creator-firefox.setup.ts',
-      use: {
-        ...devices['Desktop Firefox'],
-        viewport: { width: 1920, height: 1080 },
-        // Must explicitly include httpCredentials for staging HTTP Basic Auth
-        ...(HTTP_USER && HTTP_PASS
-          ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
-          : {}),
-      },
-    },
+    // // Setup project for Creator session (Firefox — separate storageState)
+    // {
+    //   name: 'setup-creator-firefox',
+    //   testMatch: '**/creator-firefox.setup.ts',
+    //   use: {
+    //     ...devices['Desktop Firefox'],
+    //     viewport: { width: 1920, height: 1080 },
+    //     // Must explicitly include httpCredentials for staging HTTP Basic Auth
+    //     ...(HTTP_USER && HTTP_PASS
+    //       ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
+    //       : {}),
+    //   },
+    // },
 
     // Chromium Downloader — Tests running under Downloader session
     {
@@ -181,40 +181,40 @@ export default defineConfig({
       testMatch: '**/creator/**/*.spec.ts',
     },
 
-    // ── Firefox Downloader ────────────────────────────────────────────────────
-    // Reuses the same storageState from setup-downloader (session is browser-agnostic)
-    {
-      name: 'firefox-downloader',
-      use: {
-        ...devices['Desktop Firefox'],
-        viewport: { width: 1920, height: 1080 },
-        // Use Firefox-specific storageState — Chromium cookies are not compatible with Firefox
-        storageState: DOWNLOADER_AUTH_STATE_FIREFOX_PATH,
-        ...(HTTP_USER && HTTP_PASS
-          ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
-          : {}),
-      },
-      // Also wait for chromium-downloader to finish first to avoid session conflict
-      // (same account cannot be logged in on 2 browsers simultaneously)
-      dependencies: ['setup-downloader-firefox'],
-      testIgnore: '**/creator/**/*.spec.ts',
-    },
+    // // ── Firefox Downloader ────────────────────────────────────────────────────
+    // // Reuses the same storageState from setup-downloader (session is browser-agnostic)
+    // {
+    //   name: 'firefox-downloader',
+    //   use: {
+    //     ...devices['Desktop Firefox'],
+    //     viewport: { width: 1920, height: 1080 },
+    //     // Use Firefox-specific storageState — Chromium cookies are not compatible with Firefox
+    //     storageState: DOWNLOADER_AUTH_STATE_FIREFOX_PATH,
+    //     ...(HTTP_USER && HTTP_PASS
+    //       ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
+    //       : {}),
+    //   },
+    //   // Also wait for chromium-downloader to finish first to avoid session conflict
+    //   // (same account cannot be logged in on 2 browsers simultaneously)
+    //   dependencies: ['setup-downloader-firefox'],
+    //   testIgnore: '**/creator/**/*.spec.ts',
+    // },
 
-    // ── Firefox Creator ───────────────────────────────────────────────────────
-    {
-      name: 'firefox-creator',
-      use: {
-        ...devices['Desktop Firefox'],
-        viewport: { width: 1920, height: 1080 },
-        // Use Firefox-specific storageState — Chromium cookies are not compatible with Firefox
-        storageState: CREATOR_AUTH_STATE_FIREFOX_PATH,
-        ...(HTTP_USER && HTTP_PASS
-          ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
-          : {}),
-      },
-      dependencies: ['setup-creator-firefox'],
-      testMatch: '**/creator/**/*.spec.ts',
-    },
+    // // ── Firefox Creator ───────────────────────────────────────────────────────
+    // {
+    //   name: 'firefox-creator',
+    //   use: {
+    //     ...devices['Desktop Firefox'],
+    //     viewport: { width: 1920, height: 1080 },
+    //     // Use Firefox-specific storageState — Chromium cookies are not compatible with Firefox
+    //     storageState: CREATOR_AUTH_STATE_FIREFOX_PATH,
+    //     ...(HTTP_USER && HTTP_PASS
+    //       ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
+    //       : {}),
+    //   },
+    //   dependencies: ['setup-creator-firefox'],
+    //   testMatch: '**/creator/**/*.spec.ts',
+    // },
 
     // ── WebKit (Safari) Downloader ────────────────────────────────────────────
     // {

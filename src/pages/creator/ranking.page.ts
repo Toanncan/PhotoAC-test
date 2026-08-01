@@ -135,7 +135,6 @@ export class RankingPage extends BasePage {
   async goToRankingPage(): Promise<void> {
     await test.step('Navigate to Creator Ranking page', async () => {
       await this.navigate(this.PAGE_URL);
-      // await this.waitForPageLoad();
     });
   }
 

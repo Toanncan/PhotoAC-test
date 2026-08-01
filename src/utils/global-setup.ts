@@ -22,8 +22,8 @@ async function globalSetup(): Promise<void> {
     fs.mkdirSync(allureResultsDir, { recursive: true });
   }
 
-  const env = process.env.ENV || 'staging';
-  const baseUrl = process.env.BASE_URL || 'https://test-lien.photo-ac.com';
+  const env = process.env.ENV;
+  const baseUrl = process.env.BASE_URL;
   const nodeVersion = process.version;
   const playwrightVersion = getPackageVersion('@playwright/test');
   const allureVersion = getPackageVersion('allure-playwright');

@@ -231,7 +231,7 @@ photo-ac-test/
 | Luôn import `test` từ `base.fixture.ts` thay vì `@playwright/test` để tận dụng các page objects đã được khởi tạo tự động. | Không khởi tạo thủ công `new LoginPage(page)` trong từng file spec nếu đã có fixture hỗ trợ. |
 | Sử dụng Web-First Assertions (`await expect(locator).toBeVisible()`) để tự động chờ element xuất hiện. | Tránh dùng hard-timeout như `page.waitForTimeout(5000)` làm chậm test suite. |
 | Sử dụng bộ định vị ngữ nghĩa (Semantic Locator) như `page.getByRole()`, `page.getByLabel()`. | Không sử dụng XPath tuyệt đối dựa trên cấu trúc giao diện dễ bị thay đổi. |
-| Mọi dữ liệu cần tính duy nhất (Email tạo mới, tên...) phải được sinh tự động bằng [test-data.ts](file:///d:/Js/photo-ac-test/src/utils/test-data.ts). | Không hardcode dữ liệu test trùng lặp gây xung đột khi chạy song song. |
+| Mọi dữ liệu cần tính duy nhất (Email tạo mới, tên...) phải được sinh tự động bằng [test-data.ts](../src/utils/test-data.ts). | Không hardcode dữ liệu test trùng lặp gây xung đột khi chạy song song. |
 
 ### 3. Tối ưu hóa Đăng nhập (Session Sharing)
 Dự án áp dụng cơ chế đăng nhập 1 lần qua `auth.setup.ts`. Session đăng nhập sẽ được lưu vào `.auth/user.json` và tự động đính kèm vào các test case chạy sau, giúp giảm thiểu thời gian đăng nhập lặp đi lặp lại.
@@ -247,4 +247,3 @@ npm run clean
 
 ---
 
-*Tài liệu được cập nhật tự động bởi Antigravity AI — photo-ac E2E Automation Framework*

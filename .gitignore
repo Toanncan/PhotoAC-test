@@ -40,3 +40,7 @@ debug_output.txt
 # Gmail API credentials — NEVER commit
 credentials.json
 gmail-token.json
+ac_receipt_no_1910696.pdf
+
+#test gmail
+/src/tests/downloader/test-gmail.spec.ts

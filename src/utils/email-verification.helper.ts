@@ -4,10 +4,12 @@ import {
   getLatestGmailEmail,
   getEmailBodyText,
   extractAmountsFromText,
+  extractOrderId,
+  extractPriceText,
 } from './gmail.utils';
 
 // Re-export for convenience — specs only need to import from this file
-export { extractAmountsFromText };
+export { extractAmountsFromText, extractOrderId, extractPriceText };
 
 /**
  * Result of an email verification operation.

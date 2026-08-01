@@ -3,7 +3,6 @@ import * as allure from 'allure-js-commons';
 import * as path from 'path';
 import { LoginPage } from '../pages/common/login.page';
 import { DashboardPage } from '../pages/dashboard.page';
-import { CreatorLoginPage } from '../pages/creator-login.page';
 import { RankingPage } from '../pages/creator/ranking.page';
 import { ReceiptsPage } from '../pages/downloader/receipts.page';
 import { ProfileEditPage } from '../pages/downloader/profile-edit.page';
@@ -16,7 +15,6 @@ import { envConfig } from '../utils/env.config';
 type PageFixtures = {
   loginPage: LoginPage;
   dashboardPage: DashboardPage;
-  creatorLoginPage: CreatorLoginPage;
   rankingPage: RankingPage;
   receiptsPage: ReceiptsPage;
   profileEditPage: ProfileEditPage;
@@ -83,12 +81,6 @@ export const test = base.extend<PageFixtures>({
   dashboardPage: async ({ page }, use) => {
     const dashboardPage = new DashboardPage(page);
     await use(dashboardPage);
-  },
-
-  // Provides a CreatorLoginPage instance for creator portal tests
-  creatorLoginPage: async ({ page }, use) => {
-    const creatorLoginPage = new CreatorLoginPage(page);
-    await use(creatorLoginPage);
   },
 
   // Provides a RankingPage instance for ranking page tests
