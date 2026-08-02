@@ -1,3 +1,3 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","14756","authenticate as creator","setup-creator","2026-08-02","passed","2026-08-02","","","",""
-"","14924","Authenticate as downloader","setup-downloader","2026-08-02","passed","2026-08-02","","","",""
+"","12097","authenticate as creator","setup-creator","2026-08-02","passed","2026-08-02","","","",""
+"","19788","Authenticate as downloader","setup-downloader","2026-08-02","passed","2026-08-02","","","",""
