@@ -1,6 +1,0 @@
-Expected Amounts: ["17182","18900"]
-Total emails found: 28
-All email amounts: [["1800","1980"],["17182","18900"]]
-Match found: true
-Matched amount: 17182
-Matched email #: 2
