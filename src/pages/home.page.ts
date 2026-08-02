@@ -6,7 +6,7 @@ import { BasePage } from './common/base.page';
  *
  * NOTE: Update locators after inspecting the actual DOM.
  */
-export class DashboardPage extends BasePage {
+export class HomePage extends BasePage {
   // ─── Locators ─────────────────────────────────────────────────────────────
 
   /** Page heading / main title of the dashboard */
@@ -32,8 +32,8 @@ export class DashboardPage extends BasePage {
   /**
    * Navigate directly to the dashboard root.
    */
-  async goToDashboard(): Promise<void> {
-    await test.step('Navigate to Dashboard', async () => {
+  async goToHomePage(): Promise<void> {
+    await test.step('Navigate to HomePage', async () => {
       await this.navigate('/');
     });
   }
@@ -51,6 +51,7 @@ export class DashboardPage extends BasePage {
    */
   async search(keyword: string): Promise<void> {
     await test.step(`Search with keyword: "${keyword}"`, async () => {
+      await this.searchInput.click();
       await this.fillInput(this.searchInput, keyword);
       await this.page.keyboard.press('Enter');
     });
@@ -69,16 +70,16 @@ export class DashboardPage extends BasePage {
    * Log out by clicking the logout button/link.
    */
   async logout(): Promise<void> {
-    await test.step('Logout from dashboard', async () => {
+    await test.step('Logout from HomePage', async () => {
       await this.openUserMenu();
       await this.clickElement(this.logoutButton);
     });
   }
 
   /**
-   * Check if the dashboard is loaded (heading is visible).
+   * Check if the HomePage is loaded (heading is visible).
    */
-  async isDashboardLoaded(): Promise<boolean> {
+  async isHomePageLoaded(): Promise<boolean> {
     return this.isVisible(this.pageHeading);
   }
 }
