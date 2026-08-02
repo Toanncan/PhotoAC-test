@@ -2,7 +2,7 @@ import { test as base, expect } from '@playwright/test';
 import * as allure from 'allure-js-commons';
 import * as path from 'path';
 import { LoginPage } from '../pages/common/login.page';
-import { DashboardPage } from '../pages/dashboard.page';
+import { DashboardPage } from '../pages/home.page';
 import { RankingPage } from '../pages/creator/ranking.page';
 import { ReceiptsPage } from '../pages/downloader/receipts.page';
 import { ProfileEditPage } from '../pages/downloader/profile-edit.page';
