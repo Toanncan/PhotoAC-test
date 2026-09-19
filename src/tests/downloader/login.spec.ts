@@ -19,8 +19,8 @@
 //   //   page,
 //   // }) => {
 //   //   // Arrange
-//   //   const email = process.env.TEST_USER_EMAIL ?? '';
-//   //   const password = process.env.TEST_USER_PASSWORD ?? '';
+//   //   const email = process.env.PREMIUM_USER_EMAIL ?? '';
+//   //   const password = process.env.PREMIUM_USER_PASSWORD ?? '';
 
 //   //   // Act
 //   //   await loginPage.loginAsDownloader(email, password);
@@ -41,7 +41,7 @@
 //   //   loginPage,
 //   // }) => {
 //   //   // Arrange
-//   //   const email = process.env.TEST_USER_EMAIL ?? 'test@example.com';
+//   //   const email = process.env.PREMIUM_USER_EMAIL ?? 'test@example.com';
 //   //   const wrongPassword = 'WrongPassword_Invalid_999!';
 
 //   //   // Act

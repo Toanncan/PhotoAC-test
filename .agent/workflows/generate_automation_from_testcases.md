@@ -244,13 +244,12 @@ Nếu user chưa cung cấp đủ — hỏi trước khi bắt đầu.
 
 ### Bước 7: Cleanup và Bàn Giao
 
-1. **Code cleanup** (bắt buộc):
-   - Xóa `console.log()` / debug log tạm
-   - Xóa locator không còn sử dụng
-   - Xóa commented-out code
-   - Không còn `waitForTimeout()`
-   - Không còn hardcoded test data
-   - Import gọn gàng — không unused imports
+1. **Code cleanup & Quality Gate** (bắt buộc theo [code_review_rules.md](file:///d:/Js/photo-ac-test/.agent/rules/code_review_rules.md)):
+   - **Import Check:** Đảm bảo test spec import `{ test, expect }` từ `base.fixture.ts`, không import từ `@playwright/test`.
+   - **POM Check:** Không đặt business assertions trong Page classes.
+   - **Anti-patterns scan:** Xóa sạch `test.only`, `page.waitForTimeout()`, `console.log()`, commented code.
+   - **Shared Files & Blast Radius:** Nếu có sửa file dùng chung (`BasePage`, `base.fixture.ts`, `helpers.ts`), đảm bảo không phá vỡ method signature cũ và chạy regression test liên quan.
+   - **Test data:** Sử dụng `test-data.ts` sinh dynamic data, không hardcode.
 
 2. **Cập nhật artifact `task.md`** với kết quả cuối:
    ```markdown

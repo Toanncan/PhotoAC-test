@@ -4,7 +4,7 @@ description: Thiet ke va scaffold automation framework hoan chinh cho Playwright
 
 # Workflow: Thiết Kế Automation Framework (Playwright TypeScript)
 
-> **BẮT BUỘC (MANDATORY SKILL):** Bạn PHẢI nạp và đọc kỹ nội dung của skill **`framework_architect`** (tại `.agent/skills/framework_architect/SKILL.md`) trước khi bắt đầu. Ngoài ra, tham khảo thêm skill **`qa_automation_engineer`** để nắm các quy tắc automation chung.
+> **BẮT BUỘC (MANDATORY SKILL):** Bạn PHẢI nạp và đọc kỹ nội dung của skill **`framework_architect`** (tại `.agent/skills/framework_architect/SKILL.md`) trước khi bắt đầu. Ngoài ra, tuân thủ các quy tắc tại [code_review_rules.md](file:///d:/Js/photo-ac-test/.agent/rules/code_review_rules.md) và [automation_rules.md](file:///d:/Js/photo-ac-test/.agent/rules/automation_rules.md).
 
 Workflow này giúp agent thiết kế, scaffold và triển khai automation framework Playwright TypeScript hoàn chỉnh từ đầu.
 

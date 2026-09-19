@@ -190,12 +190,12 @@ Nếu user chưa cung cấp đủ — hỏi:
 
 ### Bước 5: Cleanup và Bàn Giao
 
-1. **Code cleanup** (bắt buộc trước khi bàn giao):
-   - Xóa `console.log()` / debug log
-   - Xóa locator không dùng
-   - Xóa commented-out code
-   - Không còn `waitForTimeout()`
-   - Import không thừa
+1. **Code cleanup & Quality Gate** (bắt buộc theo [code_review_rules.md](file:///d:/Js/photo-ac-test/.agent/rules/code_review_rules.md)):
+   - **Import Check:** Đảm bảo test spec import `{ test, expect }` từ `base.fixture.ts`, không import từ `@playwright/test`.
+   - **POM Check:** Tách bạch rõ ràng: không assert trong Page classes, locators đặt `private readonly` bằng semantic locator.
+   - **Anti-patterns scan:** Xóa sạch `test.only`, `page.waitForTimeout()`, `console.log()`, code comment thừa.
+   - **Zero Regression:** Nếu sửa file dùng chung, bắt buộc đảm bảo backward compatibility và verify các test liên quan.
+   - **Reporting:** Bọc các thao tác trong `test.step()` rõ ràng cho Allure.
 
 2. **Cập nhật artifact `task.md`** với kết quả:
    ```markdown

@@ -109,9 +109,13 @@ npx playwright install --with-deps
    ```env
    BASE_URL=link test.
    
-   # Thông tin tài khoản Download Member (người tải ảnh)
-   TEST_USER_EMAIL=your-email@example.com
-   TEST_USER_PASSWORD=your-password
+   # Thông tin tài khoản Download Member - Premium
+   PREMIUM_USER_EMAIL=your-email@example.com
+   PREMIUM_USER_PASSWORD=your-password
+   
+   # Thông tin tài khoản Download Member - Free
+   FREE_USER_EMAIL=your-free-email@example.com
+   FREE_USER_PASSWORD=your-free-password
    
    # Thông tin tài khoản Creator (người sáng tạo nội dung)
    CREATOR_EMAIL=your-creator-email@example.com

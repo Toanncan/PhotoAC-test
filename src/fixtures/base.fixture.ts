@@ -2,10 +2,11 @@ import { test as base, expect } from '@playwright/test';
 import * as allure from 'allure-js-commons';
 import * as path from 'path';
 import { LoginPage } from '../pages/common/login.page';
-import { DashboardPage } from '../pages/home.page';
+import { HomePage } from '../pages/common/home.page';
 import { RankingPage } from '../pages/creator/ranking.page';
 import { ReceiptsPage } from '../pages/downloader/receipts.page';
 import { ProfileEditPage } from '../pages/downloader/profile-edit.page';
+import { SearchResultPage } from '@pages/common/search-results.page';
 import { envConfig } from '../utils/env.config';
 
 /**
@@ -14,10 +15,11 @@ import { envConfig } from '../utils/env.config';
  */
 type PageFixtures = {
   loginPage: LoginPage;
-  dashboardPage: DashboardPage;
+  homePage: HomePage;
   rankingPage: RankingPage;
   receiptsPage: ReceiptsPage;
   profileEditPage: ProfileEditPage;
+  searchResultPage: SearchResultPage;
   allureMetadata: void;
   screenshotOnPass: void;
 };
@@ -77,10 +79,10 @@ export const test = base.extend<PageFixtures>({
     await use(loginPage);
   },
 
-  // Provides a DashboardPage instance for tests that need it
-  dashboardPage: async ({ page }, use) => {
-    const dashboardPage = new DashboardPage(page);
-    await use(dashboardPage);
+  // Provides a HomePage instance for tests that need it
+  homePage: async ({ page }, use) => {
+    const homePage = new HomePage(page);
+    await use(homePage);
   },
 
   // Provides a RankingPage instance for ranking page tests
@@ -99,6 +101,10 @@ export const test = base.extend<PageFixtures>({
   profileEditPage: async ({ page }, use) => {
     const profileEditPage = new ProfileEditPage(page);
     await use(profileEditPage);
+  },
+  searchResultPage: async ({ page }, use) => {
+    const searchResultPage = new SearchResultPage(page);
+    await use(searchResultPage);
   },
 
   /**

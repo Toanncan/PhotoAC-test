@@ -127,6 +127,20 @@ Kích hoạt khi user nói:
 
 ---
 
+### Review Codebase & Quản Trị Rủi Ro Hồi Quy
+
+Tác vụ này sử dụng skill `code_review_guardian`.
+
+Sử dụng workflow: `review_codebase`
+
+Kích hoạt khi user nói:
+- review code / review codebase
+- kiểm tra code mới có ảnh hưởng code cũ không
+- audit code / check zero regression
+- review PR / review pull request
+
+---
+
 ## Tech Stack
 
 - **Ngôn ngữ:** TypeScript
@@ -147,17 +161,19 @@ Kích hoạt khi user nói:
 6. `css selector`
 7. `xpath` (lựa chọn cuối cùng)
 
-Tham chiếu chi tiết: `.agent-playwright/rules/locator_strategy.md`
+Tham chiếu chi tiết: `.agent/rules/locator_strategy.md`
 
 ---
 
 ## Tham Chiếu Rules
 
-Agent PHẢI tuân thủ các rules chi tiết trong `.agent-playwright/rules/`:
+Agent PHẢI tuân thủ các rules chi tiết trong `.agent/rules/`:
 
 - `automation_rules.md` — Quy tắc automation chung
+- `code_review_rules.md` — Quy chuẩn code review, chống hồi quy và bảo vệ shared files
 - `locator_strategy.md` — Chiến lược chọn locator
 - `playwright_rules.md` — Quy tắc riêng cho Playwright
+- `local_test_runner.md` — Quy tắc vận hành portal & test runner local
 
 ---
 

@@ -12,10 +12,13 @@ export abstract class BasePage {
 
   protected readonly closeButton: Locator;
 
+  protected readonly pageLoadingIcon: Locator;
+
   constructor(page: Page) {
     this.page = page;
     this.photoAiModelContent = this.page.locator('.photo-ai-lab-modal__content');
     this.closeButton = this.page.getByRole('button', { name: '閉じる' }).nth(1);
+    this.pageLoadingIcon = page.locator('#full_page_loading').first();
   }
 
   // ─── Navigation ──────────────────────────────────────────────────────────
@@ -98,8 +101,8 @@ export abstract class BasePage {
    * @param locator - Playwright Locator
    * @param timeout - Optional custom timeout in ms
    */
-  async waitForElementToHide(locator: Locator, timeout?: number): Promise<void> {
-    await expect(locator).toBeHidden({ timeout });
+  async waitForPageLoadingIconHidden(): Promise<void> {
+    await this.pageLoadingIcon.waitFor({ state: 'hidden', timeout: 10_000 });
   }
 
   /**
