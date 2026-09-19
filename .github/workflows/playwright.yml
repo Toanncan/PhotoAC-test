@@ -7,8 +7,8 @@ on:
     branches: [dev, master]
 
   # Chạy tự động lúc 05:00 AM sáng thứ 7 giờ Việt Nam (22:00 UTC tối thứ 6)
-  schedule:
-    - cron: '0 22 * * 5'
+  #schedule:
+   # - cron: '0 22 * * 5'
 
   # Cho phép trigger thủ công và chọn browser
   workflow_dispatch:
