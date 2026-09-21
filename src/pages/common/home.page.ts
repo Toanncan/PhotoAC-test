@@ -11,7 +11,7 @@ export class HomePage extends BasePage {
   private readonly pageHeading = this.page.getByRole('heading', { level: 1 });
 
   /** Search input on the dashboard */
-  private readonly searchInput = this.page.getByRole('searchbox', { name: 'キーワード（例：女性）' });
+  readonly searchInput = this.page.locator('form:not(#search_frm_fixed):has(.search-by-ai) input[type="text"], form:not(#search_frm_fixed):has(.search-by-ai) input[type="search"], form:not(#search_frm_fixed):has(.search-by-ai) input#sw, input#sw:visible').first();
 
   /** User menu / account dropdown */
   private readonly userMenu = this.page.locator('[class*="user-menu"], [class*="user-nav"]').first();
@@ -29,7 +29,7 @@ export class HomePage extends BasePage {
   readonly popularTags = this.page.locator('.pop-tags-limit a[href*="utm_source=top_keyword"]');
 
   /** Image search modal trigger button (画像検索) */
-  readonly imageSearchButton = this.page.locator('a.search-file[data-target="#uploadFile"]').first();
+  readonly imageSearchButton = this.page.locator('form:not(#search_frm_fixed) a.search-file[data-target="#uploadFile"]');
 
   /** Image search file upload modal (#uploadFile) */
   readonly uploadFileModal = this.page.locator('#uploadFile');
@@ -46,22 +46,28 @@ export class HomePage extends BasePage {
   // ─── AI Search (AI検索 β版) Locators ─────────────────────────────────────────
 
   /** AI Search toggle button (.search-by-ai) */
-  readonly searchByAiButton = this.page.locator('.search-by-ai').first();
+  readonly searchByAiButton = this.page.locator('form:not(#search_frm_fixed) .search-by-ai');
 
   /** Hidden input for by_ai value (0: OFF, 1: ON) */
-  readonly byAiInput = this.page.locator('.search-by-ai input[name="by_ai"]').first();
+  readonly byAiInput = this.searchByAiButton.locator('input[name="by_ai"]');
 
   /** AI Search ON icon (green/active) */
-  readonly aiSearchOnIcon = this.page.locator('.search-by-ai .search-ai-icon-on').first();
+  readonly aiSearchOnIcon = this.searchByAiButton.locator('.search-ai-icon-on');
 
   /** AI Search OFF icon (gray/inactive) */
-  readonly aiSearchOffIcon = this.page.locator('.search-by-ai .search-ai-icon-off').first();
+  readonly aiSearchOffIcon = this.searchByAiButton.locator('.search-ai-icon-off');
 
   /** Clock overlay icon indicating daily search limit reached (3 times/day) */
-  readonly aiLimitClockIcon = this.page.locator('.search-by-ai .overlay-icon-clock').first();
+  readonly aiLimitClockIcon = this.searchByAiButton.locator('.overlay-icon-clock');
 
   /** Main search submit button */
   readonly searchSubmitButton = this.page.locator('button.search_btn, #search_btn').first();
+
+  /** Semantic search introduction modal displayed when AI search is activated upon reaching limit */
+  readonly semanticSearchModal = this.page.locator('.modal:has-text("AI検索を3回使えます"), .modal.show:has-text("AI検索")').first();
+
+  /** Close / dismiss button for semantic search continue modal */
+  readonly semanticSearchModalCloseButton = this.semanticSearchModal.locator('button.close, [data-dismiss="modal"], .btn-close, [aria-label="Close"]').first();
 
   // ─── Methods ──────────────────────────────────────────────────────────────
 
@@ -91,9 +97,14 @@ export class HomePage extends BasePage {
    */
   async search(keyword: string): Promise<void> {
     await test.step(`Search with keyword: "${keyword}"`, async () => {
-      await this.searchInput.click();
       await this.fillInput(this.searchInput, keyword);
-      await this.page.keyboard.press('Enter');
+      if (await this.searchSubmitButton.isVisible().catch(() => false)) {
+        await this.searchSubmitButton.click().catch(async () => {
+          await this.searchInput.press('Enter');
+        });
+      } else {
+        await this.searchInput.press('Enter');
+      }
     });
   }
 
@@ -179,7 +190,20 @@ export class HomePage extends BasePage {
   async uploadImageForSearch(filePath: string): Promise<void> {
     await test.step(`Upload image for search: "${filePath}"`, async () => {
       await this.openImageSearchModal();
-      await this.fileUploadInput.setInputFiles(filePath);
+
+      // Photo-AC requires isFileInputClicked = true to trigger uploadImageAjax on change
+      await this.page.evaluate(() => {
+        (window as any).isFileInputClicked = true;
+      });
+
+      // Wait for navigation triggered by window.location.href to /search/ris
+      await Promise.all([
+        this.page.waitForURL(/\/search\/ris/i, { timeout: 30_000, waitUntil: 'domcontentloaded' }),
+        (async () => {
+          await this.fileUploadInput.setInputFiles(filePath);
+          await this.fileUploadInput.dispatchEvent('change').catch(() => {});
+        })(),
+      ]);
     });
   }
 
@@ -204,21 +228,42 @@ export class HomePage extends BasePage {
   }
 
   /**
+   * Dismiss the semantic/AI search introduction modal if visible.
+   */
+  async dismissSemanticSearchModal(): Promise<void> {
+    const isVisible = await this.semanticSearchModal.waitFor({ state: 'visible', timeout: 3000 }).then(() => true).catch(() => false);
+    if (isVisible) {
+      await test.step('Dismiss Semantic Search Modal', async () => {
+        if (await this.semanticSearchModalCloseButton.isVisible().catch(() => false)) {
+          await this.semanticSearchModalCloseButton.click().catch(() => {});
+        }
+        await this.page.keyboard.press('Escape').catch(() => {});
+        await this.semanticSearchModal.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
+        await this.page.locator('.modal-backdrop').waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+      });
+    }
+  }
+
+  /**
    * Perform a search with AI Search enabled (AI検索).
+   * Automatically detects if AI toggle is already ON (e.g. after limit reached),
+   * dismisses introduction modal if present, and executes genuine user search flow.
    * @param naturalQuery - Descriptive search query (e.g. 'オフィスでパソコンを開くビジネスマン')
    */
   async searchWithAi(naturalQuery: string): Promise<void> {
     await test.step(`Search with AI using query: "${naturalQuery}"`, async () => {
+      await this.dismissSemanticSearchModal();
+
       const isAiOn = await this.aiSearchOnIcon.isVisible().catch(() => false);
       const isDisabled = await this.searchByAiButton.isDisabled().catch(() => false);
 
+      // Only toggle if not already ON and not disabled
       if (!isAiOn && !isDisabled) {
         await this.toggleAiSearch();
       }
 
-      await this.searchInput.click();
       await this.fillInput(this.searchInput, naturalQuery);
-      await this.page.keyboard.press('Enter');
+      await this.searchInput.press('Enter');
     });
   }
 }

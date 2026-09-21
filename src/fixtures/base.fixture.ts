@@ -38,7 +38,11 @@ export const test = base.extend<PageFixtures>({
     const projectName = testInfo.project.name.toLowerCase();
 
     let role = 'Common';
-    if (filePath.includes('downloader') || projectName.includes('downloader')) {
+    if (filePath.includes('guest') || projectName.includes('guest')) {
+      role = 'Guest';
+    } else if (filePath.includes('freeuser') || projectName.includes('free-user')) {
+      role = 'FreeUser';
+    } else if (filePath.includes('downloader') || projectName.includes('downloader')) {
       role = 'Downloader';
     } else if (filePath.includes('creator') || projectName.includes('creator')) {
       role = 'Creator';

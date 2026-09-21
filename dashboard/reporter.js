@@ -4,6 +4,11 @@
  * so the dashboard server can stream real-time test progress via SSE.
  */
 
+function stripAnsi(str) {
+  if (!str) return str;
+  return str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
+}
+
 class DashboardReporter {
   onBegin(config, suite) {
     const allTests = suite.allTests();
@@ -33,13 +38,17 @@ class DashboardReporter {
   }
 
   onTestEnd(test, result) {
+    const relativeFile = test.location.file.replace(/\\/g, '/').split('src/tests/')[1] || test.location.file;
+    const rawError = result.error ? (result.error.message || String(result.error)) : null;
     console.log('__TEST_EVENT__' + JSON.stringify({
       type: 'testEnd',
       id: test.id,
       title: test.title,
+      project: test.parent?.project()?.name || '',
+      file: relativeFile,
       status: result.status, // 'passed' | 'failed' | 'timedOut' | 'skipped'
       duration: result.duration,
-      error: result.error ? (result.error.message || String(result.error)) : null
+      error: rawError ? stripAnsi(rawError) : null
     }));
   }
 

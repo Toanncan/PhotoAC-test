@@ -128,6 +128,10 @@ Khi review mã nguồn, nếu phát hiện bất kỳ vi phạm nào sau đây, 
 | Hardcode credentials (mật khẩu/token thật) | Lỗ hổng bảo mật nghiêm trọng. | Đọc qua `process.env` hoặc `envConfig`. |
 | Dynamic/Positional CSS/XPath (`div:nth-child(3) > a`) | Cực kỳ dễ vỡ khi frontend cập nhật layout. | Dùng Playwright Semantic: `getByRole`, `getByLabel`, `getByPlaceholder`. |
 | Tự viết lại logic đã có trong `src/utils/` | Tăng nợ kỹ thuật và code duplication. | Bắt buộc tái sử dụng `helpers.ts`, `pdf.utils.ts`, `email-verification.helper.ts`. |
+| Lạm dụng URL Query Params Bypass UI trong E2E tests (`searchWithCombinedParams`, `page.goto('/search?...')`) | Vi phạm nguyên lý E2E testing; không kiểm thử hành vi người dùng thật, che giấu lỗi giao diện/tương tác dropdown và form. | Mô phỏng 100% người dùng thật: Click toolbar dropdown, chọn radio/checkbox, gõ input, nhấn Enter/Apply. Chỉ dùng URL injection khi test chuyên biệt về routing hoặc deep link. |
+| Gọi `locator.count()` ngay sau navigation/filter mà không có Web-First Auto-Wait | `count()` không auto-wait; quét trúng lúc DOM transition gap dẫn đến kết quả 0 phần tử ngẫu nhiên trên Firefox/WebKit. | Bắt buộc đặt Web-First assertion (`expect(locator.first()).toBeVisible()` hoặc `expect(locator).not.toHaveCount(0)`) trước khi lấy số lượng. |
+| Dùng `.catch(() => {})` nuốt timeout kết hợp `click({ force: true })` trên dynamic menus | Ép click lúc menu đang chuyển động (CSS transition) khiến Bootstrap/Gecko tự động đóng sập menu (auto-collapse). | Chờ menu/container hiển thị tường minh (`expect(menu).toBeVisible()`) rồi click tự nhiên. |
+| Upload file qua `setInputFiles` mà không kích hoạt sự kiện `change` | WebKit/Safari sandbox có thể không tự động dispatch event `change` của input ẩn, gây treo tiến trình upload. | Luôn bổ sung `await fileInput.dispatchEvent('change').catch(() => {})` sau khi set input files. |
 
 ---
 
@@ -140,7 +144,8 @@ Trước khi coi một task hoàn thành hoặc phê duyệt code, người revi
 [ ] 2. Import Check: Mọi spec đều import { test, expect } từ base.fixture.ts.
 [ ] 3. Shared File Safety: Có can thiệp Tier 1/Tier 2 không? Nếu có, có đảm bảo Backward Compatibility không?
 [ ] 4. Blast Radius: Đã phân tích và test lại tất cả spec chịu ảnh hưởng chưa?
-[ ] 5. Anti-Pattern Scan: Đã sạch test.only, console.log, hard sleep, raw xpath chưa?
+[ ] 5. Anti-Pattern Scan: Đã sạch test.only, console.log, hard sleep, raw xpath, URL bypass chưa?
 [ ] 6. Multi-Role & Browser Compatibility: Đã kiểm tra cả Chromium và Firefox theo ma trận role chưa?
 [ ] 7. Naming & Formatting: Đã đặt tên đúng quy chuẩn kebab-case / camelCase và dùng test.step() chưa?
+[ ] 8. True E2E Simulation: Tương tác 100% qua UI thật (Toolbar, Dropdown, Input), không lạm dụng URL query params để bypass luồng.
 ```

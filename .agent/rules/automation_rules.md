@@ -17,6 +17,10 @@ trigger: always_on
 - **Import bắt buộc:** Mọi spec file **BẮT BUỘC** import `{ test, expect }` từ `src/fixtures/base.fixture`, CẤM import trực tiếp từ `@playwright/test`.
 - **Reporting:** Mọi action và assertion quan trọng phải bọc trong `test.step('mô tả')` phục vụ Allure Report.
 - **Tính độc lập:** Mỗi test case phải độc lập (`beforeEach`/`afterEach`), không chia sẻ state giữa các test methods.
+- **100% Mô phỏng người dùng thật (True User Simulation - BẮT BUỘC):**
+  - Mọi kịch bản kiểm thử E2E (đặc biệt là Tìm kiếm & Bộ lọc - Search & Filters) **BẮT BUỘC thao tác trực tiếp trên giao diện UI** (click mở menu toolbar/dropdown, fill vào input, chọn radio/checkbox, nhấn Enter).
+  - **TUYỆT ĐỐI CẤM** việc lạm dụng sửa URL / tiêm query params (`page.goto('...?param=val')`, `searchWithCombinedParams()`) để đi tắt hoặc giả lập filter, trừ trường hợp test case đó có mục đích cụ thể là kiểm tra Deep-link URL routing hoặc URL persistence khi phân trang.
+  - Khi element nằm trong dropdown/modal, luôn dùng `:visible` scope để tránh tương tác nhầm vào các element ẩn của responsive template.
 
 ---
 
@@ -57,7 +61,7 @@ Photo-AC phân tách 4 vai trò (Roles) với session riêng biệt trên Chromi
 
 | Vai trò (Role) | Biến `.env` | Setup Chromium | Setup Firefox | StorageState Chromium | StorageState Firefox | Project Chạy Test |
 |---|---|---|---|---|---|---|
-| **Guest User** (Chưa đăng nhập) | *Không cần* | *Không cần* | *Không cần* | `cookies: []` | `cookies: []` | Dùng `test.use({ storageState: { cookies: [], origins: [] } })` |
+| **Guest User** (Chưa đăng nhập) | *Không cần* | *Không cần* | *Không cần* | `cookies: []` | `cookies: []` | `chromium-guest`<br>`firefox-guest` |
 | **Free User** (無料会員) | `FREE_USER_EMAIL`<br>`FREE_USER_PASSWORD` | `free-user.setup.ts` | `free-user-firefox.setup.ts` | `.auth/free-user.json` | `.auth/free-user-firefox.json` | `chromium-free-user`<br>`firefox-free-user` |
 | **Premium User** (プレミアム会員) | `PREMIUM_USER_EMAIL`<br>`PREMIUM_USER_PASSWORD` | `premium-user.setup.ts` | `premium-user-firefox.setup.ts` | `.auth/premium-user.json` | `.auth/premium-user-firefox.json` | `chromium-downloader`<br>`firefox-downloader` |
 | **Creator** (クリエイター) | `CREATOR_EMAIL`<br>`CREATOR_PASSWORD` | `creator.setup.ts` | `creator-firefox.setup.ts` | `.auth/creator.json` | `.auth/creator-firefox.json` | `chromium-creator`<br>`firefox-creator` |

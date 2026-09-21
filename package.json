@@ -9,6 +9,7 @@
     "test:debug": "playwright test --debug",
     "test:chromium": "playwright test --project=chromium-downloader --project=chromium-creator",
     "test:firefox": "playwright test --project=firefox-downloader --project=firefox-creator",
+    "test:guest": "playwright test --project=chromium-guest",
     "test:webkit": "playwright test --project=webkit",
     "test:smoke": "playwright test --grep @smoke",
     "test:regression": "playwright test --grep @regression",

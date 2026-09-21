@@ -122,6 +122,10 @@ Thực hiện rà soát tự động loại bỏ các code smells sau:
 | **AP-005** | Khối code lớn bị comment vô cớ | ⚠️ **WARNING** (Xóa bỏ để giữ code sạch) |
 | **AP-006** | Import trực tiếp `@playwright/test` trong spec | ⛔ **BLOCKER** (Đổi sang `base.fixture`) |
 | **AP-007** | Assertion nằm bên trong Page Object | ⛔ **BLOCKER** (Chuyển ra test spec) |
+| **AP-008** | Lạm dụng URL bypass / query injection trong E2E tests (`searchWithCombinedParams`) thay vì tương tác UI thật | ⛔ **BLOCKER** (Phải mô phỏng 100% thao tác click toolbar, dropdown, form inputs) |
+| **AP-009** | Gọi `locator.count()` sau navigation/filter mà không có Web-First Auto-Wait | ⛔ **BLOCKER** (Thêm assertion `toBeVisible()` trước khi lấy count) |
+| **AP-010** | Dùng `.catch(() => {})` nuốt timeout kết hợp `click({ force: true })` trên dynamic menus | ⛔ **BLOCKER** (Chờ menu hiển thị rồi click tự nhiên) |
+| **AP-011** | Upload file qua `setInputFiles` mà không kích hoạt sự kiện `change` cho WebKit | ⛔ **BLOCKER** (Bổ sung `dispatchEvent('change')`) |
 
 ---
 

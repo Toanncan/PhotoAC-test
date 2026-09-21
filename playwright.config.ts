@@ -181,6 +181,21 @@ export default defineConfig({
     },
 
     // ── Execution Projects (Chromium) ─────────────────────────────────────────
+    // Chromium Guest — Tests running without authentication (No login required)
+    {
+      name: 'chromium-guest',
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1920, height: 1080 },
+        storageState: { cookies: [], origins: [] },
+        launchOptions: { args: ['--disable-blink-features=AutomationControlled'] },
+        ...(HTTP_USER && HTTP_PASS
+          ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
+          : {}),
+      },
+      testMatch: '**/downloader/*guest*.spec.ts',
+    },
+
     // Chromium Downloader — Tests running under Premium Downloader session
     {
       name: 'chromium-downloader',
@@ -194,7 +209,11 @@ export default defineConfig({
           : {}),
       },
       dependencies: ['setup-premium-user'],
-      testIgnore: ['**/creator/**/*.spec.ts', '**/downloader/*freeUser*.spec.ts'],
+      testIgnore: [
+        '**/creator/**/*.spec.ts',
+        '**/downloader/*freeUser*.spec.ts',
+        '**/downloader/*guest*.spec.ts',
+      ],
     },
 
     // Chromium Free User — Tests running under Free User session
@@ -227,6 +246,20 @@ export default defineConfig({
     },
 
     // ── Execution Projects (Firefox) ──────────────────────────────────────────
+    // Firefox Guest — Tests running without authentication (No login required)
+    {
+      name: 'firefox-guest',
+      use: {
+        ...devices['Desktop Firefox'],
+        viewport: { width: 1920, height: 1080 },
+        storageState: { cookies: [], origins: [] },
+        ...(HTTP_USER && HTTP_PASS
+          ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
+          : {}),
+      },
+      testMatch: '**/downloader/*guest*.spec.ts',
+    },
+
     // Firefox Downloader — Tests running under Premium Downloader session
     {
       name: 'firefox-downloader',
@@ -239,7 +272,11 @@ export default defineConfig({
           : {}),
       },
       dependencies: ['setup-premium-user-firefox'],
-      testIgnore: ['**/creator/**/*.spec.ts', '**/downloader/*freeUser*.spec.ts'],
+      testIgnore: [
+        '**/creator/**/*.spec.ts',
+        '**/downloader/*freeUser*.spec.ts',
+        '**/downloader/*guest*.spec.ts',
+      ],
     },
 
     // Firefox Free User — Tests running under Free User session
@@ -270,6 +307,21 @@ export default defineConfig({
       },
       dependencies: ['setup-creator-firefox'],
       testMatch: '**/creator/**/*.spec.ts',
+    },
+
+    // ── Execution Projects (WebKit) ───────────────────────────────────────────
+    // WebKit Guest — Tests running on WebKit (Safari engine) without authentication
+    {
+      name: 'webkit-guest',
+      use: {
+        ...devices['Desktop Safari'],
+        viewport: { width: 1920, height: 1080 },
+        storageState: { cookies: [], origins: [] },
+        ...(HTTP_USER && HTTP_PASS
+          ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
+          : {}),
+      },
+      testMatch: '**/downloader/*guest*.spec.ts',
     },
   ],
 

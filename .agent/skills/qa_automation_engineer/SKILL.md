@@ -163,6 +163,13 @@ Kích hoạt khi user nói:
 
 Tham chiếu chi tiết: `.agent/rules/locator_strategy.md`
 
+## Nguyên Tắc Bắt Buộc: 100% True User Simulation (E2E Testing)
+
+- **Mô phỏng người dùng thật (End-to-End)**:
+  - Mọi luồng tìm kiếm và lọc kết quả phải được thực hiện bằng hành vi người dùng thật trên UI (click mở menu toolbar/dropdown, chọn checkbox/radio, nhập input và gõ phím Enter).
+  - **TUYỆT ĐỐI CẤM** lạm dụng URL query params manipulation (`searchWithCombinedParams`, `page.goto('/search?...')`) để thay thế luồng UI trong E2E tests, vì điều này làm mất giá trị kiểm thử giao diện thực tế và che giấu các bug frontend/dropdown.
+  - Ngoại lệ duy nhất: Khi test trực tiếp các trường hợp Routing đặc biệt, Direct Link, hoặc Deep-linking theo đúng yêu cầu nghiệp vụ.
+
 ---
 
 ## Tham Chiếu Rules

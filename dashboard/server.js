@@ -8,8 +8,52 @@ const ROOT_DIR = path.resolve(__dirname, '..');
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const ALLURE_REPORT_DIR = path.join(ROOT_DIR, 'allure-report');
 const PLAYWRIGHT_REPORT_DIR = path.join(ROOT_DIR, 'playwright-report');
+const ALLURE_RESULTS_DIR = path.join(ROOT_DIR, 'allure-results');
+const TEST_RESULTS_DIR = path.join(ROOT_DIR, 'test-results');
 
 let currentProcess = null;
+
+// Clean old test artifacts to prevent ghost tests and result pollution
+function cleanOldReports() {
+  let cleanedCount = 0;
+  try {
+    // 1. Dọn dẹp allure-results (giữ lại history nếu có để duy trì xu hướng)
+    if (fs.existsSync(ALLURE_RESULTS_DIR)) {
+      const files = fs.readdirSync(ALLURE_RESULTS_DIR);
+      for (const file of files) {
+        if (file === 'history') continue;
+        const fullPath = path.join(ALLURE_RESULTS_DIR, file);
+        try {
+          if (fs.statSync(fullPath).isDirectory()) {
+            fs.rmSync(fullPath, { recursive: true, force: true });
+          } else {
+            fs.unlinkSync(fullPath);
+          }
+          cleanedCount++;
+        } catch {}
+      }
+    }
+
+    // 2. Dọn dẹp test-results (video, screenshots, trace nặng)
+    if (fs.existsSync(TEST_RESULTS_DIR)) {
+      const files = fs.readdirSync(TEST_RESULTS_DIR);
+      for (const file of files) {
+        const fullPath = path.join(TEST_RESULTS_DIR, file);
+        try {
+          if (fs.statSync(fullPath).isDirectory()) {
+            fs.rmSync(fullPath, { recursive: true, force: true });
+          } else {
+            fs.unlinkSync(fullPath);
+          }
+          cleanedCount++;
+        } catch {}
+      }
+    }
+  } catch (err) {
+    console.error('Lỗi khi dọn dẹp báo cáo cũ:', err);
+  }
+  return cleanedCount;
+}
 let currentRun = {
   running: false,
   total: 0,
@@ -137,25 +181,63 @@ function startTestRun(options) {
     return { error: 'Một phiên test đang chạy. Vui lòng chờ hoặc bấm Dừng.' };
   }
 
-  const { project, file, headed, grep, workers } = options;
-  currentRun = {
-    running: true,
-    total: 0,
-    passed: 0,
-    failed: 0,
-    skipped: 0,
-    tests: [],
-    logs: []
-  };
+  const { project, projects, file, files, headed, grep, workers, cleanReport, retries, isRerun } = options;
+
+  // Pre-run Cleanup: Chỉ xóa kết quả cũ khi cleanReport !== false và không phải chế độ rerun
+  if (cleanReport !== false && !isRerun) {
+    const cleaned = cleanOldReports();
+    console.log(`[CLEANUP] Đã tự động dọn dẹp ${cleaned} tệp kết quả kiểm thử cũ.`);
+
+    currentRun = {
+      running: true,
+      isRerun: false,
+      total: 0,
+      passed: 0,
+      failed: 0,
+      skipped: 0,
+      tests: [],
+      logs: []
+    };
+
+    currentRun.logs.push('🧹 Đã tự động làm sạch dữ liệu kiểm thử cũ (allure-results và test-results).');
+  } else {
+    console.log('[RERUN] Chạy lại test case lỗi - bảo lưu toàn bộ kết quả kiểm thử trước đó.');
+    currentRun.running = true;
+    currentRun.isRerun = true;
+    currentRun.logs.push('🔁 Đang chạy lại các bài kiểm thử bị lỗi (bảo lưu kết quả các bài test đã Passed)...');
+  }
 
   const args = ['playwright', 'test'];
 
-  if (file && file.trim()) {
-    args.push(path.join('src', 'tests', file).replace(/\\/g, '/'));
+  // Hỗ trợ chọn nhiều file hoặc 1 file hoặc toàn bộ
+  let selectedFiles = [];
+  if (Array.isArray(files) && files.length > 0) {
+    selectedFiles = files;
+  } else if (file && file.trim()) {
+    selectedFiles = [file.trim()];
   }
 
-  if (project && project !== 'all') {
-    args.push(`--project=${project}`);
+  if (selectedFiles.length > 0) {
+    for (let f of selectedFiles) {
+      f = f.replace(/\\/g, '/');
+      const idx = f.toLowerCase().indexOf('src/tests/');
+      const relPath = idx !== -1 ? f.substring(idx + 'src/tests/'.length) : f;
+      args.push(path.join('src', 'tests', relPath).replace(/\\/g, '/'));
+    }
+  }
+
+  // Hỗ trợ chọn 1 project hoặc nhiều projects (ví dụ chromium-guest + firefox-guest)
+  let selectedProjects = [];
+  if (Array.isArray(projects) && projects.length > 0) {
+    selectedProjects = projects.filter(p => p && p !== 'all');
+  } else if (project && project !== 'all') {
+    selectedProjects = [project];
+  }
+
+  if (selectedProjects.length > 0) {
+    for (const p of selectedProjects) {
+      args.push(`--project=${p}`);
+    }
   }
 
   if (headed) {
@@ -163,11 +245,20 @@ function startTestRun(options) {
   }
 
   if (grep && grep.trim()) {
-    args.push(`--grep=${grep.trim()}`);
+    const cleanGrep = grep.trim();
+    if (/[ &|<>\^]/.test(cleanGrep)) {
+      args.push(`--grep="${cleanGrep.replace(/"/g, '\\"')}"`);
+    } else {
+      args.push(`--grep=${cleanGrep}`);
+    }
   }
 
   if (workers && Number(workers) > 0) {
     args.push(`--workers=${workers}`);
+  }
+
+  if (retries && Number(retries) > 0) {
+    args.push(`--retries=${retries}`);
   }
 
   // Use our custom reporter and keep allure-playwright + html
@@ -218,7 +309,6 @@ function startTestRun(options) {
       broadcast('log', { text, isError: true });
     }
   });
-
   currentProcess.on('close', async (code) => {
     currentRun.running = false;
     currentProcess = null;
@@ -239,7 +329,9 @@ function startTestRun(options) {
 
 function handleTestEvent(event) {
   if (event.type === 'suiteStart') {
-    currentRun.total = event.total;
+    if (!currentRun.isRerun) {
+      currentRun.total = event.total;
+    }
     broadcast('suiteStart', event);
   } else if (event.type === 'testBegin') {
     const existing = currentRun.tests.find(t => t.id === event.id);
@@ -247,25 +339,39 @@ function handleTestEvent(event) {
       currentRun.tests.push({ ...event, status: 'running' });
     } else {
       existing.status = 'running';
+      existing.error = null;
     }
     broadcast('testBegin', event);
   } else if (event.type === 'testEnd') {
     const existing = currentRun.tests.find(t => t.id === event.id);
+    const oldStatus = existing ? existing.status : null;
     if (existing) {
       existing.status = event.status;
       existing.duration = event.duration;
       existing.error = event.error;
+    } else {
+      currentRun.tests.push({ ...event });
     }
 
-    if (event.status === 'passed') currentRun.passed++;
-    else if (event.status === 'failed' || event.status === 'timedOut') currentRun.failed++;
-    else if (event.status === 'skipped') currentRun.skipped++;
+    // Nếu là rerun và cập nhật trạng thái của test cũ: giảm counter cũ
+    if (oldStatus && oldStatus !== event.status) {
+      if (oldStatus === 'passed') currentRun.passed = Math.max(0, currentRun.passed - 1);
+      else if (oldStatus === 'failed' || oldStatus === 'timedOut') currentRun.failed = Math.max(0, currentRun.failed - 1);
+      else if (oldStatus === 'skipped') currentRun.skipped = Math.max(0, currentRun.skipped - 1);
+    }
+
+    if (!oldStatus || oldStatus !== event.status) {
+      if (event.status === 'passed') currentRun.passed++;
+      else if (event.status === 'failed' || event.status === 'timedOut') currentRun.failed++;
+      else if (event.status === 'skipped') currentRun.skipped++;
+    }
 
     broadcast('testEnd', {
       ...event,
       passed: currentRun.passed,
       failed: currentRun.failed,
-      skipped: currentRun.skipped
+      skipped: currentRun.skipped,
+      total: currentRun.total
     });
   } else if (event.type === 'suiteEnd') {
     broadcast('suiteEnd', event);
@@ -375,10 +481,10 @@ const server = http.createServer(async (req, res) => {
       : [];
 
     const modules = [
-      { id: 'all', name: '⚡ Tất cả Thư mục (All Modules)' },
+      { id: 'all', name: 'Tất cả Thư mục (All Modules)' },
       ...detectedFolders.map(folder => ({
         id: folder,
-        name: folder === 'downloader' ? '📥 Downloader Module' : folder === 'creator' ? '🎨 Creator Module' : `📁 ${folder}`
+        name: folder === 'downloader' ? 'Downloader' : folder === 'creator' ? 'Creator' : folder.charAt(0).toUpperCase() + folder.slice(1)
       }))
     ];
 
@@ -389,9 +495,13 @@ const server = http.createServer(async (req, res) => {
 
     const projects = [
       { id: 'all', name: 'Tất cả Projects (Chromium & Firefox)' },
-      { id: 'chromium-downloader', name: 'Chromium - Downloader Session' },
+      { id: 'chromium-guest', name: 'Chromium - Guest (Không Cần Đăng Nhập)' },
+      { id: 'chromium-free-user', name: 'Chromium - Free User (Miễn Phí)' },
+      { id: 'chromium-downloader', name: 'Chromium - Downloader (Premium)' },
       { id: 'chromium-creator', name: 'Chromium - Creator Session' },
-      { id: 'firefox-downloader', name: 'Firefox - Downloader Session' },
+      { id: 'firefox-guest', name: 'Firefox - Guest (Không Cần Đăng Nhập)' },
+      { id: 'firefox-free-user', name: 'Firefox - Free User (Miễn Phí)' },
+      { id: 'firefox-downloader', name: 'Firefox - Downloader (Premium)' },
       { id: 'firefox-creator', name: 'Firefox - Creator Session' }
     ];
 
@@ -445,6 +555,14 @@ const server = http.createServer(async (req, res) => {
     stopCurrentRun();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ success: true, message: 'Dừng test thành công' }));
+    return;
+  }
+
+  // API: Manual Clean Reports
+  if (pathname === '/api/clean-reports' && req.method === 'POST') {
+    const cleaned = cleanOldReports();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ success: true, cleaned, message: `Đã dọn dẹp ${cleaned} tệp kết quả cũ.` }));
     return;
   }
 
