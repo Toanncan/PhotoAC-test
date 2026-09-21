@@ -2,210 +2,95 @@
 trigger: always_on
 ---
 
-# Quy Tắc Chung cho QA Automation (Playwright TypeScript)
+# Quy Tắc Chung Cho QA Automation (Playwright TypeScript)
 
-Áp dụng cho mọi tác vụ automation testing với Playwright và TypeScript.
+Áp dụng cho mọi tác vụ automation testing với Playwright + TypeScript trên dự án Photo-AC.
 
-## 1. Kiến Trúc và Framework
+---
 
-- Bắt buộc sử dụng mô hình **Page Object Model (POM)**.
-- Phân tách rõ ràng:
-  - **Page classes:** Khai báo locators + methods tương tác UI
-  - **Test classes:** Chứa logic kiểm thử + assertions
-  - **Fixtures:** Quản lý setup/teardown và tái sử dụng state
-  - **Test data:** Tách riêng khỏi code chức năng (JSON, utils)
-- Assertions chỉ đặt trong Test classes, KHÔNG đặt trong Page classes.
+## 1. Kiến Trúc & Thiết Kế (Page Object Model)
 
-## 2. Sinh Dữ Liệu Test
+- **Mô hình POM phân tầng:**
+  - **Page classes (`src/pages/`):** Khai báo locators + methods tương tác UI. TUYỆT ĐỐI KHÔNG đặt business assertions trong Page classes.
+  - **Test specs (`src/tests/`):** Chứa kịch bản test, luồng thao tác và assertions.
+  - **Fixtures (`src/fixtures/`):** Khởi tạo Page Objects, quản lý auth session và Allure metadata.
+- **Import bắt buộc:** Mọi spec file **BẮT BUỘC** import `{ test, expect }` từ `src/fixtures/base.fixture`, CẤM import trực tiếp từ `@playwright/test`.
+- **Reporting:** Mọi action và assertion quan trọng phải bọc trong `test.step('mô tả')` phục vụ Allure Report.
+- **Tính độc lập:** Mỗi test case phải độc lập (`beforeEach`/`afterEach`), không chia sẻ state giữa các test methods.
+- **100% Mô phỏng người dùng thật (True User Simulation - BẮT BUỘC):**
+  - Mọi kịch bản kiểm thử E2E (đặc biệt là Tìm kiếm & Bộ lọc - Search & Filters) **BẮT BUỘC thao tác trực tiếp trên giao diện UI** (click mở menu toolbar/dropdown, fill vào input, chọn radio/checkbox, nhấn Enter).
+  - **TUYỆT ĐỐI CẤM** việc lạm dụng sửa URL / tiêm query params (`page.goto('...?param=val')`, `searchWithCombinedParams()`) để đi tắt hoặc giả lập filter, trừ trường hợp test case đó có mục đích cụ thể là kiểm tra Deep-link URL routing hoặc URL persistence khi phân trang.
+  - Khi element nằm trong dropdown/modal, luôn dùng `:visible` scope để tránh tương tác nhầm vào các element ẩn của responsive template.
 
-- Tất cả trường yêu cầu unique (Email, Username, Mã...) **phải sinh động**, không hardcode.
-- Sử dụng Timestamp hoặc thư viện Faker.
-- Dữ liệu phải **traceable** — nhìn vào hệ thống biết ngay test nào tạo ra:
-  ```
-  Format: [prefix]_[tenTest]_[timestamp]_[random]
-  Vi du:  auto_taoKhachHang_20260402_A3F2@test.com
-  ```
-- Hỗ trợ chạy song song: mỗi test method có data riêng biệt, không conflict.
+---
 
-## 3. Chất Lượng Code
+## 2. Tiêu Chuẩn Viết Code & Đặt Tên
 
-- Không logic trùng lặp — tạo helper methods cho các hành động lặp đi lặp lại.
-- Code phải đơn giản, dễ đọc, dễ bảo trì.
-- Trước khi bàn giao code:
-  - Xóa toàn bộ `console.log` sinh ra khi debug
-  - Xóa code bị comment
-  - Xóa locator / biến không sử dụng
+- **Quy ước đặt tên:**
+  - Page Class: `PascalCase` + hậu tố `Page` (vd: `LoginPage.ts`, `SearchResultPage.ts`).
+  - Spec File: `kebab-case.spec.ts` (vd: `search-freeUser.spec.ts`).
+  - Test Block: `test('TC_ID: mô tả hành vi @tag', async ({...}) => {})`.
+  - Locator biến: `private readonly lowerCamelCase` (vd: `private readonly loginButton`).
+  - Fixture / Utils: `kebab-case.fixture.ts` / `kebab-case.ts` hoặc `PascalCase.ts`.
+- **Semantic Locators:** Ưu tiên theo thứ tự: `getByRole` > `getByLabel` > `getByPlaceholder` > `getByText` > `getByTestId` > `css`. CẤM dùng positional xpath hoặc dynamic class.
+- **Sinh Test Data (`src/utils/test-data.ts`):**
+  - Dữ liệu unique (Email, Username...) **bắt buộc sinh động** theo format: `auto_[tenTest]_[timestamp]_[random]` (vd: `generateEmail('register')`).
+- **Assertions:** Mỗi test case bắt buộc có ít nhất 1 assertion Web-First (`toBeVisible()`, `toHaveURL()`, `toHaveText()`). CẤM dùng hard sleep (`waitForTimeout`, `setTimeout`).
 
-## 4. Quản Lý File và Thư Mục
+---
 
-- KHÔNG tự động xóa file source khi chưa xác nhận với user.
-- Kiểm tra cấu trúc thư mục hiện có trước khi tạo file mới — tránh trùng lặp.
-- Đặt file đúng thư mục theo kiến trúc project (xem `framework_architect`).
+## 3. Quản Trị Tiện Ích Dùng Chung (Utilities Matrix)
 
-## 5. Quy Tắc Đặt Tên (TypeScript / Playwright)
+Dự án đã có sẵn các utility chuyên biệt. **BẮT BUỘC tái sử dụng, KHÔNG tự viết lại logic**:
 
-| Thành phần | Quy tắc | Ví dụ |
+| Utility | File nguồn | Nghiệp vụ áp dụng & Lưu ý quan trọng |
 |---|---|---|
-| Page class | PascalCase + hậu tố `Page` | `LoginPage.ts`, `CartPage.ts` |
-| Test file | kebab-case + `.spec.ts` | `login.spec.ts`, `cart.spec.ts` |
-| Test block | `test('mô tả hành vi')` | `test('dang nhap thanh cong')` |
-| Locator biến | lowerCamelCase hoặc readonly | `readonly loginButton` |
-| Fixture file | kebab-case + `.fixture.ts` | `auth.fixture.ts` |
-| Utils | PascalCase hoặc kebab-case | `DataGenerator.ts`, `test-data.ts` |
-
-## 6. Assertions (Kiểm Tra Kết Quả)
-
-- Mỗi test case **BẮT BUỘC** có ít nhất 1 assertion ở cuối.
-- Nên có assertion xen kẽ ở các bước quan trọng.
-- Assert phải mô tả rõ expected behavior:
-  ```typescript
-  await expect(page.getByText('Dang nhap thanh cong')).toBeVisible();
-  await expect(page).toHaveURL(/dashboard/);
-  ```
-
-## 7. Tính Độc Lập Của Test
-
-- Mỗi test case phải **độc lập** — không phụ thuộc kết quả test khác.
-- Setup/teardown rõ ràng qua `beforeEach` / `afterEach`.
-- Không chia sẻ state giữa các test methods.
-- Dùng fixture để tái sử dụng logic setup (đăng nhập, tạo data).
-
-## 8. Project-Specific Utilities (BẮT BUỘC sử dụng)
-
-Dự án có sẵn các utility đã được xây dựng. **KHÔNG tự viết lại logic đã có** — phải import và tái sử dụng đúng utility theo từng loại test case.
-
-### 8.1 Verify Email (`EmailVerificationHelper`)
-
-> **Dùng khi:** Test case yêu cầu kiểm tra email nhận được qua Gmail (số tiền thanh toán, nội dung thông báo, xác nhận đăng ký...)
-
-**Import:**
-```typescript
-import { EmailVerificationHelper } from '../../utils/email-verification.helper';
-```
-
-**Các methods:**
-
-| Method | Mô tả | Khi nào dùng |
-|---|---|---|
-| `verifyAmountInEmail()` | Tìm email chứa amount khớp (cross-compare multi-email) | Verify số tiền thanh toán |
-| `verifyTextInEmail()` | Tìm email chứa text cụ thể (AND/OR logic) | Verify nội dung email |
-| `verifyEmailExists()` | Kiểm tra email tồn tại + trả về body | Check email đã gửi |
-| `getAllMatchingEmails()` | Lấy tất cả email khớp subject, không có assertion | Custom verification |
-
-**Ví dụ:**
-```typescript
-// Verify số tiền thanh toán trong email
-await EmailVerificationHelper.verifyAmountInEmail({
-  subject: 'プレミアム会員サービス登録完了のご連絡',
-  expectedAmounts: ['1800', '1980'], // tax-excluded + tax-included
-  contextLabel: '会員種別-Amount',
-});
-
-// Verify nội dung text email
-await EmailVerificationHelper.verifyTextInEmail({
-  subject: '会員登録完了',
-  expectedTexts: ['プレミアム会員', 'user@example.com'],
-  contextLabel: 'Registration-Email',
-});
-
-// Skip test nếu account không phải premium (không có amount)
-if (membershipAmounts.length === 0) {
-  test.skip(true, `Account is not a premium member — no amounts found.`);
-}
-```
-
-**Lưu ý quan trọng:**
-- KHÔNG dùng browser để truy cập Gmail — `EmailVerificationHelper` gọi Gmail API trực tiếp.
-- Gmail API cần `credentials.json` + `gmail-token.json` ở project root (local) hoặc GitHub Secrets `GMAIL_CREDENTIALS` + `GMAIL_TOKEN` (CI).
-- Test case verify email phải `test.setTimeout(90_000)` vì API search có thể mất thời gian.
-- Nếu account là free member → KHÔNG có amount → phải `test.skip()` thay vì fail.
+| **`EmailVerificationHelper`** | `src/utils/email-verification.helper.ts` | Verify email Gmail (thanh toán, OTP, đăng ký). Gọi Gmail API trực tiếp (cần `credentials.json` + `gmail-token.json`). Set `test.setTimeout(90_000)`. Dùng: `verifyAmountInEmail()`, `verifyTextInEmail()`, `verifyEmailExists()`. Skip nếu tài khoản Free. |
+| **`PdfUtils`** | `src/utils/pdf.utils.ts` | Verify PDF hóa đơn (`/user/receipts`). Dùng: `saveAndAttach(download, testInfo, prefix)`, `validatePdfStructure(filePath, minBytes)`, `getMetadata(filePath)` để kiểm tra text và số trang. |
+| **`test-data.ts`** | `src/utils/test-data.ts` | Sinh dữ liệu traceable: `generateEmail()`, `generateUsername()`, `generatePassword()`, `generatePhone()`, `generateDisplayName()`. |
+| **`helpers.ts`** | `src/utils/helpers.ts` | Tiện ích chung: `retry(fn, maxRetries, delayMs)`, `formatDate(date)`, `normalizeWhitespace(str)`, `randomString(len)`. |
+| **`envConfig`** | `src/utils/env.config.ts` | Cấu hình môi trường (`baseUrl`, `timeout`, credentials). Đọc qua `envConfig`. |
 
 ---
 
-### 8.2 Verify PDF (`PdfUtils`)
+## 4. Kiến Trúc Multi-Role & Quản Lý Phiên Đăng Nhập (Photo-AC)
 
-> **Dùng khi:** Test case tải file PDF và cần kiểm tra nội dung, cấu trúc, số trang.
+Photo-AC phân tách 4 vai trò (Roles) với session riêng biệt trên Chromium và Firefox. **TUYỆT ĐỐI KHÔNG dùng chung session giữa Chromium và Firefox**.
 
-**Import:**
-```typescript
-import { PdfUtils } from '../../utils/pdf.utils';
-```
+### 4.1 Ma Trận 4 Vai Trò Người Dùng (User Roles Matrix)
 
-**Các methods:**
+| Vai trò (Role) | Biến `.env` | Setup Chromium | Setup Firefox | StorageState Chromium | StorageState Firefox | Project Chạy Test |
+|---|---|---|---|---|---|---|
+| **Guest User** (Chưa đăng nhập) | *Không cần* | *Không cần* | *Không cần* | `cookies: []` | `cookies: []` | `chromium-guest`<br>`firefox-guest` |
+| **Free User** (無料会員) | `FREE_USER_EMAIL`<br>`FREE_USER_PASSWORD` | `free-user.setup.ts` | `free-user-firefox.setup.ts` | `.auth/free-user.json` | `.auth/free-user-firefox.json` | `chromium-free-user`<br>`firefox-free-user` |
+| **Premium User** (プレミアム会員) | `PREMIUM_USER_EMAIL`<br>`PREMIUM_USER_PASSWORD` | `premium-user.setup.ts` | `premium-user-firefox.setup.ts` | `.auth/premium-user.json` | `.auth/premium-user-firefox.json` | `chromium-downloader`<br>`firefox-downloader` |
+| **Creator** (クリエイター) | `CREATOR_EMAIL`<br>`CREATOR_PASSWORD` | `creator.setup.ts` | `creator-firefox.setup.ts` | `.auth/creator.json` | `.auth/creator-firefox.json` | `chromium-creator`<br>`firefox-creator` |
 
-| Method | Mô tả |
-|---|---|
-| `PdfUtils.saveAndAttach(download, testInfo, prefix)` | Lưu PDF download + đính kèm vào report |
-| `PdfUtils.validatePdfStructure(filePath, minBytes)` | Kiểm tra file tồn tại, đúng extension, magic bytes |
-| `PdfUtils.getMetadata(filePath)` | Parse PDF → lấy text content + số trang |
+### 4.2 Ma Trận Phân Quyền & Hành Vi Cần Kiểm Thử
 
-**Ví dụ:**
-```typescript
-// Step 1: Capture download event
-const downloadPromise = page.waitForEvent('download', { timeout: 30_000 });
-await receiptsPage.downloadButton.click();
-const download = await downloadPromise;
+| Đặc tính / Hành vi | Guest User | Free User | Premium User | Creator |
+|---|---|---|---|---|
+| **Giới hạn tìm kiếm** | 4 lần/ngày (hiển thị popup giới hạn) | 4 lần/ngày (hiển thị modal coupon/limit) | **Không giới hạn** | Không áp dụng |
+| **Sắp xếp "人気順" (Phổ biến)** | Bị chặn (hiển thị popover Premium) | Bị chặn (hiển thị popover Premium) | **Cho phép** sắp xếp bình thường | Không áp dụng |
+| **AI Search Toggle** | Hiển thị nhưng disable; mở 3 lượt khi chạm limit | **Hoàn toàn ẩn** (`.search-by-ai` không có trên DOM) | Theo gói trả phí | Không áp dụng |
+| **Tải ảnh / Hóa đơn** | Bị giới hạn tải / Không có hóa đơn | Bị giới hạn tải / Không có hóa đơn | **Tải không giới hạn**, có hóa đơn (`/user/receipts`) | Quản lý tác phẩm đã tải lên |
 
-// Step 2: Save + attach to report
-const downloadPath = await PdfUtils.saveAndAttach(download, test.info(), 'receipt');
-
-// Step 3: Validate structure
-PdfUtils.validatePdfStructure(downloadPath, 10_000); // min 10KB
-
-// Step 4: Verify text content
-const pdfData = await PdfUtils.getMetadata(downloadPath);
-const pdfText = pdfData.text;
-expect(pdfText.includes('領収書')).toBe(true);
-expect(pdfData.numPages).toBe(1);
-```
+- **Session Isolation:** Cấu hình `storageState` ở cấp Project trong `playwright.config.ts`, TRÁNH hardcode trong test spec (ngoại trừ Guest User). CẤM sửa/xóa trực tiếp file `.auth/*.json`.
 
 ---
 
-### 8.3 Test Data (`test-data.ts`)
+## 5. Kiểm Soát Chất Lượng, Shared Files & Chống Hồi Quy (Zero Regression)
 
-> **Dùng khi:** Cần sinh dữ liệu unique cho test (email, username, password, phone, display name).
+Mọi thay đổi mã nguồn trước khi merge/commit **bắt buộc tuân thủ quy tắc tại [code_review_rules.md](file:///d:/Js/photo-ac-test/.agent/rules/code_review_rules.md)**:
 
-**Import:**
-```typescript
-import { generateEmail, generateUsername, generatePassword, generatePhone, generateDisplayName } from '../../utils/test-data.ts';
-```
-
-**Format sinh ra:** `auto_[testName]_[timestamp]_[random]`
-
-**Ví dụ:**
-```typescript
-const email = generateEmail('register');     // auto_register_20260709213700_A3F2@test.com
-const username = generateUsername('login');  // auto_login_20260709213700_A3F2
-const password = generatePassword();        // random password with uppercase/lowercase/digit/special
-```
-
----
-
-### 8.4 General Helpers (`helpers.ts`)
-
-> **Dùng khi:** Cần các tiện ích chung: retry, sleep, format date, random string.
-
-**Import:**
-```typescript
-import { retry, sleep, randomString, formatDate } from '../../utils/helpers';
-```
-
-| Function | Mô tả |
-|---|---|
-| `retry(fn, maxRetries, delayMs)` | Retry async operation khi fail |
-| `sleep(ms)` | Wait — **chỉ dùng khi không có cách nào khác** |
-| `randomString(length)` | Random alphanumeric string |
-| `formatDate(date, locale)` | Format date để logging |
-| `normalizeWhitespace(str)` | Trim + collapse multiple spaces |
-
----
-
-### Tóm tắt — Chọn Utility Theo Loại Test Case
-
-| Loại test case | Utility phải dùng |
-|---|---|
-| Verify **email nhận được** (amount, text, tồn tại) | `EmailVerificationHelper` |
-| Verify **nội dung PDF** tải về | `PdfUtils` |
-| Sinh **test data** unique (email, username, password) | `test-data.ts` |
-| **Retry / wait / format** | `helpers.ts` |
-| **Cấu hình môi trường** (URL, credentials) | `env.config.ts` |
+1. **Bảo vệ File Dùng Chung (Shared Files Gate):**
+   - Hạn chế tối đa sửa đổi Tier 1 (`base.fixture.ts`, `base.page.ts`, `playwright.config.ts`, `auth.fixture.ts`) và Tier 2 (`src/pages/common/**`, `src/utils/**`).
+   - Tuân thủ **Open-Closed Principle (OCP)**: Ưu tiên mở rộng method mới hoặc dùng `optional parameters` (`param?: type`). CẤM thay đổi signature làm break caller cũ.
+2. **Kiểm soát Vùng Ảnh Hưởng (Blast Radius Audit):**
+   - Trước khi sửa method dùng chung, bắt buộc dùng `grep_search` quét toàn bộ callers trong `src/tests/**`.
+   - Lên kế hoạch chạy regression test cho mọi module liên quan.
+3. **Danh mục cấm tuyệt đối (Zero-Tolerance Anti-Patterns):**
+   - ⛔ Cấm `test.only`, `describe.only` (làm bỏ qua toàn bộ test suites khác).
+   - ⛔ Cấm `page.waitForTimeout` hoặc hard sleep (gây flaky).
+   - ⛔ Cấm `console.log` và code comment rác sót lại.
+   - ⛔ Cấm hardcode credentials vào source code.

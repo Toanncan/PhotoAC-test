@@ -102,3 +102,39 @@ export const test = base.extend<Fixtures>({
 - Dùng fixture thay vì lặp code login trong `beforeEach`
 - `auth.fixture.ts` — lưu trạng thái đăng nhập qua `storageState`
 - `base.fixture.ts` — mở rộng `test` với tất cả fixtures cần thiết
+
+## 7. Quy Chuẩn Đa Trình Duyệt (Cross-Browser Compatibility — Chromium, Firefox, WebKit)
+
+Để đảm bảo automation chạy ổn định 100% trên cả 3 browser engines (Blink, Gecko, WebKit):
+
+1. **Bẫy `locator.count()` Non-Auto-Waiting (BẮT BUỘC):**
+   - `locator.count()` **KHÔNG CÓ auto-waiting**. Sau khi điều hướng, đổi URL (`toHaveURL`) hoặc áp dụng filter, TUYỆT ĐỐI KHÔNG gọi `count()` ngay lập tức.
+   - BẮT BUỘC đặt một Web-First assertion chờ phần tử hiển thị trước khi đếm:
+     ```typescript
+     // ĐÚNG:
+     await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
+     const count = await searchResultPage.getResultCount();
+     expect(count).toBeGreaterThan(0);
+
+     // SAI: Sẽ bị count = 0 ngẫu nhiên trên Firefox/WebKit do DOM transition gap!
+     await expect(page).toHaveURL(/param=val/);
+     const count = await searchResultPage.getResultCount(); // Bị 0!
+     ```
+2. **Đồng Bộ Dynamic Dropdowns & Menus (Chống Dropdown Auto-Collapse):**
+   - TUYỆT ĐỐI KHÔNG dùng `.catch(() => {})` để nuốt lỗi timeout khi chờ menu mở, sau đó click `{ force: true }`.
+   - Luôn chờ menu / dropdown-item hiển thị tường minh bằng Web-First Assertion:
+     ```typescript
+     await expect(targetOption).toBeVisible({ timeout: 10_000 });
+     await this.clickElement(targetOption);
+     ```
+3. **Sandbox File Upload trên WebKit / Safari:**
+   - Khi upload file qua input ẩn (`<input type="file">`), luôn kích hoạt dispatch event `change`:
+     ```typescript
+     await this.fileUploadInput.setInputFiles(filePath);
+     await this.fileUploadInput.dispatchEvent('change').catch(() => {});
+     ```
+4. **Form Submit & Tiếng Nhật (IME Input):**
+   - Trên các form nhập tiếng Nhật, không chỉ dựa vào `press('Enter')`. Luôn ưu tiên click nút Submit icon hoặc fallback `press('Enter')` để tránh bị nuốt sự kiện IME composition trên Firefox.
+5. **Link mở tab mới (`target="_blank"`):**
+   - Khi muốn điều hướng trên cùng tab, luôn xóa cả thuộc tính `target` và `rel="noopener noreferrer"` để tránh Safari chặn hoặc mở background tab.
+

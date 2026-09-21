@@ -12,10 +12,21 @@ export const envConfig = {
   /** Base URL of the application under test */
   baseUrl: process.env.BASE_URL || '',
 
-  /** Test user credentials (download member) */
-  testUser: {
-    email: process.env.TEST_USER_EMAIL!,
-    password: process.env.TEST_USER_PASSWORD!,
+  /** Premium user credentials (download member - Premium) */
+  premiumUser: {
+    email: (process.env.PREMIUM_USER_EMAIL || process.env.TEST_USER_EMAIL)!,
+    password: (process.env.PREMIUM_USER_PASSWORD || process.env.TEST_USER_PASSWORD)!,
+  },
+
+  /** Legacy alias for backward compatibility */
+  get testUser() {
+    return this.premiumUser;
+  },
+
+  /** Free user credentials (download member - Free) */
+  freeUser: {
+    email: process.env.FREE_USER_EMAIL!,
+    password: process.env.FREE_USER_PASSWORD!,
   },
 
   /** Creator credentials */

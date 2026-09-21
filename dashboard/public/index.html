@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photo-AC Test Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Consolas', 'Meiryo', 'MS Gothic', 'monospace']
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: rgba(30, 41, 59, 0.4); border-radius: 4px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.5); border-radius: 4px; }
+    .custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.8); }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 15px rgba(99, 102, 241, 0.3); }
+      50% { box-shadow: 0 0 25px rgba(99, 102, 241, 0.7); }
+    }
+    .glow-running { animation: pulse-glow 2s infinite; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- TOP NAVIGATION / HEADER -->
+  <header class="border-b border-slate-800/80 bg-slate-900/70 backdrop-blur-xl sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 ring-1 ring-white/20">
+          <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">PHOTO-AC TEST PORTAL</h1>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <!-- OS Badge -->
+        <span id="osBadge" class="hidden sm:inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
+          <span id="osText">Đang nhận diện OS...</span>
+        </span>
+        <!-- Java Badge -->
+        <span id="javaBadge" class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-800 text-slate-400 border border-slate-700">
+          <span class="w-1.5 h-1.5 rounded-full bg-slate-500 mr-1.5"></span> Kiểm tra Java...
+        </span>
+        <!-- Quick Allure Button -->
+        <a id="navAllureBtn" href="/allure-report/index.html" target="_blank" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 hover:bg-indigo-600 hover:text-white transition-all shadow-sm">
+          Allure Report
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- JAVA WARNING BANNER (HIDDEN BY DEFAULT) -->
+  <div id="javaWarningBanner" class="hidden bg-amber-950/70 border-b border-amber-600/40 px-4 py-3 text-amber-200 text-xs sm:text-sm">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <svg class="w-5 h-5 text-amber-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <span><strong>Cảnh báo:</strong> Máy tính chưa phát hiện Java Runtime. Báo cáo Allure cần Java để biên dịch. Hãy tải OpenJDK 17 để xem báo cáo đầy đủ.</span>
+      </div>
+      <a href="https://adoptium.net/temurin/releases/?version=17" target="_blank" class="ml-4 underline font-semibold text-amber-300 hover:text-white whitespace-nowrap">Tải Java 1-Click &rarr;</a>
+    </div>
+  </div>
+
+  <!-- MAIN WORKSPACE -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- LEFT COLUMN: CONTROL & CONFIG PANEL (4 COLS) -->
+    <div class="lg:col-span-4 space-y-5">
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl backdrop-blur-sm space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <h2 class="font-bold text-sm text-slate-200 uppercase tracking-wider flex items-center">
+            <svg class="w-4 h-4 mr-2 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+            </svg>
+            Cấu Hình Test Run
+          </h2>
+        </div>
+
+        <!-- 1. MODULE / FOLDER SELECTOR -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">1. Thư Mục / Module Kiểm Thử</label>
+          <select id="moduleSelect" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
+            <option value="all">Tất cả Thư mục (All Modules)</option>
+            <option value="downloader">Downloader</option>
+            <option value="creator">Creator</option>
+          </select>
+        </div>
+
+        <!-- 2. MULTI-SELECT SPEC FILES -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-xs font-semibold text-slate-300">2. Chọn File Kiểm Thử</label>
+            <span id="fileSelectionBadge" class="text-xs font-medium text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-lg border border-indigo-500/20">Đã chọn: 0/0</span>
+          </div>
+
+          <!-- Search & Action Toolbar -->
+          <div class="space-y-1.5 mb-2">
+            <div class="relative">
+              <input type="text" id="fileSearchInput" placeholder="Tìm nhanh file spec..." class="w-full bg-slate-950/90 border border-slate-800 rounded-lg pl-2.5 pr-7 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all">
+              <button type="button" id="btnClearFileSearch" class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 text-xs transition-colors" title="Xóa từ khóa tìm kiếm">✕</button>
+            </div>
+            <div class="flex items-center justify-between text-xs text-slate-400 px-1">
+              <div class="space-x-2">
+                <button type="button" id="btnSelectAllFiles" class="hover:text-indigo-300 transition-colors font-medium">Chọn tất cả</button>
+                <span>•</span>
+                <button type="button" id="btnDeselectAllFiles" class="hover:text-rose-300 transition-colors font-medium">Bỏ chọn</button>
+              </div>
+              <span id="fileMatchCount" class="text-[11px] text-slate-500 hidden"></span>
+            </div>
+          </div>
+
+          <!-- File Checkbox List -->
+          <div id="fileChecklistContainer" class="max-h-48 overflow-y-auto custom-scroll space-y-1 p-1.5 bg-slate-950/70 rounded-xl border border-slate-800/80">
+            <div class="text-xs text-slate-500 text-center py-4">Đang tải danh sách file...</div>
+          </div>
+        </div>
+
+        <!-- 3. ROLE / SESSION MULTI-SELECTION -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-semibold text-slate-300">3. Vai Trò Người Dùng</label>
+            <button type="button" id="btnAutoRoles" class="text-xs text-indigo-400 bg-indigo-500/10 hover:bg-indigo-500/20 px-2.5 py-0.5 rounded-lg border border-indigo-500/30 transition-colors font-medium">Tự động theo file</button>
+          </div>
+
+          <!-- 2x2 Grid Roles: Clean, Balanced, No Clutter -->
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" data-role="guest" class="role-btn py-2.5 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-semibold hover:border-slate-700 transition-all flex items-center justify-center text-center">
+              <span>Guest</span>
+            </button>
+            <button type="button" data-role="free-user" class="role-btn py-2.5 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-semibold hover:border-slate-700 transition-all flex items-center justify-center text-center">
+              <span>Free User</span>
+            </button>
+            <button type="button" data-role="downloader" class="role-btn py-2.5 px-3 rounded-xl border text-xs font-semibold transition-all flex items-center justify-center text-center bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm">
+              <span>Premium</span>
+            </button>
+            <button type="button" data-role="creator" class="role-btn py-2.5 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-semibold hover:border-slate-700 transition-all flex items-center justify-center text-center">
+              <span>Creator</span>
+            </button>
+          </div>
+
+          <div class="pt-0.5 text-xs px-0.5">
+            <span id="roleHintBadge" class="text-indigo-400 font-medium">Đã chọn: Premium</span>
+          </div>
+        </div>
+
+        <!-- 4. BROWSERS SELECTION (CROSS-BROWSER MULTI-SELECT) -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-xs font-semibold text-slate-300">4. Trình Duyệt Thực Thi</label>
+            <span id="browserHintBadge" class="text-xs text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-lg border border-indigo-500/20 font-medium">Chromium</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" id="btnBrowserChromium" class="browser-btn py-2 px-3 rounded-xl border text-xs font-medium transition-all flex items-center justify-center bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm" data-browser="chromium">
+              <span>Chromium</span>
+            </button>
+            <button type="button" id="btnBrowserFirefox" class="browser-btn py-2 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-medium hover:border-slate-700 transition-all flex items-center justify-center" data-browser="firefox">
+              <span>Firefox</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 5. TAG FILTER -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">5. Lọc Theo Tag (Grep)</label>
+          <select id="tagSelect" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
+            <option value="">Tất cả (Không lọc tag)</option>
+            <option value="@smoke">@smoke (Smoke Tests)</option>
+            <option value="@regression">@regression (Regression Tests)</option>
+          </select>
+        </div>
+
+        <!-- 6. WORKERS SELECTION (CHỈ 2 VÀ 4) -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">6. Số Luồng Chạy (Workers)</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" data-workers="2" class="worker-btn py-1.5 px-2 rounded-lg border text-xs font-medium transition-all bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm">2 (Chuẩn)</button>
+            <button type="button" data-workers="4" class="worker-btn py-1.5 px-2 rounded-lg border text-xs font-medium transition-all border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700">4 (Tốc độ)</button>
+          </div>
+        </div>
+
+        <!-- 7. HEADED / HEADLESS TOGGLE -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">7. Chế Độ Hiển Thị Trình Duyệt</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" id="btnModeHeaded" class="mode-btn py-2 px-3 rounded-xl border text-xs font-medium transition-all flex items-center justify-center space-x-1.5 bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm">
+              <svg class="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <span>Mở Trình Duyệt</span>
+            </button>
+            <button type="button" id="btnModeHeadless" class="mode-btn py-2 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-medium hover:border-slate-700 transition-all flex items-center justify-center space-x-1.5">
+              <svg class="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+              </svg>
+              <span>Chạy Ngầm</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="pt-2 space-y-2.5">
+          <button id="btnRunTest" class="w-full py-3.5 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 hover:from-indigo-400 hover:to-violet-500 text-white shadow-lg shadow-indigo-600/30 hover:shadow-indigo-500/50 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center space-x-2">
+            <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+            </svg>
+            <span id="btnRunTestText">BẮT ĐẦU CHẠY TEST</span>
+          </button>
+
+          <button id="btnStopTest" class="w-full py-3 px-4 rounded-xl font-bold text-xs bg-rose-950/60 border border-rose-600/50 text-rose-300 hover:bg-rose-600 hover:text-white transition-all hidden flex items-center justify-center space-x-2">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+            </svg>
+            <span>DỪNG TIẾN TRÌNH TEST</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: LIVE EXECUTION DASHBOARD (8 COLS) -->
+    <div class="lg:col-span-8 space-y-5">
+
+      <!-- INTERACTIVE METRICS CARDS -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <!-- TOTAL -->
+        <div id="cardFilterAll" class="kpi-card cursor-pointer bg-slate-900/80 hover:bg-slate-800/80 border border-slate-800 rounded-2xl p-4 shadow-sm transition-all ring-2 ring-indigo-500/50">
+          <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Tổng Testcases</div>
+          <div id="metricTotal" class="text-2xl sm:text-3xl font-extrabold text-white mt-1">0</div>
+        </div>
+
+        <!-- PASSED -->
+        <div id="cardFilterPassed" class="kpi-card cursor-pointer bg-slate-900/80 hover:bg-slate-800/80 border border-emerald-900/30 rounded-2xl p-4 shadow-sm transition-all">
+          <div class="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider flex items-center">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5"></span> Passed
+          </div>
+          <div id="metricPassed" class="text-2xl sm:text-3xl font-extrabold text-emerald-400 mt-1">0</div>
+        </div>
+
+        <!-- FAILED -->
+        <div id="cardFilterFailed" class="kpi-card cursor-pointer bg-slate-900/80 hover:bg-slate-800/80 border border-rose-900/30 rounded-2xl p-4 shadow-sm transition-all">
+          <div class="text-[11px] font-semibold text-rose-400 uppercase tracking-wider flex items-center">
+            <span class="w-1.5 h-1.5 rounded-full bg-rose-400 mr-1.5"></span> Failed
+          </div>
+          <div id="metricFailed" class="text-2xl sm:text-3xl font-extrabold text-rose-400 mt-1">0</div>
+        </div>
+
+        <!-- SKIPPED -->
+        <div id="cardFilterSkipped" class="kpi-card cursor-pointer bg-slate-900/80 hover:bg-slate-800/80 border border-amber-900/30 rounded-2xl p-4 shadow-sm transition-all">
+          <div class="text-[11px] font-semibold text-amber-400 uppercase tracking-wider flex items-center">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 mr-1.5"></span> Skipped
+          </div>
+          <div id="metricSkipped" class="text-2xl sm:text-3xl font-extrabold text-amber-400 mt-1">0</div>
+        </div>
+      </div>
+
+      <!-- PROGRESS BAR & STATUS HEADER -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2.5">
+            <div id="statusDot" class="w-3 h-3 rounded-full bg-slate-600"></div>
+            <span id="statusLabel" class="text-sm font-bold text-slate-200">Sẵn sàng chạy test</span>
+          </div>
+          <span id="progressPercent" class="text-xs font-bold text-indigo-400">0%</span>
+        </div>
+
+        <!-- PROGRESS BAR -->
+        <div class="w-full bg-slate-950 rounded-full h-2.5 overflow-hidden border border-slate-800/80">
+          <div id="progressBar" class="bg-gradient-to-r from-indigo-500 to-violet-500 h-2.5 rounded-full transition-all duration-300 w-0"></div>
+        </div>
+      </div>
+
+      <!-- POST-RUN BANNER & RERUN FAILED ACTION (HIDDEN BY DEFAULT) -->
+      <div id="postRunBanner" class="hidden rounded-2xl p-4 border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
+        <div class="flex items-center space-x-3">
+          <div id="postRunIcon" class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-lg"></div>
+          <div>
+            <div id="postRunTitle" class="text-sm font-bold text-white"></div>
+            <div id="postRunDesc" class="text-xs text-slate-400 mt-0.5"></div>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2 w-full sm:w-auto">
+          <button id="btnRerunFailed" class="hidden flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-md shadow-rose-600/30 transition-all flex items-center justify-center space-x-1.5">
+            <span>Chạy lại các test lỗi</span>
+          </button>
+          <a id="btnPostRunAllure" href="/allure-report/index.html" target="_blank" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/20 transition-all flex items-center justify-center space-x-1.5">
+            <span>Allure Report</span>
+          </a>
+          <a id="btnPostRunHtml" href="/playwright-report/index.html" target="_blank" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all flex items-center justify-center space-x-1.5">
+            <span>HTML Report</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- REAL-TIME TEST CASE LIST (GROUPED BY FILE OR FLAT) -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl shadow-lg overflow-hidden flex flex-col min-h-[460px]">
+        
+        <!-- TOOLBAR -->
+        <div class="px-5 py-3.5 border-b border-slate-800 bg-slate-900/90 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center space-x-2.5">
+            <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Danh Sách Test Cases</h3>
+            <span id="testCountBadge" class="px-2 py-0.5 text-[10px] rounded-full bg-slate-800 border border-slate-700/60 text-slate-300 font-semibold">0</span>
+          </div>
+
+          <!-- Filter Tabs with Live Counters -->
+          <div class="flex flex-wrap items-center bg-slate-950 p-1 rounded-xl border border-slate-800 space-x-1 text-xs">
+            <button type="button" data-filter="all" class="filter-tab px-2.5 py-1 rounded-lg font-medium text-white bg-indigo-600 shadow-sm transition-all flex items-center space-x-1.5">
+              <span>Tất cả</span>
+              <span id="filterCountAll" class="px-1.5 py-0.2 rounded-full text-[10px] bg-indigo-900/80 text-indigo-200 font-semibold">0</span>
+            </button>
+            <button type="button" data-filter="running" class="filter-tab px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white transition-all flex items-center space-x-1.5">
+              <span>Đang chạy</span>
+              <span id="filterCountRunning" class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800 text-slate-400 font-semibold">0</span>
+            </button>
+            <button type="button" data-filter="failed" class="filter-tab px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-rose-400 transition-all flex items-center space-x-1.5">
+              <span>Lỗi</span>
+              <span id="filterCountFailed" class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800 text-slate-400 font-semibold">0</span>
+            </button>
+            <button type="button" data-filter="passed" class="filter-tab px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-emerald-400 transition-all flex items-center space-x-1.5">
+              <span>Pass</span>
+              <span id="filterCountPassed" class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800 text-slate-400 font-semibold">0</span>
+            </button>
+            <button type="button" data-filter="pending" class="filter-tab px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center space-x-1.5">
+              <span>Chờ chạy</span>
+              <span id="filterCountPending" class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800 text-slate-400 font-semibold">0</span>
+            </button>
+          </div>
+
+          <!-- Action Buttons (Expand/Collapse only) -->
+          <div class="flex items-center space-x-2 text-xs">
+            <button id="btnToggleExpandAll" title="Thu gọn hoặc mở rộng tất cả các nhóm file" class="px-2.5 py-1 rounded-lg border border-slate-800 bg-slate-950 text-slate-300 hover:text-white hover:border-slate-700 text-xs font-medium transition-all flex items-center space-x-1.5 shadow-sm">
+              <svg class="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+              <span>Thu / Mở tất cả</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- LIST CONTAINER -->
+        <div id="testList" class="p-4 space-y-3 overflow-y-auto flex-1 custom-scroll max-h-[520px]">
+          <div id="emptyState" class="h-full flex flex-col items-center justify-center text-center p-12 text-slate-500">
+            <svg class="w-14 h-14 text-slate-700 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            </svg>
+            <p class="text-sm font-medium text-slate-400">Chưa có bài kiểm thử nào được khởi chạy</p>
+            <p class="text-xs text-slate-500 mt-1">Chọn các file spec ở cột bên trái và bấm "BẮT ĐẦU CHẠY TEST"</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLLAPSIBLE LIVE LOGS / TERMINAL OUTPUT -->
+      <div class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-lg">
+        <div class="px-4 py-2.5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <div class="flex space-x-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+            </div>
+            <span class="text-xs font-semibold text-slate-400 ml-2">Console Live Log</span>
+          </div>
+          <div class="flex items-center space-x-3">
+            <button id="btnClearLog" class="text-xs text-slate-400 hover:text-slate-200 font-medium">Xóa Log</button>
+            <button id="btnToggleLog" class="text-xs text-indigo-400 hover:text-indigo-300 font-medium">Ẩn/Hiện Console</button>
+          </div>
+        </div>
+        <div id="logContainer" class="p-3 bg-black/80 font-mono text-xs text-slate-300 h-44 overflow-y-auto custom-scroll space-y-0.5">
+          <div class="text-slate-600">Sẵn sàng stream log từ Playwright runner...</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- JAVASCRIPT CONTROLLER -->
+  <script>
+    const state = {
+      running: false,
+      isRerun: false,
+      headed: true,
+      workers: 2,
+      activeFilter: 'all', // 'all' | 'running' | 'failed' | 'passed' | 'skipped'
+      allExpanded: true,
+      total: 0,
+      passed: 0,
+      failed: 0,
+      skipped: 0,
+      tests: new Map(),
+      fileSelection: new Set(),
+      selectedBrowsers: new Set(['chromium']),
+      selectedRoles: new Set(['downloader']),
+      lastFailedTests: []
+    };
+
+    // DOM Elements
+    const moduleSelect = document.getElementById('moduleSelect');
+    const roleHintBadge = document.getElementById('roleHintBadge');
+    const btnAutoRoles = document.getElementById('btnAutoRoles');
+    const btnBrowserChromium = document.getElementById('btnBrowserChromium');
+    const btnBrowserFirefox = document.getElementById('btnBrowserFirefox');
+    const browserHintBadge = document.getElementById('browserHintBadge');
+    const tagSelect = document.getElementById('tagSelect');
+    const fileSearchInput = document.getElementById('fileSearchInput');
+    const btnClearFileSearch = document.getElementById('btnClearFileSearch');
+    const fileMatchCount = document.getElementById('fileMatchCount');
+    const fileChecklistContainer = document.getElementById('fileChecklistContainer');
+    const fileSelectionBadge = document.getElementById('fileSelectionBadge');
+    const btnSelectAllFiles = document.getElementById('btnSelectAllFiles');
+    const btnDeselectAllFiles = document.getElementById('btnDeselectAllFiles');
+    const btnModeHeaded = document.getElementById('btnModeHeaded');
+    const btnModeHeadless = document.getElementById('btnModeHeadless');
+    const btnRunTest = document.getElementById('btnRunTest');
+    const btnRunTestText = document.getElementById('btnRunTestText');
+    const btnStopTest = document.getElementById('btnStopTest');
+    const statusDot = document.getElementById('statusDot');
+    const statusLabel = document.getElementById('statusLabel');
+    const progressPercent = document.getElementById('progressPercent');
+    const progressBar = document.getElementById('progressBar');
+    const metricTotal = document.getElementById('metricTotal');
+    const metricPassed = document.getElementById('metricPassed');
+    const metricFailed = document.getElementById('metricFailed');
+    const metricSkipped = document.getElementById('metricSkipped');
+    const cardFilterAll = document.getElementById('cardFilterAll');
+    const cardFilterPassed = document.getElementById('cardFilterPassed');
+    const cardFilterFailed = document.getElementById('cardFilterFailed');
+    const cardFilterSkipped = document.getElementById('cardFilterSkipped');
+    const postRunBanner = document.getElementById('postRunBanner');
+    const postRunIcon = document.getElementById('postRunIcon');
+    const postRunTitle = document.getElementById('postRunTitle');
+    const postRunDesc = document.getElementById('postRunDesc');
+    const btnRerunFailed = document.getElementById('btnRerunFailed');
+    const btnPostRunAllure = document.getElementById('btnPostRunAllure');
+    const btnPostRunHtml = document.getElementById('btnPostRunHtml');
+    const testList = document.getElementById('testList');
+    const emptyState = document.getElementById('emptyState');
+    const testCountBadge = document.getElementById('testCountBadge');
+    const btnToggleExpandAll = document.getElementById('btnToggleExpandAll');
+    const logContainer = document.getElementById('logContainer');
+    const btnToggleLog = document.getElementById('btnToggleLog');
+    const btnClearLog = document.getElementById('btnClearLog');
+    const javaWarningBanner = document.getElementById('javaWarningBanner');
+    const javaBadge = document.getElementById('javaBadge');
+    const osBadge = document.getElementById('osBadge');
+    const osText = document.getElementById('osText');
+
+    let suitesData = { files: [], modules: [], filesByModule: {}, projects: [] };
+
+    // ==========================================
+    // 1. FILE SELECTION & MULTI-SELECT MANAGER
+    // ==========================================
+    function getAvailableFiles() {
+      const selectedModule = moduleSelect.value;
+      if (selectedModule === 'all') {
+        return suitesData.files || [];
+      }
+      return suitesData.filesByModule[selectedModule] || [];
+    }
+
+    function renderFileChecklist() {
+      const allFiles = getAvailableFiles();
+      const rawQuery = fileSearchInput.value || '';
+      const searchQuery = rawQuery.toLowerCase().trim();
+      const filteredFiles = allFiles.filter(f => f.toLowerCase().includes(searchQuery));
+
+      // Manage Search Clear button & Match counter
+      if (searchQuery.length > 0) {
+        btnClearFileSearch.classList.remove('hidden');
+        fileMatchCount.classList.remove('hidden');
+        fileMatchCount.textContent = `Khớp: ${filteredFiles.length}/${allFiles.length}`;
+      } else {
+        btnClearFileSearch.classList.add('hidden');
+        fileMatchCount.classList.add('hidden');
+      }
+
+      fileChecklistContainer.innerHTML = '';
+
+      if (filteredFiles.length === 0) {
+        fileChecklistContainer.innerHTML = '<div class="text-xs text-slate-500 text-center py-3">Không tìm thấy file phù hợp</div>';
+        updateFileBadge();
+        return;
+      }
+
+      for (const file of filteredFiles) {
+        const fileName = file.split('/').pop() || file;
+        const isChecked = state.fileSelection.has(file);
+
+        const label = document.createElement('label');
+        label.className = `flex items-center p-2 rounded-lg cursor-pointer transition-all border ${
+          isChecked ? 'bg-indigo-950/40 border-indigo-500/40 text-white' : 'hover:bg-slate-800/60 border-transparent text-slate-300'
+        }`;
+
+        label.innerHTML = `
+          <div class="flex items-center space-x-2.5 truncate flex-1">
+            <input type="checkbox" value="${escapeHtml(file)}" ${isChecked ? 'checked' : ''} class="file-item-checkbox w-4 h-4 rounded text-indigo-600 bg-slate-900 border-slate-700 focus:ring-indigo-500">
+            <span class="text-xs font-mono truncate select-none">${escapeHtml(fileName)}</span>
+          </div>
+        `;
+
+        const checkbox = label.querySelector('input[type="checkbox"]');
+        checkbox.addEventListener('change', (e) => {
+          if (e.target.checked) {
+            state.fileSelection.add(file);
+          } else {
+            state.fileSelection.delete(file);
+          }
+          renderFileChecklist();
+          updateFileBadge();
+        });
+
+        fileChecklistContainer.appendChild(label);
+      }
+
+      updateFileBadge();
+    }
+
+    function updateFileBadge() {
+      const available = getAvailableFiles();
+      const selectedCount = state.fileSelection.size;
+      const totalCount = available.length;
+
+      fileSelectionBadge.textContent = `Đã chọn: ${selectedCount}/${totalCount}`;
+      if (selectedCount === 0) {
+        btnRunTestText.textContent = `BẮT ĐẦU CHẠY TOÀN BỘ (${totalCount} FILES)`;
+      } else {
+        btnRunTestText.textContent = `BẮT ĐẦU CHẠY TEST (${selectedCount} FILES)`;
+      }
+      autoSyncRolesFromFiles();
+    }
+
+    // Select All (Smart: selects visible filtered files if search is active)
+    btnSelectAllFiles.addEventListener('click', () => {
+      const searchQuery = (fileSearchInput.value || '').toLowerCase().trim();
+      const targetFiles = searchQuery 
+        ? getAvailableFiles().filter(f => f.toLowerCase().includes(searchQuery))
+        : getAvailableFiles();
+      for (const file of targetFiles) state.fileSelection.add(file);
+      renderFileChecklist();
+    });
+
+    // Deselect All (Smart: deselects visible filtered files if search is active)
+    btnDeselectAllFiles.addEventListener('click', () => {
+      const searchQuery = (fileSearchInput.value || '').toLowerCase().trim();
+      if (searchQuery) {
+        const targetFiles = getAvailableFiles().filter(f => f.toLowerCase().includes(searchQuery));
+        for (const file of targetFiles) state.fileSelection.delete(file);
+      } else {
+        state.fileSelection.clear();
+      }
+      renderFileChecklist();
+    });
+
+    // Search File
+    fileSearchInput.addEventListener('input', () => {
+      renderFileChecklist();
+    });
+
+    // Clear Search Button
+    btnClearFileSearch.addEventListener('click', () => {
+      fileSearchInput.value = '';
+      fileSearchInput.focus();
+      renderFileChecklist();
+    });
+
+    // Module change
+    moduleSelect.addEventListener('change', () => {
+      state.fileSelection.clear();
+      renderFileChecklist();
+      autoSyncRolesFromFiles();
+    });
+
+    // ==========================================
+    // ROLE / SESSION MANAGEMENT (MULTI-SELECT & AUTO-DETECT)
+    // ==========================================
+    const ROLE_LABELS = {
+      'guest': 'Guest',
+      'free-user': 'Free User',
+      'downloader': 'Premium',
+      'creator': 'Creator'
+    };
+
+    function detectRoleFromFile(filePath) {
+      const lower = (filePath || '').toLowerCase();
+      if (lower.startsWith('creator/') || lower.includes('/creator/')) {
+        return 'creator';
+      }
+      if (lower.includes('guest')) {
+        return 'guest';
+      }
+      if (lower.includes('freeuser') || lower.includes('free-user')) {
+        return 'free-user';
+      }
+      return 'downloader';
+    }
+
+    function updateRoleButtonsUI() {
+      document.querySelectorAll('.role-btn').forEach(btn => {
+        const role = btn.getAttribute('data-role');
+        const isSelected = state.selectedRoles.has(role);
+
+        if (isSelected) {
+          btn.className = 'role-btn py-2.5 px-3 rounded-xl border text-xs font-semibold transition-all flex items-center justify-center text-center bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm';
+        } else {
+          btn.className = 'role-btn py-2.5 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-semibold hover:border-slate-700 transition-all flex items-center justify-center text-center';
+        }
+      });
+
+      const count = state.selectedRoles.size;
+      if (count === 4) {
+        roleHintBadge.textContent = 'Tất cả (4 vai trò)';
+        roleHintBadge.className = 'text-xs text-purple-400 truncate max-w-[210px] font-medium';
+      } else if (count === 0) {
+        roleHintBadge.textContent = 'Chưa chọn vai trò';
+        roleHintBadge.className = 'text-xs text-rose-400 truncate max-w-[210px] font-medium';
+      } else {
+        const names = Array.from(state.selectedRoles).map(r => ROLE_LABELS[r] || r).join(', ');
+        roleHintBadge.textContent = `Đã chọn: ${names}`;
+        roleHintBadge.className = 'text-xs text-indigo-300 truncate max-w-[210px] font-medium';
+      }
+    }
+
+    function toggleRole(role) {
+      if (state.selectedRoles.has(role)) {
+        if (state.selectedRoles.size > 1) {
+          state.selectedRoles.delete(role);
+        }
+      } else {
+        state.selectedRoles.add(role);
+      }
+      updateRoleButtonsUI();
+    }
+
+    function autoSyncRolesFromFiles() {
+      const selectedFiles = Array.from(state.fileSelection);
+      const detected = new Set();
+
+      if (selectedFiles.length === 0) {
+        const available = getAvailableFiles();
+        for (const f of available) {
+          detected.add(detectRoleFromFile(f));
+        }
+      } else {
+        for (const f of selectedFiles) {
+          detected.add(detectRoleFromFile(f));
+        }
+      }
+
+      if (detected.size > 0) {
+        state.selectedRoles = detected;
+      } else {
+        state.selectedRoles = new Set(['downloader']);
+      }
+      updateRoleButtonsUI();
+    }
+
+    document.querySelectorAll('.role-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const role = btn.getAttribute('data-role');
+        toggleRole(role);
+      });
+    });
+
+    btnAutoRoles.addEventListener('click', () => {
+      autoSyncRolesFromFiles();
+    });
+
+    // Browser Selection Toggle (Chromium / Firefox)
+    function updateBrowserButtonsUI() {
+      const hasChromium = state.selectedBrowsers.has('chromium');
+      const hasFirefox = state.selectedBrowsers.has('firefox');
+
+      if (hasChromium) {
+        btnBrowserChromium.className = 'browser-btn py-2 px-3 rounded-xl border text-xs font-medium transition-all flex items-center justify-center bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm';
+      } else {
+        btnBrowserChromium.className = 'browser-btn py-2 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-medium hover:border-slate-700 transition-all flex items-center justify-center';
+      }
+
+      if (hasFirefox) {
+        btnBrowserFirefox.className = 'browser-btn py-2 px-3 rounded-xl border text-xs font-medium transition-all flex items-center justify-center bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm';
+      } else {
+        btnBrowserFirefox.className = 'browser-btn py-2 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-medium hover:border-slate-700 transition-all flex items-center justify-center';
+      }
+
+      if (hasChromium && hasFirefox) {
+        browserHintBadge.textContent = 'Chromium + Firefox';
+        browserHintBadge.className = 'text-xs text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded-lg border border-purple-500/20 font-medium';
+      } else if (hasChromium) {
+        browserHintBadge.textContent = 'Chromium';
+        browserHintBadge.className = 'text-xs text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-lg border border-indigo-500/20 font-medium';
+      } else if (hasFirefox) {
+        browserHintBadge.textContent = 'Firefox';
+        browserHintBadge.className = 'text-xs text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-lg border border-amber-500/20 font-medium';
+      }
+    }
+
+    function toggleBrowser(browserName) {
+      if (state.selectedBrowsers.has(browserName)) {
+        if (state.selectedBrowsers.size > 1) {
+          state.selectedBrowsers.delete(browserName);
+        }
+      } else {
+        state.selectedBrowsers.add(browserName);
+      }
+      updateBrowserButtonsUI();
+    }
+
+    btnBrowserChromium.addEventListener('click', () => toggleBrowser('chromium'));
+    btnBrowserFirefox.addEventListener('click', () => toggleBrowser('firefox'));
+
+    // Workers buttons
+    document.querySelectorAll('.worker-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.worker-btn').forEach(b => {
+          b.className = 'worker-btn py-1.5 px-2 rounded-lg border text-xs font-medium transition-all border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700';
+        });
+        btn.className = 'worker-btn py-1.5 px-2 rounded-lg border text-xs font-medium transition-all bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm';
+        state.workers = Number(btn.getAttribute('data-workers')) || 2;
+      });
+    });
+
+    // Toggle Headed / Headless
+    btnModeHeaded.addEventListener('click', () => setMode(true));
+    btnModeHeadless.addEventListener('click', () => setMode(false));
+
+    function setMode(headed) {
+      state.headed = headed;
+      if (headed) {
+        btnModeHeaded.className = 'mode-btn py-2 px-3 rounded-xl border text-xs font-medium transition-all flex items-center justify-center space-x-1.5 bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm';
+        btnModeHeadless.className = 'mode-btn py-2 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-medium hover:border-slate-700 transition-all flex items-center justify-center space-x-1.5';
+      } else {
+        btnModeHeadless.className = 'mode-btn py-2 px-3 rounded-xl border text-xs font-medium transition-all flex items-center justify-center space-x-1.5 bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm';
+        btnModeHeaded.className = 'mode-btn py-2 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-medium hover:border-slate-700 transition-all flex items-center justify-center space-x-1.5';
+      }
+    }
+
+    // ==========================================
+    // 2. VIEW CONTROLS & FILTER TABS
+    // ==========================================
+
+    // Expand / Collapse All
+    btnToggleExpandAll.addEventListener('click', () => {
+      state.allExpanded = !state.allExpanded;
+      document.querySelectorAll('.file-group-body').forEach(body => {
+        if (state.allExpanded) body.classList.remove('hidden');
+        else body.classList.add('hidden');
+      });
+      document.querySelectorAll('.file-group-arrow').forEach(arrow => {
+        arrow.style.transform = state.allExpanded ? 'rotate(90deg)' : 'rotate(0deg)';
+      });
+    });
+
+    // Filter Tabs
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        setFilter(tab.getAttribute('data-filter'));
+      });
+    });
+
+    // KPI Cards as Filter Triggers
+    cardFilterAll.addEventListener('click', () => setFilter('all'));
+    cardFilterPassed.addEventListener('click', () => setFilter('passed'));
+    cardFilterFailed.addEventListener('click', () => setFilter('failed'));
+    cardFilterSkipped.addEventListener('click', () => setFilter('skipped'));
+
+    function setFilter(filter) {
+      state.activeFilter = filter;
+      document.querySelectorAll('.filter-tab').forEach(tab => {
+        if (tab.getAttribute('data-filter') === filter) {
+          tab.className = 'filter-tab px-2.5 py-1 rounded-lg font-medium text-white bg-indigo-600 shadow-sm transition-all flex items-center space-x-1.5';
+        } else {
+          tab.className = 'filter-tab px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white transition-all flex items-center space-x-1.5';
+        }
+      });
+
+      // Update KPI card highlights
+      const cards = [
+        { el: cardFilterAll, key: 'all' },
+        { el: cardFilterPassed, key: 'passed' },
+        { el: cardFilterFailed, key: 'failed' },
+        { el: cardFilterSkipped, key: 'skipped' }
+      ];
+      cards.forEach(c => {
+        if (c.key === filter) {
+          c.el.classList.add('ring-2', 'ring-indigo-500/60');
+        } else {
+          c.el.classList.remove('ring-2', 'ring-indigo-500/60');
+        }
+      });
+
+      renderTestList();
+    }
+
+    // Toggle Console
+    btnToggleLog.addEventListener('click', () => {
+      logContainer.classList.toggle('hidden');
+    });
+
+    // Clear Log
+    btnClearLog.addEventListener('click', () => {
+      logContainer.innerHTML = '<div class="text-slate-600">Đã xóa log console.</div>';
+    });
+
+    // ==========================================
+    // 3. RENDER TEST LIST (GROUPED OR FLAT)
+    // ==========================================
+    function getFilteredTests() {
+      let tests = Array.from(state.tests.values());
+      if (state.activeFilter === 'running') tests = tests.filter(t => t.status === 'running');
+      else if (state.activeFilter === 'failed') tests = tests.filter(t => t.status === 'failed' || t.status === 'timedOut');
+      else if (state.activeFilter === 'passed') tests = tests.filter(t => t.status === 'passed');
+      else if (state.activeFilter === 'skipped') tests = tests.filter(t => t.status === 'skipped');
+      else if (state.activeFilter === 'pending') tests = tests.filter(t => t.status === 'pending');
+      return tests;
+    }
+
+    function updateFilterCounts() {
+      const all = Array.from(state.tests.values());
+      const total = state.total || all.length;
+      const running = all.filter(t => t.status === 'running').length;
+      const failed = all.filter(t => t.status === 'failed' || t.status === 'timedOut').length;
+      const passed = all.filter(t => t.status === 'passed').length;
+      const pending = all.filter(t => t.status === 'pending').length;
+
+      const cAll = document.getElementById('filterCountAll');
+      const cRunning = document.getElementById('filterCountRunning');
+      const cFailed = document.getElementById('filterCountFailed');
+      const cPassed = document.getElementById('filterCountPassed');
+      const cPending = document.getElementById('filterCountPending');
+
+      if (cAll) cAll.textContent = total;
+      if (cRunning) cRunning.textContent = running;
+      if (cFailed) cFailed.textContent = failed;
+      if (cPassed) cPassed.textContent = passed;
+      if (cPending) cPending.textContent = pending;
+    }
+
+    function escapeRegex(str) {
+      return (str || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function extractTestGrepPattern(testTitle) {
+      if (!testTitle) return '';
+      // 1. Nếu có mã TC (ví dụ: TC-SEARCH-FREE-001, TC_AUTH_01, TC01, TC001, TC-01)
+      const tcMatch = testTitle.match(/(TC[-_]?[0-9]+[-_A-Za-z0-9]*|TC[-_][A-Za-z0-9_-]+)/i);
+      if (tcMatch) {
+        return `\\b${tcMatch[1]}\\b`;
+      }
+      // 2. Hoặc phần mã trước dấu hai chấm ':' hoặc dấu gạch ngang '-'
+      const prefixMatch = testTitle.match(/^([^:\-]{2,25})[:\-]/);
+      if (prefixMatch) {
+        const cleanPrefix = prefixMatch[1].trim();
+        return `\\b${escapeRegex(cleanPrefix)}\\b`;
+      }
+      // 3. Fallback: Lấy title sạch không có @tags, escape ký tự regex nhưng KHÔNG bọc ^ và $
+      const cleanTitle = testTitle.split('@')[0].trim();
+      return escapeRegex(cleanTitle);
+    }
+
+    function recalculateMetrics() {
+      let passed = 0;
+      let failed = 0;
+      let skipped = 0;
+
+      for (const t of state.tests.values()) {
+        if (t.status === 'passed') passed++;
+        else if (t.status === 'failed' || t.status === 'timedOut') failed++;
+        else if (t.status === 'skipped') skipped++;
+      }
+
+      // Giữ nguyên tổng số test case cố định từ suiteStart (hoặc state.tests.size nếu lớn hơn)
+      const total = Math.max(state.total, state.tests.size);
+      state.total = total;
+      state.passed = passed;
+      state.failed = failed;
+      state.skipped = skipped;
+      updateMetrics(total, passed, failed, skipped);
+    }
+
+    function formatTestTitleHtml(rawTitle) {
+      if (!rawTitle) return '<span class="text-xs font-semibold text-slate-200">Test Case</span>';
+      
+      // Tách các @tags
+      const parts = rawTitle.split(/(@\S+)/g);
+      let mainText = '';
+      const tags = [];
+      for (const p of parts) {
+        if (p.startsWith('@')) {
+          tags.push(p);
+        } else {
+          mainText += p;
+        }
+      }
+      mainText = mainText.trim();
+      
+      // Tách mã TC ở đầu nếu có (ví dụ "TC-SEARCH-FREE-001: ..." hoặc "TC01 - ...")
+      let codeHtml = '';
+      let descText = mainText;
+      const tcMatch = mainText.match(/^([A-Za-z0-9_\-]+)\s*[:\-]\s*(.*)$/);
+      if (tcMatch && tcMatch[1].length < 30) {
+        const code = tcMatch[1].trim();
+        descText = tcMatch[2].trim();
+        codeHtml = `<span class="inline-block px-1.5 py-0.5 rounded font-mono text-[11px] font-bold bg-indigo-950/70 border border-indigo-800/60 text-indigo-300 mr-2 flex-shrink-0">${escapeHtml(code)}</span>`;
+      }
+      
+      const tagsHtml = tags.map(t => `<span class="inline-block text-[10px] px-1.5 py-0.2 rounded bg-slate-900 border border-slate-800 text-slate-400 font-normal ml-1">${escapeHtml(t)}</span>`).join('');
+      
+      return `
+        <div class="flex flex-wrap items-center gap-y-1">
+          ${codeHtml}
+          <span class="text-xs font-semibold text-slate-200">${escapeHtml(descText || mainText)}</span>
+          ${tagsHtml}
+        </div>
+      `;
+    }
+
+    function renderTestList() {
+      updateFilterCounts();
+      const filtered = getFilteredTests();
+      testCountBadge.textContent = state.total || state.tests.size;
+
+      if (state.tests.size === 0) {
+        testList.innerHTML = '';
+        testList.appendChild(emptyState);
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      testList.innerHTML = '';
+
+      if (filtered.length === 0) {
+        const noMatch = document.createElement('div');
+        noMatch.className = 'py-14 px-4 text-center text-slate-500 text-xs flex flex-col items-center justify-center space-y-2';
+        noMatch.innerHTML = `
+          <div class="w-10 h-10 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-500">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+          </div>
+          <div class="font-medium text-slate-400">Không có bài kiểm thử nào ở trạng thái này</div>
+        `;
+        testList.appendChild(noMatch);
+        return;
+      }
+
+      // Grouped by File Spec (Default & Only View)
+      const groups = {};
+      for (const test of filtered) {
+        const file = test.file || 'Chung / Khác';
+        if (!groups[file]) groups[file] = [];
+        groups[file].push(test);
+      }
+
+      for (const [file, tests] of Object.entries(groups)) {
+        testList.appendChild(createFileGroupElement(file, tests));
+      }
+    }
+
+    function createFileGroupElement(file, tests) {
+      const groupEl = document.createElement('div');
+      groupEl.className = 'border border-slate-800 rounded-2xl bg-slate-950/60 overflow-hidden transition-all shadow-sm';
+
+      let hasFail = tests.some(t => t.status === 'failed' || t.status === 'timedOut');
+      let hasRunning = tests.some(t => t.status === 'running');
+      let allPassed = tests.every(t => t.status === 'passed');
+
+      let groupBadge = '';
+      let groupBorderColor = 'border-slate-800';
+
+      if (hasFail) {
+        groupBorderColor = 'border-rose-900/50 bg-rose-950/10';
+        groupBadge = `<span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30">❌ ${tests.filter(t => t.status === 'failed' || t.status === 'timedOut').length} Lỗi</span>`;
+      } else if (hasRunning) {
+        groupBorderColor = 'border-indigo-900/50 bg-indigo-950/10';
+        groupBadge = `<span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 animate-pulse">⏳ Đang chạy...</span>`;
+      } else if (allPassed) {
+        groupBorderColor = 'border-emerald-900/40 bg-emerald-950/10';
+        groupBadge = `<span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">✅ ${tests.length}/${tests.length} Passed</span>`;
+      } else {
+        const passedCount = tests.filter(t => t.status === 'passed').length;
+        groupBorderColor = 'border-slate-800';
+        groupBadge = `<span class="px-2 py-0.5 text-[10px] font-medium rounded-full bg-slate-800/80 text-slate-400 border border-slate-700/60">${passedCount}/${tests.length} Hoàn thành</span>`;
+      }
+
+      // Total duration of file
+      const totalMs = tests.reduce((acc, t) => acc + (t.duration || 0), 0);
+      const totalDurStr = totalMs > 0 ? `${(totalMs / 1000).toFixed(2)}s` : '';
+
+      // Header
+      const header = document.createElement('div');
+      header.className = `p-3.5 bg-slate-900/90 border-b ${groupBorderColor} flex items-center justify-between cursor-pointer select-none hover:bg-slate-850 transition-colors`;
+      header.innerHTML = `
+        <div class="flex items-center space-x-2.5 truncate flex-1 mr-2">
+          <svg class="file-group-arrow w-4 h-4 text-slate-400 transition-transform duration-200 flex-shrink-0" style="transform: ${hasFail || hasRunning || state.allExpanded ? 'rotate(90deg)' : 'rotate(0deg)'}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+          <span class="text-xs font-bold text-slate-200 font-mono truncate">${escapeHtml(file)}</span>
+          <span class="text-[11px] font-medium text-slate-500">(${tests.length} tests)</span>
+        </div>
+        <div class="flex items-center space-x-2 flex-shrink-0">
+          ${groupBadge}
+          ${totalDurStr ? `<span class="text-[11px] font-medium text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">${totalDurStr}</span>` : ''}
+        </div>
+      `;
+
+      // Body
+      const body = document.createElement('div');
+      body.className = `file-group-body p-2 space-y-2 ${hasFail || hasRunning || state.allExpanded ? '' : 'hidden'}`;
+
+      for (const test of tests) {
+        body.appendChild(createTestCardElement(test, true));
+      }
+
+      header.addEventListener('click', () => {
+        body.classList.toggle('hidden');
+        const arrow = header.querySelector('.file-group-arrow');
+        arrow.style.transform = body.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(90deg)';
+      });
+
+      groupEl.appendChild(header);
+      groupEl.appendChild(body);
+      return groupEl;
+    }
+
+    function formatProjectName(proj) {
+      if (!proj) return '';
+      const map = {
+        'chromium-guest': 'Chromium • Guest',
+        'chromium-free-user': 'Chromium • Free User',
+        'chromium-downloader': 'Chromium • Premium',
+        'chromium-creator': 'Chromium • Creator',
+        'firefox-guest': 'Firefox • Guest',
+        'firefox-free-user': 'Firefox • Free User',
+        'firefox-downloader': 'Firefox • Premium',
+        'firefox-creator': 'Firefox • Creator'
+      };
+      return map[proj] || proj;
+    }
+
+    function createTestCardElement(test, insideGroup = false) {
+      const card = document.createElement('div');
+      card.id = `test-${test.id}`;
+
+      let statusBadge = '';
+      let borderClass = 'border-slate-800/80 bg-slate-950/80';
+
+      if (test.status === 'running') {
+        borderClass = 'border-indigo-500/50 bg-indigo-950/20 glow-running';
+        statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-400 animate-pulse">Đang chạy...</span>';
+      } else if (test.status === 'passed') {
+        borderClass = 'border-emerald-900/40 bg-emerald-950/15';
+        statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400">PASSED</span>';
+      } else if (test.status === 'failed' || test.status === 'timedOut') {
+        borderClass = 'border-rose-900/50 bg-rose-950/25';
+        statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-400">FAILED</span>';
+      } else if (test.status === 'skipped') {
+        borderClass = 'border-amber-900/40 bg-amber-950/15';
+        statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400">SKIPPED</span>';
+      } else {
+        borderClass = 'border-slate-800/80 bg-slate-950/40';
+        statusBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-slate-800/80 text-slate-400 border border-slate-700/50">Chờ chạy</span>';
+      }
+
+      const durationStr = test.duration ? `${(test.duration / 1000).toFixed(2)}s` : '';
+
+      card.className = `p-3 rounded-xl border ${borderClass} hover:border-slate-700/80 transition-all flex flex-col space-y-1.5`;
+      card.innerHTML = `
+        <div class="flex items-start justify-between gap-2">
+          <div class="flex-1 min-w-0 pr-1">
+            ${formatTestTitleHtml(test.title)}
+            <div class="mt-1 flex items-center space-x-2">
+              <span class="text-[10px] font-semibold text-indigo-400 bg-indigo-950/40 border border-indigo-900/50 px-2 py-0.5 rounded-md">${escapeHtml(formatProjectName(test.project))}</span>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2 flex-shrink-0">
+            ${statusBadge}
+            ${durationStr ? `<span class="text-[11px] font-medium text-slate-400 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">${durationStr}</span>` : ''}
+          </div>
+        </div>
+        ${test.error ? `
+          <div class="mt-1 p-2 rounded-lg bg-rose-950/60 border border-rose-900/50 text-[11px] font-mono text-rose-300 break-all space-y-1">
+            <div class="flex items-center justify-between pb-1 border-b border-rose-900/40 text-[10px] text-rose-400 font-semibold uppercase">
+              <span>Error Trace</span>
+              <div class="flex items-center space-x-2">
+                <button type="button" class="btn-rerun-single text-xs text-rose-300 hover:text-white px-2 py-0.5 rounded bg-rose-900/60 hover:bg-rose-800/80 border border-rose-700/60 transition-all font-medium normal-case flex items-center">Chạy lại test này</button>
+                <button type="button" class="btn-copy-error text-indigo-300 hover:text-white transition-colors underline normal-case font-normal" data-err="${escapeHtml(cleanErrorText(test.error))}">Sao chép lỗi</button>
+              </div>
+            </div>
+            <div class="max-h-28 overflow-y-auto custom-scroll leading-relaxed whitespace-pre-wrap">${escapeHtml(cleanErrorText(test.error))}</div>
+          </div>
+        ` : ''}
+      `;
+
+      // Single Test Rerun Event
+      const rerunSingleBtn = card.querySelector('.btn-rerun-single');
+      if (rerunSingleBtn) {
+        rerunSingleBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const pattern = extractTestGrepPattern(test.title);
+          triggerRun({
+            files: test.file ? [test.file] : [],
+            projects: test.project ? [test.project] : calculateSelectedProjects(),
+            grep: pattern,
+            isRerun: true,
+            rerunTestId: test.id,
+            cleanReport: false
+          });
+        });
+      }
+
+      // Copy Error Event
+      const copyBtn = card.querySelector('.btn-copy-error');
+      if (copyBtn) {
+        copyBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const errText = copyBtn.getAttribute('data-err');
+          navigator.clipboard.writeText(errText).then(() => {
+            copyBtn.textContent = 'Đã sao chép!';
+            setTimeout(() => { copyBtn.textContent = 'Sao chép lỗi'; }, 2000);
+          });
+        });
+      }
+
+      return card;
+    }
+
+    function appendLog(text, colorClass = 'text-slate-300') {
+      const line = document.createElement('div');
+      line.className = `${colorClass} leading-relaxed`;
+      line.textContent = cleanErrorText(text);
+      logContainer.appendChild(line);
+      logContainer.scrollTop = logContainer.scrollHeight;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function cleanErrorText(str) {
+      if (!str) return '';
+      return String(str).replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
+    }
+
+    // ==========================================
+    // 4. SSE REAL-TIME CONNECTION
+    // ==========================================
+    function setupSSE() {
+      const evtSource = new EventSource('/api/events');
+
+      evtSource.addEventListener('runStarted', (e) => {
+        const data = JSON.parse(e.data);
+        setRunningState(true, 'Đang chuẩn bị phiên test...');
+        appendLog(`🚀 Đã kích hoạt lệnh: ${data.command}`, 'text-indigo-400 font-bold');
+      });
+
+      evtSource.addEventListener('suiteStart', (e) => {
+        const data = JSON.parse(e.data);
+        if (!state.isRerun) {
+          state.total = data.total;
+          state.tests.clear();
+          if (Array.isArray(data.tests)) {
+            for (const t of data.tests) {
+              state.tests.set(t.id, {
+                ...t,
+                status: 'pending',
+                duration: 0,
+                error: null
+              });
+            }
+          }
+          updateMetrics(state.total, 0, 0, 0);
+          setRunningState(true, `Đang chạy ${data.total} test case...`);
+          renderTestList();
+        } else {
+          setRunningState(true, `Đang chạy lại ${data.total} test case lỗi...`);
+          recalculateMetrics();
+          renderTestList();
+        }
+      });
+
+      evtSource.addEventListener('testBegin', (e) => {
+        const test = JSON.parse(e.data);
+        const existing = state.tests.get(test.id) || {};
+        state.tests.set(test.id, { ...existing, ...test, status: 'running', error: null });
+        renderTestList();
+      });
+
+      evtSource.addEventListener('testEnd', (e) => {
+        const test = JSON.parse(e.data);
+        const existing = state.tests.get(test.id) || {};
+        state.tests.set(test.id, { ...existing, ...test });
+        recalculateMetrics();
+        renderTestList();
+      });
+
+      evtSource.addEventListener('runFinished', (e) => {
+        const data = JSON.parse(e.data);
+        recalculateMetrics();
+        const totalFailed = state.failed;
+        setRunningState(false, totalFailed > 0 ? `Hoàn tất với ${totalFailed} lỗi.` : 'Hoàn tất! Tất cả tests đều Passed 🎉');
+        appendLog(`🏁 Test runner đã kết thúc với mã thoát: ${data.exitCode}`, totalFailed > 0 ? 'text-rose-400 font-bold' : 'text-emerald-400 font-bold');
+
+        // Show Post-Run Banner dựa trên state tổng thể sau khi rerun
+        showPostRunBanner({
+          total: state.total,
+          passed: state.passed,
+          failed: state.failed,
+          skipped: state.skipped
+        });
+        state.isRerun = false;
+      });
+
+      evtSource.addEventListener('runStopped', (e) => {
+        setRunningState(false, 'Đã dừng test theo yêu cầu.');
+      });
+
+      evtSource.addEventListener('status', (e) => {
+        const data = JSON.parse(e.data);
+        statusLabel.textContent = data.message;
+      });
+
+      evtSource.addEventListener('allureReady', (e) => {
+        const data = JSON.parse(e.data);
+        statusLabel.textContent = '✨ Đã tạo báo cáo Allure thành công.';
+        appendLog(`📊 Allure Report đã được tạo thành công tại: ${data.url}`, 'text-emerald-400 font-bold');
+      });
+
+      evtSource.addEventListener('allureError', (e) => {
+        const data = JSON.parse(e.data);
+        statusLabel.textContent = data.message;
+        appendLog(`⚠️ ${data.message}`, 'text-amber-400 font-bold');
+      });
+
+      evtSource.addEventListener('log', (e) => {
+        const data = JSON.parse(e.data);
+        appendLog(data.text, data.isError ? 'text-rose-400' : 'text-slate-300');
+      });
+    }
+
+    function setRunningState(running, label) {
+      state.running = running;
+      if (running) {
+        btnRunTest.classList.add('hidden');
+        btnStopTest.classList.remove('hidden');
+        statusDot.className = 'w-3 h-3 rounded-full bg-indigo-500 animate-ping';
+        postRunBanner.classList.add('hidden');
+      } else {
+        btnRunTest.classList.remove('hidden');
+        btnStopTest.classList.add('hidden');
+        statusDot.className = 'w-3 h-3 rounded-full bg-slate-500';
+      }
+      if (label) statusLabel.textContent = label;
+    }
+
+    function updateMetrics(total, passed, failed, skipped) {
+      metricTotal.textContent = total;
+      metricPassed.textContent = passed;
+      metricFailed.textContent = failed;
+      metricSkipped.textContent = skipped;
+
+      const completed = passed + failed + skipped;
+      const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+      progressPercent.textContent = `${pct}% (${completed}/${total})`;
+      progressBar.style.width = `${pct}%`;
+    }
+
+    function showPostRunBanner(data) {
+      postRunBanner.classList.remove('hidden');
+      state.lastFailedTests = Array.from(state.tests.values()).filter(t => t.status === 'failed' || t.status === 'timedOut');
+
+      if (data.failed > 0) {
+        postRunBanner.className = 'rounded-2xl p-4 border border-rose-800/60 bg-rose-950/30 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg';
+        postRunIcon.className = 'w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center flex-shrink-0 text-base font-bold';
+        postRunIcon.innerHTML = `<svg class="w-5 h-5 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg>`;
+        postRunTitle.textContent = `Phát hiện ${data.failed} testcase bị lỗi!`;
+        postRunDesc.textContent = `Tổng cộng: ${data.total} tests • ${data.passed} Passed • ${data.failed} Failed • ${data.skipped} Skipped`;
+        
+        btnRerunFailed.classList.remove('hidden');
+        btnRerunFailed.textContent = `Chạy lại ${state.lastFailedTests.length} test lỗi`;
+      } else {
+        postRunBanner.className = 'rounded-2xl p-4 border border-emerald-800/60 bg-emerald-950/30 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg';
+        postRunIcon.className = 'w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 text-base font-bold';
+        postRunIcon.innerHTML = `<svg class="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" /></svg>`;
+        postRunTitle.textContent = 'Tất cả bài test đều PASSED hoàn hảo!';
+        postRunDesc.textContent = `Tổng cộng: ${data.passed}/${data.total} testcase thành công 100%.`;
+        btnRerunFailed.classList.add('hidden');
+      }
+    }
+
+    // ==========================================
+    // 5. TEST EXECUTION TRIGGERS
+    // ==========================================
+    btnRunTest.addEventListener('click', async () => {
+      await triggerRun();
+    });
+
+    btnRerunFailed.addEventListener('click', async () => {
+      if (state.lastFailedTests.length === 0) return;
+      
+      // 1. Thu thập danh sách file spec chứa test lỗi
+      const failedFiles = Array.from(new Set(state.lastFailedTests.map(t => t.file).filter(Boolean)));
+      
+      // 2. Thu thập chính xác project/browser xảy ra lỗi (không chạy lan sang project khác)
+      const failedProjects = Array.from(new Set(state.lastFailedTests.map(t => t.project).filter(Boolean)));
+
+      // 3. Xây dựng grep pattern từ danh sách test lỗi sử dụng extractTestGrepPattern
+      const patterns = Array.from(new Set(state.lastFailedTests.map(t => extractTestGrepPattern(t.title)).filter(Boolean)));
+      const grepPattern = patterns.length > 0 ? patterns.join('|') : '';
+      const rerunTestIds = state.lastFailedTests.map(t => t.id);
+
+      await triggerRun({
+        files: failedFiles,
+        projects: failedProjects.length > 0 ? failedProjects : calculateSelectedProjects(),
+        grep: grepPattern,
+        isRerun: true,
+        rerunTestIds: rerunTestIds,
+        cleanReport: false
+      });
+    });
+
+    // Calculate Playwright Projects based on selected Roles and Browsers
+    function calculateSelectedProjects() {
+      const roles = Array.from(state.selectedRoles);
+      const browsers = Array.from(state.selectedBrowsers);
+
+      const projects = [];
+      for (const r of roles) {
+        for (const b of browsers) {
+          projects.push(`${b}-${r}`);
+        }
+      }
+      return projects;
+    }
+
+    async function triggerRun(overrideOptions = {}) {
+      const isRerun = Boolean(overrideOptions.isRerun);
+      state.isRerun = isRerun;
+
+      const selectedFiles = Array.from(state.fileSelection);
+      const selectedProjects = calculateSelectedProjects();
+
+      const payload = {
+        projects: selectedProjects,
+        roles: Array.from(state.selectedRoles),
+        files: overrideOptions.files || (selectedFiles.length > 0 ? selectedFiles : []),
+        grep: tagSelect.value,
+        headed: state.headed,
+        workers: state.workers,
+        cleanReport: !isRerun,
+        ...overrideOptions
+      };
+
+      if (!isRerun) {
+        // Khởi chạy mới toàn bộ: reset state và xóa dữ liệu cũ
+        state.tests.clear();
+        renderTestList();
+        updateMetrics(0, 0, 0, 0);
+      } else {
+        // RERUN: BẢO LƯU KẾT QUẢ CŨ! Chỉ chuyển test được chạy lại sang trạng thái 'running'
+        const targetIds = overrideOptions.rerunTestIds || (overrideOptions.rerunTestId ? [overrideOptions.rerunTestId] : []);
+        if (targetIds.length > 0) {
+          for (const id of targetIds) {
+            const t = state.tests.get(id);
+            if (t) {
+              t.status = 'running';
+              t.error = null;
+            }
+          }
+        } else if (overrideOptions.grep) {
+          for (const t of state.tests.values()) {
+            if (overrideOptions.grep.includes(t.title) || (t.title && t.title.includes(overrideOptions.grep))) {
+              t.status = 'running';
+              t.error = null;
+            }
+          }
+        }
+        renderTestList();
+        recalculateMetrics();
+      }
+
+      postRunBanner.classList.add('hidden');
+      const timeStr = new Date().toLocaleTimeString();
+      const browserNames = Array.from(state.selectedBrowsers).map(b => b.toUpperCase()).join(' + ');
+      const roleNames = Array.from(state.selectedRoles).map(r => ROLE_LABELS[r] || r).join(' + ');
+      appendLog(`\n======================================================`, 'text-indigo-400 font-bold');
+      appendLog(`   ${isRerun ? '🔁 CHẠY LẠI TEST LỖI (BẢO LƯU KẾT QUẢ CŨ)' : 'KHỞI CHẠY PHIÊN TEST MỚI'} [${timeStr}]`, 'text-indigo-300 font-bold');
+      appendLog(`   Số file: ${payload.files.length > 0 ? payload.files.length : 'Toàn bộ'}`);
+      appendLog(`   Trình duyệt: ${browserNames} • Vai trò: ${roleNames}`);
+      appendLog(`   Projects: [${(payload.projects || []).join(', ')}] • Workers: ${payload.workers}`);
+      if (payload.grep) appendLog(`   Lọc Test Case (Grep): "${payload.grep}"`);
+      appendLog(`======================================================`, 'text-indigo-400 font-bold');
+
+      try {
+        const res = await fetch('/api/run', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.error) {
+          alert(`Lỗi: ${data.error}`);
+        }
+      } catch (err) {
+        alert(`Không thể kết nối đến server: ${err.message}`);
+      }
+    }
+
+    btnStopTest.addEventListener('click', async () => {
+      if (confirm('Bạn có chắc chắn muốn dừng toàn bộ tiến trình test đang chạy không?')) {
+        await fetch('/api/stop', { method: 'POST' });
+      }
+    });
+
+    // ==========================================
+    // 6. INITIALIZATION
+    // ==========================================
+    async function init() {
+      try {
+        const [statusRes, suitesRes] = await Promise.all([
+          fetch('/api/status').then(r => r.json()),
+          fetch('/api/suites').then(r => r.json())
+        ]);
+
+        // OS Badge
+        const osName = statusRes.platform === 'win32' ? 'Windows' : statusRes.platform === 'darwin' ? 'macOS' : statusRes.platform;
+        osText.textContent = osName;
+
+        // Java status
+        if (statusRes.javaInstalled) {
+          javaBadge.className = 'inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-emerald-950/60 text-emerald-400 border border-emerald-800/40';
+          javaBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5"></span> Java Ready';
+          javaWarningBanner.classList.add('hidden');
+        } else {
+          javaBadge.className = 'inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-amber-950/60 text-amber-400 border border-amber-800/40';
+          javaBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-400 mr-1.5"></span> Java Chưa Cài';
+          javaWarningBanner.classList.remove('hidden');
+        }
+
+        // Store suites data
+        suitesData = suitesRes;
+
+        // Populate modules dropdown (Defensively sanitize all icons & paths)
+        if (suitesRes.modules && suitesRes.modules.length > 0) {
+          moduleSelect.innerHTML = '';
+          for (const mod of suitesRes.modules) {
+            const opt = document.createElement('option');
+            opt.value = mod.id;
+            let cleanName = (mod.name || '')
+              .replace(/[\u{1F300}-\u{1FAD6}\u{2000}-\u{27BF}\u{FE00}-\u{FE0F}]/gu, '')
+              .replace(/[⚡📥🎨📁🔥📦💻📊🧹🔁✓✕]/g, '')
+              .replace(/\s*\([^)]*\)/g, '')
+              .trim();
+            if (mod.id === 'all') cleanName = 'Tất cả Thư mục (All Modules)';
+            else if (mod.id === 'downloader') cleanName = 'Downloader';
+            else if (mod.id === 'creator') cleanName = 'Creator';
+            else cleanName = mod.id.charAt(0).toUpperCase() + mod.id.slice(1);
+            opt.textContent = cleanName;
+            moduleSelect.appendChild(opt);
+          }
+        }
+
+        // Initialize browser buttons UI
+        updateBrowserButtonsUI();
+
+        // Render checklist files
+        renderFileChecklist();
+
+        // Sync roles with initially available/selected files
+        autoSyncRolesFromFiles();
+
+        // Update filter counters
+        updateFilterCounts();
+
+      } catch (err) {
+        console.error('Init error:', err);
+      }
+
+      setupSSE();
+    }
+
+    init();
+  </script>
+</body>
+</html>

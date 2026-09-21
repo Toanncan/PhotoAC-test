@@ -127,6 +127,20 @@ Kích hoạt khi user nói:
 
 ---
 
+### Review Codebase & Quản Trị Rủi Ro Hồi Quy
+
+Tác vụ này sử dụng skill `code_review_guardian`.
+
+Sử dụng workflow: `review_codebase`
+
+Kích hoạt khi user nói:
+- review code / review codebase
+- kiểm tra code mới có ảnh hưởng code cũ không
+- audit code / check zero regression
+- review PR / review pull request
+
+---
+
 ## Tech Stack
 
 - **Ngôn ngữ:** TypeScript
@@ -147,17 +161,26 @@ Kích hoạt khi user nói:
 6. `css selector`
 7. `xpath` (lựa chọn cuối cùng)
 
-Tham chiếu chi tiết: `.agent-playwright/rules/locator_strategy.md`
+Tham chiếu chi tiết: `.agent/rules/locator_strategy.md`
+
+## Nguyên Tắc Bắt Buộc: 100% True User Simulation (E2E Testing)
+
+- **Mô phỏng người dùng thật (End-to-End)**:
+  - Mọi luồng tìm kiếm và lọc kết quả phải được thực hiện bằng hành vi người dùng thật trên UI (click mở menu toolbar/dropdown, chọn checkbox/radio, nhập input và gõ phím Enter).
+  - **TUYỆT ĐỐI CẤM** lạm dụng URL query params manipulation (`searchWithCombinedParams`, `page.goto('/search?...')`) để thay thế luồng UI trong E2E tests, vì điều này làm mất giá trị kiểm thử giao diện thực tế và che giấu các bug frontend/dropdown.
+  - Ngoại lệ duy nhất: Khi test trực tiếp các trường hợp Routing đặc biệt, Direct Link, hoặc Deep-linking theo đúng yêu cầu nghiệp vụ.
 
 ---
 
 ## Tham Chiếu Rules
 
-Agent PHẢI tuân thủ các rules chi tiết trong `.agent-playwright/rules/`:
+Agent PHẢI tuân thủ các rules chi tiết trong `.agent/rules/`:
 
 - `automation_rules.md` — Quy tắc automation chung
+- `code_review_rules.md` — Quy chuẩn code review, chống hồi quy và bảo vệ shared files
 - `locator_strategy.md` — Chiến lược chọn locator
 - `playwright_rules.md` — Quy tắc riêng cho Playwright
+- `local_test_runner.md` — Quy tắc vận hành portal & test runner local
 
 ---
 

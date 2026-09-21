@@ -13,14 +13,24 @@
 import * as path from 'path';
 import * as fs from 'fs';
 
-/** Path to the persisted downloader authentication state file (Chromium) */
-export const DOWNLOADER_AUTH_STATE_PATH = path.resolve('.auth', 'downloader.json');
+/** Path to the persisted premium user authentication state file (Chromium) */
+export const PREMIUM_USER_AUTH_STATE_PATH = path.resolve('.auth', 'premium-user.json');
+/** Alias for legacy downloader references */
+export const DOWNLOADER_AUTH_STATE_PATH = PREMIUM_USER_AUTH_STATE_PATH;
+
+/** Path to the persisted free user authentication state file (Chromium) */
+export const FREE_USER_AUTH_STATE_PATH = path.resolve('.auth', 'free-user.json');
 
 /** Path to the persisted creator authentication state file (Chromium) */
 export const CREATOR_AUTH_STATE_PATH = path.resolve('.auth', 'creator.json');
 
-/** Path to the persisted downloader authentication state file (Firefox) */
-export const DOWNLOADER_AUTH_STATE_FIREFOX_PATH = path.resolve('.auth', 'downloader-firefox.json');
+/** Path to the persisted premium user authentication state file (Firefox) */
+export const PREMIUM_USER_AUTH_STATE_FIREFOX_PATH = path.resolve('.auth', 'premium-user-firefox.json');
+/** Alias for legacy downloader references */
+export const DOWNLOADER_AUTH_STATE_FIREFOX_PATH = PREMIUM_USER_AUTH_STATE_FIREFOX_PATH;
+
+/** Path to the persisted free user authentication state file (Firefox) */
+export const FREE_USER_AUTH_STATE_FIREFOX_PATH = path.resolve('.auth', 'free-user-firefox.json');
 
 /** Path to the persisted creator authentication state file (Firefox) */
 export const CREATOR_AUTH_STATE_FIREFOX_PATH = path.resolve('.auth', 'creator-firefox.json');

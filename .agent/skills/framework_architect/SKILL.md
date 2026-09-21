@@ -122,10 +122,12 @@ Moi Page Object:
 - Khong co assertion — assertion chi o test class
 
 ### `src/fixtures/auth.fixture.ts`
-Fixture quan ly dang nhap:
-- Luu trang thai dang nhap vao `storageState` sau lan dang nhap dau tien
-- Tai su dung state da luu cho cac test sau — khong can dang nhap lai moi test
-- Giam thoi gian chay test toan bo
+Fixture quan ly dang nhap & Multi-Role Architecture:
+- Quan ly duong dan file `storageState` cho tung vai tro (`premium-user`, `free-user`, `creator`)
+- Tach biet session giua cac trinh duyet: Chromium (`.auth/{role}.json`) va Firefox (`.auth/{role}-firefox.json`)
+- Setup files tuong ung: `{role}.setup.ts` (Chromium) va `{role}-firefox.setup.ts` (Firefox)
+- Tai su dung state da luu cho cac test sau — khong can dang nhap lai moi test, dam bao chay song song khong conflict
+
 
 ### `src/fixtures/base.fixture.ts`
 Fixture goc:
@@ -242,5 +244,6 @@ Du lieu test ngoai:
 
 Agent PHAI tuan thu:
 - `.agent/rules/automation_rules.md` — Quy tac automation chung
+- `.agent/rules/code_review_rules.md` — Quy chuan code review, chong hoi quy va bao ve file dung chung
 - `.agent/rules/locator_strategy.md` — Chien luoc chon locator
 - `.agent/rules/playwright_rules.md` — Quy tac Playwright cu the

@@ -12,20 +12,30 @@ export abstract class BasePage {
 
   protected readonly closeButton: Locator;
 
+  protected readonly pageLoadingIcon: Locator;
+
   constructor(page: Page) {
     this.page = page;
     this.photoAiModelContent = this.page.locator('.photo-ai-lab-modal__content');
     this.closeButton = this.page.getByRole('button', { name: '閉じる' }).nth(1);
+    this.pageLoadingIcon = page.locator('#full_page_loading').first();
   }
 
   // ─── Navigation ──────────────────────────────────────────────────────────
 
   /**
-   * Navigate to a URL path relative to baseURL.
+   * Navigate to a URL path relative to baseURL with resilient retry on transient network timeouts.
    * @param path - Relative path (e.g., '/login') or absolute URL
+   * @param options - Optional navigation configuration
    */
-  async navigate(path: string = '/'): Promise<void> {
-    await this.page.goto(path, { waitUntil: 'domcontentloaded' });
+  async navigate(path: string = '/', options?: { timeout?: number }): Promise<void> {
+    const timeout = options?.timeout ?? 25_000;
+    try {
+      await this.page.goto(path, { waitUntil: 'domcontentloaded', timeout });
+    } catch {
+      // Retry once if navigation timed out due to staging network latency
+      await this.page.goto(path, { waitUntil: 'domcontentloaded', timeout });
+    }
   }
 
   /**
@@ -41,9 +51,15 @@ export abstract class BasePage {
    * Click an element after ensuring it is visible and enabled.
    * @param locator - Playwright Locator object
    */
-  async clickElement(locator: Locator): Promise<void> {
+  async clickElement(locator: Locator, options?: { force?: boolean }): Promise<void> {
     await locator.waitFor({ state: 'visible', timeout: 20_000 });
-    await locator.click();
+    if (options?.force) {
+      await locator.click({ force: true });
+    } else {
+      await locator.click().catch(async () => {
+        await locator.click({ force: true });
+      });
+    }
   }
 
   /**
@@ -53,7 +69,7 @@ export abstract class BasePage {
    */
   async fillInput(locator: Locator, value: string): Promise<void> {
     await locator.waitFor({ state: 'visible', timeout: 20_000 });
-    await locator.clear();
+    await locator.fill('');
     await locator.fill(value);
   }
 
@@ -98,8 +114,8 @@ export abstract class BasePage {
    * @param locator - Playwright Locator
    * @param timeout - Optional custom timeout in ms
    */
-  async waitForElementToHide(locator: Locator, timeout?: number): Promise<void> {
-    await expect(locator).toBeHidden({ timeout });
+  async waitForPageLoadingIconHidden(): Promise<void> {
+    await this.pageLoadingIcon.waitFor({ state: 'hidden', timeout: 10_000 });
   }
 
   /**

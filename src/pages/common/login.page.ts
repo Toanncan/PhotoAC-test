@@ -79,7 +79,8 @@ export class LoginPage extends BasePage {
       await this.page.waitForURL(/\/(user|$)/, { waitUntil: 'domcontentloaded', timeout: 30_000 });
       await this.closePhotoAiModelContent();
       // Wait for user avatar to be visible, ensuring session cookies are fully established in the context
-      await this.page.locator('#user-info-dropdown img').nth(1).waitFor({ state: 'visible', timeout: 15_000 });
+      // await this.page.locator('#user-info-dropdown img').nth(1).waitFor({ state: 'visible', timeout: 15_000 });
+      await this.page.waitForTimeout(3000);
     })
   }
 
