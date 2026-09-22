@@ -7,7 +7,7 @@
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
     "test:debug": "playwright test --debug",
-    "test:chromium": "playwright test --project=chromium-downloader --project=chromium-creator",
+    "test:chromium": "playwright test --project=chromium-guest --project=chromium-downloader --project=chromium-free-user --project=chromium-creator",
     "test:firefox": "playwright test --project=firefox-downloader --project=firefox-creator",
     "test:guest": "playwright test --project=chromium-guest",
     "test:webkit": "playwright test --project=webkit",

@@ -113,6 +113,13 @@ export class SearchResultPage extends BasePage {
   /** Filter button: Display Conditions (表示条件) */
   readonly displayConditionFilterButton: Locator = this.page.locator('#filter-dropdown-display > button, button:has-text("表示条件")').first();
 
+  /** Filter clear all link ("すべてクリア") displayed when any filter is active */
+  readonly clearAllFiltersButton: Locator = this.page.getByRole('link', { name: 'すべてクリア' })
+    .or(this.page.locator('a:has-text("すべてクリア")'));
+
+  /** Active filter badges/chips displayed directly under the filter toolbar */
+  readonly activeFilterBadges: Locator = this.page.locator('button:has(a[aria-label="削除"])');
+
   // ─── Filter Option Locators: 1. Category (カテゴリー) ──────────────────────
   readonly categoryPeopleLabel: Locator = this.page.locator('#filter-dropdown-categories label[for="ddcl-c_names1-i0"], #ddcl-c_names1-ddw label:has-text("人物")').first();
   readonly categoryBusinessLabel: Locator = this.page.locator('#filter-dropdown-categories label[for="ddcl-c_names1-i1"], #ddcl-c_names1-ddw label:has-text("ビジネス")').first();
@@ -391,25 +398,56 @@ export class SearchResultPage extends BasePage {
   // ─── Pagination Actions ───────────────────────────────────────────────────
 
   /**
-   * Click the Next page button in pagination with smart wait to prevent race condition.
+   * Click the Next page button in pagination with progressive 3-tier fallback to ensure reliable navigation cross-browser.
    */
   async goToNextPage(): Promise<void> {
     await test.step('Navigate to next page in pagination', async () => {
       const currentPage = await this.getActivePageNumber().catch(() => '1');
       const targetPage = String(Number(currentPage) + 1);
-      // Scroll into center of viewport so fixed footer banners (cookie, signup) cannot obscure the button in Gecko
+
+      // Tier 1: Scroll element into center of viewport to avoid bottom fixed banners (Cookie, Signup CTA)
       await this.paginationNextButton.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => {});
       await this.clickElement(this.paginationNextButton);
-      // Wait for either the active page to become targetPage or URL to contain `p=`
-      await this.page.waitForFunction(
+
+      // Check if navigation occurred within 2.5s
+      const navigated = await this.page.waitForFunction(
         (target) => {
           const activeEl = document.querySelector('ul.ac-pagination li.active a');
           const url = window.location.href;
           return (activeEl && activeEl.textContent?.trim() === target) || url.includes(`p=${target}`);
         },
         targetPage,
-        { timeout: 15_000 }
-      ).catch(() => {});
+        { timeout: 2_500 }
+      ).then(() => true).catch(() => false);
+
+      if (!navigated) {
+        // Tier 2: Trigger Photo-AC native keyboard shortcut ArrowRight
+        await this.page.keyboard.press('ArrowRight');
+        const keyboardNavigated = await this.page.waitForFunction(
+          (target) => {
+            const activeEl = document.querySelector('ul.ac-pagination li.active a');
+            const url = window.location.href;
+            return (activeEl && activeEl.textContent?.trim() === target) || url.includes(`p=${target}`);
+          },
+          targetPage,
+          { timeout: 2_500 }
+        ).then(() => true).catch(() => false);
+
+        if (!keyboardNavigated) {
+          // Tier 3: Native DOM anchor click dispatch
+          await this.paginationNextButton.evaluate((el: HTMLAnchorElement) => el.click()).catch(() => {});
+          await this.page.waitForFunction(
+            (target) => {
+              const activeEl = document.querySelector('ul.ac-pagination li.active a');
+              const url = window.location.href;
+              return (activeEl && activeEl.textContent?.trim() === target) || url.includes(`p=${target}`);
+            },
+            targetPage,
+            { timeout: 10_000 }
+          ).catch(() => {});
+        }
+      }
+
       await this.waitForResultDisplay();
     });
   }
@@ -436,25 +474,56 @@ export class SearchResultPage extends BasePage {
   }
 
   /**
-   * Click the Previous page button in pagination with smart wait to prevent race condition.
+   * Click the Previous page button in pagination with progressive 3-tier fallback to ensure reliable navigation cross-browser.
    */
   async goToPrevPage(): Promise<void> {
     await test.step('Navigate to previous page in pagination', async () => {
       const currentPage = await this.getActivePageNumber().catch(() => '2');
       const targetPage = String(Math.max(1, Number(currentPage) - 1));
-      // Scroll into center of viewport to avoid bottom fixed banners in Gecko
+
+      // Tier 1: Scroll element into center of viewport to avoid bottom fixed banners
       await this.paginationPrevButton.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => {});
       await this.clickElement(this.paginationPrevButton);
-      // Wait for URL/active element to update
-      await this.page.waitForFunction(
+
+      // Check if navigation occurred within 2.5s
+      const navigated = await this.page.waitForFunction(
         (target) => {
           const activeEl = document.querySelector('ul.ac-pagination li.active a');
           const url = window.location.href;
           return (activeEl && activeEl.textContent?.trim() === target) || (target === '1' && !url.includes('p=2'));
         },
         targetPage,
-        { timeout: 15_000 }
-      ).catch(() => {});
+        { timeout: 2_500 }
+      ).then(() => true).catch(() => false);
+
+      if (!navigated) {
+        // Tier 2: Trigger Photo-AC native keyboard shortcut ArrowLeft
+        await this.page.keyboard.press('ArrowLeft');
+        const keyboardNavigated = await this.page.waitForFunction(
+          (target) => {
+            const activeEl = document.querySelector('ul.ac-pagination li.active a');
+            const url = window.location.href;
+            return (activeEl && activeEl.textContent?.trim() === target) || (target === '1' && !url.includes('p=2'));
+          },
+          targetPage,
+          { timeout: 2_500 }
+        ).then(() => true).catch(() => false);
+
+        if (!keyboardNavigated) {
+          // Tier 3: Native DOM anchor click dispatch
+          await this.paginationPrevButton.evaluate((el: HTMLAnchorElement) => el.click()).catch(() => {});
+          await this.page.waitForFunction(
+            (target) => {
+              const activeEl = document.querySelector('ul.ac-pagination li.active a');
+              const url = window.location.href;
+              return (activeEl && activeEl.textContent?.trim() === target) || (target === '1' && !url.includes('p=2'));
+            },
+            targetPage,
+            { timeout: 10_000 }
+          ).catch(() => {});
+        }
+      }
+
       await this.waitForResultDisplay();
     });
   }
@@ -550,6 +619,43 @@ export class SearchResultPage extends BasePage {
       }
       await expect(expectedOption).toBeVisible({ timeout: 2_000 });
     }).toPass({ timeout, intervals: [400, 800, 1_200] });
+  }
+
+  /**
+   * Clear all active filters on the search results page if any filter is currently applied.
+   * Clicks "すべてクリア" link when visible and waits for search results to refresh.
+   */
+  async clearAllFilters(): Promise<void> {
+    await test.step('Clear all active filters via "すべてクリア"', async () => {
+      const isClearVisible = await this.clearAllFiltersButton.first().isVisible({ timeout: 1_500 }).catch(() => false);
+      if (isClearVisible) {
+        await this.clickElement(this.clearAllFiltersButton.first());
+        await this.waitForResultDisplay();
+      }
+    });
+  }
+
+  /**
+   * Check whether any active filters are currently applied on the search results page.
+   */
+  async hasActiveFilters(): Promise<boolean> {
+    return this.clearAllFiltersButton.first().isVisible().catch(() => false);
+  }
+
+  /**
+   * Get a specific active filter badge by its label text.
+   * @param label - Label text displayed in the badge (e.g. '縦長', '横長', '人物', '無人', '1人', '2人', '3人以上', '若者', '取得済のみ', '完全一致')
+   */
+  getActiveFilterBadge(label: string): Locator {
+    return this.activeFilterBadges.filter({ hasText: label }).first();
+  }
+
+  /**
+   * Get an active color filter badge by its hex color value.
+   * @param hexColor - Hex color string without '#' (e.g. '0000d6' for blue)
+   */
+  getActiveColorBadge(hexColor: string): Locator {
+    return this.activeFilterBadges.locator(`span[style*="${hexColor}"]`).first();
   }
 
   /**

@@ -22,6 +22,7 @@ type PageFixtures = {
   searchResultPage: SearchResultPage;
   allureMetadata: void;
   screenshotOnPass: void;
+  urlOverlayAndAttachment: void;
 };
 
 /**
@@ -123,6 +124,51 @@ export const test = base.extend<PageFixtures>({
         body: screenshot,
         contentType: 'image/png',
       });
+    }
+  }, { auto: true }],
+
+  /**
+   * urlOverlayAndAttachment — Injects a clean URL watermark banner on the page top
+   * and attaches current URL as text to Allure Report for fast copy and high visibility.
+   * auto: true → Runs for every test. Fixtures teardown in LIFO order so this runs first on test completion.
+   */
+  urlOverlayAndAttachment: [async ({ page }, use, testInfo) => {
+    await use();
+    try {
+      if (!page.isClosed()) {
+        const currentUrl = page.url();
+
+        // 1. Attach URL as clean text to Allure Report for 1-click copy
+        await testInfo.attach('Current URL', {
+          body: currentUrl,
+          contentType: 'text/plain',
+        });
+
+        // 2. Inject URL watermark banner to DOM so all screenshots (Pass and Failure) capture the exact URL
+        await page.evaluate((url) => {
+          if (document.getElementById('qa-screenshot-url-banner')) return;
+          const banner = document.createElement('div');
+          banner.id = 'qa-screenshot-url-banner';
+          banner.style.position = 'fixed';
+          banner.style.top = '0';
+          banner.style.left = '0';
+          banner.style.width = '100%';
+          banner.style.backgroundColor = 'rgba(15, 23, 42, 0.92)';
+          banner.style.color = '#22c55e';
+          banner.style.fontFamily = 'Consolas, Menlo, Monaco, monospace';
+          banner.style.fontSize = '13px';
+          banner.style.fontWeight = 'bold';
+          banner.style.padding = '6px 14px';
+          banner.style.zIndex = '2147483647';
+          banner.style.borderBottom = '2px solid #22c55e';
+          banner.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.5)';
+          banner.style.pointerEvents = 'none';
+          banner.textContent = '📍 URL: ' + url;
+          document.body.prepend(banner);
+        }, currentUrl).catch(() => {});
+      }
+    } catch {
+      // Ignore if page is already closed or destroyed
     }
   }, { auto: true }],
 });
