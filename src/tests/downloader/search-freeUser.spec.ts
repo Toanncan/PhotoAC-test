@@ -929,7 +929,7 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
     homePage,
     searchResultPage,
   }) => {
-    await homePage.search('cat');
+    await homePage.search('dog');
     await searchResultPage.waitForResultDisplay();
 
     await test.step('Verify menu "表示件数" có radio 70件ずつ表示 được check default', async () => {
