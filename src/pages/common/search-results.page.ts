@@ -14,8 +14,8 @@ export class SearchResultPage extends BasePage {
   /** Quickview link overlays on thumbnails */
   readonly quickViewOverlays: Locator = this.page.locator('.link-to-detail.quickview');
 
-  /** Message displayed when no images match the search criteria */
-  readonly noResultMessage: Locator = this.page.getByText('該当する写真がありませんでした。ページ下部よりリクエストも受け付けております。');
+  /** Message displayed when no images match the search criteria (keyword search or image upload search) */
+  readonly noResultMessage: Locator = this.page.getByText(/該当する写真がありませんでした|写真は見つかりませんでした/);
 
   /** Combined locator matching either image results or no-results message (Playwright native .or) */
   readonly resultsOrNoResultLocator: Locator = this.resultItems.first().or(this.noResultMessage.first());
