@@ -1,9 +1,9 @@
 @echo off
-title Photo-AC Automation Test Portal
+title Test Portal
 color 0B
 
 echo ================================================================
-echo    PHOTO-AC AUTOMATION TEST PORTAL - WINDOWS LAUNCHER
+echo    AUTOMATION TEST PORTAL - WINDOWS LAUNCHER
 echo ================================================================
 echo.
 

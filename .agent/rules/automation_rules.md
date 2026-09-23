@@ -4,7 +4,7 @@ trigger: always_on
 
 # Quy Tắc Chung Cho QA Automation (Playwright TypeScript)
 
-Áp dụng cho mọi tác vụ automation testing với Playwright + TypeScript trên dự án Photo-AC.
+Áp dụng cho mọi tác vụ automation testing với Playwright + TypeScript trên **Monorepo Photo-AC & Illust-AC** (`d:\Js\photo-ac-test\`).
 
 ---
 
@@ -53,35 +53,24 @@ Dự án đã có sẵn các utility chuyên biệt. **BẮT BUỘC tái sử d�
 
 ---
 
-## 4. Kiến Trúc Multi-Role & Quản Lý Phiên Đăng Nhập (Photo-AC)
+## 4. Kiến Trúc Multi-Role & Quản Lý Phiên Đăng Nhập
 
-Photo-AC phân tách 4 vai trò (Roles) với session riêng biệt trên Chromium và Firefox. **TUYỆT ĐỐI KHÔNG dùng chung session giữa Chromium và Firefox**.
+Dự án phân tách 4 vai trò (Roles) với session riêng biệt trên Chromium và Firefox.
+**TUYỆT ĐỐI KHÔNG dùng chung session giữa Chromium và Firefox.**
 
-### 4.1 Ma Trận 4 Vai Trò Người Dùng (User Roles Matrix)
+> Chi tiết Role Matrix, StorageState, và Setup files → đọc [`.agent/rules/features/auth.md`](file:///d:/Js/photo-ac-test/.agent/rules/features/auth.md)
 
-| Vai trò (Role) | Biến `.env` | Setup Chromium | Setup Firefox | StorageState Chromium | StorageState Firefox | Project Chạy Test |
-|---|---|---|---|---|---|---|
-| **Guest User** (Chưa đăng nhập) | *Không cần* | *Không cần* | *Không cần* | `cookies: []` | `cookies: []` | `chromium-guest`<br>`firefox-guest` |
-| **Free User** (無料会員) | `FREE_USER_EMAIL`<br>`FREE_USER_PASSWORD` | `free-user.setup.ts` | `free-user-firefox.setup.ts` | `.auth/free-user.json` | `.auth/free-user-firefox.json` | `chromium-free-user`<br>`firefox-free-user` |
-| **Premium User** (プレミアム会員) | `PREMIUM_USER_EMAIL`<br>`PREMIUM_USER_PASSWORD` | `premium-user.setup.ts` | `premium-user-firefox.setup.ts` | `.auth/premium-user.json` | `.auth/premium-user-firefox.json` | `chromium-downloader`<br>`firefox-downloader` |
-| **Creator** (クリエイター) | `CREATOR_EMAIL`<br>`CREATOR_PASSWORD` | `creator.setup.ts` | `creator-firefox.setup.ts` | `.auth/creator.json` | `.auth/creator-firefox.json` | `chromium-creator`<br>`firefox-creator` |
+### Quy Tắc Session Isolation Tóm Tắt
 
-### 4.2 Ma Trận Phân Quyền & Hành Vi Cần Kiểm Thử
-
-| Đặc tính / Hành vi | Guest User | Free User | Premium User | Creator |
-|---|---|---|---|---|
-| **Giới hạn tìm kiếm** | 4 lần/ngày (hiển thị popup giới hạn) | 4 lần/ngày (hiển thị modal coupon/limit) | **Không giới hạn** | Không áp dụng |
-| **Sắp xếp "人気順" (Phổ biến)** | Bị chặn (hiển thị popover Premium) | Bị chặn (hiển thị popover Premium) | **Cho phép** sắp xếp bình thường | Không áp dụng |
-| **AI Search Toggle** | Hiển thị nhưng disable; mở 3 lượt khi chạm limit | **Hoàn toàn ẩn** (`.search-by-ai` không có trên DOM) | Theo gói trả phí | Không áp dụng |
-| **Tải ảnh / Hóa đơn** | Bị giới hạn tải / Không có hóa đơn | Bị giới hạn tải / Không có hóa đơn | **Tải không giới hạn**, có hóa đơn (`/user/receipts`) | Quản lý tác phẩm đã tải lên |
-
-- **Session Isolation:** Cấu hình `storageState` ở cấp Project trong `playwright.config.ts`, TRÁNH hardcode trong test spec (ngoại trừ Guest User). CẤM sửa/xóa trực tiếp file `.auth/*.json`.
+- **Guest User:** `test.use({ storageState: { cookies: [], origins: [] } })` trong spec.
+- **Free / Premium / Creator:** để project config (`playwright.config.ts`) tự inject — **KHÔNG** khai báo trong spec.
+- **CẤM** sửa/xóa trực tiếp file `.auth/*.json`.
 
 ---
 
 ## 5. Kiểm Soát Chất Lượng, Shared Files & Chống Hồi Quy (Zero Regression)
 
-Mọi thay đổi mã nguồn trước khi merge/commit **bắt buộc tuân thủ quy tắc tại [code_review_rules.md](file:///d:/Js/photo-ac-test/.agent/rules/code_review_rules.md)**:
+Mọi thay đổi mã nguồn trước khi merge/commit **bắt buộc tuân thủ `code_review_rules.md`** (trong Global Config):
 
 1. **Bảo vệ File Dùng Chung (Shared Files Gate):**
    - Hạn chế tối đa sửa đổi Tier 1 (`base.fixture.ts`, `base.page.ts`, `playwright.config.ts`, `auth.fixture.ts`) và Tier 2 (`src/pages/common/**`, `src/utils/**`).
@@ -94,3 +83,46 @@ Mọi thay đổi mã nguồn trước khi merge/commit **bắt buộc tuân th�
    - ⛔ Cấm `page.waitForTimeout` hoặc hard sleep (gây flaky).
    - ⛔ Cấm `console.log` và code comment rác sót lại.
    - ⛔ Cấm hardcode credentials vào source code.
+
+---
+
+## 6. Feature Catalog System (BẮT BUỘC ĐỌC TRƯỚC KHI VIẾT CODE)
+
+> **CRITICAL:** Mọi tính năng đặc thù của từng site được catalog hóa riêng trong `.agent/rules/features/`.
+> AI BẮT BUỘC đọc file tương ứng TRƯỚC khi viết code cho feature đó.
+
+### Index Feature Catalog
+
+| Feature | File | Load khi nào |
+|---|---|---|
+| **Search & Filters** | [`.agent/rules/features/search.md`](file:///d:/Js/photo-ac-test/.agent/rules/features/search.md) | Tìm kiếm, filter toolbar, sort, pagination, search limit |
+| **Download & Receipts** | [`.agent/rules/features/download.md`](file:///d:/Js/photo-ac-test/.agent/rules/features/download.md) | Tải ảnh, hóa đơn PDF, profile edit |
+| **Creator** | [`.agent/rules/features/creator.md`](file:///d:/Js/photo-ac-test/.agent/rules/features/creator.md) | Ranking, upload tác phẩm, portfolio |
+| **Auth & Session** | [`.agent/rules/features/auth.md`](file:///d:/Js/photo-ac-test/.agent/rules/features/auth.md) | Login, session, `.auth/*.json`, role setup |
+| **[Feature mới]** | `.agent/rules/features/<ten-feature>.md` | Copy từ `_TEMPLATE.md` |
+
+### Quy Trình Bắt Buộc 3 Bước
+
+```
+BƯỚC 1: XÁC ĐỊNH SITE
+   Đọc đường dẫn file hiện tại:
+   - photo-ac/ → Photo-AC (photo-ac.com)
+   - illust-ac/ → Illust-AC (ac-illust.com)
+
+BƯỚC 2: ĐỌC FEATURE CATALOG
+   Mở file .agent/rules/features/<feature>.md → xác nhận feature ✅/❌ trên site
+
+BƯỚC 3: VERIFY TRÊN BROWSER (NẾu không chắc)
+   Mở browser → inspect DOM thực tế → không đoán mò
+```
+
+### Khi Có Feature Mới (Quy Trình Chuẩn)
+
+```
+1. Copy _TEMPLATE.md → features/<ten-feature>.md
+2. Inspect DOM thực tế trên browser
+3. Điền Feature Parity Matrix (✅/❌ rõ ràng)
+4. Điền Behavior Matrix theo Role
+5. Commit file này cùng với code automation
+```
+

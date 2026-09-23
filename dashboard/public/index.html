@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Photo-AC Test Portal</title>
+  <title>Test Portal</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,7 +55,7 @@
           </svg>
         </div>
         <div>
-          <h1 class="text-lg font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">PHOTO-AC TEST PORTAL</h1>
+          <h1 class="text-lg font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">TEST PORTAL</h1>
         </div>
       </div>
 
@@ -102,6 +102,19 @@
             </svg>
             Cấu Hình Test Run
           </h2>
+        </div>
+
+        <!-- PROJECT SELECTOR -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">Dự Án</label>
+          <div class="grid grid-cols-2 gap-2 p-1 bg-slate-950 border border-slate-800 rounded-xl" id="projectSelectorContainer">
+            <button type="button" id="btnProjectPhoto" data-project="photo-ac" class="project-btn py-1.5 px-3 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow-sm">
+              Photo-AC
+            </button>
+            <button type="button" id="btnProjectIllust" data-project="illust-ac" class="project-btn py-1.5 px-3 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-slate-200">
+              AC-Illust
+            </button>
+          </div>
         </div>
 
         <!-- 1. MODULE / FOLDER SELECTOR -->
@@ -416,10 +429,13 @@
       fileSelection: new Set(),
       selectedBrowsers: new Set(['chromium']),
       selectedRoles: new Set(['downloader']),
+      currentProjectSite: 'photo-ac',
       lastFailedTests: []
     };
 
     // DOM Elements
+    const btnProjectPhoto = document.getElementById('btnProjectPhoto');
+    const btnProjectIllust = document.getElementById('btnProjectIllust');
     const moduleSelect = document.getElementById('moduleSelect');
     const roleHintBadge = document.getElementById('roleHintBadge');
     const btnAutoRoles = document.getElementById('btnAutoRoles');
@@ -587,6 +603,64 @@
       fileSearchInput.focus();
       renderFileChecklist();
     });
+
+    // Project Selection
+    async function selectProjectSite(siteId) {
+      if (state.currentProjectSite === siteId) return;
+      state.currentProjectSite = siteId;
+
+      if (btnProjectPhoto && btnProjectIllust) {
+        btnProjectPhoto.className = siteId === 'photo-ac'
+          ? 'project-btn py-1.5 px-3 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow-sm'
+          : 'project-btn py-1.5 px-3 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-slate-200';
+        btnProjectIllust.className = siteId === 'illust-ac'
+          ? 'project-btn py-1.5 px-3 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow-sm'
+          : 'project-btn py-1.5 px-3 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-slate-200';
+      }
+
+      const navAllure = document.getElementById('navAllureBtn');
+      if (navAllure) navAllure.href = `/allure-report/index.html?project=${siteId}`;
+
+      state.fileSelection.clear();
+      if (fileSearchInput) fileSearchInput.value = '';
+      if (btnClearFileSearch) btnClearFileSearch.classList.add('hidden');
+
+      try {
+        const suitesRes = await fetch(`/api/suites?projectSite=${siteId}`).then(r => r.json());
+        suitesData = suitesRes;
+
+        if (suitesRes.modules && suitesRes.modules.length > 0) {
+          moduleSelect.innerHTML = '';
+          for (const mod of suitesRes.modules) {
+            const opt = document.createElement('option');
+            opt.value = mod.id;
+            let cleanName = (mod.name || '')
+              .replace(/[\u{1F300}-\u{1FAD6}\u{2000}-\u{27BF}\u{FE00}-\u{FE0F}]/gu, '')
+              .replace(/[⚡📥🎨📁🔥📦💻📊🧹🔁✓✕]/g, '')
+              .replace(/\s*\([^)]*\)/g, '')
+              .trim();
+            if (mod.id === 'all') cleanName = 'Tất cả Thư mục (All Modules)';
+            else if (mod.id === 'downloader') cleanName = 'Downloader';
+            else if (mod.id === 'creator') cleanName = 'Creator';
+            else cleanName = mod.id.charAt(0).toUpperCase() + mod.id.slice(1);
+            opt.textContent = cleanName;
+            moduleSelect.appendChild(opt);
+          }
+          moduleSelect.value = 'all';
+          state.currentModule = 'all';
+        }
+
+        renderFileChecklist();
+        autoSyncRolesFromFiles();
+        updateFilterCounts();
+        appendLog(`[HỆ THỐNG] Đã chuyển sang dự án: ${siteId === 'illust-ac' ? 'AC-Illust' : 'Photo-AC'}`);
+      } catch (err) {
+        console.error('Lỗi khi chuyển đổi dự án:', err);
+      }
+    }
+
+    if (btnProjectPhoto) btnProjectPhoto.addEventListener('click', () => selectProjectSite('photo-ac'));
+    if (btnProjectIllust) btnProjectIllust.addEventListener('click', () => selectProjectSite('illust-ac'));
 
     // Module change
     moduleSelect.addEventListener('change', () => {
@@ -1365,6 +1439,7 @@
       const selectedProjects = calculateSelectedProjects();
 
       const payload = {
+        projectSite: state.currentProjectSite || 'photo-ac',
         projects: selectedProjects,
         roles: Array.from(state.selectedRoles),
         files: overrideOptions.files || (selectedFiles.length > 0 ? selectedFiles : []),
