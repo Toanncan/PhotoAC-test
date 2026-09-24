@@ -27,13 +27,13 @@ export class SearchResultPage extends BasePage {
   readonly resultCount: Locator = this.page.locator('[class*="result-count"], [class*="total"], .count, h1[class*="result"]').first();
 
   /** Search keyword input box on results page */
-  readonly searchInput: Locator = this.page.locator('form:not(#search_frm_fixed) input#sw, form:not(#search_frm_fixed) input[name="q"], input#sw:visible').first();
+  readonly searchInput: Locator = this.page.locator('form#search_frm input#sw, form#search_frm input[name="q"]').first();
 
   /** Reset keyword button inside search box */
   readonly resetKeywordButton: Locator = this.page.getByRole('button', { name: 'リセット' });
 
   /** Submit search button */
-  readonly searchSubmitButton: Locator = this.page.getByRole('button', { name: 'search_btn' });
+  readonly searchSubmitButton: Locator = this.page.locator('form#search_frm button.execloginbtn:visible, form#search_frm button[type="submit"]:visible').first();
 
   // ─── Sort Dropdown Locators ────────────────────────────────────────────────
 

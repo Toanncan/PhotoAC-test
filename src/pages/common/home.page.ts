@@ -11,7 +11,7 @@ export class HomePage extends BasePage {
   private readonly pageHeading = this.page.getByRole('heading', { level: 1 });
 
   /** Search input on the dashboard */
-  readonly searchInput = this.page.locator('form:not(#search_frm_fixed):has(.search-by-ai) input[type="text"], form:not(#search_frm_fixed):has(.search-by-ai) input[type="search"], form:not(#search_frm_fixed):has(.search-by-ai) input#sw, input#sw:visible').first();
+  readonly searchInput = this.page.locator('form#search_frm input#sw, form#search_frm input[name="q"]').first();
 
   /** User menu / account dropdown */
   private readonly userMenu = this.page.locator('[class*="user-menu"], [class*="user-nav"]').first();
@@ -29,7 +29,7 @@ export class HomePage extends BasePage {
   readonly popularTags = this.page.locator('.pop-tags-limit a[href*="utm_source=top_keyword"]');
 
   /** Image search modal trigger button (画像検索) */
-  readonly imageSearchButton = this.page.locator('form:not(#search_frm_fixed) a.search-file[data-target="#uploadFile"]');
+  readonly imageSearchButton = this.page.locator('form#search_frm a.search-file[data-target="#uploadFile"]');
 
   /** Image search file upload modal (#uploadFile) */
   readonly uploadFileModal = this.page.locator('#uploadFile');
@@ -46,7 +46,7 @@ export class HomePage extends BasePage {
   // ─── AI Search (AI検索 β版) Locators ─────────────────────────────────────────
 
   /** AI Search toggle button (.search-by-ai) */
-  readonly searchByAiButton = this.page.locator('form:not(#search_frm_fixed) .search-by-ai');
+  readonly searchByAiButton = this.page.locator('form#search_frm .search-by-ai');
 
   /** Hidden input for by_ai value (0: OFF, 1: ON) */
   readonly byAiInput = this.searchByAiButton.locator('input[name="by_ai"]');
@@ -61,7 +61,7 @@ export class HomePage extends BasePage {
   readonly aiLimitClockIcon = this.searchByAiButton.locator('.overlay-icon-clock');
 
   /** Main search submit button */
-  readonly searchSubmitButton = this.page.locator('button.search_btn, #search_btn').first();
+  readonly searchSubmitButton = this.page.locator('form#search_frm button#search_btn, form#search_frm button[type="submit"]').first();
 
   /** Semantic search introduction modal displayed when AI search is activated upon reaching limit */
   readonly semanticSearchModal = this.page.locator('.modal:has-text("AI検索を3回使えます"), .modal.show:has-text("AI検索")').first();
@@ -77,8 +77,8 @@ export class HomePage extends BasePage {
   /** Sticky search input field (#search_frm_fixed #sw) */
   readonly stickySearchInput = this.page.locator('form#search_frm_fixed input#sw, form#search_frm_fixed input[name="q"]').first();
 
-  /** Sticky search submit button (.execloginbtn) */
-  readonly stickySearchSubmitButton = this.page.locator('form#search_frm_fixed button.execloginbtn, form#search_frm_fixed button[type="submit"], form#search_frm_fixed .search-box button').first();
+  /** Sticky search submit button (form#search_frm_fixed button[type="submit"]) */
+  readonly stickySearchSubmitButton = this.page.locator('form#search_frm_fixed button[type="submit"], form#search_frm_fixed button.execloginbtn').first();
 
   // ─── Methods ──────────────────────────────────────────────────────────────
 
@@ -110,9 +110,7 @@ export class HomePage extends BasePage {
     await test.step(`Search with keyword: "${keyword}"`, async () => {
       await this.fillInput(this.searchInput, keyword);
       if (await this.searchSubmitButton.isVisible().catch(() => false)) {
-        await this.searchSubmitButton.click().catch(async () => {
-          await this.searchInput.press('Enter');
-        });
+        await this.clickElement(this.searchSubmitButton);
       } else {
         await this.searchInput.press('Enter');
       }
@@ -286,6 +284,10 @@ export class HomePage extends BasePage {
     await test.step('Scroll down to activate Sticky Header Search Bar', async () => {
       await this.page.evaluate((y) => {
         window.scrollTo(0, y);
+        document.documentElement.scrollTop = y;
+        if ((window as any).jQuery) {
+          (window as any).jQuery(window).trigger('scroll');
+        }
         window.dispatchEvent(new Event('scroll'));
       }, scrollDistance);
       await this.stickySearchArea.waitFor({ state: 'visible', timeout: 10_000 });
@@ -299,6 +301,10 @@ export class HomePage extends BasePage {
     await test.step('Scroll back to top of page', async () => {
       await this.page.evaluate(() => {
         window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        if ((window as any).jQuery) {
+          (window as any).jQuery(window).trigger('scroll');
+        }
         window.dispatchEvent(new Event('scroll'));
       });
       await this.stickySearchArea.waitFor({ state: 'hidden', timeout: 10_000 });
@@ -313,9 +319,7 @@ export class HomePage extends BasePage {
     await test.step(`Search via Sticky Search Bar with keyword: "${keyword}"`, async () => {
       await this.fillInput(this.stickySearchInput, keyword);
       if (await this.stickySearchSubmitButton.isVisible().catch(() => false)) {
-        await this.stickySearchSubmitButton.click().catch(async () => {
-          await this.stickySearchInput.press('Enter');
-        });
+        await this.clickElement(this.stickySearchSubmitButton);
       } else {
         await this.stickySearchInput.press('Enter');
       }
