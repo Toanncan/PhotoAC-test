@@ -1,0 +1,18 @@
+{
+  "name": "illust-ac",
+  "version": "1.0.0",
+  "description": "E2E Web UI Automation Framework for AC-Illust using Playwright + TypeScript",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:chromium": "playwright test --project=chromium-guest --project=chromium-downloader --project=chromium-free-user --project=chromium-creator",
+    "test:firefox": "playwright test --project=firefox-downloader --project=firefox-creator",
+    "test:guest": "playwright test --project=chromium-guest",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression",
+    "clean": "rimraf allure-results allure-report .auth",
+    "lint": "tsc --noEmit"
+  }
+}

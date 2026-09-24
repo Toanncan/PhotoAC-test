@@ -8,22 +8,34 @@ yarn-error.log*
 .env
 .env.local
 .env.*.local
+**/.env
+**/.env.local
+**/.env.*.local
 
 # TypeScript build output
 dist/
+**/dist/
 
 # Playwright artifacts (generated at runtime)
 playwright-report/
 test-results/
 .auth/
 .playwright-mcp/
+**/playwright-report/**
+**/test-results/**
+**/.auth/**
+**/.playwright-mcp/**
 
 # Allure Report artifacts (generated at runtime)
-allure-results/*
-allure-report/*
+allure-results/
+allure-report/
+**/allure-results/**
+**/allure-report/**
 # Keep .gitkeep files
 !allure-results/.gitkeep
 !allure-report/.gitkeep
+!**/allure-results/.gitkeep
+!**/allure-report/.gitkeep
 
 # IDE / OS files
 .vscode/
@@ -31,16 +43,24 @@ allure-report/*
 *.DS_Store
 Thumbs.db
 
-# Temporary files
+# Temporary & debug files
 *.tmp
 *.temp
 *_debug.txt
 debug_output.txt
+page_snapshot.md
+snapshot_*.md
+dom_dump.txt
+html_dump.html
+network_requests.txt
+console_log.txt
 
 # Gmail API credentials — NEVER commit
 credentials.json
 gmail-token.json
+**/credentials.json
+**/gmail-token.json
 ac_receipt_no_1910696.pdf
 
-#test gmail
-/src/tests/downloader/test-gmail.spec.ts
+# Test gmail temporary spec
+/src/tests/downloader/test-gmail.spec.ts

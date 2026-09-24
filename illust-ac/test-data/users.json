@@ -1,0 +1,16 @@
+[
+  {
+    "description": "Valid test user — used in happy path tests",
+    "email": "test-user@photo-ac.com",
+    "password": "TestPassword123!",
+    "role": "user",
+    "note": "Replace with actual test account credentials in .env — DO NOT hardcode real credentials here"
+  },
+  {
+    "description": "Admin user — used in admin-specific tests",
+    "email": "admin@photo-ac.com",
+    "password": "AdminPassword123!",
+    "role": "admin",
+    "note": "Replace with actual admin credentials via environment variables"
+  }
+]

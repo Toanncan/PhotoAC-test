@@ -1,24 +1,20 @@
 {
   "name": "photo-ac-test",
   "version": "1.0.0",
-  "description": "E2E Web UI Automation Framework for photo-ac using Playwright + TypeScript",
+  "description": "Multi-project E2E Web UI Automation Framework for Photo-AC and AC-Illust using Playwright + TypeScript",
+  "workspaces": [
+    "photo-ac",
+    "illust-ac"
+  ],
   "scripts": {
-    "test": "playwright test",
-    "test:headed": "playwright test --headed",
-    "test:ui": "playwright test --ui",
-    "test:debug": "playwright test --debug",
-    "test:chromium": "playwright test --project=chromium-guest --project=chromium-downloader --project=chromium-free-user --project=chromium-creator",
-    "test:firefox": "playwright test --project=firefox-downloader --project=firefox-creator",
-    "test:guest": "playwright test --project=chromium-guest",
-    "test:webkit": "playwright test --project=webkit",
-    "test:smoke": "playwright test --grep @smoke",
-    "test:regression": "playwright test --grep @regression",
-    "report": "playwright show-report",
-    "report:allure": "allure generate allure-results --clean -o allure-report && allure open allure-report",
-    "allure:open": "allure open allure-report",
     "dashboard": "node dashboard/server.js",
-    "clean": "rimraf allure-results allure-report .auth",
-    "lint": "tsc --noEmit"
+    "test": "playwright test --config=photo-ac/playwright.config.ts",
+    "test:photo": "playwright test --config=photo-ac/playwright.config.ts",
+    "test:illust": "playwright test --config=illust-ac/playwright.config.ts",
+    "test:photo:headed": "playwright test --config=photo-ac/playwright.config.ts --headed",
+    "test:illust:headed": "playwright test --config=illust-ac/playwright.config.ts --headed",
+    "clean": "rimraf photo-ac/allure-results illust-ac/allure-results photo-ac/.auth illust-ac/.auth allure-results allure-report test-results",
+    "lint": "tsc --noEmit --project photo-ac/tsconfig.json && tsc --noEmit --project illust-ac/tsconfig.json"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.0",

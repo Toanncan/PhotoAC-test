@@ -11,18 +11,60 @@ const PLAYWRIGHT_REPORT_DIR = path.join(ROOT_DIR, 'playwright-report');
 const ALLURE_RESULTS_DIR = path.join(ROOT_DIR, 'allure-results');
 const TEST_RESULTS_DIR = path.join(ROOT_DIR, 'test-results');
 
+// Registry of supported child projects under root workspace
+const PROJECTS = {
+  'photo-ac': {
+    id: 'photo-ac',
+    name: 'Photo-AC',
+    dir: fs.existsSync(path.join(ROOT_DIR, 'photo-ac')) ? path.join(ROOT_DIR, 'photo-ac') : ROOT_DIR,
+    testsDir: fs.existsSync(path.join(ROOT_DIR, 'photo-ac', 'src', 'tests'))
+      ? path.join(ROOT_DIR, 'photo-ac', 'src', 'tests')
+      : path.join(ROOT_DIR, 'src', 'tests'),
+    allureResultsDir: fs.existsSync(path.join(ROOT_DIR, 'photo-ac'))
+      ? path.join(ROOT_DIR, 'photo-ac', 'allure-results')
+      : path.join(ROOT_DIR, 'allure-results'),
+    allureReportDir: fs.existsSync(path.join(ROOT_DIR, 'photo-ac'))
+      ? path.join(ROOT_DIR, 'photo-ac', 'allure-report')
+      : path.join(ROOT_DIR, 'allure-report'),
+    playwrightReportDir: fs.existsSync(path.join(ROOT_DIR, 'photo-ac'))
+      ? path.join(ROOT_DIR, 'photo-ac', 'playwright-report')
+      : path.join(ROOT_DIR, 'playwright-report'),
+    testResultsDir: fs.existsSync(path.join(ROOT_DIR, 'photo-ac'))
+      ? path.join(ROOT_DIR, 'photo-ac', 'test-results')
+      : path.join(ROOT_DIR, 'test-results')
+  },
+  'illust-ac': {
+    id: 'illust-ac',
+    name: 'AC-Illust',
+    dir: path.join(ROOT_DIR, 'illust-ac'),
+    testsDir: path.join(ROOT_DIR, 'illust-ac', 'src', 'tests'),
+    allureResultsDir: path.join(ROOT_DIR, 'illust-ac', 'allure-results'),
+    allureReportDir: path.join(ROOT_DIR, 'illust-ac', 'allure-report'),
+    playwrightReportDir: path.join(ROOT_DIR, 'illust-ac', 'playwright-report'),
+    testResultsDir: path.join(ROOT_DIR, 'illust-ac', 'test-results')
+  }
+};
+
+let activeProjectId = 'photo-ac';
+
+function getActiveProject(id) {
+  const targetId = id || activeProjectId;
+  return PROJECTS[targetId] || PROJECTS['photo-ac'];
+}
+
 let currentProcess = null;
 
 // Clean old test artifacts to prevent ghost tests and result pollution
-function cleanOldReports() {
+function cleanOldReports(projectId = activeProjectId) {
+  const proj = getActiveProject(projectId);
   let cleanedCount = 0;
   try {
     // 1. Dọn dẹp allure-results (giữ lại history nếu có để duy trì xu hướng)
-    if (fs.existsSync(ALLURE_RESULTS_DIR)) {
-      const files = fs.readdirSync(ALLURE_RESULTS_DIR);
+    if (fs.existsSync(proj.allureResultsDir)) {
+      const files = fs.readdirSync(proj.allureResultsDir);
       for (const file of files) {
         if (file === 'history') continue;
-        const fullPath = path.join(ALLURE_RESULTS_DIR, file);
+        const fullPath = path.join(proj.allureResultsDir, file);
         try {
           if (fs.statSync(fullPath).isDirectory()) {
             fs.rmSync(fullPath, { recursive: true, force: true });
@@ -35,10 +77,10 @@ function cleanOldReports() {
     }
 
     // 2. Dọn dẹp test-results (video, screenshots, trace nặng)
-    if (fs.existsSync(TEST_RESULTS_DIR)) {
-      const files = fs.readdirSync(TEST_RESULTS_DIR);
+    if (fs.existsSync(proj.testResultsDir)) {
+      const files = fs.readdirSync(proj.testResultsDir);
       for (const file of files) {
-        const fullPath = path.join(TEST_RESULTS_DIR, file);
+        const fullPath = path.join(proj.testResultsDir, file);
         try {
           if (fs.statSync(fullPath).isDirectory()) {
             fs.rmSync(fullPath, { recursive: true, force: true });
@@ -54,6 +96,7 @@ function cleanOldReports() {
   }
   return cleanedCount;
 }
+
 let currentRun = {
   running: false,
   total: 0,
@@ -103,55 +146,64 @@ function openBrowser(url) {
   exec(cmd, () => {});
 }
 
-// Find all test spec files
-function getTestFiles(dir = path.join(ROOT_DIR, 'src', 'tests')) {
+// Find all test spec files for a specific project
+function getTestFiles(projectId = activeProjectId) {
+  const proj = getActiveProject(projectId);
+  const dir = proj.testsDir;
   let results = [];
   if (!fs.existsSync(dir)) return results;
-  const list = fs.readdirSync(dir);
-  for (const file of list) {
-    const fullPath = path.join(dir, file);
-    const stat = fs.statSync(fullPath);
-    if (stat && stat.isDirectory()) {
-      results = results.concat(getTestFiles(fullPath));
-    } else if (file.endsWith('.spec.ts')) {
-      const relPath = path.relative(path.join(ROOT_DIR, 'src', 'tests'), fullPath).replace(/\\/g, '/');
-      results.push(relPath);
+
+  function walk(d) {
+    const list = fs.readdirSync(d);
+    for (const file of list) {
+      const fullPath = path.join(d, file);
+      const stat = fs.statSync(fullPath);
+      if (stat && stat.isDirectory()) {
+        walk(fullPath);
+      } else if (file.endsWith('.spec.ts')) {
+        const relPath = path.relative(dir, fullPath).replace(/\\/g, '/');
+        results.push(relPath);
+      }
     }
   }
+
+  walk(dir);
   return results;
 }
 
 // Generate Allure Report
-function generateAllureReport() {
-  return new Promise((resolve, reject) => {
-    broadcast('status', { message: 'Đang tạo báo cáo Allure...' });
-    
-    // Choose the best available allure command
-    let allureCmd = 'npx allure generate allure-results --clean -o allure-report';
+function generateAllureReport(projectId = activeProjectId) {
+  const proj = getActiveProject(projectId);
+  return new Promise((resolve) => {
+    broadcast('status', { message: `Đang tạo báo cáo Allure cho ${proj.name}...` });
+
+    const resultsDir = proj.allureResultsDir;
+    const reportDir = proj.allureReportDir;
+
+    let allureCmd = `npx allure generate "${resultsDir}" --clean -o "${reportDir}"`;
     const localAllureWin = path.join(ROOT_DIR, 'node_modules', '.bin', 'allure.cmd');
     const localAllureUnix = path.join(ROOT_DIR, 'node_modules', '.bin', 'allure');
-    
+
     if (process.platform === 'win32' && fs.existsSync(localAllureWin)) {
-      allureCmd = `"${localAllureWin}" generate allure-results --clean -o allure-report`;
+      allureCmd = `"${localAllureWin}" generate "${resultsDir}" --clean -o "${reportDir}"`;
     } else if (process.platform !== 'win32' && fs.existsSync(localAllureUnix)) {
-      allureCmd = `"${localAllureUnix}" generate allure-results --clean -o allure-report`;
+      allureCmd = `"${localAllureUnix}" generate "${resultsDir}" --clean -o "${reportDir}"`;
     }
 
-    exec(allureCmd, { cwd: ROOT_DIR }, (err, stdout, stderr) => {
+    exec(allureCmd, { cwd: proj.dir }, (err, stdout, stderr) => {
       if (err) {
         console.error('Lỗi khi chạy Allure:', stderr || err.message);
-        // Fallback with npx allure-commandline
-        exec('npx allure-commandline generate allure-results --clean -o allure-report', { cwd: ROOT_DIR }, (fallbackErr) => {
+        exec(`npx allure-commandline generate "${resultsDir}" --clean -o "${reportDir}"`, { cwd: proj.dir }, (fallbackErr) => {
           if (fallbackErr) {
             broadcast('allureError', { message: 'Không thể tạo Allure Report. Vui lòng kiểm tra môi trường Java!' });
             resolve(false);
           } else {
-            broadcast('allureReady', { url: '/allure-report/index.html' });
+            broadcast('allureReady', { url: `/allure-report/index.html?project=${proj.id}` });
             resolve(true);
           }
         });
       } else {
-        broadcast('allureReady', { url: '/allure-report/index.html' });
+        broadcast('allureReady', { url: `/allure-report/index.html?project=${proj.id}` });
         resolve(true);
       }
     });
@@ -181,12 +233,16 @@ function startTestRun(options) {
     return { error: 'Một phiên test đang chạy. Vui lòng chờ hoặc bấm Dừng.' };
   }
 
-  const { project, projects, file, files, headed, grep, workers, cleanReport, retries, isRerun } = options;
+  const { project, projects, file, files, headed, grep, workers, cleanReport, retries, isRerun, projectSite } = options;
+
+  const siteId = projectSite || activeProjectId || 'photo-ac';
+  activeProjectId = siteId;
+  const proj = getActiveProject(siteId);
 
   // Pre-run Cleanup: Chỉ xóa kết quả cũ khi cleanReport !== false và không phải chế độ rerun
   if (cleanReport !== false && !isRerun) {
-    const cleaned = cleanOldReports();
-    console.log(`[CLEANUP] Đã tự động dọn dẹp ${cleaned} tệp kết quả kiểm thử cũ.`);
+    const cleaned = cleanOldReports(siteId);
+    console.log(`[CLEANUP] Đã tự động dọn dẹp ${cleaned} tệp kết quả kiểm thử cũ của ${proj.name}.`);
 
     currentRun = {
       running: true,
@@ -199,7 +255,7 @@ function startTestRun(options) {
       logs: []
     };
 
-    currentRun.logs.push('🧹 Đã tự động làm sạch dữ liệu kiểm thử cũ (allure-results và test-results).');
+    currentRun.logs.push(`🧹 Đã tự động làm sạch dữ liệu kiểm thử cũ (${proj.name}).`);
   } else {
     console.log('[RERUN] Chạy lại test case lỗi - bảo lưu toàn bộ kết quả kiểm thử trước đó.');
     currentRun.running = true;
@@ -261,11 +317,12 @@ function startTestRun(options) {
     args.push(`--retries=${retries}`);
   }
 
-  // Use our custom reporter and keep allure-playwright + html
-  args.push('--reporter=./dashboard/reporter.js,allure-playwright,html');
+  // Calculate reporter path relative to project dir
+  const relReporter = path.relative(proj.dir, path.join(ROOT_DIR, 'dashboard', 'reporter.js')).replace(/\\/g, '/');
+  args.push(`--reporter=${relReporter},allure-playwright,html`);
 
   const cmd = process.platform === 'win32' ? 'npx.cmd' : 'npx';
-  broadcast('runStarted', { options, command: `npx ${args.join(' ')}` });
+  broadcast('runStarted', { options, project: proj.id, command: `npx ${args.join(' ')}` });
 
   const env = {
     ...process.env,
@@ -273,7 +330,7 @@ function startTestRun(options) {
   };
 
   currentProcess = spawn(cmd, args, {
-    cwd: ROOT_DIR,
+    cwd: proj.dir,
     shell: true,
     detached: process.platform !== 'win32',
     env
@@ -309,6 +366,7 @@ function startTestRun(options) {
       broadcast('log', { text, isError: true });
     }
   });
+
   currentProcess.on('close', async (code) => {
     currentRun.running = false;
     currentProcess = null;
@@ -320,8 +378,8 @@ function startTestRun(options) {
       total: currentRun.total
     });
 
-    // Auto generate Allure report
-    await generateAllureReport();
+    // Auto generate Allure report for the active project
+    await generateAllureReport(siteId);
   });
 
   return { success: true };
@@ -353,7 +411,6 @@ function handleTestEvent(event) {
       currentRun.tests.push({ ...event });
     }
 
-    // Nếu là rerun và cập nhật trạng thái của test cũ: giảm counter cũ
     if (oldStatus && oldStatus !== event.status) {
       if (oldStatus === 'passed') currentRun.passed = Math.max(0, currentRun.passed - 1);
       else if (oldStatus === 'failed' || oldStatus === 'timedOut') currentRun.failed = Math.max(0, currentRun.failed - 1);
@@ -442,40 +499,66 @@ const server = http.createServer(async (req, res) => {
 
   // Static route for Allure Report
   if (pathname.startsWith('/allure-report')) {
+    const projectParam = parsedUrl.searchParams.get('project') || activeProjectId;
+    const proj = getActiveProject(projectParam);
     const rel = pathname.replace('/allure-report', '') || '/';
-    const reportFilePath = path.join(ALLURE_REPORT_DIR, rel);
+    let reportFilePath = path.join(proj.allureReportDir, rel);
+    if (!fs.existsSync(reportFilePath)) {
+      reportFilePath = path.join(ALLURE_REPORT_DIR, rel);
+    }
     return serveStaticFile(req, res, reportFilePath);
   }
 
   // Static route for Playwright HTML Report
   if (pathname.startsWith('/playwright-report')) {
+    const projectParam = parsedUrl.searchParams.get('project') || activeProjectId;
+    const proj = getActiveProject(projectParam);
     const rel = pathname.replace('/playwright-report', '') || '/';
-    const reportFilePath = path.join(PLAYWRIGHT_REPORT_DIR, rel);
+    let reportFilePath = path.join(proj.playwrightReportDir, rel);
+    if (!fs.existsSync(reportFilePath)) {
+      reportFilePath = path.join(PLAYWRIGHT_REPORT_DIR, rel);
+    }
     return serveStaticFile(req, res, reportFilePath);
   }
 
   // API: Get Status & System info
   if (pathname === '/api/status' && req.method === 'GET') {
     await checkJava();
+    const proj = getActiveProject(activeProjectId);
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
       running: currentRun.running,
       javaInstalled: isJavaInstalled,
       platform: process.platform,
       port: PORT,
-      allureExists: fs.existsSync(path.join(ALLURE_REPORT_DIR, 'index.html')),
-      playwrightReportExists: fs.existsSync(path.join(PLAYWRIGHT_REPORT_DIR, 'index.html')),
+      activeProject: activeProjectId,
+      allureExists: fs.existsSync(path.join(proj.allureReportDir, 'index.html')) || fs.existsSync(path.join(ALLURE_REPORT_DIR, 'index.html')),
+      playwrightReportExists: fs.existsSync(path.join(proj.playwrightReportDir, 'index.html')) || fs.existsSync(path.join(PLAYWRIGHT_REPORT_DIR, 'index.html')),
       currentRun
+    }));
+    return;
+  }
+
+  // API: Get List of Projects
+  if (pathname === '/api/projects' && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      active: activeProjectId,
+      projects: Object.values(PROJECTS).map(p => ({
+        id: p.id,
+        name: p.name
+      }))
     }));
     return;
   }
 
   // API: Get Test Suites & Spec files
   if (pathname === '/api/suites' && req.method === 'GET') {
-    const files = getTestFiles();
-    
-    // Auto-detect subdirectories in src/tests as modules
-    const testsRoot = path.join(ROOT_DIR, 'src', 'tests');
+    const projectParam = parsedUrl.searchParams.get('projectSite') || parsedUrl.searchParams.get('project') || activeProjectId;
+    const proj = getActiveProject(projectParam);
+    const files = getTestFiles(proj.id);
+
+    const testsRoot = proj.testsDir;
     const detectedFolders = fs.existsSync(testsRoot)
       ? fs.readdirSync(testsRoot).filter(f => fs.statSync(path.join(testsRoot, f)).isDirectory() && f !== 'auth')
       : [];
@@ -506,7 +589,7 @@ const server = http.createServer(async (req, res) => {
     ];
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ files, modules, filesByModule, projects }));
+    res.end(JSON.stringify({ project: proj.id, files, modules, filesByModule, projects }));
     return;
   }
 
@@ -519,7 +602,7 @@ const server = http.createServer(async (req, res) => {
     });
 
     sseClients.add(res);
-    res.write(`event: init\ndata: ${JSON.stringify({ currentRun, isJavaInstalled })}\n\n`);
+    res.write(`event: init\ndata: ${JSON.stringify({ currentRun, isJavaInstalled, activeProject: activeProjectId })}\n\n`);
 
     req.on('close', () => {
       sseClients.delete(res);
@@ -560,7 +643,7 @@ const server = http.createServer(async (req, res) => {
 
   // API: Manual Clean Reports
   if (pathname === '/api/clean-reports' && req.method === 'POST') {
-    const cleaned = cleanOldReports();
+    const cleaned = cleanOldReports(activeProjectId);
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ success: true, cleaned, message: `Đã dọn dẹp ${cleaned} tệp kết quả cũ.` }));
     return;
@@ -576,7 +659,7 @@ server.listen(PORT, async () => {
   await checkJava();
   const url = `http://localhost:${PORT}`;
   console.log(`\n======================================================`);
-  console.log(`   🚀 PHOTO-AC TEST PORTAL ĐANG CHẠY TẠI:`);
+  console.log(`   TEST PORTAL ĐANG CHẠY TẠI:`);
   console.log(`   👉 ${url}`);
   console.log(`   Hệ điều hành: ${process.platform.toUpperCase()}`);
   console.log(`   Java Runtime: ${isJavaInstalled ? '✅ Đã cài đặt' : '⚠️ CHƯA CÓ (Cần cho Allure)'}`);
