@@ -230,11 +230,11 @@ export class SearchResultPage extends BasePage {
     try {
       if (await this.introDialog.first().isVisible().catch(() => false)) {
         if (await this.introDialogCloseButton.first().isVisible().catch(() => false)) {
-          await this.introDialogCloseButton.first().click({ force: true }).catch(() => {});
+          await this.introDialogCloseButton.first().click({ force: true }).catch(() => { });
         } else {
-          await this.page.keyboard.press('Escape').catch(() => {});
+          await this.page.keyboard.press('Escape').catch(() => { });
         }
-        await this.introDialog.first().waitFor({ state: 'hidden', timeout: 2_000 }).catch(() => {});
+        await this.introDialog.first().waitFor({ state: 'hidden', timeout: 2_000 }).catch(() => { });
       }
     } catch {
       // Ignore if no dialog is present
@@ -262,7 +262,7 @@ export class SearchResultPage extends BasePage {
    */
   async getResultCount(options?: { timeout?: number }): Promise<number> {
     const timeout = options?.timeout ?? 10_000;
-    await this.resultsOrNoResultLocator.waitFor({ state: 'visible', timeout }).catch(() => {});
+    await this.resultsOrNoResultLocator.waitFor({ state: 'visible', timeout }).catch(() => { });
     return this.resultItems.count();
   }
 
@@ -406,7 +406,7 @@ export class SearchResultPage extends BasePage {
       const targetPage = String(Number(currentPage) + 1);
 
       // Tier 1: Scroll element into center of viewport to avoid bottom fixed banners (Cookie, Signup CTA)
-      await this.paginationNextButton.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => {});
+      await this.paginationNextButton.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => { });
       await this.clickElement(this.paginationNextButton);
 
       // Check if navigation occurred within 2.5s
@@ -435,7 +435,7 @@ export class SearchResultPage extends BasePage {
 
         if (!keyboardNavigated) {
           // Tier 3: Native DOM anchor click dispatch
-          await this.paginationNextButton.evaluate((el: HTMLAnchorElement) => el.click()).catch(() => {});
+          await this.paginationNextButton.evaluate((el: HTMLAnchorElement) => el.click()).catch(() => { });
           await this.page.waitForFunction(
             (target) => {
               const activeEl = document.querySelector('ul.ac-pagination li.active a');
@@ -444,7 +444,7 @@ export class SearchResultPage extends BasePage {
             },
             targetPage,
             { timeout: 10_000 }
-          ).catch(() => {});
+          ).catch(() => { });
         }
       }
 
@@ -468,7 +468,7 @@ export class SearchResultPage extends BasePage {
         },
         targetPage,
         { timeout: 15_000 }
-      ).catch(() => {});
+      ).catch(() => { });
       await this.waitForResultDisplay();
     });
   }
@@ -482,7 +482,7 @@ export class SearchResultPage extends BasePage {
       const targetPage = String(Math.max(1, Number(currentPage) - 1));
 
       // Tier 1: Scroll element into center of viewport to avoid bottom fixed banners
-      await this.paginationPrevButton.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => {});
+      await this.paginationPrevButton.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => { });
       await this.clickElement(this.paginationPrevButton);
 
       // Check if navigation occurred within 2.5s
@@ -511,7 +511,7 @@ export class SearchResultPage extends BasePage {
 
         if (!keyboardNavigated) {
           // Tier 3: Native DOM anchor click dispatch
-          await this.paginationPrevButton.evaluate((el: HTMLAnchorElement) => el.click()).catch(() => {});
+          await this.paginationPrevButton.evaluate((el: HTMLAnchorElement) => el.click()).catch(() => { });
           await this.page.waitForFunction(
             (target) => {
               const activeEl = document.querySelector('ul.ac-pagination li.active a');
@@ -520,7 +520,7 @@ export class SearchResultPage extends BasePage {
             },
             targetPage,
             { timeout: 10_000 }
-          ).catch(() => {});
+          ).catch(() => { });
         }
       }
 
@@ -544,7 +544,7 @@ export class SearchResultPage extends BasePage {
         },
         targetPage,
         { timeout: 15_000 }
-      ).catch(() => {});
+      ).catch(() => { });
       await this.waitForResultDisplay();
     });
   }
@@ -555,7 +555,7 @@ export class SearchResultPage extends BasePage {
   async goToPageNumber(pageNumber: number): Promise<void> {
     await test.step(`Navigate to page ${pageNumber} in pagination`, async () => {
       const pageLink = this.paginationContainer.locator(`a:text-is("${pageNumber}")`);
-      await pageLink.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => {});
+      await pageLink.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => { });
       await this.clickElement(pageLink);
       await this.waitForResultDisplay();
     });
@@ -612,7 +612,7 @@ export class SearchResultPage extends BasePage {
     await expect(async () => {
       const isVisible = await expectedOption.isVisible().catch(() => false);
       if (!isVisible) {
-        await dropdownButton.scrollIntoViewIfNeeded().catch(() => {});
+        await dropdownButton.scrollIntoViewIfNeeded().catch(() => { });
         await dropdownButton.click().catch(async () => {
           await dropdownButton.click({ force: true });
         });
@@ -626,7 +626,7 @@ export class SearchResultPage extends BasePage {
    * Clicks "すべてクリア" link when visible and waits for search results to refresh.
    */
   async clearAllFilters(): Promise<void> {
-    await test.step('Clear all active filters via "すべてクリア"', async () => {
+    await test.step('Clear all active filters "すべてクリア"', async () => {
       const isClearVisible = await this.clearAllFiltersButton.first().isVisible({ timeout: 1_500 }).catch(() => false);
       if (isClearVisible) {
         await this.clickElement(this.clearAllFiltersButton.first());
@@ -678,7 +678,7 @@ export class SearchResultPage extends BasePage {
       // Cross-browser: Ensure underlying radio is checked and change event dispatches in Gecko/WebKit
       const isChecked = await targetRadio.isChecked().catch(() => false);
       if (!isChecked) {
-        await targetRadio.check({ force: true }).catch(() => {});
+        await targetRadio.check({ force: true }).catch(() => { });
       }
       await this.waitForResultDisplay();
     });
@@ -695,7 +695,7 @@ export class SearchResultPage extends BasePage {
 
       const isChecked = await targetRadio.isChecked().catch(() => false);
       if (!isChecked) {
-        await targetRadio.check({ force: true }).catch(() => {});
+        await targetRadio.check({ force: true }).catch(() => { });
       }
       await this.waitForResultDisplay();
     });
@@ -714,7 +714,7 @@ export class SearchResultPage extends BasePage {
 
       const isChecked = await targetRadio.isChecked().catch(() => false);
       if (!isChecked) {
-        await targetRadio.check({ force: true }).catch(() => {});
+        await targetRadio.check({ force: true }).catch(() => { });
       }
       await this.waitForResultDisplay();
     });
@@ -760,7 +760,7 @@ export class SearchResultPage extends BasePage {
 
       const isChecked = await targetRadio.isChecked().catch(() => false);
       if (!isChecked) {
-        await targetRadio.check({ force: true }).catch(() => {});
+        await targetRadio.check({ force: true }).catch(() => { });
       }
       await this.waitForResultDisplay();
     });
@@ -795,7 +795,7 @@ export class SearchResultPage extends BasePage {
 
       const isChecked = await targetRadio.isChecked().catch(() => false);
       if (!isChecked) {
-        await targetRadio.check({ force: true }).catch(() => {});
+        await targetRadio.check({ force: true }).catch(() => { });
       }
       await this.waitForResultDisplay();
     });
@@ -856,7 +856,7 @@ export class SearchResultPage extends BasePage {
 
       const isChecked = await targetRadio.isChecked().catch(() => false);
       if (!isChecked) {
-        await targetRadio.check({ force: true }).catch(() => {});
+        await targetRadio.check({ force: true }).catch(() => { });
       }
       await this.waitForResultDisplay();
     });
@@ -876,7 +876,7 @@ export class SearchResultPage extends BasePage {
 
       const isChecked = await targetRadio.isChecked().catch(() => false);
       if (!isChecked) {
-        await targetRadio.check({ force: true }).catch(() => {});
+        await targetRadio.check({ force: true }).catch(() => { });
       }
       await this.waitForResultDisplay();
     });
@@ -894,7 +894,7 @@ export class SearchResultPage extends BasePage {
         await this.clickElement(this.excludeAiLabel, { force: true });
         const isStillWrong = (await this.excludeAiCheckbox.isChecked().catch(() => false)) !== enable;
         if (isStillWrong) {
-          await this.excludeAiCheckbox.setChecked(enable, { force: true }).catch(() => {});
+          await this.excludeAiCheckbox.setChecked(enable, { force: true }).catch(() => { });
         }
         await this.waitForResultDisplay();
       }
@@ -913,7 +913,7 @@ export class SearchResultPage extends BasePage {
         await this.clickElement(this.exactMatchLabel, { force: true });
         const isStillWrong = (await this.exactMatchCheckbox.isChecked().catch(() => false)) !== enable;
         if (isStillWrong) {
-          await this.exactMatchCheckbox.setChecked(enable, { force: true }).catch(() => {});
+          await this.exactMatchCheckbox.setChecked(enable, { force: true }).catch(() => { });
         }
         await this.waitForResultDisplay();
       }
@@ -1029,7 +1029,7 @@ export class SearchResultPage extends BasePage {
         el.removeAttribute('rel');
       });
       await this.clickElement(faceLink);
-      await this.page.waitForLoadState('domcontentloaded').catch(() => {});
+      await this.page.waitForLoadState('domcontentloaded').catch(() => { });
       await this.waitForResultDisplay();
     });
   }
