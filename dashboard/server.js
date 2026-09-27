@@ -3,8 +3,14 @@ const fs = require('fs');
 const path = require('path');
 const { spawn, exec } = require('child_process');
 
-const PORT = process.env.PORT || 4000;
 const ROOT_DIR = path.resolve(__dirname, '..');
+
+// Load root .env if available
+try {
+  require('dotenv').config({ path: path.join(ROOT_DIR, '.env') });
+} catch (e) {}
+
+const PORT = process.env.PORT || 4000;
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const ALLURE_REPORT_DIR = path.join(ROOT_DIR, 'allure-report');
 const PLAYWRIGHT_REPORT_DIR = path.join(ROOT_DIR, 'playwright-report');
@@ -50,6 +56,35 @@ let activeProjectId = 'photo-ac';
 function getActiveProject(id) {
   const targetId = id || activeProjectId;
   return PROJECTS[targetId] || PROJECTS['photo-ac'];
+}
+
+// Read environment key-value pairs for a project (.env in project or root)
+function getProjectEnv(siteId) {
+  const proj = getActiveProject(siteId);
+  const envPath = fs.existsSync(path.join(proj.dir, '.env'))
+    ? path.join(proj.dir, '.env')
+    : path.join(ROOT_DIR, '.env');
+  const parsed = {};
+  if (fs.existsSync(envPath)) {
+    try {
+      const content = fs.readFileSync(envPath, 'utf8');
+      const lines = content.split('\n');
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+        const match = trimmed.match(/^([^=]+)=(.*)$/);
+        if (match) {
+          const key = match[1].trim();
+          let val = match[2].trim();
+          if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+            val = val.slice(1, -1);
+          }
+          parsed[key] = val;
+        }
+      }
+    } catch (e) {}
+  }
+  return parsed;
 }
 
 let currentProcess = null;
@@ -233,7 +268,23 @@ function startTestRun(options) {
     return { error: 'Một phiên test đang chạy. Vui lòng chờ hoặc bấm Dừng.' };
   }
 
-  const { project, projects, file, files, headed, grep, workers, cleanReport, retries, isRerun, projectSite } = options;
+  const {
+    project,
+    projects,
+    file,
+    files,
+    headed,
+    grep,
+    workers,
+    cleanReport,
+    retries,
+    isRerun,
+    projectSite,
+    customUrl,
+    httpAuth,
+    customAccounts,
+    forceRefreshAuth
+  } = options;
 
   const siteId = projectSite || activeProjectId || 'photo-ac';
   activeProjectId = siteId;
@@ -261,6 +312,43 @@ function startTestRun(options) {
     currentRun.running = true;
     currentRun.isRerun = true;
     currentRun.logs.push('🔁 Đang chạy lại các bài kiểm thử bị lỗi (bảo lưu kết quả các bài test đã Passed)...');
+  }
+
+  // Session Invalidation: Xóa session .auth/*.json khi có custom URL, custom accounts hoặc forceRefreshAuth
+  const hasCustomAccounts = customAccounts && (
+    (customAccounts.freeUser?.email && customAccounts.freeUser.email.trim()) ||
+    (customAccounts.freeUser?.password && customAccounts.freeUser.password.trim()) ||
+    (customAccounts.premiumUser?.email && customAccounts.premiumUser.email.trim()) ||
+    (customAccounts.premiumUser?.password && customAccounts.premiumUser.password.trim()) ||
+    (customAccounts.creatorUser?.email && customAccounts.creatorUser.email.trim()) ||
+    (customAccounts.creatorUser?.password && customAccounts.creatorUser.password.trim())
+  );
+  const hasCustomUrl = Boolean(customUrl && customUrl.trim());
+
+  if (hasCustomUrl || hasCustomAccounts || forceRefreshAuth) {
+    const authDirs = [
+      path.join(proj.dir, '.auth'),
+      path.join(ROOT_DIR, '.auth')
+    ];
+    let cleanedAuthCount = 0;
+    for (const ad of authDirs) {
+      if (fs.existsSync(ad)) {
+        try {
+          const files = fs.readdirSync(ad);
+          for (const f of files) {
+            if (f.endsWith('.json')) {
+              fs.unlinkSync(path.join(ad, f));
+              cleanedAuthCount++;
+            }
+          }
+        } catch (e) {
+          console.error('[AUTH] Lỗi khi dọn dẹp .auth session:', e);
+        }
+      }
+    }
+    if (cleanedAuthCount > 0) {
+      currentRun.logs.push(`🔑 Đã tự động làm mới ${cleanedAuthCount} phiên (.auth) để áp dụng thông tin môi trường/tài khoản mới.`);
+    }
   }
 
   const args = ['playwright', 'test'];
@@ -322,12 +410,99 @@ function startTestRun(options) {
   args.push(`--reporter=${relReporter},allure-playwright,html`);
 
   const cmd = process.platform === 'win32' ? 'npx.cmd' : 'npx';
-  broadcast('runStarted', { options, project: proj.id, command: `npx ${args.join(' ')}` });
 
+  // Sanitize options to avoid exposing sensitive passwords via SSE
+  const sanitizedOptions = {
+    ...options,
+    httpAuth: httpAuth ? { ...httpAuth, password: httpAuth.password ? '********' : undefined } : undefined,
+    customAccounts: customAccounts ? {
+      freeUser: customAccounts.freeUser ? { ...customAccounts.freeUser, password: customAccounts.freeUser.password ? '********' : undefined } : undefined,
+      premiumUser: customAccounts.premiumUser ? { ...customAccounts.premiumUser, password: customAccounts.premiumUser.password ? '********' : undefined } : undefined,
+      creatorUser: customAccounts.creatorUser ? { ...customAccounts.creatorUser, password: customAccounts.creatorUser.password ? '********' : undefined } : undefined,
+    } : undefined
+  };
+  broadcast('runStarted', { options: sanitizedOptions, project: proj.id, command: `npx ${args.join(' ')}` });
+
+  // Prepare environment variables with dynamic overrides
   const env = {
     ...process.env,
     HEADLESS: headed ? 'false' : 'true'
   };
+
+  // Base URL override (supports http://, https://, or bare domain)
+  if (hasCustomUrl) {
+    let cleanUrl = customUrl.trim();
+    if (!/^https?:\/\//i.test(cleanUrl)) {
+      cleanUrl = /^(localhost|127\.0\.0\.1|192\.168\.|10\.)/i.test(cleanUrl)
+        ? `http://${cleanUrl}`
+        : `https://${cleanUrl}`;
+    }
+    env.BASE_URL = cleanUrl;
+    currentRun.logs.push(`Base URL: ${cleanUrl}`);
+  }
+
+  // HTTP Basic Auth override
+  if (httpAuth) {
+    if (httpAuth.enabled !== false) {
+      if (httpAuth.username && httpAuth.username.trim()) {
+        env.HTTP_USER = httpAuth.username.trim();
+      }
+      if (httpAuth.password && httpAuth.password.trim()) {
+        env.HTTP_PASS = httpAuth.password.trim();
+      }
+    } else {
+      delete env.HTTP_USER;
+      delete env.HTTP_PASS;
+    }
+  }
+
+  // Custom Accounts override
+  if (customAccounts) {
+    if (customAccounts.freeUser?.email && customAccounts.freeUser.email.trim()) {
+      env.FREE_USER_EMAIL = customAccounts.freeUser.email.trim();
+    }
+    if (customAccounts.freeUser?.password && customAccounts.freeUser.password.trim()) {
+      env.FREE_USER_PASSWORD = customAccounts.freeUser.password.trim();
+    }
+
+    if (customAccounts.premiumUser?.email && customAccounts.premiumUser.email.trim()) {
+      env.PREMIUM_USER_EMAIL = customAccounts.premiumUser.email.trim();
+      env.TEST_USER_EMAIL = customAccounts.premiumUser.email.trim();
+    }
+    if (customAccounts.premiumUser?.password && customAccounts.premiumUser.password.trim()) {
+      env.PREMIUM_USER_PASSWORD = customAccounts.premiumUser.password.trim();
+      env.TEST_USER_PASSWORD = customAccounts.premiumUser.password.trim();
+    }
+
+    if (customAccounts.creatorUser?.email && customAccounts.creatorUser.email.trim()) {
+      env.CREATOR_EMAIL = customAccounts.creatorUser.email.trim();
+    }
+    if (customAccounts.creatorUser?.password && customAccounts.creatorUser.password.trim()) {
+      env.CREATOR_PASSWORD = customAccounts.creatorUser.password.trim();
+    }
+  }
+
+  // Passwords to mask in output logs
+  const passwordsToMask = [];
+  if (httpAuth?.password) passwordsToMask.push(httpAuth.password);
+  if (customAccounts?.freeUser?.password) passwordsToMask.push(customAccounts.freeUser.password);
+  if (customAccounts?.premiumUser?.password) passwordsToMask.push(customAccounts.premiumUser.password);
+  if (customAccounts?.creatorUser?.password) passwordsToMask.push(customAccounts.creatorUser.password);
+  if (env.HTTP_PASS) passwordsToMask.push(env.HTTP_PASS);
+  if (env.FREE_USER_PASSWORD) passwordsToMask.push(env.FREE_USER_PASSWORD);
+  if (env.PREMIUM_USER_PASSWORD) passwordsToMask.push(env.PREMIUM_USER_PASSWORD);
+  if (env.CREATOR_PASSWORD) passwordsToMask.push(env.CREATOR_PASSWORD);
+
+  function maskLog(text) {
+    if (!text) return text;
+    let res = text;
+    for (const pwd of passwordsToMask) {
+      if (pwd && pwd.length >= 3 && res.includes(pwd)) {
+        res = res.split(pwd).join('********');
+      }
+    }
+    return res;
+  }
 
   currentProcess = spawn(cmd, args, {
     cwd: proj.dir,
@@ -353,8 +528,9 @@ function startTestRun(options) {
           console.error('Parse event error:', e);
         }
       } else {
-        currentRun.logs.push(trimmed);
-        broadcast('log', { text: trimmed });
+        const masked = maskLog(trimmed);
+        currentRun.logs.push(masked);
+        broadcast('log', { text: masked });
       }
     }
   });
@@ -362,8 +538,9 @@ function startTestRun(options) {
   currentProcess.stderr.on('data', (data) => {
     const text = data.toString().trim();
     if (text) {
-      currentRun.logs.push(text);
-      broadcast('log', { text, isError: true });
+      const masked = maskLog(text);
+      currentRun.logs.push(masked);
+      broadcast('log', { text: masked, isError: true });
     }
   });
 
@@ -548,6 +725,22 @@ const server = http.createServer(async (req, res) => {
         id: p.id,
         name: p.name
       }))
+    }));
+    return;
+  }
+
+  // API: Get Project Environment Defaults (for Test Portal modal placeholders)
+  if (pathname === '/api/env-info' && req.method === 'GET') {
+    const projectParam = parsedUrl.searchParams.get('projectSite') || parsedUrl.searchParams.get('project') || activeProjectId;
+    const projEnv = getProjectEnv(projectParam);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      project: projectParam,
+      baseUrl: projEnv.BASE_URL || process.env.BASE_URL || '',
+      httpUser: projEnv.HTTP_USER || process.env.HTTP_USER || '',
+      freeUserEmail: projEnv.FREE_USER_EMAIL || process.env.FREE_USER_EMAIL || '',
+      premiumUserEmail: projEnv.PREMIUM_USER_EMAIL || process.env.PREMIUM_USER_EMAIL || '',
+      creatorEmail: projEnv.CREATOR_EMAIL || process.env.CREATOR_EMAIL || ''
     }));
     return;
   }

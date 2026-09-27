@@ -45,8 +45,8 @@ trigger: model_decision
 | **Recommended Search** | ✅ | ✅ | Cùng cơ chế (`rcm=1`) |
 | **Sort: 新着順** | ✅ | ✅ | Cùng cơ chế (`srt=-releasedate`) |
 | **Sort: 人気順** | ✅ | ✅ | Bị chặn Guest/Free; cho phép Premium (`srt=recent_popular`) |
-| **Display Count: 70** | ✅ | ✅ | Guest / Free User default |
-| **Display Count: 210** | ✅ | ✅ | Premium User privilege |
+| **Display Count: 70** | ✅ | ✅ | Guest / Free / Creator / Premium User default |
+| **Display Count: 210** | ✅ | ✅ | Premium User privilege (chọn mở rộng tối đa 210 ảnh/trang) |
 | **Search Limit: 4 lần/ngày** | ✅ | ✅ | Guest + Free User |
 | **Heading format kết quả** | `「kw」の写真素材` | `「kw」のイラスト素材` | Khác nhau |
 | **Image Upload heading** | `アップロードされた画像に似ている写真素材` | `アップロードされた画像に似ているイラスト素材` | Khác nhau |

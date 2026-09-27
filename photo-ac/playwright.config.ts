@@ -323,6 +323,20 @@ export default defineConfig({
       },
       testMatch: '**/downloader/*guest*.spec.ts',
     },
+
+    // ── Execution Projects (Mobile) ───────────────────────────────────────────
+    // Mobile Chromium Guest — Mobile search & browsing tests (Guest session)
+    {
+      name: 'mobile-chromium-guest',
+      use: {
+        ...devices['iPhone 13'],
+        storageState: { cookies: [], origins: [] },
+        ...(HTTP_USER && HTTP_PASS
+          ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
+          : {}),
+      },
+      testMatch: '**/mobile/**/*.spec.ts',
+    },
   ],
 
   // Output folder for test artifacts

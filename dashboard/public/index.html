@@ -102,6 +102,24 @@
             </svg>
             Cấu Hình Test Run
           </h2>
+          <!-- Nút mở Popup Môi trường & Tài khoản -->
+          <button type="button" id="btnOpenEnvModal" class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800/90 hover:bg-slate-700 text-slate-300 border border-slate-700/80 hover:border-indigo-500/50 hover:text-white transition-all shadow-sm">
+            <svg class="w-3.5 h-3.5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span>Môi Trường & Acc</span>
+            <span id="envConfigIndicator" class="w-2 h-2 rounded-full bg-slate-500" title="Đang dùng mặc định .env"></span>
+          </button>
+        </div>
+
+        <!-- ACTIVE CUSTOM ENV NOTICE (HIDDEN BY DEFAULT) -->
+        <div id="activeCustomNotice" class="hidden p-2 rounded-xl bg-indigo-950/40 border border-indigo-500/30 text-xs text-indigo-300 flex items-center justify-between">
+          <div class="flex items-center space-x-1.5 truncate">
+            <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse flex-shrink-0"></span>
+            <span id="activeCustomText" class="truncate font-medium">Tùy biến đang bật</span>
+          </div>
+          <button type="button" id="btnQuickResetEnv" class="text-[11px] text-indigo-400 hover:text-indigo-200 underline ml-2 flex-shrink-0">Dùng .env</button>
         </div>
 
         <!-- PROJECT SELECTOR -->
@@ -654,6 +672,9 @@
         autoSyncRolesFromFiles();
         updateFilterCounts();
         appendLog(`[HỆ THỐNG] Đã chuyển sang dự án: ${siteId === 'illust-ac' ? 'AC-Illust' : 'Photo-AC'}`);
+        if (typeof fetchProjectEnvDefaults === 'function') {
+          fetchProjectEnvDefaults();
+        }
       } catch (err) {
         console.error('Lỗi khi chuyển đổi dự án:', err);
       }
@@ -1450,6 +1471,23 @@
         ...overrideOptions
       };
 
+      // Gắn cấu hình URL & Tài khoản tùy chỉnh nếu có
+      const customEnv = getSavedCustomEnvConfig();
+      if (customEnv) {
+        if (customEnv.customUrl && customEnv.customUrl.trim()) {
+          payload.customUrl = customEnv.customUrl.trim();
+        }
+        if (customEnv.httpAuth && (customEnv.httpAuth.username || customEnv.httpAuth.password)) {
+          payload.httpAuth = customEnv.httpAuth;
+        }
+        if (customEnv.customAccounts) {
+          payload.customAccounts = customEnv.customAccounts;
+        }
+        if (customEnv.forceRefreshAuth !== undefined) {
+          payload.forceRefreshAuth = customEnv.forceRefreshAuth;
+        }
+      }
+
       if (!isRerun) {
         // Khởi chạy mới toàn bộ: reset state và xóa dữ liệu cũ
         state.tests.clear();
@@ -1487,6 +1525,16 @@
       appendLog(`   Số file: ${payload.files.length > 0 ? payload.files.length : 'Toàn bộ'}`);
       appendLog(`   Trình duyệt: ${browserNames} • Vai trò: ${roleNames}`);
       appendLog(`   Projects: [${(payload.projects || []).join(', ')}] • Workers: ${payload.workers}`);
+      if (payload.customUrl) appendLog(`   Custom Base URL: ${payload.customUrl}`, 'text-amber-300 font-semibold');
+      if (payload.customAccounts) {
+        const customRoles = [];
+        if (payload.customAccounts.freeUser?.email) customRoles.push('Free User');
+        if (payload.customAccounts.premiumUser?.email) customRoles.push('Premium');
+        if (payload.customAccounts.creatorUser?.email) customRoles.push('Creator');
+        if (customRoles.length > 0) {
+          appendLog(`   Tài khoản tùy chỉnh: ${customRoles.join(', ')}`, 'text-amber-300 font-semibold');
+        }
+      }
       if (payload.grep) appendLog(`   Lọc Test Case (Grep): "${payload.grep}"`);
       appendLog(`======================================================`, 'text-indigo-400 font-bold');
 
@@ -1571,6 +1619,9 @@
         // Update filter counters
         updateFilterCounts();
 
+        // Initialize Environment & Accounts modal
+        initEnvConfigModal();
+
       } catch (err) {
         console.error('Init error:', err);
       }
@@ -1578,7 +1629,412 @@
       setupSSE();
     }
 
+    // ==========================================
+    // 7. ENVIRONMENT & ACCOUNTS CONFIG MODAL
+    // ==========================================
+    const ENV_STORAGE_KEY = 'test_portal_custom_env_config';
+
+    function getSavedCustomEnvConfig() {
+      try {
+        const raw = localStorage.getItem(ENV_STORAGE_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function saveCustomEnvConfig(cfg) {
+      try {
+        localStorage.setItem(ENV_STORAGE_KEY, JSON.stringify(cfg));
+      } catch (e) {}
+      updateEnvIndicatorUI();
+    }
+
+    function clearCustomEnvConfig() {
+      try {
+        localStorage.removeItem(ENV_STORAGE_KEY);
+      } catch (e) {}
+      updateEnvIndicatorUI();
+    }
+
+    function updateEnvIndicatorUI() {
+      const cfg = getSavedCustomEnvConfig();
+      const indicator = document.getElementById('envConfigIndicator');
+      const notice = document.getElementById('activeCustomNotice');
+      const noticeText = document.getElementById('activeCustomText');
+
+      const hasUrl = Boolean(cfg && cfg.customUrl && cfg.customUrl.trim());
+      const hasAccounts = Boolean(
+        cfg && cfg.customAccounts &&
+        (
+          (cfg.customAccounts.freeUser?.email && cfg.customAccounts.freeUser.email.trim()) ||
+          (cfg.customAccounts.premiumUser?.email && cfg.customAccounts.premiumUser.email.trim()) ||
+          (cfg.customAccounts.creatorUser?.email && cfg.customAccounts.creatorUser.email.trim())
+        )
+      );
+
+      if (hasUrl || hasAccounts) {
+        if (indicator) {
+          indicator.className = 'w-2 h-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400 ring-2 ring-emerald-400/30 animate-pulse';
+          indicator.title = 'Đang kích hoạt URL / Tài khoản tùy chỉnh';
+        }
+        if (notice && noticeText) {
+          notice.classList.remove('hidden');
+          const details = [];
+          if (hasUrl) details.push(`URL: ${cfg.customUrl.replace(/^https?:\/\//, '')}`);
+          if (hasAccounts) details.push(`Acc tùy chỉnh`);
+          noticeText.textContent = `⚡ ${details.join(' • ')}`;
+        }
+      } else {
+        if (indicator) {
+          indicator.className = 'w-2 h-2 rounded-full bg-slate-500';
+          indicator.title = 'Đang dùng mặc định .env';
+        }
+        if (notice) {
+          notice.classList.add('hidden');
+        }
+      }
+    }
+
+    async function fetchProjectEnvDefaults() {
+      try {
+        const site = state.currentProjectSite || 'photo-ac';
+        const res = await fetch(`/api/env-info?projectSite=${site}`);
+        if (res.ok) {
+          const data = await res.json();
+          const inputCustomUrl = document.getElementById('inputCustomUrl');
+          if (inputCustomUrl && data.baseUrl) {
+            inputCustomUrl.placeholder = data.baseUrl;
+          }
+        }
+      } catch (e) {
+        console.error('Lỗi lấy env-info:', e);
+      }
+    }
+
+    function initEnvConfigModal() {
+      const modal = document.getElementById('envConfigModal');
+      const btnOpen = document.getElementById('btnOpenEnvModal');
+      const btnClose = document.getElementById('btnCloseEnvModal');
+      const btnCancel = document.getElementById('btnCancelEnvModal');
+      const btnSave = document.getElementById('btnSaveEnvModal');
+      const btnReset = document.getElementById('btnResetEnvModal');
+      const btnQuickReset = document.getElementById('btnQuickResetEnv');
+      const backdrop = document.getElementById('modalBackdrop');
+
+      const inputCustomUrl = document.getElementById('inputCustomUrl');
+      const btnClearCustomUrl = document.getElementById('btnClearCustomUrl');
+      const inputHttpUser = document.getElementById('inputHttpUser');
+      const inputHttpPass = document.getElementById('inputHttpPass');
+      const inputFreeEmail = document.getElementById('inputFreeEmail');
+      const inputFreePass = document.getElementById('inputFreePass');
+      const inputPremiumEmail = document.getElementById('inputPremiumEmail');
+      const inputPremiumPass = document.getElementById('inputPremiumPass');
+      const inputCreatorEmail = document.getElementById('inputCreatorEmail');
+      const inputCreatorPass = document.getElementById('inputCreatorPass');
+      const chkForceRefreshAuth = document.getElementById('chkForceRefreshAuth');
+
+      function openModal() {
+        const cfg = getSavedCustomEnvConfig() || {};
+        inputCustomUrl.value = cfg.customUrl || '';
+        if (btnClearCustomUrl) {
+          btnClearCustomUrl.classList.toggle('hidden', !inputCustomUrl.value);
+        }
+
+        if (cfg.httpAuth) {
+          inputHttpUser.value = cfg.httpAuth.username || '';
+          inputHttpPass.value = cfg.httpAuth.password || '';
+        } else {
+          inputHttpUser.value = '';
+          inputHttpPass.value = '';
+        }
+
+        if (cfg.customAccounts) {
+          inputFreeEmail.value = cfg.customAccounts.freeUser?.email || '';
+          inputFreePass.value = cfg.customAccounts.freeUser?.password || '';
+          inputPremiumEmail.value = cfg.customAccounts.premiumUser?.email || '';
+          inputPremiumPass.value = cfg.customAccounts.premiumUser?.password || '';
+          inputCreatorEmail.value = cfg.customAccounts.creatorUser?.email || '';
+          inputCreatorPass.value = cfg.customAccounts.creatorUser?.password || '';
+        } else {
+          inputFreeEmail.value = '';
+          inputFreePass.value = '';
+          inputPremiumEmail.value = '';
+          inputPremiumPass.value = '';
+          inputCreatorEmail.value = '';
+          inputCreatorPass.value = '';
+        }
+
+        if (chkForceRefreshAuth) {
+          chkForceRefreshAuth.checked = cfg.forceRefreshAuth !== undefined ? cfg.forceRefreshAuth : true;
+        }
+
+        fetchProjectEnvDefaults();
+        modal.classList.remove('hidden');
+      }
+
+      function closeModal() {
+        modal.classList.add('hidden');
+      }
+
+      function saveModal() {
+        let customUrl = inputCustomUrl.value.trim();
+        if (customUrl && !/^https?:\/\//i.test(customUrl)) {
+          customUrl = /^(localhost|127\.0\.0\.1|192\.168\.|10\.)/i.test(customUrl)
+            ? `http://${customUrl}`
+            : `https://${customUrl}`;
+        }
+        const httpUser = inputHttpUser.value.trim();
+        const httpPass = inputHttpPass.value.trim();
+
+        const freeEmail = inputFreeEmail.value.trim();
+        const freePass = inputFreePass.value.trim();
+        const premEmail = inputPremiumEmail.value.trim();
+        const premPass = inputPremiumPass.value.trim();
+        const creatorEmail = inputCreatorEmail.value.trim();
+        const creatorPass = inputCreatorPass.value.trim();
+
+        const cfg = {
+          customUrl: customUrl || '',
+          httpAuth: (httpUser || httpPass) ? {
+            username: httpUser,
+            password: httpPass,
+            enabled: true
+          } : null,
+          customAccounts: {
+            freeUser: (freeEmail || freePass) ? { email: freeEmail, password: freePass } : null,
+            premiumUser: (premEmail || premPass) ? { email: premEmail, password: premPass } : null,
+            creatorUser: (creatorEmail || creatorPass) ? { email: creatorEmail, password: creatorPass } : null
+          },
+          forceRefreshAuth: chkForceRefreshAuth ? chkForceRefreshAuth.checked : true
+        };
+
+        if (!cfg.customAccounts.freeUser && !cfg.customAccounts.premiumUser && !cfg.customAccounts.creatorUser) {
+          delete cfg.customAccounts;
+        }
+        if (!cfg.httpAuth) {
+          delete cfg.httpAuth;
+        }
+
+        saveCustomEnvConfig(cfg);
+        closeModal();
+      }
+
+      function resetModal() {
+        if (confirm('Khôi phục toàn bộ cấu hình về mặc định trong file .env?')) {
+          clearCustomEnvConfig();
+          inputCustomUrl.value = '';
+          inputHttpUser.value = '';
+          inputHttpPass.value = '';
+          inputFreeEmail.value = '';
+          inputFreePass.value = '';
+          inputPremiumEmail.value = '';
+          inputPremiumPass.value = '';
+          inputCreatorEmail.value = '';
+          inputCreatorPass.value = '';
+          if (chkForceRefreshAuth) chkForceRefreshAuth.checked = true;
+          if (btnClearCustomUrl) btnClearCustomUrl.classList.add('hidden');
+          closeModal();
+        }
+      }
+
+      if (btnOpen) btnOpen.addEventListener('click', openModal);
+      if (btnClose) btnClose.addEventListener('click', closeModal);
+      if (btnCancel) btnCancel.addEventListener('click', closeModal);
+      if (backdrop) backdrop.addEventListener('click', closeModal);
+      if (btnSave) btnSave.addEventListener('click', saveModal);
+      if (btnReset) btnReset.addEventListener('click', resetModal);
+      if (btnQuickReset) btnQuickReset.addEventListener('click', () => {
+        clearCustomEnvConfig();
+        appendLog('🌱 Đã khôi phục cài đặt về mặc định từ file .env.', 'text-emerald-400');
+      });
+
+      if (inputCustomUrl && btnClearCustomUrl) {
+        inputCustomUrl.addEventListener('input', () => {
+          btnClearCustomUrl.classList.toggle('hidden', !inputCustomUrl.value.trim());
+        });
+        btnClearCustomUrl.addEventListener('click', () => {
+          inputCustomUrl.value = '';
+          btnClearCustomUrl.classList.add('hidden');
+          inputCustomUrl.focus();
+        });
+      }
+
+      // Password visibility toggles (Modern SVG & safe selector)
+      document.querySelectorAll('.btn-toggle-pwd').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const input = btn.closest('.relative')?.querySelector('input');
+          if (!input) return;
+          const isPassword = input.type === 'password';
+          input.type = isPassword ? 'text' : 'password';
+          btn.title = isPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu';
+          btn.innerHTML = isPassword
+            ? `<svg class="w-3.5 h-3.5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" /></svg>`
+            : `<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>`;
+        });
+      });
+
+      // Close modal on Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+          closeModal();
+        }
+      });
+
+      // Initial UI state
+      updateEnvIndicatorUI();
+    }
+
     init();
   </script>
+
+  <!-- MODAL: CẤU HÌNH MÔI TRƯỜNG & TÀI KHOẢN (POPUP) -->
+  <div id="envConfigModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+    <!-- Backdrop Blur -->
+    <div id="modalBackdrop" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity"></div>
+
+    <!-- Modal Dialog Window -->
+    <div class="relative w-full max-w-xl bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] z-10 animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Modal Header -->
+      <div class="px-5 py-3.5 border-b border-slate-800 flex items-center justify-between bg-slate-900/90 sticky top-0 z-10">
+        <h3 class="text-sm font-bold text-white uppercase tracking-wider">Cấu Hình Môi Trường & Tài Khoản</h3>
+        <button type="button" id="btnCloseEnvModal" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-5 overflow-y-auto custom-scroll space-y-4">
+        
+        <!-- SECTION 1: URL MÔI TRƯỜNG KIỂM THỬ -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-bold text-slate-200 uppercase tracking-wide">
+              URL Môi Trường Kiểm Thử (Base URL)
+            </label>
+            <span class="text-[11px] text-slate-400">Trống = Mặc định .env</span>
+          </div>
+
+          <div class="relative">
+            <input type="text" id="inputCustomUrl" placeholder="https://www.photo-ac.com/" class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all font-mono">
+            <button type="button" id="btnClearCustomUrl" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 text-xs p-1" title="Xóa URL">✕</button>
+          </div>
+
+          <!-- HTTP Basic Auth Collapsible / Toggle -->
+          <div class="pt-0.5">
+            <details class="group bg-slate-950/60 rounded-xl border border-slate-800 p-2.5 text-xs">
+              <summary class="cursor-pointer font-semibold text-slate-300 flex items-center justify-between select-none">
+                <span>HTTP Basic Auth (Tùy chọn)</span>
+                <span class="text-[11px] text-indigo-400 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2.5 mt-2 border-t border-slate-800/80">
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Username</label>
+                  <input type="text" id="inputHttpUser" placeholder="Username" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Password</label>
+                  <div class="relative">
+                    <input type="password" id="inputHttpPass" placeholder="Password" class="w-full bg-slate-900 border border-slate-800 rounded-lg pl-2.5 pr-7 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                    <button type="button" class="btn-toggle-pwd absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 p-0.5 rounded transition-colors" title="Hiện/Ẩn mật khẩu">
+                      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <!-- SECTION 2: TÀI KHOẢN KIỂM THỬ -->
+        <div class="space-y-2.5 pt-2 border-t border-slate-800">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-bold text-slate-200 uppercase tracking-wide">
+              Tài Khoản Kiểm Thử
+            </label>
+            <span class="text-[11px] text-slate-400">Trống = Mặc định .env</span>
+          </div>
+
+          <div class="space-y-2">
+            <!-- FREE USER -->
+            <div class="p-2.5 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-slate-200">Free User</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <input type="text" id="inputFreeEmail" placeholder="Email" class="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                <div class="relative">
+                  <input type="password" id="inputFreePass" placeholder="Password" class="w-full bg-slate-900 border border-slate-800 rounded-lg pl-2.5 pr-7 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                  <button type="button" class="btn-toggle-pwd absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 p-0.5 rounded transition-colors" title="Hiện/Ẩn mật khẩu">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- PREMIUM USER -->
+            <div class="p-2.5 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-slate-200">Premium User</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <input type="text" id="inputPremiumEmail" placeholder="Email" class="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                <div class="relative">
+                  <input type="password" id="inputPremiumPass" placeholder="Password" class="w-full bg-slate-900 border border-slate-800 rounded-lg pl-2.5 pr-7 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                  <button type="button" class="btn-toggle-pwd absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 p-0.5 rounded transition-colors" title="Hiện/Ẩn mật khẩu">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- CREATOR -->
+            <div class="p-2.5 bg-slate-950/70 border border-slate-800 rounded-xl space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-slate-200">Creator</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <input type="text" id="inputCreatorEmail" placeholder="Email" class="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                <div class="relative">
+                  <input type="password" id="inputCreatorPass" placeholder="Password" class="w-full bg-slate-900 border border-slate-800 rounded-lg pl-2.5 pr-7 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                  <button type="button" class="btn-toggle-pwd absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 p-0.5 rounded transition-colors" title="Hiện/Ẩn mật khẩu">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FORCE REFRESH AUTH CHECKBOX -->
+        <div class="pt-2 border-t border-slate-800 flex items-center space-x-2">
+          <input type="checkbox" id="chkForceRefreshAuth" checked class="w-4 h-4 rounded text-indigo-600 bg-slate-950 border-slate-700 focus:ring-indigo-500">
+          <label for="chkForceRefreshAuth" class="text-xs text-slate-300 cursor-pointer select-none">
+            Làm mới phiên đăng nhập (.auth session) khi chạy test với thông tin mới
+          </label>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-5 py-3 border-t border-slate-800 bg-slate-900/90 flex items-center justify-between">
+        <button type="button" id="btnResetEnvModal" class="text-xs text-rose-400 hover:text-rose-300 font-medium transition-colors">
+          Đặt lại mặc định .env
+        </button>
+        <div class="flex items-center space-x-2">
+          <button type="button" id="btnCancelEnvModal" class="px-3 py-1.5 rounded-xl border border-slate-700 text-xs text-slate-300 hover:bg-slate-800 transition-colors font-semibold">
+            Đóng
+          </button>
+          <button type="button" id="btnSaveEnvModal" class="px-4 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all shadow-md shadow-indigo-600/30">
+            Lưu cấu hình
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </body>
 </html>

@@ -13,7 +13,7 @@ import { test, expect } from '../../fixtures/base.fixture';
  *   + Cho phép sắp xếp "人気順" (Popularity sort - srt=recent_popular) thành công, không bị chặn bởi popover nâng cấp.
  *   + Giữ nguyên thứ tự Sắp xếp (Sort persistence) khi phân trang (Sheet Case 13, 15).
  *   + Cho phép chủ động bật/tắt Toggle AI Search (.search-by-ai) trên TopPage và tìm kiếm bằng câu tự nhiên (Sheet Case 26).
- *   + Hiển thị 210 ảnh/trang (đặc quyền Premium, khác biệt so với Free/Guest 70 ảnh/trang) và giữ nguyên khi chuyển trang (Sheet Case 14, 16, 21).
+ *   + Display Count mặc định là 70 ảnh/trang (đồng nhất trên mọi role), kèm đặc quyền Premium cho phép chọn mở rộng tối đa 210 ảnh/trang (Sheet Case 12, 14, 16, 20, 21, 23).
  *   + Tìm kiếm bằng hình ảnh (Image Search Upload - Sheet Case 8).
  *   + Tìm kiếm bằng khuôn mặt AI (AI Face Search - Sheet Case 17, 27).
  *   + Bao phủ đầy đủ 18 bộ lọc đơn lẻ và bộ lọc kết hợp đa điều kiện trên Search Result Page.
@@ -984,29 +984,60 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
   });
 
   /**
-   * TC-SEARCH-PREM-037: [PAGINATION - DISPLAY COUNT 210] Kiểm tra số lượng ảnh hiển thị của Premium User (210 ảnh/trang) (Sheet Case 14, 16, 21)
-   * Đặc quyền Premium: Cho phép hiển thị tối đa 210 record mỗi trang (khác biệt so với Free/Guest chỉ 70 record)
+   * TC-SEARCH-PREM-037: [PAGINATION - DEFAULT DISPLAY COUNT] Kiểm tra số lượng ảnh hiển thị mặc định của Premium User (70 ảnh/trang) (Sheet Case 12, 20, 23)
+   * Đặc tả chuẩn: Trên trang tìm kiếm, Premium User có Display Count mặc định ban đầu là 70 ảnh/trang
+   * giống như các role khác, radio 70 được check default và menu hiển thị "70件表示".
+   * @tags @regression @premium
+   */
+  test('TC-SEARCH-PREM-037: Verify Premium User có Display Count mặc định đạt 70 ảnh/trang và radio 70 được check default @regression @premium', async ({
+    homePage,
+    searchResultPage,
+  }) => {
+    await homePage.search('dog');
+    await searchResultPage.waitForResultDisplay();
+
+    await test.step('Verify menu "表示件数" có radio 70件ずつ表示 được check default', async () => {
+      await searchResultPage.openSortDropdown();
+      await expect(searchResultPage.displayCount70Radio).toBeChecked();
+      await expect(searchResultPage.sortDropdownButton).toContainText('70件表示');
+    });
+
+    await test.step('Verify trang 1 hiển thị trong giới hạn tối đa 70 ảnh', async () => {
+      const countPage1 = await searchResultPage.getResultCount();
+      expect(countPage1, 'Trang 1 phải có ảnh hiển thị').toBeGreaterThan(0);
+      expect(countPage1, 'Trang 1 không được vượt quá giới hạn 70 ảnh').toBeLessThanOrEqual(70);
+    });
+
+    await searchResultPage.goToNextPage();
+
+    await test.step('Verify trang 2 tiếp tục hiển thị trong giới hạn tối đa 70 ảnh và giữ nguyên radio 70', async () => {
+      const countPage2 = await searchResultPage.getResultCount();
+      expect(countPage2, 'Trang 2 phải có ảnh hiển thị').toBeGreaterThan(0);
+      expect(countPage2, 'Trang 2 không được vượt quá giới hạn 70 ảnh').toBeLessThanOrEqual(70);
+      await searchResultPage.openSortDropdown();
+      await expect(searchResultPage.displayCount70Radio).toBeChecked();
+    });
+  });
+
+  /**
+   * TC-SEARCH-PREM-037B: [PAGINATION - DISPLAY COUNT 210] Đặc quyền Premium User chọn hiển thị 210 ảnh/trang (Sheet Case 14, 16, 21)
+   * Đặc quyền Premium: Cho phép chủ động chọn hiển thị tối đa 210 record mỗi trang (khác biệt so với Free/Guest chỉ 70 record)
    * và giữ nguyên số lượng 210 record khi chuyển trang.
    * @tags @regression @premium
    */
-  test('TC-SEARCH-PREM-037: Verify Premium User hiển thị 210 ảnh trên mỗi trang và giữ nguyên khi phân trang @regression @premium', async ({
+  test('TC-SEARCH-PREM-037B: Verify đặc quyền Premium User khi chủ động chọn hiển thị 210 ảnh/trang và giữ nguyên khi phân trang @regression @premium', async ({
     page,
     homePage,
     searchResultPage,
   }) => {
-    await homePage.search('cat');
+    await homePage.search('dog');
     await searchResultPage.waitForResultDisplay();
 
-    await test.step('Kiểm tra radio hiển thị mặc định của Premium User và chọn 210件', async () => {
-      await searchResultPage.openSortDropdown();
-      const is210Default = await searchResultPage.displayCount210Radio.isChecked();
-      if (!is210Default) {
-        // Nếu môi trường staging chưa set default 210, Premium User chủ động chọn 210件ずつ表示
-        await searchResultPage.selectDisplayCount('210');
-      }
+    await test.step('Premium User chủ động chọn hiển thị 210件ずつ表示 từ menu', async () => {
+      await searchResultPage.selectDisplayCount('210');
       await expect(page).toHaveURL(/pp=210/);
       const countPage1 = await searchResultPage.getResultCount();
-      expect(countPage1, 'Số lượng ảnh hiển thị phải là 210').toBe(210);
+      expect(countPage1, 'Số lượng ảnh hiển thị phải đạt 210 ảnh').toBe(210);
     });
 
     await searchResultPage.goToNextPage();
@@ -1015,7 +1046,7 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
       await expect(page).toHaveURL(/pp=210/);
       await expect(page).toHaveURL(/p=2/);
       const countPage2 = await searchResultPage.getResultCount();
-      expect(countPage2, 'Số lượng ảnh trên trang 2 của Premium phải tiếp tục là 210').toBe(210);
+      expect(countPage2, 'Số lượng ảnh trên trang 2 của Premium phải tiếp tục là 210 ảnh').toBe(210);
     });
   });
 

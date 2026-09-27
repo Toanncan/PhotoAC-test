@@ -3,7 +3,7 @@ import { test, expect } from '../../fixtures/base.fixture';
 
 /**
  * ============================================================================
- * TEST SUITE: SEARCH FEATURE — GUEST USER (CHƯA ĐĂNG NHẬP / NO-LOGIN)
+ * TEST SUITE: SEARCH FEATURE — GUEST USER
  * ============================================================================
  */
 test.describe('Search Feature — Guest (No-Login User)', () => {
@@ -32,14 +32,14 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   // ============================================================================
-  // NHÓM 1: CƠ BẢN & ĐIỂM VÀO TÌM KIẾM (BASIC SEARCH & ENTRYPOINTS)
+  // NHÓM 1: CƠ BẢN & ĐIỂM VÀO TÌM KIẾM
   // ============================================================================
 
   /**
-   * TC-SEARCH-GUEST-001: Tìm kiếm với từ khóa hợp lệ (Sheet Case 2)
-   * @tags @smoke @regression @guest
+   * TC-SEARCH-GUEST-001: Tìm kiếm với từ khóa hợp lệ
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-001: Guest tìm kiếm từ khóa hợp lệ: hiển thị kết quả @smoke @guest', async ({
+  test('TC-SEARCH-GUEST-001: Tìm kiếm từ khóa hợp lệ hiển thị kết quả @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -63,9 +63,9 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
 
   /**
    * TC-SEARCH-GUEST-002: Tìm kiếm với nhiều từ khóa kết hợp (Multi-keyword AND search)
-   * @tags @regression @guest
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-002: Guest tìm kiếm nhiều từ khóa kết hợp: hiển thị kết quả @regression @guest', async ({
+  test('TC-SEARCH-GUEST-002: Tìm kiếm nhiều từ khóa kết hợp hiển thị kết quả @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -85,9 +85,9 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
 
   /**
    * TC-SEARCH-GUEST-003: Tìm kiếm với từ khóa không tồn tại (Zero Results)
-   * @tags @regression @guest
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-003: Hiển thị thông báo khi không tìm thấy ảnh nào khớp từ khóa @regression @guest', async ({
+  test('TC-SEARCH-GUEST-003: Hiển thị thông báo khi không tìm thấy ảnh nào khớp từ khóa @guest', async ({
     homePage,
     searchResultPage,
   }) => {
@@ -105,9 +105,9 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
 
   /**
    * TC-SEARCH-GUEST-004: Tìm kiếm tiếp từ thanh tìm kiếm trên trang kết quả (Search Again)
-   * @tags @regression @guest
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-004: Guest tìm kiếm từ khóa mới trực tiếp từ trang kết quả @regression @guest', async ({
+  test('TC-SEARCH-GUEST-004: Tìm kiếm từ khóa mới trực tiếp từ trang kết quả @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -129,9 +129,9 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
 
   /**
    * TC-SEARCH-GUEST-005: Xóa từ khóa bằng nút Reset trên ô tìm kiếm
-   * @tags @regression @guest
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-005: Xóa nhanh từ khóa trong ô tìm kiếm bằng nút Reset @regression @guest', async ({
+  test('TC-SEARCH-GUEST-005: Xóa nhanh từ khóa trong ô tìm kiếm bằng nút Reset @guest', async ({
     homePage,
     searchResultPage,
   }) => {
@@ -152,7 +152,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-006: Tìm kiếm nhanh bằng Top Keyword dưới Search Bar
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-006: Guest click Top Keyword chuyển hướng đến trang kết quả tìm kiếm @regression @guest', async ({
+  test('TC-SEARCH-GUEST-006: Tìm kiếm bằng top keyword @regression @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -178,10 +178,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-007: Tìm kiếm bằng Popular Tag Cloud
+   * TC-SEARCH-GUEST-007: Tìm kiếm bằng Popular Tag
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-007: Guest click Popular Tag từ tag cloud thành công @regression @guest', async ({
+  test('TC-SEARCH-GUEST-007: Tìm kiếm bằng popular tag keyword @regression @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -201,14 +201,14 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   // ============================================================================
-  // NHÓM 2: BỘ LỌC ĐƠN LẺ TRÊN THANH CÔNG CỤ (FILTER TOOLBAR - SINGLE FILTERS)
+  // NHÓM 2: FILTER TOOLBAR - SINGLE FILTERS
   // ============================================================================
 
   /**
-   * TC-SEARCH-GUEST-008: [FILTER - ORIENTATION] Lọc ảnh theo Chiều dọc (縦長) qua toolbar
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-008: Filter ảnh theo Chiều dọc (縦長)
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-008: Guest lọc kết quả theo Chiều dọc (縦長) qua Toolbar @regression @guest', async ({
+  test('TC-SEARCH-GUEST-008: Filter ảnh theo Chiều dọc (縦長) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -231,10 +231,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-009: [FILTER - ORIENTATION] Lọc ảnh theo Chiều ngang (横長) qua toolbar
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-009: Lọc ảnh theo Chiều ngang (横長) qua toolbar
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-009: Guest lọc kết quả theo Chiều ngang (横長) qua Toolbar @regression @guest', async ({
+  test('TC-SEARCH-GUEST-009: Filter ảnh theo Chiều ngang (横長) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -257,10 +257,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-010: [FILTER - PSD FORMAT] Lọc định dạng ảnh PSD qua Toolbar "ファイル・向き"
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-010: Filter định dạng ảnh PSD qua Toolbar "ファイル・向き"
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-010: Guest lọc định dạng ảnh PSD qua Toolbar "ファイル・向き" @regression @guest', async ({
+  test('TC-SEARCH-GUEST-010: Filter định dạng ảnh PSD @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -281,11 +281,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-011: [FILTER - SIZE M] Lọc kích thước ảnh Mサイズ以上 qua Toolbar "ファイル・向き"
-   * 100% E2E True User Simulation: Thao tác mở menu Toolbar "ファイル・向き" và chọn Mサイズ以上
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-011: Lọc kích thước ảnh Mサイズ以上 qua Toolbar "ファイル・向き"
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-011: Guest lọc kích thước ảnh Mサイズ以上 qua Toolbar "ファイル・向き" @regression @guest', async ({
+  test('TC-SEARCH-GUEST-011: Filter kích thước ảnh Mサイズ以上 @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -307,11 +306,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-012: [FILTER - SIZE L] Lọc kích thước ảnh Lサイズ qua Toolbar "ファイル・向き"
-   * 100% E2E True User Simulation: Thao tác mở menu Toolbar "ファイル・向き" và chọn Lサイズ
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-012: Lọc kích thước ảnh Lサイズ qua Toolbar "ファイル・向き"
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-012: Guest lọc kích thước ảnh Lサイズ qua Toolbar "ファイル・向き" @regression @guest', async ({
+  test('TC-SEARCH-GUEST-012: Filter kích thước ảnh Lサイズ @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -333,11 +331,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-013: [FILTER - CATEGORY] Lọc ảnh theo Danh mục qua Toolbar dropdown (人物 / c_id=1)
-   * 100% E2E True User Simulation: Thao tác mở menu Toolbar "カテゴリー" và chọn 人物
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-013: Filter ảnh theo Danh mục qua Toolbar dropdown (人物 / c_id=1)
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-013: Guest lọc ảnh theo Danh mục (人物) qua Toolbar dropdown @regression @guest', async ({
+  test('TC-SEARCH-GUEST-013: Filter ảnh theo Danh mục (人物) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -358,11 +355,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-014: [FILTER - COLOR] Lọc ảnh theo Màu sắc (青 / Blue) qua Toolbar
-   * 100% E2E True User Simulation: Thao tác mở menu Toolbar "色" và chọn ô màu Xanh dương
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-014: Filter ảnh theo Màu sắc (青 / Blue) qua Toolbar
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-014: Guest lọc ảnh theo Màu sắc (青 / Blue) qua Toolbar @regression @guest', async ({
+  test('TC-SEARCH-GUEST-014: Filter ảnh theo Màu sắc (青 / Blue) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -385,11 +381,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-015: [FILTER - MODEL COUNT] Lọc ảnh Không có người (無人 / model_count=0) qua Toolbar
-   * 100% E2E True User Simulation: Thao tác mở menu Toolbar "人物指定" và chọn 無人
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-015: Filter ảnh Không có người (無人 / model_count=0) qua Toolbar
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-015: Guest lọc ảnh Không có người (無人) qua Toolbar @regression @guest', async ({
+  test('TC-SEARCH-GUEST-015: Filter ảnh Không có người (無人) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -411,11 +406,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-016: [FILTER - MODEL COUNT] Lọc ảnh có 1 người mẫu (1人 / model_count=1) qua Toolbar
-   * 100% E2E True User Simulation: Thao tác mở menu Toolbar "人物指定" và chọn 1人
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-016: Filter ảnh có 1 người mẫu (1人 / model_count=1) qua Toolbar
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-016: Guest lọc ảnh có 1 người mẫu (1人) qua Toolbar @regression @guest', async ({
+  test('TC-SEARCH-GUEST-016: Filter ảnh có 1 người mẫu (1人) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -437,11 +431,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-017: [FILTER - MODEL COUNT] Lọc ảnh có từ 3 người mẫu trở lên (3人以上 / model_count=3) qua Toolbar
-   * 100% E2E True User Simulation: Thao tác mở menu Toolbar "人物指定" và chọn 3人以上
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-017: Filter ảnh có từ 3 người mẫu trở lên (3人以上 / model_count=3) qua Toolbar
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-017: Guest lọc ảnh có từ 3 người mẫu trở lên (3人以上) qua Toolbar @regression @guest', async ({
+  test('TC-SEARCH-GUEST-017: Filter ảnh có từ 3 người mẫu trở lên (3人以上) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -463,11 +456,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-018: [FILTER - AGE] Lọc người mẫu theo Độ tuổi (若者 / age=W) qua Toolbar "人物指定"
-   * 100% E2E True User Simulation: Thao tác mở menu Toolbar "人物指定" và chọn 年代 若者
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-018: Filter người mẫu theo Độ tuổi (若者 / age=W) qua Toolbar "人物指定"
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-018: Guest lọc người mẫu theo Độ tuổi (若者) qua Toolbar "人物指定" @regression @guest', async ({
+  test('TC-SEARCH-GUEST-018: Filter người mẫu theo Độ tuổi (若者) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -489,11 +481,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-019: [FILTER - MODEL RELEASE] Lọc ảnh có Giấy phép người mẫu (取得済のみ / mdlrlrsec=on)
-   * 100% E2E True User Simulation: Thao tác mở menu "表示条件" và chọn モデルリリース取得済のみ
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-019: Filter ảnh có Giấy phép người mẫu (取得済のみ / mdlrlrsec=on)
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-019: Guest lọc ảnh có Giấy phép người mẫu (取得済のみ) qua menu Display Conditions @regression @guest', async ({
+  test('TC-SEARCH-GUEST-019: Filter ảnh có Giấy phép người mẫu (取得済のみ) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -515,11 +506,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-020: [FILTER - PROPERTY RELEASE] Lọc ảnh có Giấy phép tài sản (プロパティリリース取得済のみ / prprlrsec=on)
-   * 100% E2E True User Simulation: Thao tác mở menu "表示条件" và chọn プロパティリリース取得済のみ
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-020: Filter ảnh có Giấy phép tài sản (プロパティリリース取得済のみ / prprlrsec=on)
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-020: Guest lọc ảnh có Giấy phép tài sản (取得済のみ) qua menu Display Conditions @regression @guest', async ({
+  test('TC-SEARCH-GUEST-020: Filter ảnh có Giấy phép tài sản (取得済のみ) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -541,10 +531,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-021: [FILTER - EXCLUDE AI] Lọc Loại trừ ảnh AI (AI生成ツール使用素材を除く)
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-021: Filter ảnh do AI tạo
+   * @regression @guest @filter
    */
-  test('TC-SEARCH-GUEST-021: Guest bật bộ lọc Loại trừ ảnh do AI tạo @regression @guest', async ({
+  test('TC-SEARCH-GUEST-021: Filter ảnh do AI tạo @regression @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -563,10 +553,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-022: [FILTER - EXACT MATCH] Lọc Khớp chính xác cụm từ (完全一致)
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-022: Filter bật bộ lọc Tìm kiếm khớp chính xác (完全一致)
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-022: Guest bật bộ lọc Tìm kiếm khớp chính xác (完全一致) @regression @guest', async ({
+  test('TC-SEARCH-GUEST-022: Filter bật bộ lọc Tìm kiếm khớp chính xác (完全一致) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -587,10 +577,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-023: [FILTER - EXCLUDE KEYWORD] Lọc theo Từ khóa loại trừ (除外キーワード)
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-023: Lọc theo Từ khóa loại trừ (除外キーワード)
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-023: Guest lọc kết quả với Từ khóa loại trừ (除外キーワード) @regression @guest', async ({
+  test('TC-SEARCH-GUEST-023: Filter theo Từ khóa loại trừ (除外キーワード) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -614,11 +604,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-024: [FILTER - CREATOR] Lọc theo Tên tác giả qua menu Tìm kiếm chi tiết (詳細検索)
-   * 100% E2E True User Simulation: Thao tác mở menu Detailed Search trên Toolbar và nhập tên tác giả Acworks
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-024: Lọc theo Tên tác giả qua menu Tìm kiếm chi tiết (詳細検索)
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-024: Guest tìm kiếm ảnh theo Tác giả (Acworks) qua menu Detailed Search Toolbar @regression @guest', async ({
+  test('TC-SEARCH-GUEST-024: Filter theo Tên tác giả (Acworks) qua menu (詳細検索) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -642,11 +631,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-025: [FILTER - EXCLUDE CREATOR] Lọc Loại trừ Tác giả qua menu Tìm kiếm chi tiết (詳細検索)
-   * 100% E2E True User Simulation: Thao tác mở menu Detailed Search trên Toolbar và nhập tác giả loại trừ Acworks
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-025: Lọc Loại trừ Tác giả qua menu Tìm kiếm chi tiết (詳細検索)
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-025: Guest loại trừ ảnh của Tác giả (Acworks) qua menu Detailed Search Toolbar @regression @guest', async ({
+  test('TC-SEARCH-GUEST-025: Filter Loại trừ Tác giả (Acworks) qua menu (詳細検索) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -673,15 +661,14 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   // ============================================================================
-  // NHÓM 3: BỘ LỌC KẾT HỢP ĐA ĐIỀU KIỆN TRÊN UI (COMBINED MULTI-FILTERS)
+  // NHÓM 3: BỘ LỌC KẾT HỢP ĐA ĐIỀU KIỆN TRÊN UI
   // ============================================================================
 
   /**
-   * TC-SEARCH-GUEST-026: [QA SHEET FILTER COMBO] Keyword "学生" + 2 người mẫu + Model Release (Sheet Case 3)
-   * 100% E2E True User Simulation: Thao tác click chọn trực tiếp trên Filter Toolbar
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-026: Kết hợp Từ khóa + 2 người mẫu + Model Release qua UI Toolbar
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-026: Guest kết hợp Từ khóa + 2 người mẫu + Model Release qua UI Toolbar @regression @guest', async ({
+  test('TC-SEARCH-GUEST-026: Kết hợp Từ khóa + 2 người mẫu + Model Release qua UI Toolbar @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -707,11 +694,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-027: [MULTI-FILTER] Kết hợp Từ khóa + Chiều ngang + Không có người (無人) + Loại trừ AI
-   * 100% E2E True User Simulation: Thao tác click chọn tuần tự trên Filter Toolbar
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-027: Kết hợp Từ khóa + Chiều ngang + Không có người (無人) + Loại trừ AI
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-027: Guest kết hợp Đa bộ lọc (Chiều ngang + Không có người + Loại trừ AI) qua UI Toolbar @regression @guest', async ({
+  test('TC-SEARCH-GUEST-027: Kết hợp Đa bộ lọc (Chiều ngang + Không có người + Loại trừ AI) qua UI Toolbar @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -744,14 +730,14 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   // ============================================================================
-  // NHÓM 4: TÌM KIẾM CHUYÊN SÂU & ĐẶC BIỆT (SPECIALIZED SEARCHES)
+  // NHÓM 4: TÌM KIẾM CHUYÊN SÂU & ĐẶC BIỆT
   // ============================================================================
 
   /**
-   * TC-SEARCH-GUEST-028: [IMAGE SEARCH UPLOAD] Tải ảnh lên tìm kiếm tương đồng (Sheet Case 1, 6, 8)
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-028: Tải ảnh lên tìm kiếm tương đồng
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-028: Guest upload ảnh để tìm kiếm hình ảnh tương đồng @regression @guest', async ({
+  test('TC-SEARCH-GUEST-028: Tải ảnh lên tìm kiếm hình ảnh tương đồng @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -765,18 +751,16 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
       if (count > 0) {
         expect(count, 'Phải có hình ảnh tương đồng được hiển thị').toBeGreaterThan(0);
       } else {
-        // Trường hợp môi trường Staging có kho ảnh giới hạn, xác nhận thông báo rỗng chuẩn của Photo-AC
         await expect(searchResultPage.noResultMessage.first()).toBeVisible();
       }
     });
   });
 
   /**
-   * TC-SEARCH-GUEST-029: [PHOTO ID SEARCH] Tìm kiếm theo Mã素材ID chính xác (Sheet Case 7: qid=1597634)
-   * 100% E2E True User Simulation: Thao tác mở menu Detailed Search trên Toolbar và nhập mã ID
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-029: Filter theo Mã素材ID chính xác
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-029: Khách vãng lai tìm kiếm chính xác ảnh theo Mã素材ID qua menu Detailed Search @regression @guest', async ({
+  test('TC-SEARCH-GUEST-029: Filter theo Mã素材ID @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -799,10 +783,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-030: [RECOMMENDED SEARCH] Tìm kiếm đề xuất và phân trang (Sheet Case 24: rcm=1)
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-030: Tìm kiếm đề xuất và phân trang (Sheet Case 24: rcm=1)
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-030: Truy cập Recommended Search và giữ tham số rcm=1 khi chuyển trang @regression @guest', async ({
+  test('TC-SEARCH-GUEST-030: Truy cập Recommended Search và giữ tham số rcm=1 khi chuyển trang @guest', async ({
     page,
     searchResultPage,
   }) => {
@@ -825,10 +809,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-031: [PSD FORMAT SEARCH] Tìm kiếm ảnh định dạng PSD và phân trang (Sheet Case 25: sizesec=psd)
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-031: Tìm kiếm ảnh định dạng PSD và phân trang (Sheet Case 25: sizesec=psd)
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-031: Truy cập PSD Format Search và giữ tham số sizesec=psd khi chuyển trang @regression @guest', async ({
+  test('TC-SEARCH-GUEST-031: Truy cập PSD Format Search và giữ tham số sizesec=psd khi chuyển trang @guest', async ({
     page,
     searchResultPage,
   }) => {
@@ -851,12 +835,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-032: [AI FACE SEARCH] Tìm kiếm bằng AI Face từ trang Detail (Sheet Case 17, 27)
-   * Đặc tả: Truy cập trang chi tiết ảnh có AI model, click vào thumbnail nhỏ tại mục AI Face / AIで同じモデルの写真を探す,
-   * verify chuyển hướng đến trang kết quả tìm kiếm với tham số vector_face, hiển thị đúng dữ liệu và giữ nguyên khi phân trang.
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-032: Tìm kiếm bằng AI Face từ trang Detail (Sheet Case 17, 27)
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-032: Guest click AI Face thumbnail từ trang Detail tìm kiếm ảnh cùng khuôn mặt và giữ nguyên khi phân trang @regression @guest', async ({
+  test('TC-SEARCH-GUEST-032: Guest click AI Face thumbnail từ trang Detail tìm kiếm ảnh cùng khuôn mặt và giữ nguyên khi phân trang @guest', async ({
     page,
     searchResultPage,
   }) => {
@@ -886,14 +868,14 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   // ============================================================================
-  // NHÓM 5: SẮP XẾP & PHÂN TRANG (SORT & PAGINATION)
+  // NHÓM 5: SẮP XẾP & PHÂN TRANG
   // ============================================================================
 
   /**
-   * TC-SEARCH-GUEST-033: [SORT NEWEST] Sắp xếp kết quả theo "新着順" (Mới nhất)
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-033: Sắp xếp kết quả theo "新着順" (Mới nhất)
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-033: Guest sắp xếp kết quả theo "新着順" (Mới nhất) thành công @regression @guest', async ({
+  test('TC-SEARCH-GUEST-033: Sắp xếp kết quả theo "新着順" (Mới nhất) thành công @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -911,10 +893,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-034: [SORT RESTRICTION] Sắp xếp "人気順" (Phổ biến) bị chặn đối với Guest
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-034: Chặn sắp xếp "人気順" và hiển thị popover nâng cấp Premium
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-034: Guest bị chặn sắp xếp "人気順" và hiển thị popover nâng cấp Premium @regression @guest', async ({
+  test('TC-SEARCH-GUEST-034: Chặn sắp xếp "人気順" và hiển thị popover nâng cấp Premium @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -936,10 +918,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-035: [PAGINATION] Phân trang - Chuyển trang tiếp theo (Next) và trang trước (Prev)
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-035: Phân trang - Chuyển trang tiếp theo (Next) và trang trước (Prev)
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-035: Guest chuyển trang phân trang (Next / Prev) thành công @regression @guest', async ({
+  test('TC-SEARCH-GUEST-035: Chuyển trang phân trang (Next / Prev) thành công @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -969,10 +951,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-036: [PAGINATION - KEEP SORT] Giữ nguyên thứ tự Sắp xếp đã chọn khi chuyển trang (Sheet Case 15)
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-036: Giữ nguyên thứ tự Sắp xếp đã chọn khi chuyển trang (Sheet Case 15)
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-036: Giữ nguyên tùy chọn Sắp xếp "新着順" khi chuyển sang Trang 2 @regression @guest', async ({
+  test('TC-SEARCH-GUEST-036: Giữ nguyên tùy chọn Sắp xếp "新着順" khi chuyển sang Trang 2 @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -993,10 +975,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-037: [PAGINATION - DISPLAY COUNT] Kiểm tra hiển thị mặc định 70 ảnh/trang (Sheet Case 12, 20, 23)
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-037: Kiểm tra hiển thị mặc định 70 ảnh/trang (Sheet Case 12, 20, 23)
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-037: Verify số lượng ảnh hiển thị mặc định đạt 70 ảnh trên mỗi trang và radio 70 được check default @regression @guest', async ({
+  test('TC-SEARCH-GUEST-037: Số lượng ảnh hiển thị mặc định đạt 70 ảnh trên mỗi trang và radio 70 được check default @guest', async ({
     homePage,
     searchResultPage,
   }) => {
