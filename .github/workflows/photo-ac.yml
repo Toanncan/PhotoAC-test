@@ -1,0 +1,171 @@
+name: Photo-AC Tests
+
+on:
+  push:
+    branches: [dev]
+    paths:
+      - 'photo-ac/**'
+      - 'package.json'
+      - '.github/workflows/photo-ac.yml'
+  pull_request:
+    branches: [dev, master]
+    paths:
+      - 'photo-ac/**'
+      - 'package.json'
+      - '.github/workflows/photo-ac.yml'
+
+  # Cho phép trigger thủ công
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write # Cho phép dọn dẹp workflow runs cũ
+
+jobs:
+  test:
+    name: Run Photo-AC Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    env:
+      ENV_NAME: ${{ secrets.ENV_NAME }}
+      BASE_URL: ${{ secrets.PHOTO_BASE_URL || secrets.BASE_URL }}
+      PREMIUM_USER_EMAIL: ${{ secrets.PREMIUM_USER_EMAIL || secrets.TEST_USER_EMAIL }}
+      PREMIUM_USER_PASSWORD: ${{ secrets.PREMIUM_USER_PASSWORD || secrets.TEST_USER_PASSWORD }}
+      FREE_USER_EMAIL: ${{ secrets.FREE_USER_EMAIL }}
+      FREE_USER_PASSWORD: ${{ secrets.FREE_USER_PASSWORD }}
+      CREATOR_EMAIL: ${{ secrets.CREATOR_EMAIL }}
+      CREATOR_PASSWORD: ${{ secrets.CREATOR_PASSWORD }}
+      ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+      HTTP_USER: ${{ secrets.HTTP_USER }}
+      HTTP_PASS: ${{ secrets.HTTP_PASS }}
+      # Gmail API credentials (base64 encoded)
+      GMAIL_CREDENTIALS: ${{ secrets.GMAIL_CREDENTIALS }}
+      GMAIL_TOKEN: ${{ secrets.GMAIL_TOKEN }}
+      ENV: staging
+      CI: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers (Chromium only)
+        run: npx playwright install --with-deps chromium
+
+      # Setup Gmail API credentials (decode from base64 secrets)
+      - name: Setup Gmail API credentials
+        if: env.GMAIL_CREDENTIALS != ''
+        run: |
+          echo "$GMAIL_CREDENTIALS" | base64 -d > credentials.json
+          echo "$GMAIL_TOKEN" | base64 -d > gmail-token.json
+          cp credentials.json photo-ac/ 2>/dev/null || true
+          cp gmail-token.json photo-ac/ 2>/dev/null || true
+          echo "Gmail API credentials configured"
+
+      # Clean old reports trước khi chạy
+      - name: Clean old results
+        run: npm run clean
+
+      # Chạy Playwright tests trên Chromium cho Photo-AC
+      - name: Run Playwright tests (Chromium only)
+        run: npm run test:photo:chromium
+
+      # Đồng bộ kết quả test và report từ photo-ac ra thư mục gốc
+      - name: Consolidate test reports and results
+        if: always()
+        run: |
+          mkdir -p allure-results playwright-report test-results
+          if [ -d "photo-ac/allure-results" ]; then
+            cp -rn photo-ac/allure-results/* allure-results/ 2>/dev/null || true
+          fi
+          if [ -d "photo-ac/playwright-report" ]; then
+            cp -rn photo-ac/playwright-report/* playwright-report/ 2>/dev/null || true
+          fi
+          if [ -d "photo-ac/test-results" ]; then
+            cp -rn photo-ac/test-results/* test-results/ 2>/dev/null || true
+          fi
+
+      # ── Allure Report ────────────────────────────────────────────────────────
+
+      - name: Get Allure history
+        uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages-dir
+
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        id: allure-report
+        with:
+          allure_results: allure-results
+          gh_pages: gh-pages-dir
+          allure_report: allure-report
+          allure_history: allure-history
+          keep_reports: 20
+
+      - name: Deploy Allure Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-report
+
+      # ── Upload Artifacts ──────────────────────────────────────────────────────
+
+      - name: Upload Playwright HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-photo-ac-${{ github.run_number }}
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-photo-ac-${{ github.run_number }}
+          path: allure-results/
+          retention-days: 30
+
+      - name: Upload Allure Report Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-photo-ac-${{ github.run_number }}
+          path: allure-report/
+          retention-days: 30
+
+      - name: Upload Test Screenshots (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-screenshots-photo-ac-${{ github.run_number }}
+          path: test-results/
+          retention-days: 7
+
+      # ── Tự động dọn dẹp các lần chạy cũ (giữ lại 5 runs gần nhất của Photo-AC) ──
+      - name: Cleanup old workflow runs (keep latest 5)
+        uses: Mattraks/delete-workflow-runs@v2
+        if: always()
+        continue-on-error: true
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          retain_days: 0
+          keep_minimum_runs: 5
+          workflow_id: 'photo-ac.yml'

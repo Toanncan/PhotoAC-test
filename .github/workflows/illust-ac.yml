@@ -1,38 +1,45 @@
-name: PhotoAC-Test
+name: Illust-AC Tests
 
 on:
   push:
     branches: [dev]
+    paths:
+      - 'illust-ac/**'
+      - 'package.json'
+      - '.github/workflows/illust-ac.yml'
   pull_request:
     branches: [dev, master]
-
-  # Chạy tự động lúc 05:00 AM sáng thứ 7 giờ Việt Nam (22:00 UTC tối thứ 6)
-  #schedule:
-   # - cron: '0 22 * * 5'
+    paths:
+      - 'illust-ac/**'
+      - 'package.json'
+      - '.github/workflows/illust-ac.yml'
 
   # Cho phép trigger thủ công
   workflow_dispatch:
 
 permissions:
   contents: write
+  actions: write # Cho phép dọn dẹp workflow runs cũ
 
 jobs:
   test:
-    name: Run Playwright Tests
+    name: Run Illust-AC Tests
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
     env:
       ENV_NAME: ${{ secrets.ENV_NAME }}
-      BASE_URL: ${{ secrets.BASE_URL }}
-      TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
-      TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+      BASE_URL: ${{ secrets.ILLUST_BASE_URL || secrets.BASE_URL }}
+      PREMIUM_USER_EMAIL: ${{ secrets.PREMIUM_USER_EMAIL || secrets.TEST_USER_EMAIL }}
+      PREMIUM_USER_PASSWORD: ${{ secrets.PREMIUM_USER_PASSWORD || secrets.TEST_USER_PASSWORD }}
+      FREE_USER_EMAIL: ${{ secrets.FREE_USER_EMAIL }}
+      FREE_USER_PASSWORD: ${{ secrets.FREE_USER_PASSWORD }}
+      CREATOR_EMAIL: ${{ secrets.CREATOR_EMAIL }}
+      CREATOR_PASSWORD: ${{ secrets.CREATOR_PASSWORD }}
       ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
       HTTP_USER: ${{ secrets.HTTP_USER }}
       HTTP_PASS: ${{ secrets.HTTP_PASS }}
-      CREATOR_EMAIL: ${{ secrets.CREATOR_EMAIL }}
-      CREATOR_PASSWORD: ${{ secrets.CREATOR_PASSWORD }}
       # Gmail API credentials (base64 encoded)
       GMAIL_CREDENTIALS: ${{ secrets.GMAIL_CREDENTIALS }}
       GMAIL_TOKEN: ${{ secrets.GMAIL_TOKEN }}
@@ -61,15 +68,32 @@ jobs:
         run: |
           echo "$GMAIL_CREDENTIALS" | base64 -d > credentials.json
           echo "$GMAIL_TOKEN" | base64 -d > gmail-token.json
+          cp credentials.json illust-ac/ 2>/dev/null || true
+          cp gmail-token.json illust-ac/ 2>/dev/null || true
           echo "Gmail API credentials configured"
 
       # Clean old reports trước khi chạy
       - name: Clean old results
         run: npm run clean
 
-      # Chạy Playwright tests trên Chromium
+      # Chạy Playwright tests trên Chromium cho Illust-AC
       - name: Run Playwright tests (Chromium only)
-        run: npm run test:chromium
+        run: npm run test:illust:chromium
+
+      # Đồng bộ kết quả test và report từ illust-ac ra thư mục gốc
+      - name: Consolidate test reports and results
+        if: always()
+        run: |
+          mkdir -p allure-results playwright-report test-results
+          if [ -d "illust-ac/allure-results" ]; then
+            cp -rn illust-ac/allure-results/* allure-results/ 2>/dev/null || true
+          fi
+          if [ -d "illust-ac/playwright-report" ]; then
+            cp -rn illust-ac/playwright-report/* playwright-report/ 2>/dev/null || true
+          fi
+          if [ -d "illust-ac/test-results" ]; then
+            cp -rn illust-ac/test-results/* test-results/ 2>/dev/null || true
+          fi
 
       # ── Allure Report ────────────────────────────────────────────────────────
 
@@ -106,7 +130,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ github.run_number }}
+          name: playwright-report-illust-ac-${{ github.run_number }}
           path: playwright-report/
           retention-days: 30
 
@@ -114,7 +138,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-results-${{ github.run_number }}
+          name: allure-results-illust-ac-${{ github.run_number }}
           path: allure-results/
           retention-days: 30
 
@@ -122,7 +146,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report-${{ github.run_number }}
+          name: allure-report-illust-ac-${{ github.run_number }}
           path: allure-report/
           retention-days: 30
 
@@ -130,6 +154,18 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: test-screenshots-${{ github.run_number }}
+          name: test-screenshots-illust-ac-${{ github.run_number }}
           path: test-results/
           retention-days: 7
+
+      # ── Tự động dọn dẹp các lần chạy cũ (giữ lại 5 runs gần nhất của Illust-AC) ──
+      - name: Cleanup old workflow runs (keep latest 5)
+        uses: Mattraks/delete-workflow-runs@v2
+        if: always()
+        continue-on-error: true
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          retain_days: 0
+          keep_minimum_runs: 5
+          workflow_id: 'illust-ac.yml'
