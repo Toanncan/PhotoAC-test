@@ -1011,15 +1011,15 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   // ============================================================================
 
   /**
-   * TC-SEARCH-GUEST-038: [SEARCH LIMIT] Chạm hạn mức tìm kiếm (4 lần/ngày)
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-038: Chạm hạn mức tìm kiếm 
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-038: Guest chạm hạn mức tìm kiếm hiển thị Modal giới hạn và CTA Đăng ký @regression @guest', async ({
+  test('TC-SEARCH-GUEST-038: Hiển thị Modal giới hạn khi chạm hạn mức tìm kiếm @guest', async ({
     page,
     homePage,
     searchResultPage,
   }) => {
-    // Mô phỏng endpoint kiểm tra hạn mức tìm kiếm trả về hết lượt sau chuỗi tìm kiếm (桜, 学生, 景色, 山)
+
     await page.route('**/ajax/public/is_enable_search', async (route) => {
       await route.fulfill({
         status: 200,
@@ -1034,12 +1034,12 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
 
     await homePage.search('山');
 
-    await test.step('Verify Modal giới hạn tìm kiếm (#searchLimitModal) hiển thị', async () => {
+    await test.step('Verify Modal giới hạn tìm kiếm hiển thị', async () => {
       await searchResultPage.waitForSearchLimitModal();
       await expect(searchResultPage.searchLimitTitle).toContainText('無料のキーワード検索は「1日4回」までです。');
     });
 
-    await test.step('Verify Guest nhìn thấy CTA Đăng ký tài khoản nhận 15pt và link Premium', async () => {
+    await test.step('Verify hiển thị mục đăng ký tài khoản nhận 15pt và link Premium', async () => {
       await expect(searchResultPage.searchLimitRegisterCta).toBeVisible();
       await expect(searchResultPage.searchLimitRegisterCta).toContainText('無料会員登録してACポイント');
       await expect(searchResultPage.searchLimitPremiumLink).toBeVisible();
@@ -1047,12 +1047,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-039: [AI SEARCH INITIAL STATE] Khách vãng lai khi chưa chạm hạn mức tìm kiếm thì AI Toggle tự động tắt
-   * @tags @regression @guest
-   * Đặc tả: Khi Guest chưa chạm hạn mức tìm kiếm thông thường (search_zancnt != 0), AI Toggle tự động tắt,
-   * nút .search-by-ai ở trạng thái disabled và không có màu vàng kích hoạt.
+   * TC-SEARCH-GUEST-039: Khách vãng lai khi chưa chạm hạn mức tìm kiếm thì AI Toggle tự động tắt
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-039: Khách vãng lai khi chưa chạm hạn mức tìm kiếm thì AI Toggle tự động tắt @regression @guest', async ({
+  test('TC-SEARCH-GUEST-039: AI Toggle tự động tắt khi chưa chạm hạn mức tìm kiếm @guest', async ({
     homePage,
   }) => {
     await test.step('Verify nút AI Search (.search-by-ai) hiển thị trên Top Page', async () => {

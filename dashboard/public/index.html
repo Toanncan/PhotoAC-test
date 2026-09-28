@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi" class="dark">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,9 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -30,46 +33,84 @@
     }
   </script>
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
-    .custom-scroll::-webkit-scrollbar-track { background: rgba(30, 41, 59, 0.4); border-radius: 4px; }
-    .custom-scroll::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.5); border-radius: 4px; }
-    .custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.8); }
-    @keyframes pulse-glow {
-      0%, 100% { box-shadow: 0 0 15px rgba(99, 102, 241, 0.3); }
-      50% { box-shadow: 0 0 25px rgba(99, 102, 241, 0.7); }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
-    .glow-running { animation: pulse-glow 2s infinite; }
+
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(30, 41, 59, 0.4);
+      border-radius: 4px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(100, 116, 139, 0.5);
+      border-radius: 4px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(148, 163, 184, 0.8);
+    }
+
+    @keyframes pulse-glow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+      }
+
+      50% {
+        box-shadow: 0 0 25px rgba(99, 102, 241, 0.7);
+      }
+    }
+
+    .glow-running {
+      animation: pulse-glow 2s infinite;
+    }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+<body
+  class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
 
   <!-- TOP NAVIGATION / HEADER -->
   <header class="border-b border-slate-800/80 bg-slate-900/70 backdrop-blur-xl sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 ring-1 ring-white/20">
+        <div
+          class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 ring-1 ring-white/20">
           <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
         <div>
-          <h1 class="text-lg font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">TEST PORTAL</h1>
+          <h1
+            class="text-lg font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+            TEST PORTAL</h1>
         </div>
       </div>
 
       <div class="flex items-center space-x-3">
         <!-- OS Badge -->
-        <span id="osBadge" class="hidden sm:inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
+        <span id="osBadge"
+          class="hidden sm:inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
           <span id="osText">Đang nhận diện OS...</span>
         </span>
         <!-- Java Badge -->
-        <span id="javaBadge" class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-800 text-slate-400 border border-slate-700">
+        <span id="javaBadge"
+          class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-800 text-slate-400 border border-slate-700">
           <span class="w-1.5 h-1.5 rounded-full bg-slate-500 mr-1.5"></span> Kiểm tra Java...
         </span>
         <!-- Quick Allure Button -->
-        <a id="navAllureBtn" href="/allure-report/index.html" target="_blank" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 hover:bg-indigo-600 hover:text-white transition-all shadow-sm">
+        <a id="navAllureBtn" href="/allure-report/index.html" target="_blank"
+          class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 hover:bg-indigo-600 hover:text-white transition-all shadow-sm">
           Allure Report
         </a>
       </div>
@@ -77,15 +118,20 @@
   </header>
 
   <!-- JAVA WARNING BANNER (HIDDEN BY DEFAULT) -->
-  <div id="javaWarningBanner" class="hidden bg-amber-950/70 border-b border-amber-600/40 px-4 py-3 text-amber-200 text-xs sm:text-sm">
+  <div id="javaWarningBanner"
+    class="hidden bg-amber-950/70 border-b border-amber-600/40 px-4 py-3 text-amber-200 text-xs sm:text-sm">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <div class="flex items-center space-x-2">
         <svg class="w-5 h-5 text-amber-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
         </svg>
-        <span><strong>Cảnh báo:</strong> Máy tính chưa phát hiện Java Runtime. Báo cáo Allure cần Java để biên dịch. Hãy tải OpenJDK 17 để xem báo cáo đầy đủ.</span>
+        <span><strong>Cảnh báo:</strong> Máy tính chưa phát hiện Java Runtime. Báo cáo Allure cần Java để biên dịch. Hãy
+          tải OpenJDK 17 để xem báo cáo đầy đủ.</span>
       </div>
-      <a href="https://adoptium.net/temurin/releases/?version=17" target="_blank" class="ml-4 underline font-semibold text-amber-300 hover:text-white whitespace-nowrap">Tải Java 1-Click &rarr;</a>
+      <a href="https://adoptium.net/temurin/releases/?version=17" target="_blank"
+        class="ml-4 underline font-semibold text-amber-300 hover:text-white whitespace-nowrap">Tải Java 1-Click
+        &rarr;</a>
     </div>
   </div>
 
@@ -98,38 +144,48 @@
         <div class="flex items-center justify-between pb-3 border-b border-slate-800">
           <h2 class="font-bold text-sm text-slate-200 uppercase tracking-wider flex items-center">
             <svg class="w-4 h-4 mr-2 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
             </svg>
             Cấu Hình Test Run
           </h2>
           <!-- Nút mở Popup Môi trường & Tài khoản -->
-          <button type="button" id="btnOpenEnvModal" class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800/90 hover:bg-slate-700 text-slate-300 border border-slate-700/80 hover:border-indigo-500/50 hover:text-white transition-all shadow-sm">
+          <button type="button" id="btnOpenEnvModal"
+            class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800/90 hover:bg-slate-700 text-slate-300 border border-slate-700/80 hover:border-indigo-500/50 hover:text-white transition-all shadow-sm">
             <svg class="w-3.5 h-3.5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             <span>Môi Trường & Acc</span>
-            <span id="envConfigIndicator" class="w-2 h-2 rounded-full bg-slate-500" title="Đang dùng mặc định .env"></span>
+            <span id="envConfigIndicator" class="w-2 h-2 rounded-full bg-slate-500"
+              title="Đang dùng mặc định .env"></span>
           </button>
         </div>
 
         <!-- ACTIVE CUSTOM ENV NOTICE (HIDDEN BY DEFAULT) -->
-        <div id="activeCustomNotice" class="hidden p-2 rounded-xl bg-indigo-950/40 border border-indigo-500/30 text-xs text-indigo-300 flex items-center justify-between">
+        <div id="activeCustomNotice"
+          class="hidden p-2 rounded-xl bg-indigo-950/40 border border-indigo-500/30 text-xs text-indigo-300 flex items-center justify-between">
           <div class="flex items-center space-x-1.5 truncate">
             <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse flex-shrink-0"></span>
             <span id="activeCustomText" class="truncate font-medium">Tùy biến đang bật</span>
           </div>
-          <button type="button" id="btnQuickResetEnv" class="text-[11px] text-indigo-400 hover:text-indigo-200 underline ml-2 flex-shrink-0">Dùng .env</button>
+          <button type="button" id="btnQuickResetEnv"
+            class="text-[11px] text-indigo-400 hover:text-indigo-200 underline ml-2 flex-shrink-0">Dùng .env</button>
         </div>
 
         <!-- PROJECT SELECTOR -->
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1.5">Dự Án</label>
-          <div class="grid grid-cols-2 gap-2 p-1 bg-slate-950 border border-slate-800 rounded-xl" id="projectSelectorContainer">
-            <button type="button" id="btnProjectPhoto" data-project="photo-ac" class="project-btn py-1.5 px-3 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow-sm">
+          <div class="grid grid-cols-2 gap-2 p-1 bg-slate-950 border border-slate-800 rounded-xl"
+            id="projectSelectorContainer">
+            <button type="button" id="btnProjectPhoto" data-project="photo-ac"
+              class="project-btn py-1.5 px-3 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow-sm">
               Photo-AC
             </button>
-            <button type="button" id="btnProjectIllust" data-project="illust-ac" class="project-btn py-1.5 px-3 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-slate-200">
+            <button type="button" id="btnProjectIllust" data-project="illust-ac"
+              class="project-btn py-1.5 px-3 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-slate-200">
               AC-Illust
             </button>
           </div>
@@ -138,7 +194,8 @@
         <!-- 1. MODULE / FOLDER SELECTOR -->
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1.5">1. Thư Mục / Module Kiểm Thử</label>
-          <select id="moduleSelect" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
+          <select id="moduleSelect"
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
             <option value="all">Tất cả Thư mục (All Modules)</option>
             <option value="downloader">Downloader</option>
             <option value="creator">Creator</option>
@@ -149,27 +206,35 @@
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label class="block text-xs font-semibold text-slate-300">2. Chọn File Kiểm Thử</label>
-            <span id="fileSelectionBadge" class="text-xs font-medium text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-lg border border-indigo-500/20">Đã chọn: 0/0</span>
+            <span id="fileSelectionBadge"
+              class="text-xs font-medium text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-lg border border-indigo-500/20">Đã
+              chọn: 0/0</span>
           </div>
 
           <!-- Search & Action Toolbar -->
           <div class="space-y-1.5 mb-2">
             <div class="relative">
-              <input type="text" id="fileSearchInput" placeholder="Tìm nhanh file spec..." class="w-full bg-slate-950/90 border border-slate-800 rounded-lg pl-2.5 pr-7 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all">
-              <button type="button" id="btnClearFileSearch" class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 text-xs transition-colors" title="Xóa từ khóa tìm kiếm">✕</button>
+              <input type="text" id="fileSearchInput" placeholder="Tìm nhanh file spec..."
+                class="w-full bg-slate-950/90 border border-slate-800 rounded-lg pl-2.5 pr-7 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all">
+              <button type="button" id="btnClearFileSearch"
+                class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 text-xs transition-colors"
+                title="Xóa từ khóa tìm kiếm">✕</button>
             </div>
             <div class="flex items-center justify-between text-xs text-slate-400 px-1">
               <div class="space-x-2">
-                <button type="button" id="btnSelectAllFiles" class="hover:text-indigo-300 transition-colors font-medium">Chọn tất cả</button>
+                <button type="button" id="btnSelectAllFiles"
+                  class="hover:text-indigo-300 transition-colors font-medium">Chọn tất cả</button>
                 <span>•</span>
-                <button type="button" id="btnDeselectAllFiles" class="hover:text-rose-300 transition-colors font-medium">Bỏ chọn</button>
+                <button type="button" id="btnDeselectAllFiles"
+                  class="hover:text-rose-300 transition-colors font-medium">Bỏ chọn</button>
               </div>
               <span id="fileMatchCount" class="text-[11px] text-slate-500 hidden"></span>
             </div>
           </div>
 
           <!-- File Checkbox List -->
-          <div id="fileChecklistContainer" class="max-h-48 overflow-y-auto custom-scroll space-y-1 p-1.5 bg-slate-950/70 rounded-xl border border-slate-800/80">
+          <div id="fileChecklistContainer"
+            class="max-h-48 overflow-y-auto custom-scroll space-y-1 p-1.5 bg-slate-950/70 rounded-xl border border-slate-800/80">
             <div class="text-xs text-slate-500 text-center py-4">Đang tải danh sách file...</div>
           </div>
         </div>
@@ -178,21 +243,27 @@
         <div class="space-y-1.5">
           <div class="flex items-center justify-between">
             <label class="block text-xs font-semibold text-slate-300">3. Vai Trò Người Dùng</label>
-            <button type="button" id="btnAutoRoles" class="text-xs text-indigo-400 bg-indigo-500/10 hover:bg-indigo-500/20 px-2.5 py-0.5 rounded-lg border border-indigo-500/30 transition-colors font-medium">Tự động theo file</button>
+            <button type="button" id="btnAutoRoles"
+              class="text-xs text-indigo-400 bg-indigo-500/10 hover:bg-indigo-500/20 px-2.5 py-0.5 rounded-lg border border-indigo-500/30 transition-colors font-medium">Tự
+              động theo file</button>
           </div>
 
           <!-- 2x2 Grid Roles: Clean, Balanced, No Clutter -->
           <div class="grid grid-cols-2 gap-2">
-            <button type="button" data-role="guest" class="role-btn py-2.5 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-semibold hover:border-slate-700 transition-all flex items-center justify-center text-center">
+            <button type="button" data-role="guest"
+              class="role-btn py-2.5 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-semibold hover:border-slate-700 transition-all flex items-center justify-center text-center">
               <span>Guest</span>
             </button>
-            <button type="button" data-role="free-user" class="role-btn py-2.5 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-semibold hover:border-slate-700 transition-all flex items-center justify-center text-center">
+            <button type="button" data-role="free-user"
+              class="role-btn py-2.5 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-semibold hover:border-slate-700 transition-all flex items-center justify-center text-center">
               <span>Free User</span>
             </button>
-            <button type="button" data-role="downloader" class="role-btn py-2.5 px-3 rounded-xl border text-xs font-semibold transition-all flex items-center justify-center text-center bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm">
+            <button type="button" data-role="downloader"
+              class="role-btn py-2.5 px-3 rounded-xl border text-xs font-semibold transition-all flex items-center justify-center text-center bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm">
               <span>Premium</span>
             </button>
-            <button type="button" data-role="creator" class="role-btn py-2.5 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-semibold hover:border-slate-700 transition-all flex items-center justify-center text-center">
+            <button type="button" data-role="creator"
+              class="role-btn py-2.5 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-semibold hover:border-slate-700 transition-all flex items-center justify-center text-center">
               <span>Creator</span>
             </button>
           </div>
@@ -206,13 +277,18 @@
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label class="block text-xs font-semibold text-slate-300">4. Trình Duyệt Thực Thi</label>
-            <span id="browserHintBadge" class="text-xs text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-lg border border-indigo-500/20 font-medium">Chromium</span>
+            <span id="browserHintBadge"
+              class="text-xs text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-lg border border-indigo-500/20 font-medium">Chromium</span>
           </div>
           <div class="grid grid-cols-2 gap-2">
-            <button type="button" id="btnBrowserChromium" class="browser-btn py-2 px-3 rounded-xl border text-xs font-medium transition-all flex items-center justify-center bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm" data-browser="chromium">
+            <button type="button" id="btnBrowserChromium"
+              class="browser-btn py-2 px-3 rounded-xl border text-xs font-medium transition-all flex items-center justify-center bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm"
+              data-browser="chromium">
               <span>Chromium</span>
             </button>
-            <button type="button" id="btnBrowserFirefox" class="browser-btn py-2 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-medium hover:border-slate-700 transition-all flex items-center justify-center" data-browser="firefox">
+            <button type="button" id="btnBrowserFirefox"
+              class="browser-btn py-2 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-medium hover:border-slate-700 transition-all flex items-center justify-center"
+              data-browser="firefox">
               <span>Firefox</span>
             </button>
           </div>
@@ -221,10 +297,12 @@
         <!-- 5. TAG FILTER -->
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1.5">5. Lọc Theo Tag (Grep)</label>
-          <select id="tagSelect" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
+          <select id="tagSelect"
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
             <option value="">Tất cả (Không lọc tag)</option>
             <option value="@smoke">@smoke (Smoke Tests)</option>
             <option value="@regression">@regression (Regression Tests)</option>
+            <option value="@filter">@filter (Filter Search)</option>
           </select>
         </div>
 
@@ -232,8 +310,12 @@
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1.5">6. Số Luồng Chạy (Workers)</label>
           <div class="grid grid-cols-2 gap-2">
-            <button type="button" data-workers="2" class="worker-btn py-1.5 px-2 rounded-lg border text-xs font-medium transition-all bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm">2 (Chuẩn)</button>
-            <button type="button" data-workers="4" class="worker-btn py-1.5 px-2 rounded-lg border text-xs font-medium transition-all border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700">4 (Tốc độ)</button>
+            <button type="button" data-workers="2"
+              class="worker-btn py-1.5 px-2 rounded-lg border text-xs font-medium transition-all bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm">2
+              (Chuẩn)</button>
+            <button type="button" data-workers="4"
+              class="worker-btn py-1.5 px-2 rounded-lg border text-xs font-medium transition-all border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700">4
+              (Tốc độ)</button>
           </div>
         </div>
 
@@ -241,16 +323,21 @@
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1.5">7. Chế Độ Hiển Thị Trình Duyệt</label>
           <div class="grid grid-cols-2 gap-2">
-            <button type="button" id="btnModeHeaded" class="mode-btn py-2 px-3 rounded-xl border text-xs font-medium transition-all flex items-center justify-center space-x-1.5 bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm">
+            <button type="button" id="btnModeHeaded"
+              class="mode-btn py-2 px-3 rounded-xl border text-xs font-medium transition-all flex items-center justify-center space-x-1.5 bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm">
               <svg class="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
               </svg>
               <span>Mở Trình Duyệt</span>
             </button>
-            <button type="button" id="btnModeHeadless" class="mode-btn py-2 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-medium hover:border-slate-700 transition-all flex items-center justify-center space-x-1.5">
+            <button type="button" id="btnModeHeadless"
+              class="mode-btn py-2 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-medium hover:border-slate-700 transition-all flex items-center justify-center space-x-1.5">
               <svg class="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
               </svg>
               <span>Chạy Ngầm</span>
             </button>
@@ -259,17 +346,22 @@
 
         <!-- ACTION BUTTONS -->
         <div class="pt-2 space-y-2.5">
-          <button id="btnRunTest" class="w-full py-3.5 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 hover:from-indigo-400 hover:to-violet-500 text-white shadow-lg shadow-indigo-600/30 hover:shadow-indigo-500/50 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center space-x-2">
+          <button id="btnRunTest"
+            class="w-full py-3.5 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 hover:from-indigo-400 hover:to-violet-500 text-white shadow-lg shadow-indigo-600/30 hover:shadow-indigo-500/50 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center space-x-2">
             <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
             </svg>
             <span id="btnRunTestText">BẮT ĐẦU CHẠY TEST</span>
           </button>
 
-          <button id="btnStopTest" class="w-full py-3 px-4 rounded-xl font-bold text-xs bg-rose-950/60 border border-rose-600/50 text-rose-300 hover:bg-rose-600 hover:text-white transition-all hidden flex items-center justify-center space-x-2">
+          <button id="btnStopTest"
+            class="w-full py-3 px-4 rounded-xl font-bold text-xs bg-rose-950/60 border border-rose-600/50 text-rose-300 hover:bg-rose-600 hover:text-white transition-all hidden flex items-center justify-center space-x-2">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
             </svg>
             <span>DỪNG TIẾN TRÌNH TEST</span>
           </button>
@@ -283,13 +375,15 @@
       <!-- INTERACTIVE METRICS CARDS -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <!-- TOTAL -->
-        <div id="cardFilterAll" class="kpi-card cursor-pointer bg-slate-900/80 hover:bg-slate-800/80 border border-slate-800 rounded-2xl p-4 shadow-sm transition-all ring-2 ring-indigo-500/50">
+        <div id="cardFilterAll"
+          class="kpi-card cursor-pointer bg-slate-900/80 hover:bg-slate-800/80 border border-slate-800 rounded-2xl p-4 shadow-sm transition-all ring-2 ring-indigo-500/50">
           <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Tổng Testcases</div>
           <div id="metricTotal" class="text-2xl sm:text-3xl font-extrabold text-white mt-1">0</div>
         </div>
 
         <!-- PASSED -->
-        <div id="cardFilterPassed" class="kpi-card cursor-pointer bg-slate-900/80 hover:bg-slate-800/80 border border-emerald-900/30 rounded-2xl p-4 shadow-sm transition-all">
+        <div id="cardFilterPassed"
+          class="kpi-card cursor-pointer bg-slate-900/80 hover:bg-slate-800/80 border border-emerald-900/30 rounded-2xl p-4 shadow-sm transition-all">
           <div class="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider flex items-center">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5"></span> Passed
           </div>
@@ -297,7 +391,8 @@
         </div>
 
         <!-- FAILED -->
-        <div id="cardFilterFailed" class="kpi-card cursor-pointer bg-slate-900/80 hover:bg-slate-800/80 border border-rose-900/30 rounded-2xl p-4 shadow-sm transition-all">
+        <div id="cardFilterFailed"
+          class="kpi-card cursor-pointer bg-slate-900/80 hover:bg-slate-800/80 border border-rose-900/30 rounded-2xl p-4 shadow-sm transition-all">
           <div class="text-[11px] font-semibold text-rose-400 uppercase tracking-wider flex items-center">
             <span class="w-1.5 h-1.5 rounded-full bg-rose-400 mr-1.5"></span> Failed
           </div>
@@ -305,7 +400,8 @@
         </div>
 
         <!-- SKIPPED -->
-        <div id="cardFilterSkipped" class="kpi-card cursor-pointer bg-slate-900/80 hover:bg-slate-800/80 border border-amber-900/30 rounded-2xl p-4 shadow-sm transition-all">
+        <div id="cardFilterSkipped"
+          class="kpi-card cursor-pointer bg-slate-900/80 hover:bg-slate-800/80 border border-amber-900/30 rounded-2xl p-4 shadow-sm transition-all">
           <div class="text-[11px] font-semibold text-amber-400 uppercase tracking-wider flex items-center">
             <span class="w-1.5 h-1.5 rounded-full bg-amber-400 mr-1.5"></span> Skipped
           </div>
@@ -325,12 +421,15 @@
 
         <!-- PROGRESS BAR -->
         <div class="w-full bg-slate-950 rounded-full h-2.5 overflow-hidden border border-slate-800/80">
-          <div id="progressBar" class="bg-gradient-to-r from-indigo-500 to-violet-500 h-2.5 rounded-full transition-all duration-300 w-0"></div>
+          <div id="progressBar"
+            class="bg-gradient-to-r from-indigo-500 to-violet-500 h-2.5 rounded-full transition-all duration-300 w-0">
+          </div>
         </div>
       </div>
 
       <!-- POST-RUN BANNER & RERUN FAILED ACTION (HIDDEN BY DEFAULT) -->
-      <div id="postRunBanner" class="hidden rounded-2xl p-4 border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
+      <div id="postRunBanner"
+        class="hidden rounded-2xl p-4 border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
         <div class="flex items-center space-x-3">
           <div id="postRunIcon" class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-lg"></div>
           <div>
@@ -339,56 +438,77 @@
           </div>
         </div>
         <div class="flex items-center space-x-2 w-full sm:w-auto">
-          <button id="btnRerunFailed" class="hidden flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-md shadow-rose-600/30 transition-all flex items-center justify-center space-x-1.5">
+          <button id="btnRerunFailed"
+            class="hidden flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-md shadow-rose-600/30 transition-all flex items-center justify-center space-x-1.5">
             <span>Chạy lại các test lỗi</span>
           </button>
-          <a id="btnPostRunAllure" href="/allure-report/index.html" target="_blank" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/20 transition-all flex items-center justify-center space-x-1.5">
+          <a id="btnPostRunAllure" href="/allure-report/index.html" target="_blank"
+            class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/20 transition-all flex items-center justify-center space-x-1.5">
             <span>Allure Report</span>
           </a>
-          <a id="btnPostRunHtml" href="/playwright-report/index.html" target="_blank" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all flex items-center justify-center space-x-1.5">
+          <a id="btnPostRunHtml" href="/playwright-report/index.html" target="_blank"
+            class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all flex items-center justify-center space-x-1.5">
             <span>HTML Report</span>
           </a>
         </div>
       </div>
 
       <!-- REAL-TIME TEST CASE LIST (GROUPED BY FILE OR FLAT) -->
-      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl shadow-lg overflow-hidden flex flex-col min-h-[460px]">
-        
+      <div
+        class="bg-slate-900/80 border border-slate-800 rounded-2xl shadow-lg overflow-hidden flex flex-col min-h-[460px]">
+
         <!-- TOOLBAR -->
-        <div class="px-5 py-3.5 border-b border-slate-800 bg-slate-900/90 flex flex-wrap items-center justify-between gap-3">
+        <div
+          class="px-5 py-3.5 border-b border-slate-800 bg-slate-900/90 flex flex-wrap items-center justify-between gap-3">
           <div class="flex items-center space-x-2.5">
             <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Danh Sách Test Cases</h3>
-            <span id="testCountBadge" class="px-2 py-0.5 text-[10px] rounded-full bg-slate-800 border border-slate-700/60 text-slate-300 font-semibold">0</span>
+            <span id="testCountBadge"
+              class="px-2 py-0.5 text-[10px] rounded-full bg-slate-800 border border-slate-700/60 text-slate-300 font-semibold">0</span>
           </div>
 
           <!-- Filter Tabs with Live Counters -->
-          <div class="flex flex-wrap items-center bg-slate-950 p-1 rounded-xl border border-slate-800 space-x-1 text-xs">
-            <button type="button" data-filter="all" class="filter-tab px-2.5 py-1 rounded-lg font-medium text-white bg-indigo-600 shadow-sm transition-all flex items-center space-x-1.5">
+          <div
+            class="flex flex-wrap items-center bg-slate-950 p-1 rounded-xl border border-slate-800 space-x-1 text-xs">
+            <button type="button" data-filter="all"
+              class="filter-tab px-2.5 py-1 rounded-lg font-medium text-white bg-indigo-600 shadow-sm transition-all flex items-center space-x-1.5">
               <span>Tất cả</span>
-              <span id="filterCountAll" class="px-1.5 py-0.2 rounded-full text-[10px] bg-indigo-900/80 text-indigo-200 font-semibold">0</span>
+              <span id="filterCountAll"
+                class="px-1.5 py-0.2 rounded-full text-[10px] bg-indigo-900/80 text-indigo-200 font-semibold">0</span>
             </button>
-            <button type="button" data-filter="running" class="filter-tab px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white transition-all flex items-center space-x-1.5">
+            <button type="button" data-filter="running"
+              class="filter-tab px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white transition-all flex items-center space-x-1.5">
               <span>Đang chạy</span>
-              <span id="filterCountRunning" class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800 text-slate-400 font-semibold">0</span>
+              <span id="filterCountRunning"
+                class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800 text-slate-400 font-semibold">0</span>
             </button>
-            <button type="button" data-filter="failed" class="filter-tab px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-rose-400 transition-all flex items-center space-x-1.5">
+            <button type="button" data-filter="failed"
+              class="filter-tab px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-rose-400 transition-all flex items-center space-x-1.5">
               <span>Lỗi</span>
-              <span id="filterCountFailed" class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800 text-slate-400 font-semibold">0</span>
+              <span id="filterCountFailed"
+                class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800 text-slate-400 font-semibold">0</span>
             </button>
-            <button type="button" data-filter="passed" class="filter-tab px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-emerald-400 transition-all flex items-center space-x-1.5">
+            <button type="button" data-filter="passed"
+              class="filter-tab px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-emerald-400 transition-all flex items-center space-x-1.5">
               <span>Pass</span>
-              <span id="filterCountPassed" class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800 text-slate-400 font-semibold">0</span>
+              <span id="filterCountPassed"
+                class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800 text-slate-400 font-semibold">0</span>
             </button>
-            <button type="button" data-filter="pending" class="filter-tab px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center space-x-1.5">
+            <button type="button" data-filter="pending"
+              class="filter-tab px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center space-x-1.5">
               <span>Chờ chạy</span>
-              <span id="filterCountPending" class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800 text-slate-400 font-semibold">0</span>
+              <span id="filterCountPending"
+                class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800 text-slate-400 font-semibold">0</span>
             </button>
           </div>
 
           <!-- Action Buttons (Expand/Collapse only) -->
           <div class="flex items-center space-x-2 text-xs">
-            <button id="btnToggleExpandAll" title="Thu gọn hoặc mở rộng tất cả các nhóm file" class="px-2.5 py-1 rounded-lg border border-slate-800 bg-slate-950 text-slate-300 hover:text-white hover:border-slate-700 text-xs font-medium transition-all flex items-center space-x-1.5 shadow-sm">
-              <svg class="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+            <button id="btnToggleExpandAll" title="Thu gọn hoặc mở rộng tất cả các nhóm file"
+              class="px-2.5 py-1 rounded-lg border border-slate-800 bg-slate-950 text-slate-300 hover:text-white hover:border-slate-700 text-xs font-medium transition-all flex items-center space-x-1.5 shadow-sm">
+              <svg class="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+              </svg>
               <span>Thu / Mở tất cả</span>
             </button>
           </div>
@@ -398,7 +518,8 @@
         <div id="testList" class="p-4 space-y-3 overflow-y-auto flex-1 custom-scroll max-h-[520px]">
           <div id="emptyState" class="h-full flex flex-col items-center justify-center text-center p-12 text-slate-500">
             <svg class="w-14 h-14 text-slate-700 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
             </svg>
             <p class="text-sm font-medium text-slate-400">Chưa có bài kiểm thử nào được khởi chạy</p>
             <p class="text-xs text-slate-500 mt-1">Chọn các file spec ở cột bên trái và bấm "BẮT ĐẦU CHẠY TEST"</p>
@@ -419,10 +540,12 @@
           </div>
           <div class="flex items-center space-x-3">
             <button id="btnClearLog" class="text-xs text-slate-400 hover:text-slate-200 font-medium">Xóa Log</button>
-            <button id="btnToggleLog" class="text-xs text-indigo-400 hover:text-indigo-300 font-medium">Ẩn/Hiện Console</button>
+            <button id="btnToggleLog" class="text-xs text-indigo-400 hover:text-indigo-300 font-medium">Ẩn/Hiện
+              Console</button>
           </div>
         </div>
-        <div id="logContainer" class="p-3 bg-black/80 font-mono text-xs text-slate-300 h-44 overflow-y-auto custom-scroll space-y-0.5">
+        <div id="logContainer"
+          class="p-3 bg-black/80 font-mono text-xs text-slate-300 h-44 overflow-y-auto custom-scroll space-y-0.5">
           <div class="text-slate-600">Sẵn sàng stream log từ Playwright runner...</div>
         </div>
       </div>
@@ -546,9 +669,8 @@
         const isChecked = state.fileSelection.has(file);
 
         const label = document.createElement('label');
-        label.className = `flex items-center p-2 rounded-lg cursor-pointer transition-all border ${
-          isChecked ? 'bg-indigo-950/40 border-indigo-500/40 text-white' : 'hover:bg-slate-800/60 border-transparent text-slate-300'
-        }`;
+        label.className = `flex items-center p-2 rounded-lg cursor-pointer transition-all border ${isChecked ? 'bg-indigo-950/40 border-indigo-500/40 text-white' : 'hover:bg-slate-800/60 border-transparent text-slate-300'
+          }`;
 
         label.innerHTML = `
           <div class="flex items-center space-x-2.5 truncate flex-1">
@@ -591,7 +713,7 @@
     // Select All (Smart: selects visible filtered files if search is active)
     btnSelectAllFiles.addEventListener('click', () => {
       const searchQuery = (fileSearchInput.value || '').toLowerCase().trim();
-      const targetFiles = searchQuery 
+      const targetFiles = searchQuery
         ? getAvailableFiles().filter(f => f.toLowerCase().includes(searchQuery))
         : getAvailableFiles();
       for (const file of targetFiles) state.fileSelection.add(file);
@@ -999,7 +1121,7 @@
 
     function formatTestTitleHtml(rawTitle) {
       if (!rawTitle) return '<span class="text-xs font-semibold text-slate-200">Test Case</span>';
-      
+
       // Tách các @tags
       const parts = rawTitle.split(/(@\S+)/g);
       let mainText = '';
@@ -1012,7 +1134,7 @@
         }
       }
       mainText = mainText.trim();
-      
+
       // Tách mã TC ở đầu nếu có (ví dụ "TC-SEARCH-FREE-001: ..." hoặc "TC01 - ...")
       let codeHtml = '';
       let descText = mainText;
@@ -1022,9 +1144,9 @@
         descText = tcMatch[2].trim();
         codeHtml = `<span class="inline-block px-1.5 py-0.5 rounded font-mono text-[11px] font-bold bg-indigo-950/70 border border-indigo-800/60 text-indigo-300 mr-2 flex-shrink-0">${escapeHtml(code)}</span>`;
       }
-      
+
       const tagsHtml = tags.map(t => `<span class="inline-block text-[10px] px-1.5 py-0.2 rounded bg-slate-900 border border-slate-800 text-slate-400 font-normal ml-1">${escapeHtml(t)}</span>`).join('');
-      
+
       return `
         <div class="flex flex-wrap items-center gap-y-1">
           ${codeHtml}
@@ -1394,7 +1516,7 @@
         postRunIcon.innerHTML = `<svg class="w-5 h-5 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg>`;
         postRunTitle.textContent = `Phát hiện ${data.failed} testcase bị lỗi!`;
         postRunDesc.textContent = `Tổng cộng: ${data.total} tests • ${data.passed} Passed • ${data.failed} Failed • ${data.skipped} Skipped`;
-        
+
         btnRerunFailed.classList.remove('hidden');
         btnRerunFailed.textContent = `Chạy lại ${state.lastFailedTests.length} test lỗi`;
       } else {
@@ -1416,10 +1538,10 @@
 
     btnRerunFailed.addEventListener('click', async () => {
       if (state.lastFailedTests.length === 0) return;
-      
+
       // 1. Thu thập danh sách file spec chứa test lỗi
       const failedFiles = Array.from(new Set(state.lastFailedTests.map(t => t.file).filter(Boolean)));
-      
+
       // 2. Thu thập chính xác project/browser xảy ra lỗi (không chạy lan sang project khác)
       const failedProjects = Array.from(new Set(state.lastFailedTests.map(t => t.project).filter(Boolean)));
 
@@ -1646,14 +1768,14 @@
     function saveCustomEnvConfig(cfg) {
       try {
         localStorage.setItem(ENV_STORAGE_KEY, JSON.stringify(cfg));
-      } catch (e) {}
+      } catch (e) { }
       updateEnvIndicatorUI();
     }
 
     function clearCustomEnvConfig() {
       try {
         localStorage.removeItem(ENV_STORAGE_KEY);
-      } catch (e) {}
+      } catch (e) { }
       updateEnvIndicatorUI();
     }
 
@@ -1894,12 +2016,15 @@
     <div id="modalBackdrop" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity"></div>
 
     <!-- Modal Dialog Window -->
-    <div class="relative w-full max-w-xl bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] z-10 animate-in fade-in zoom-in-95 duration-200">
-      
+    <div
+      class="relative w-full max-w-xl bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] z-10 animate-in fade-in zoom-in-95 duration-200">
+
       <!-- Modal Header -->
-      <div class="px-5 py-3.5 border-b border-slate-800 flex items-center justify-between bg-slate-900/90 sticky top-0 z-10">
+      <div
+        class="px-5 py-3.5 border-b border-slate-800 flex items-center justify-between bg-slate-900/90 sticky top-0 z-10">
         <h3 class="text-sm font-bold text-white uppercase tracking-wider">Cấu Hình Môi Trường & Tài Khoản</h3>
-        <button type="button" id="btnCloseEnvModal" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors">
+        <button type="button" id="btnCloseEnvModal"
+          class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors">
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
@@ -1908,7 +2033,7 @@
 
       <!-- Modal Body (Scrollable) -->
       <div class="p-5 overflow-y-auto custom-scroll space-y-4">
-        
+
         <!-- SECTION 1: URL MÔI TRƯỜNG KIỂM THỬ -->
         <div class="space-y-2">
           <div class="flex items-center justify-between">
@@ -1919,28 +2044,41 @@
           </div>
 
           <div class="relative">
-            <input type="text" id="inputCustomUrl" placeholder="https://www.photo-ac.com/" class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all font-mono">
-            <button type="button" id="btnClearCustomUrl" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 text-xs p-1" title="Xóa URL">✕</button>
+            <input type="text" id="inputCustomUrl" placeholder="https://www.photo-ac.com/"
+              class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all font-mono">
+            <button type="button" id="btnClearCustomUrl"
+              class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 text-xs p-1"
+              title="Xóa URL">✕</button>
           </div>
 
           <!-- HTTP Basic Auth Collapsible / Toggle -->
           <div class="pt-0.5">
             <details class="group bg-slate-950/60 rounded-xl border border-slate-800 p-2.5 text-xs">
-              <summary class="cursor-pointer font-semibold text-slate-300 flex items-center justify-between select-none">
+              <summary
+                class="cursor-pointer font-semibold text-slate-300 flex items-center justify-between select-none">
                 <span>HTTP Basic Auth (Tùy chọn)</span>
                 <span class="text-[11px] text-indigo-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2.5 mt-2 border-t border-slate-800/80">
                 <div>
                   <label class="block text-[11px] text-slate-400 mb-1">Username</label>
-                  <input type="text" id="inputHttpUser" placeholder="Username" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                  <input type="text" id="inputHttpUser" placeholder="Username"
+                    class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
                 </div>
                 <div>
                   <label class="block text-[11px] text-slate-400 mb-1">Password</label>
                   <div class="relative">
-                    <input type="password" id="inputHttpPass" placeholder="Password" class="w-full bg-slate-900 border border-slate-800 rounded-lg pl-2.5 pr-7 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
-                    <button type="button" class="btn-toggle-pwd absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 p-0.5 rounded transition-colors" title="Hiện/Ẩn mật khẩu">
-                      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                    <input type="password" id="inputHttpPass" placeholder="Password"
+                      class="w-full bg-slate-900 border border-slate-800 rounded-lg pl-2.5 pr-7 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                    <button type="button"
+                      class="btn-toggle-pwd absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 p-0.5 rounded transition-colors"
+                      title="Hiện/Ẩn mật khẩu">
+                      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
                     </button>
                   </div>
                 </div>
@@ -1965,11 +2103,20 @@
                 <span class="text-xs font-semibold text-slate-200">Free User</span>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <input type="text" id="inputFreeEmail" placeholder="Email" class="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                <input type="text" id="inputFreeEmail" placeholder="Email"
+                  class="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
                 <div class="relative">
-                  <input type="password" id="inputFreePass" placeholder="Password" class="w-full bg-slate-900 border border-slate-800 rounded-lg pl-2.5 pr-7 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
-                  <button type="button" class="btn-toggle-pwd absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 p-0.5 rounded transition-colors" title="Hiện/Ẩn mật khẩu">
-                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                  <input type="password" id="inputFreePass" placeholder="Password"
+                    class="w-full bg-slate-900 border border-slate-800 rounded-lg pl-2.5 pr-7 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                  <button type="button"
+                    class="btn-toggle-pwd absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 p-0.5 rounded transition-colors"
+                    title="Hiện/Ẩn mật khẩu">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -1981,11 +2128,20 @@
                 <span class="text-xs font-semibold text-slate-200">Premium User</span>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <input type="text" id="inputPremiumEmail" placeholder="Email" class="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                <input type="text" id="inputPremiumEmail" placeholder="Email"
+                  class="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
                 <div class="relative">
-                  <input type="password" id="inputPremiumPass" placeholder="Password" class="w-full bg-slate-900 border border-slate-800 rounded-lg pl-2.5 pr-7 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
-                  <button type="button" class="btn-toggle-pwd absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 p-0.5 rounded transition-colors" title="Hiện/Ẩn mật khẩu">
-                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                  <input type="password" id="inputPremiumPass" placeholder="Password"
+                    class="w-full bg-slate-900 border border-slate-800 rounded-lg pl-2.5 pr-7 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                  <button type="button"
+                    class="btn-toggle-pwd absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 p-0.5 rounded transition-colors"
+                    title="Hiện/Ẩn mật khẩu">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -1997,11 +2153,20 @@
                 <span class="text-xs font-semibold text-slate-200">Creator</span>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <input type="text" id="inputCreatorEmail" placeholder="Email" class="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                <input type="text" id="inputCreatorEmail" placeholder="Email"
+                  class="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
                 <div class="relative">
-                  <input type="password" id="inputCreatorPass" placeholder="Password" class="w-full bg-slate-900 border border-slate-800 rounded-lg pl-2.5 pr-7 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
-                  <button type="button" class="btn-toggle-pwd absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 p-0.5 rounded transition-colors" title="Hiện/Ẩn mật khẩu">
-                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                  <input type="password" id="inputCreatorPass" placeholder="Password"
+                    class="w-full bg-slate-900 border border-slate-800 rounded-lg pl-2.5 pr-7 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                  <button type="button"
+                    class="btn-toggle-pwd absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 p-0.5 rounded transition-colors"
+                    title="Hiện/Ẩn mật khẩu">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -2011,7 +2176,8 @@
 
         <!-- FORCE REFRESH AUTH CHECKBOX -->
         <div class="pt-2 border-t border-slate-800 flex items-center space-x-2">
-          <input type="checkbox" id="chkForceRefreshAuth" checked class="w-4 h-4 rounded text-indigo-600 bg-slate-950 border-slate-700 focus:ring-indigo-500">
+          <input type="checkbox" id="chkForceRefreshAuth" checked
+            class="w-4 h-4 rounded text-indigo-600 bg-slate-950 border-slate-700 focus:ring-indigo-500">
           <label for="chkForceRefreshAuth" class="text-xs text-slate-300 cursor-pointer select-none">
             Làm mới phiên đăng nhập (.auth session) khi chạy test với thông tin mới
           </label>
@@ -2021,14 +2187,17 @@
 
       <!-- Modal Footer -->
       <div class="px-5 py-3 border-t border-slate-800 bg-slate-900/90 flex items-center justify-between">
-        <button type="button" id="btnResetEnvModal" class="text-xs text-rose-400 hover:text-rose-300 font-medium transition-colors">
+        <button type="button" id="btnResetEnvModal"
+          class="text-xs text-rose-400 hover:text-rose-300 font-medium transition-colors">
           Đặt lại mặc định .env
         </button>
         <div class="flex items-center space-x-2">
-          <button type="button" id="btnCancelEnvModal" class="px-3 py-1.5 rounded-xl border border-slate-700 text-xs text-slate-300 hover:bg-slate-800 transition-colors font-semibold">
+          <button type="button" id="btnCancelEnvModal"
+            class="px-3 py-1.5 rounded-xl border border-slate-700 text-xs text-slate-300 hover:bg-slate-800 transition-colors font-semibold">
             Đóng
           </button>
-          <button type="button" id="btnSaveEnvModal" class="px-4 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all shadow-md shadow-indigo-600/30">
+          <button type="button" id="btnSaveEnvModal"
+            class="px-4 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all shadow-md shadow-indigo-600/30">
             Lưu cấu hình
           </button>
         </div>
@@ -2037,4 +2206,5 @@
     </div>
   </div>
 </body>
+
 </html>
