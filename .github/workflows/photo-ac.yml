@@ -116,19 +116,72 @@ jobs:
         if: always()
         run: |
           mkdir -p allure-results/history
-          if [ -d "gh-pages-dir/history" ]; then
+          if [ -d "gh-pages-dir/photo-ac/history" ]; then
+            cp -r gh-pages-dir/photo-ac/history/* allure-results/history/ 2>/dev/null || true
+          elif [ -d "gh-pages-dir/history" ]; then
             cp -r gh-pages-dir/history/* allure-results/history/ 2>/dev/null || true
           fi
           npx allure-commandline generate allure-results --clean -o allure-report
           cp -r allure-results/history allure-report/ 2>/dev/null || true
 
+      # Chuẩn bị cấu trúc deploy cho GitHub Pages (tách thư mục photo-ac & Portal landing page)
+      - name: Prepare GitHub Pages Deployment
+        if: always()
+        run: |
+          mkdir -p gh-pages-deploy/photo-ac
+          cp -r allure-report/* gh-pages-deploy/photo-ac/
+          cat << 'EOF' > gh-pages-deploy/index.html
+          <!DOCTYPE html>
+          <html lang="vi">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>AC Works - Test Automation Reports</title>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+            <style>
+              * { box-sizing: border-box; margin: 0; padding: 0; }
+              body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0b0f19; color: #f8fafc; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+              .container { max-width: 600px; width: 90%; background: #1e293b; border-radius: 20px; padding: 40px; text-align: center; border: 1px solid #334155; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+              h1 { font-size: 26px; font-weight: 800; margin-bottom: 8px; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+              p { color: #94a3b8; font-size: 14px; margin-bottom: 32px; }
+              .cards { display: flex; flex-direction: column; gap: 16px; }
+              .card { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-radius: 14px; text-decoration: none; color: #fff; font-weight: 600; font-size: 16px; transition: all 0.2s ease; border: 1px solid rgba(255, 255, 255, 0.08); }
+              .photo-card { background: linear-gradient(135deg, #0284c7, #0369a1); }
+              .illust-card { background: linear-gradient(135deg, #ea580c, #c2410c); }
+              .card:hover { transform: translateY(-3px); filter: brightness(1.1); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); }
+              .badge { font-size: 12px; padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.2); }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h1>AC Works Test Reports</h1>
+              <p>Hệ thống Báo cáo Kiểm thử Tự động Playwright E2E</p>
+              <div class="cards">
+                <a href="./photo-ac/" class="card photo-card">
+                  <span>📸 Photo-AC Allure Report</span>
+                  <span class="badge">Xem báo cáo →</span>
+                </a>
+                <a href="./illust-ac/" class="card illust-card">
+                  <span>🎨 Illust-AC Allure Report</span>
+                  <span class="badge">Xem báo cáo →</span>
+                </a>
+              </div>
+            </div>
+          </body>
+          </html>
+          EOF
+
+      # Deploy lên branch gh-pages (giữ lại các file cũ bằng keep_files)
       - name: Deploy Allure Report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: allure-report
+          publish_dir: gh-pages-deploy
+          keep_files: true
 
       # ── Upload Artifacts ──────────────────────────────────────────────────────
 
