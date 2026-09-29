@@ -1047,17 +1047,17 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-039: Khách vãng lai khi chưa chạm hạn mức tìm kiếm thì AI Toggle tự động tắt
+   * TC-SEARCH-GUEST-039: AI Toggle tắt khi chưa chạm hạn mức tìm kiếm
    * @tags @guest
    */
-  test('TC-SEARCH-GUEST-039: AI Toggle tự động tắt khi chưa chạm hạn mức tìm kiếm @guest', async ({
+  test('TC-SEARCH-GUEST-039: AI Toggle ở trạng thái OFF khi chưa chạm hạn mức tìm kiếm @guest', async ({
     homePage,
   }) => {
-    await test.step('Verify nút AI Search (.search-by-ai) hiển thị trên Top Page', async () => {
+    await test.step('Verify nút AI Search hiển thị trên Top Page', async () => {
       await expect(homePage.searchByAiButton).toBeVisible();
     });
 
-    await test.step('Verify AI Toggle ở trạng thái tự động tắt khi chưa chạm hạn mức tìm kiếm', async () => {
+    await test.step('Verify AI Toggle ở trạng thái OFF', async () => {
       await expect(homePage.aiSearchOffIcon).toBeVisible();
       await expect(homePage.aiSearchOnIcon).toBeHidden();
       await expect(homePage.byAiInput).toHaveValue('0');
@@ -1066,13 +1066,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-040: [AI SEARCH AUTO-ACTIVATION ON LIMIT] Khách vãng lai khi đạt hạn mức tìm kiếm thì AI Toggle tự động bật màu vàng và cho phép nhập tìm kiếm bằng AI
-   * @tags @regression @guest
-   * Đặc tả: Khi Guest đạt hạn mức tìm kiếm thông thường (search_zancnt == 0), hệ thống tự động kích hoạt
-   * AI Toggle (nền màu vàng bg-FFF8D5, icon ON hiển thị, by_ai=1), người dùng nhập câu tìm kiếm tự nhiên
-   * vào ô search và submit kết quả bằng AI theo đúng hành vi người dùng thật.
+   * TC-SEARCH-GUEST-040: AI Toggle bật màu vàng và cho phép nhập tìm kiếm bằng AI khi limit search
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-040: Khách vãng lai khi đạt hạn mức tìm kiếm thì AI Toggle tự động bật màu vàng và cho phép nhập tìm kiếm bằng AI @regression @guest', async ({
+  test('TC-SEARCH-GUEST-040: AI Toggle bật màu vàng và cho phép nhập tìm kiếm bằng AI khi limit search @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -1122,7 +1119,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
       await homePage.dismissSemanticSearchModal();
     });
 
-    await test.step('Thực hiện hành vi người dùng: nhập câu tìm kiếm tự nhiên và submit tìm kiếm bằng AI', async () => {
+    await test.step('Nhập từ khóa tìm kiếm và submit tìm kiếm bằng AI', async () => {
       // Mở lại route cho phép submit tìm kiếm bằng AI lên server Photo-AC
       await page.route('**/ajax/public/is_enable_search', async (route) => {
         await route.fulfill({
@@ -1140,7 +1137,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
       await searchResultPage.waitForResultDisplay();
     });
 
-    await test.step('Verify URL chứa tham số by_ai=1 và tiêu đề phản ánh đúng câu truy vấn', async () => {
+    await test.step('Verify URL chứa tham số by_ai=1 và tiêu đề chứa từ khóa tìm kiếm', async () => {
       await expect(page).toHaveURL(/by_ai=1/);
       await expect(searchResultPage.resultHeading).toContainText(`「${naturalQuery}」の写真素材`);
 
