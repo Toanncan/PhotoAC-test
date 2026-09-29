@@ -70,6 +70,14 @@ export class SearchResultPage extends BasePage {
   readonly displayCount210Radio: Locator = this.page.locator('#pp-210');
   readonly displayCount210Label: Locator = this.page.locator('label[for="pp-210"]');
 
+  // ─── Trends Page Locators (人気写真一覧 - /main/trends) ──────────────────────
+
+  /** Sort select dropdown on Trends page (select#sort) */
+  readonly trendsSortSelect: Locator = this.page.locator('select#sort');
+
+  /** Display count select dropdown on Trends page (select#pagesize) */
+  readonly trendsPageSizeSelect: Locator = this.page.locator('select#pagesize');
+
   // ─── Search Limit Modal Locators ──────────────────────────────────────────
 
   /** Modal displayed when user reaches the daily search limit (1日4回) */
@@ -1000,6 +1008,40 @@ export class SearchResultPage extends BasePage {
   async goToPsdSearch(): Promise<void> {
     await test.step('Navigate to PSD Format Search page', async () => {
       await this.navigate('/main/search?sizesec=psd&referer=category_psd');
+      await this.waitForResultDisplay();
+    });
+  }
+
+  /**
+   * Navigate to Trends Page (人気写真一覧 - /main/trends).
+   */
+  async goToTrendsPage(): Promise<void> {
+    await test.step('Navigate to Trends Page (/main/trends)', async () => {
+      await this.navigate('/main/trends');
+      await this.waitForResultDisplay();
+    });
+  }
+
+  /**
+   * Select sort option on Trends page using native select#sort.
+   * @param sort - 'dlrank' (ダウンロード数順 - default) or '-releasedate' (新着順)
+   */
+  async selectTrendsSort(sort: 'dlrank' | '-releasedate'): Promise<void> {
+    await test.step(`Select sort option on Trends page: "${sort}"`, async () => {
+      await this.trendsSortSelect.selectOption(sort);
+      await this.page.waitForLoadState('domcontentloaded');
+      await this.waitForResultDisplay();
+    });
+  }
+
+  /**
+   * Select display count on Trends page using native select#pagesize.
+   * @param count - '70' | '140' | '210'
+   */
+  async selectTrendsDisplayCount(count: '70' | '140' | '210'): Promise<void> {
+    await test.step(`Select display count on Trends page: ${count} items`, async () => {
+      await this.trendsPageSizeSelect.selectOption(count);
+      await this.page.waitForLoadState('domcontentloaded');
       await this.waitForResultDisplay();
     });
   }

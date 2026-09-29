@@ -880,6 +880,63 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
     });
   });
 
+  /**
+   * TC-SEARCH-FREE-040: [TRENDS REGRESSION - SHEET CASE 28] Free User kiểm tra trang Trends hiển thị danh sách ảnh, sắp xếp và bảo toàn tham số khi phân trang
+   * Đặc tả: Kiểm tra trang Trends không bị ảnh hưởng khi có thay đổi liên quan đến trang Search do 2 trang dùng chung View:
+   * 1. Truy cập /main/trends và verify H1 (人気の写真素材) cùng danh sách 70 ảnh mặc định.
+   * 2. Thay đổi sắp xếp sang 新着順 (Newest - select#sort) và verify URL cập nhật srt=-releasedate.
+   * 3. Chuyển sang Trang 2 và verify bảo toàn tham số srt=-releasedate, referer=more_ranking, p=2.
+   * 4. Verify thành phần dùng chung: Thanh tìm kiếm Header từ trang Trends hoạt động bình thường.
+   * @tags @regression @free-user
+   */
+  test('TC-SEARCH-FREE-040: [TRENDS REGRESSION - SHEET CASE 28] Free User kiểm tra trang Trends hiển thị danh sách ảnh, sắp xếp và bảo toàn tham số khi phân trang @regression @free-user', async ({
+    page,
+    searchResultPage,
+  }) => {
+    await searchResultPage.goToTrendsPage();
+
+    await test.step('1. Verify tiêu đề H1 và danh sách ảnh mặc định của trang Trends', async () => {
+      await expect(searchResultPage.resultHeading).toBeVisible();
+      await expect(searchResultPage.resultHeading).toHaveText('人気の写真素材');
+
+      // Web-first auto-wait theo quy chuẩn Cross-browser
+      await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
+      const count = await searchResultPage.getResultCount();
+      expect(count, 'Trang Trends mặc định phải hiển thị 70 ảnh cho Free User').toBe(70);
+    });
+
+    await test.step('2. Thay đổi sắp xếp sang "新着順" (Newest) và verify URL cập nhật', async () => {
+      await searchResultPage.selectTrendsSort('-releasedate');
+      await expect(page).toHaveURL(/srt=-releasedate/);
+      await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
+    });
+
+    await test.step('3. Chuyển sang Trang 2 và verify bảo toàn tham số srt, referer, p=2', async () => {
+      await expect(searchResultPage.paginationContainer).toBeVisible();
+      await searchResultPage.goToNextPage();
+
+      await expect(page).toHaveURL(/p=2/);
+      await expect(page).toHaveURL(/srt=-releasedate/);
+      await expect(page).toHaveURL(/referer=more_ranking/);
+      expect(await searchResultPage.getActivePageNumber()).toBe('2');
+
+      const countPage2 = await searchResultPage.getResultCount();
+      expect(countPage2, 'Trang 2 của Trends phải tiếp tục có ảnh hiển thị').toBeGreaterThan(0);
+    });
+
+    await test.step('4. Verify thành phần dùng chung: Thanh tìm kiếm Header từ trang Trends hoạt động bình thường', async () => {
+      const searchKeyword = 'ビジネス';
+      await searchResultPage.searchAgain(searchKeyword);
+
+      await expect(page).toHaveURL(/\/main\/search/);
+      await expect(page).toHaveURL(new RegExp(`q=${encodeURIComponent(searchKeyword)}`));
+      await expect(searchResultPage.resultHeading).toContainText(`「${searchKeyword}」の写真素材`);
+      await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
+      const count = await searchResultPage.getResultCount();
+      expect(count).toBeGreaterThan(0);
+    });
+  });
+
   // ============================================================================
   // NHÓM 5: SẮP XẾP & PHÂN TRANG (SORT & PAGINATION)
   // ============================================================================

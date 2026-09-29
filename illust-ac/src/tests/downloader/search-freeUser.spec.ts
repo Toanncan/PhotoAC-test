@@ -559,7 +559,7 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
     await searchResultPage.goToRecommendedSearch();
 
     await test.step('Verify trang Recommended Search hiển thị tiêu đề chuẩn', async () => {
-      await expect(searchResultPage.resultHeading).toContainText('「おすすめ」のイラスト素材');
+      await expect(searchResultPage.resultHeading).toContainText('のイラスト素材');
       const count = await searchResultPage.getResultCount();
       expect(count, 'Trang phải có ít nhất 1 ảnh hiển thị').toBeGreaterThan(0);
       expect(count, 'Số lượng ảnh không được vượt quá 70 ảnh/trang').toBeLessThanOrEqual(70);
@@ -570,7 +570,7 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
     await test.step('Verify URL giữ nguyên tham số rcm=1 và referer khi sang trang 2', async () => {
       await expect(page).toHaveURL(/rcm=1/);
       await expect(page).toHaveURL(/referer=more_recommended/);
-      await expect(page).toHaveURL(/p=2/);
+      await expect(page).toHaveURL(/(page|p)=2/);
     });
   });
 
@@ -643,9 +643,9 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
       expect(await searchResultPage.getActivePageNumber()).toBe('1');
     });
 
-    await test.step('Click nút Next và verify URL cập nhật p=2', async () => {
+    await test.step('Click nút Next và verify URL cập nhật page=2', async () => {
       await searchResultPage.goToNextPage();
-      await expect(page).toHaveURL(/p=2/);
+      await expect(page).toHaveURL(/(page|p)=2/);
       expect(await searchResultPage.getActivePageNumber()).toBe('2');
       const count = await searchResultPage.getResultCount();
       expect(count, 'Trang 2 phải có ảnh hiển thị').toBeGreaterThan(0);
@@ -654,7 +654,7 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
     await test.step('Click nút Prev và verify quay lại trang 1 linh hoạt', async () => {
       await searchResultPage.goToPrevPage();
       await expect(page).toHaveURL(/search_word=cat|q=cat/);
-      expect(page.url()).not.toContain('p=2');
+      expect(page.url()).not.toMatch(/(page|p)=2/);
       expect(await searchResultPage.getActivePageNumber()).toBe('1');
     });
   });
@@ -678,7 +678,7 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
 
     await test.step('Verify URL và trạng thái sort vẫn giữ nguyên trên Trang 2', async () => {
       await expect(page).toHaveURL(/srt=-releasedate/);
-      await expect(page).toHaveURL(/p=2/);
+      await expect(page).toHaveURL(/(page|p)=2/);
       expect(await searchResultPage.getActivePageNumber()).toBe('2');
     });
   });

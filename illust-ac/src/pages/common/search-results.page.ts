@@ -39,7 +39,7 @@ export class SearchResultPage extends BasePage {
   readonly resetKeywordButton: Locator = this.page.getByRole('button', { name: 'リセット' });
 
   /** Submit search button */
-  readonly searchSubmitButton: Locator = this.page.getByRole('button', { name: 'search_btn' });
+  readonly searchSubmitButton: Locator = this.page.locator('#search_frm button.execloginbtn:visible, #search_frm button[type="submit"]:visible, button.execloginbtn:visible, button.search_btn, #search_btn').first();
 
   // ─── Sort Dropdown Locators ────────────────────────────────────────────────
 
@@ -88,8 +88,8 @@ export class SearchResultPage extends BasePage {
   /** Heading text inside search limit modal (無料のキーワード検索は「1日4回」までです。) */
   readonly searchLimitTitle: Locator = this.page.locator('#searchLimitModal b').first();
 
-  /** Link to upgrade to Premium inside search limit modal */
-  readonly searchLimitPremiumLink: Locator = this.page.locator('#searchLimitModal a:has-text("検索し放題のプレミアム会員になる")');
+  /** Link/Button to upgrade to Premium inside search limit modal (rendered as <button> on Illust-AC) */
+  readonly searchLimitPremiumLink: Locator = this.page.locator('#searchLimitModal button:has-text("検索し放題のプレミアム会員になる"), #searchLimitModal a:has-text("検索し放題のプレミアム会員になる")').first();
 
   /** Guest CTA to register inside search limit modal */
   readonly searchLimitRegisterCta: Locator = this.page.locator('#searchLimitModal .cta-pill');
@@ -128,8 +128,8 @@ export class SearchResultPage extends BasePage {
   readonly clearAllFiltersButton: Locator = this.page.getByRole('link', { name: 'すべてクリア' })
     .or(this.page.locator('a:has-text("すべてクリア")'));
 
-  /** Active filter badges/chips displayed directly under the filter toolbar */
-  readonly activeFilterBadges: Locator = this.page.locator('button:has(a[aria-label="削除"])');
+  /** Active filter badges/chips displayed directly under the filter toolbar (Illust-AC uses button.btn-light with <a class="ml-2"> SVG remove icon) */
+  readonly activeFilterBadges: Locator = this.page.locator('button.btn-light:has(a.ml-2), button:has(a[aria-label="削除"])');
 
   // ─── Filter Option Locators: 1. Category (カテゴリー) ──────────────────────
   // NOTE: AC-Illust uses ddcl-c_names_mf-i* (NOT ddcl-c_names1-i* like photo-ac)
@@ -308,6 +308,7 @@ export class SearchResultPage extends BasePage {
   async clickPopularSort(): Promise<void> {
     await test.step('Click "人気順" (Popularity) sort option', async () => {
       await this.openSortDropdown();
+      await this.sortPopularLabel.hover().catch(() => {});
       await this.clickElement(this.sortPopularLabel);
     });
   }
@@ -402,9 +403,9 @@ export class SearchResultPage extends BasePage {
       // Check if navigation occurred within 2.5s
       const navigated = await this.page.waitForFunction(
         (target) => {
-          const activeEl = document.querySelector('ul.ac-pagination li.active a');
+          const activeEl = document.querySelector('div.pagination_bottom a.paginator_p.selected, ul.ac-pagination li.active a');
           const url = window.location.href;
-          return (activeEl && activeEl.textContent?.trim() === target) || url.includes(`p=${target}`);
+          return (activeEl && activeEl.textContent?.trim() === target) || url.includes(`page=${target}`) || url.includes(`p=${target}`);
         },
         targetPage,
         { timeout: 2_500 }
@@ -415,9 +416,9 @@ export class SearchResultPage extends BasePage {
         await this.page.keyboard.press('ArrowRight');
         const keyboardNavigated = await this.page.waitForFunction(
           (target) => {
-            const activeEl = document.querySelector('ul.ac-pagination li.active a');
+            const activeEl = document.querySelector('div.pagination_bottom a.paginator_p.selected, ul.ac-pagination li.active a');
             const url = window.location.href;
-            return (activeEl && activeEl.textContent?.trim() === target) || url.includes(`p=${target}`);
+            return (activeEl && activeEl.textContent?.trim() === target) || url.includes(`page=${target}`) || url.includes(`p=${target}`);
           },
           targetPage,
           { timeout: 2_500 }
@@ -428,9 +429,9 @@ export class SearchResultPage extends BasePage {
           await this.paginationNextButton.evaluate((el: HTMLAnchorElement) => el.click()).catch(() => {});
           await this.page.waitForFunction(
             (target) => {
-              const activeEl = document.querySelector('ul.ac-pagination li.active a');
+              const activeEl = document.querySelector('div.pagination_bottom a.paginator_p.selected, ul.ac-pagination li.active a');
               const url = window.location.href;
-              return (activeEl && activeEl.textContent?.trim() === target) || url.includes(`p=${target}`);
+              return (activeEl && activeEl.textContent?.trim() === target) || url.includes(`page=${target}`) || url.includes(`p=${target}`);
             },
             targetPage,
             { timeout: 10_000 }
@@ -452,9 +453,9 @@ export class SearchResultPage extends BasePage {
       await this.page.keyboard.press('ArrowRight');
       await this.page.waitForFunction(
         (target) => {
-          const activeEl = document.querySelector('ul.ac-pagination li.active a');
+          const activeEl = document.querySelector('div.pagination_bottom a.paginator_p.selected, ul.ac-pagination li.active a');
           const url = window.location.href;
-          return (activeEl && activeEl.textContent?.trim() === target) || url.includes(`p=${target}`);
+          return (activeEl && activeEl.textContent?.trim() === target) || url.includes(`page=${target}`) || url.includes(`p=${target}`);
         },
         targetPage,
         { timeout: 15_000 }
@@ -478,9 +479,9 @@ export class SearchResultPage extends BasePage {
       // Check if navigation occurred within 2.5s
       const navigated = await this.page.waitForFunction(
         (target) => {
-          const activeEl = document.querySelector('ul.ac-pagination li.active a');
+          const activeEl = document.querySelector('div.pagination_bottom a.paginator_p.selected, ul.ac-pagination li.active a');
           const url = window.location.href;
-          return (activeEl && activeEl.textContent?.trim() === target) || (target === '1' && !url.includes('p=2'));
+          return (activeEl && activeEl.textContent?.trim() === target) || (target === '1' && !url.includes('page=2') && !url.includes('p=2'));
         },
         targetPage,
         { timeout: 2_500 }
@@ -491,9 +492,9 @@ export class SearchResultPage extends BasePage {
         await this.page.keyboard.press('ArrowLeft');
         const keyboardNavigated = await this.page.waitForFunction(
           (target) => {
-            const activeEl = document.querySelector('ul.ac-pagination li.active a');
+            const activeEl = document.querySelector('div.pagination_bottom a.paginator_p.selected, ul.ac-pagination li.active a');
             const url = window.location.href;
-            return (activeEl && activeEl.textContent?.trim() === target) || (target === '1' && !url.includes('p=2'));
+            return (activeEl && activeEl.textContent?.trim() === target) || (target === '1' && !url.includes('page=2') && !url.includes('p=2'));
           },
           targetPage,
           { timeout: 2_500 }
@@ -504,9 +505,9 @@ export class SearchResultPage extends BasePage {
           await this.paginationPrevButton.evaluate((el: HTMLAnchorElement) => el.click()).catch(() => {});
           await this.page.waitForFunction(
             (target) => {
-              const activeEl = document.querySelector('ul.ac-pagination li.active a');
+              const activeEl = document.querySelector('div.pagination_bottom a.paginator_p.selected, ul.ac-pagination li.active a');
               const url = window.location.href;
-              return (activeEl && activeEl.textContent?.trim() === target) || (target === '1' && !url.includes('p=2'));
+              return (activeEl && activeEl.textContent?.trim() === target) || (target === '1' && !url.includes('page=2') && !url.includes('p=2'));
             },
             targetPage,
             { timeout: 10_000 }
@@ -528,9 +529,9 @@ export class SearchResultPage extends BasePage {
       await this.page.keyboard.press('ArrowLeft');
       await this.page.waitForFunction(
         (target) => {
-          const activeEl = document.querySelector('ul.ac-pagination li.active a');
+          const activeEl = document.querySelector('div.pagination_bottom a.paginator_p.selected, ul.ac-pagination li.active a');
           const url = window.location.href;
-          return (activeEl && activeEl.textContent?.trim() === target) || (target === '1' && !url.includes('p=2'));
+          return (activeEl && activeEl.textContent?.trim() === target) || (target === '1' && !url.includes('page=2') && !url.includes('p=2'));
         },
         targetPage,
         { timeout: 15_000 }
@@ -584,7 +585,7 @@ export class SearchResultPage extends BasePage {
    */
   async searchByCategory(categoryId: number, categoryName: string): Promise<void> {
     await test.step(`Search by category ID ${categoryId}: "${categoryName}"`, async () => {
-      await this.navigate(`/main/search?c_id=${categoryId}&c_name=${encodeURIComponent(categoryName)}`);
+      await this.navigate(`/main/search_result.php?cid=${categoryId}&cword=${encodeURIComponent(categoryName)}&mode=cate`);
       await this.waitForResultDisplay();
     });
   }
@@ -846,7 +847,7 @@ export class SearchResultPage extends BasePage {
       for (const [key, value] of Object.entries(params)) {
         searchParams.set(key, String(value));
       }
-      await this.navigate(`/main/search?${searchParams.toString()}`);
+      await this.navigate(`/main/search_result.php?${searchParams.toString()}`);
       await this.waitForResultDisplay();
     });
   }
@@ -856,7 +857,7 @@ export class SearchResultPage extends BasePage {
    */
   async goToRecommendedSearch(): Promise<void> {
     await test.step('Navigate to Recommended Search page', async () => {
-      await this.navigate('/main/search?rcm=1&referer=more_recommended');
+      await this.navigate('/main/search_result.php?rcm=1&referer=more_recommended');
       await this.waitForResultDisplay();
     });
   }
@@ -867,7 +868,7 @@ export class SearchResultPage extends BasePage {
    */
   async goToPhotoDetail(photoId: string): Promise<void> {
     await test.step(`Navigate to photo detail page: ${photoId}`, async () => {
-      await this.navigate(`/main/detail/${photoId}`);
+      await this.navigate(`/main/detail.php?id=${photoId}`);
       await this.waitForPageLoad();
     });
   }
