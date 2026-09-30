@@ -26,6 +26,11 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     await homePage.isHomePageLoaded();
   });
 
+  test.afterEach(async ({ searchResultPage }) => {
+    // Tự động dọn dẹp bộ lọc và khôi phục trạng thái mặc định (人気順 & 210件) nếu có thay đổi qua nút "すべてクリア"
+    await searchResultPage.clearAllFilters();
+  });
+
   // ============================================================================
   // NHÓM 1: CƠ BẢN & ĐIỂM VÀO TÌM KIẾM (BASIC SEARCH & ENTRYPOINTS)
   // ============================================================================
@@ -99,47 +104,32 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
   });
 
   /**
-   * TC-SEARCH-PREM-004: Tìm kiếm tiếp từ thanh tìm kiếm trên trang kết quả (Search Again)
+   * TC-SEARCH-PREM-004: Xóa nhanh từ khóa bằng nút Reset và tìm kiếm từ khóa mới trực tiếp trên trang kết quả (Search Again)
    * @tags @regression @premium
    */
-  test('TC-SEARCH-PREM-004: Premium User tìm kiếm từ khóa mới trực tiếp từ trang kết quả @regression @premium', async ({
+  test('TC-SEARCH-PREM-004: Premium User xóa từ khóa bằng nút Reset và tìm kiếm từ khóa mới trực tiếp từ trang kết quả @regression @premium', async ({
     page,
     homePage,
     searchResultPage,
   }) => {
-    await homePage.search('cat');
-    await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
-
+    const initialKeyword = 'cat';
     const newKeyword = 'dog';
-    await searchResultPage.searchAgain(newKeyword);
 
-    await test.step('Verify URL và heading cập nhật sang từ khóa mới', async () => {
+    await homePage.search(initialKeyword);
+    await searchResultPage.waitForResultDisplay();
+
+    await test.step('Verify từ khóa hiển thị trong ô tìm kiếm và xóa bằng nút Reset', async () => {
+      await expect(searchResultPage.searchInput).toHaveValue(initialKeyword);
+      await searchResultPage.clickResetKeyword();
+      await expect(searchResultPage.searchInput).toHaveValue('');
+    });
+
+    await test.step('Nhập từ khóa mới và tìm kiếm lại trực tiếp trên trang kết quả', async () => {
+      await searchResultPage.searchAgain(newKeyword);
       await expect(page).toHaveURL(new RegExp(`search_word=${newKeyword}|q=${newKeyword}`));
       await expect(searchResultPage.resultHeading).toContainText(`「${newKeyword}」のイラスト素材`);
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
-    });
-  });
-
-  /**
-   * TC-SEARCH-PREM-005: Xóa từ khóa bằng nút Reset trên ô tìm kiếm
-   * @tags @regression @premium
-   */
-  test('TC-SEARCH-PREM-005: Premium User xóa nhanh từ khóa trong ô tìm kiếm bằng nút Reset @regression @premium', async ({
-    homePage,
-    searchResultPage,
-  }) => {
-    const keyword = 'cat';
-
-    await homePage.search(keyword);
-    await searchResultPage.waitForResultDisplay();
-
-    await expect(searchResultPage.searchInput).toHaveValue(keyword);
-    await searchResultPage.clickResetKeyword();
-
-    await test.step('Verify giá trị trong ô searchbox bị xóa về rỗng', async () => {
-      await expect(searchResultPage.searchInput).toHaveValue('');
+      expect(count, 'Kết quả tìm kiếm từ khóa mới phải có ảnh hiển thị').toBeGreaterThan(0);
     });
   });
 
@@ -197,10 +187,10 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
   // ============================================================================
 
   /**
-   * TC-SEARCH-PREM-008: [FILTER - ORIENTATION] Lọc ảnh theo Chiều dọc (縦長) qua toolbar
+   * TC-SEARCH-PREM-008: [FILTER - ORIENTATION] Lọc ảnh theo Chiều dọc (縦長) và chuyển đổi sang Chiều ngang (横長) qua toolbar
    * @tags @regression @premium
    */
-  test('TC-SEARCH-PREM-008: Premium User lọc kết quả theo Chiều dọc (縦長) qua Toolbar @regression @premium', async ({
+  test('TC-SEARCH-PREM-008: Premium User lọc và chuyển đổi Chiều ảnh (Dọc 縦長 / Ngang 横長) qua Toolbar @regression @premium', async ({
     page,
     homePage,
     searchResultPage,
@@ -208,11 +198,9 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     const keyword = 'cat';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
-    await searchResultPage.selectOrientation('vertical');
-
-    await test.step('Verify URL cập nhật tham số orientation=0, badge hiển thị và kết quả hiển thị', async () => {
+    await test.step('Lọc theo Chiều dọc (縦長) và verify URL, badge hiển thị', async () => {
+      await searchResultPage.selectOrientation('vertical');
       await expect(page).toHaveURL(/orientation=0/);
       await expect(searchResultPage.getActiveFilterBadge('縦長')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
@@ -220,25 +208,9 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
       const count = await searchResultPage.getResultCount();
       expect(count, 'Kết quả sau khi lọc chiều dọc phải có ảnh').toBeGreaterThan(0);
     });
-  });
 
-  /**
-   * TC-SEARCH-PREM-009: [FILTER - ORIENTATION] Lọc ảnh theo Chiều ngang (横長) qua toolbar
-   * @tags @regression @premium
-   */
-  test('TC-SEARCH-PREM-009: Premium User lọc kết quả theo Chiều ngang (横長) qua Toolbar @regression @premium', async ({
-    page,
-    homePage,
-    searchResultPage,
-  }) => {
-    const keyword = 'cat';
-    await homePage.search(keyword);
-    await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
-
-    await searchResultPage.selectOrientation('horizontal');
-
-    await test.step('Verify URL cập nhật tham số orientation=1 và badge hiển thị', async () => {
+    await test.step('Chuyển đổi sang Chiều ngang (横長) và verify URL, badge cập nhật tương ứng', async () => {
+      await searchResultPage.selectOrientation('horizontal');
       await expect(page).toHaveURL(/orientation=1/);
       await expect(searchResultPage.getActiveFilterBadge('横長')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
@@ -248,48 +220,31 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
   });
 
   /**
-   * TC-SEARCH-PREM-010: [FILTER - FORMAT VECTOR] Lọc định dạng ảnh Vector (EPS・AI) qua Toolbar "ファイル・向き"
+   * TC-SEARCH-PREM-010: [FILTER - FORMAT] Lọc định dạng ảnh Vector (EPS・AI) và chuyển đổi sang PNG qua Toolbar "ファイル・向き"
    * @tags @regression @premium
    */
-  test('TC-SEARCH-PREM-010: Premium User lọc định dạng ảnh Vector (EPS・AI) qua Toolbar "ファイル・向き" @regression @premium', async ({
+  test('TC-SEARCH-PREM-010: Premium User lọc và chuyển đổi Định dạng tệp (Vector / PNG) qua Toolbar "ファイル・向き" @regression @premium', async ({
     page,
     homePage,
     searchResultPage,
   }) => {
     await homePage.search('frame');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
-    await searchResultPage.selectFormat('vector');
-
-    await test.step('Verify URL chứa tham số format=vector và kết quả hiển thị', async () => {
+    await test.step('Lọc theo định dạng Vector (EPS・AI) và verify URL', async () => {
+      await searchResultPage.selectFormat('vector');
       await expect(page).toHaveURL(/format=vector/);
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
+      expect(count, 'Kết quả lọc Vector phải có ảnh').toBeGreaterThan(0);
     });
-  });
 
-  /**
-   * TC-SEARCH-PREM-011: [FILTER - FORMAT PNG] Lọc định dạng ảnh PNG qua Toolbar "ファイル・向き"
-   * @tags @regression @premium
-   */
-  test('TC-SEARCH-PREM-011: Premium User lọc định dạng ảnh PNG qua Toolbar "ファイル・向き" @regression @premium', async ({
-    page,
-    homePage,
-    searchResultPage,
-  }) => {
-    await homePage.search('frame');
-    await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
-
-    await searchResultPage.selectFormat('png');
-
-    await test.step('Verify URL chứa tham số format=png và kết quả hiển thị', async () => {
+    await test.step('Chuyển đổi sang định dạng PNG và verify URL cập nhật', async () => {
+      await searchResultPage.selectFormat('png');
       await expect(page).toHaveURL(/format=png/);
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
+      expect(count, 'Kết quả lọc PNG phải có ảnh').toBeGreaterThan(0);
     });
   });
 
@@ -491,7 +446,7 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     await searchResultPage.waitForResultDisplay();
 
     await test.step('Verify điều hướng tới trang kết quả tìm kiếm bằng hình ảnh', async () => {
-      await expect(searchResultPage.resultHeading).toContainText('アップロードされた画像に似ているイラスト素材');
+      await expect(searchResultPage.resultHeading).toContainText(/アップロード(した|された)画像に似ているイラスト/);
       const count = await searchResultPage.getResultCount();
       if (count > 0) {
         expect(count, 'Phải có hình ảnh tương đồng được hiển thị').toBeGreaterThan(0);
@@ -590,10 +545,10 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
   });
 
   /**
-   * TC-SEARCH-PREM-034: [SORT NEWEST] Sắp xếp kết quả theo "新着順" (Mới nhất)
+   * TC-SEARCH-PREM-034: [SORT NEWEST & KEEP SORT] Sắp xếp theo "新着順" (Mới nhất) và giữ nguyên khi sang Trang 2 (Sheet Case 13, 15)
    * @tags @regression @premium
    */
-  test('TC-SEARCH-PREM-034: Premium User sắp xếp kết quả theo "新着順" (Mới nhất) thành công @regression @premium', async ({
+  test('TC-SEARCH-PREM-034: Premium User sắp xếp theo "新着順" (Mới nhất) và giữ nguyên sắp xếp khi sang Trang 2 @regression @premium', async ({
     page,
     homePage,
     searchResultPage,
@@ -603,18 +558,30 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
 
     await searchResultPage.selectNewestSort();
 
-    await test.step('Verify URL cập nhật tham số srt=-releasedate', async () => {
+    await test.step('Verify URL cập nhật tham số srt=-releasedate và kết quả hiển thị', async () => {
       await expect(page).toHaveURL(/srt=-releasedate/);
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
+      expect(count, 'Kết quả sắp xếp mới nhất phải có ảnh hiển thị').toBeGreaterThan(0);
+    });
+
+    await searchResultPage.goToNextPage();
+
+    await test.step('Verify URL và trạng thái sắp xếp "新着順" vẫn giữ nguyên trên Trang 2', async () => {
+      await expect(page).toHaveURL(/srt=-releasedate/);
+      await expect(page).toHaveURL(/(page|p)=2/);
+      expect(await searchResultPage.getActivePageNumber()).toBe('2');
+      const countPage2 = await searchResultPage.getResultCount();
+      expect(countPage2, 'Trang 2 phải có ảnh hiển thị').toBeGreaterThan(0);
     });
   });
 
   /**
-   * TC-SEARCH-PREM-035: [PAGINATION] Phân trang - Chuyển trang tiếp theo (Next) và trang trước (Prev)
+   * TC-SEARCH-PREM-035: [PAGINATION & DISPLAY COUNT 210] Kiểm tra phân trang (Next / Prev) và số lượng 210 ảnh/trang của Premium User (Sheet Case 14, 16, 21)
+   * Đặc quyền Premium: Cho phép hiển thị tối đa 210 record mỗi trang (khác biệt so với Free/Guest chỉ 70 record)
+   * và giữ nguyên số lượng 210 record khi chuyển trang.
    * @tags @regression @premium
    */
-  test('TC-SEARCH-PREM-035: Premium User chuyển trang phân trang (Next / Prev) thành công @regression @premium', async ({
+  test('TC-SEARCH-PREM-035: Premium User hiển thị mặc định 210 ảnh/trang và chuyển trang phân trang (Next / Prev) thành công @regression @premium', async ({
     page,
     homePage,
     searchResultPage,
@@ -622,17 +589,20 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     await homePage.search('cat');
     await searchResultPage.waitForResultDisplay();
 
-    await test.step('Verify container phân trang hiển thị và đang ở trang 1', async () => {
-      await expect(searchResultPage.paginationContainer).toBeVisible();
+    await test.step('Verify tùy chọn số lượng hiển thị mặc định của Premium User là 210件 và đang ở trang 1', async () => {
+      await searchResultPage.openSortDropdown();
+      await expect(searchResultPage.displayCount210Radio).toBeChecked();
       expect(await searchResultPage.getActivePageNumber()).toBe('1');
+      const countPage1 = await searchResultPage.getResultCount();
+      expect(countPage1, 'Số lượng ảnh hiển thị phải là 210').toBe(210);
     });
 
-    await test.step('Click nút Next và verify URL cập nhật page=2', async () => {
+    await test.step('Click nút Next và verify sang trang 2 tiếp tục hiển thị đủ 210 ảnh', async () => {
       await searchResultPage.goToNextPage();
       await expect(page).toHaveURL(/(page|p)=2/);
       expect(await searchResultPage.getActivePageNumber()).toBe('2');
-      const count = await searchResultPage.getResultCount();
-      expect(count, 'Trang 2 phải có ảnh hiển thị').toBeGreaterThan(0);
+      const countPage2 = await searchResultPage.getResultCount();
+      expect(countPage2, 'Số lượng ảnh trên trang 2 của Premium phải tiếp tục là 210').toBe(210);
     });
 
     await test.step('Click nút Prev và verify quay lại trang 1 linh hoạt', async () => {
@@ -640,68 +610,8 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
       await expect(page).toHaveURL(/search_word=cat|q=cat/);
       expect(page.url()).not.toMatch(/(page|p)=2/);
       expect(await searchResultPage.getActivePageNumber()).toBe('1');
-    });
-  });
-
-  /**
-   * TC-SEARCH-PREM-036: [PAGINATION - KEEP SORT] Giữ nguyên tùy chọn Sắp xếp khi chuyển sang Trang 2 (Sheet Case 13, 15)
-   * Đặc tả: Khi Premium User chọn sắp xếp "関連性の高い順" hoặc "新着順", khi chuyển sang Trang 2
-   * URL và trạng thái sort vẫn giữ nguyên, không tự động chuyển đổi sang sort khác.
-   * @tags @regression @premium
-   */
-  test('TC-SEARCH-PREM-036: Giữ nguyên tùy chọn Sắp xếp "新着順" khi chuyển sang Trang 2 @regression @premium', async ({
-    page,
-    homePage,
-    searchResultPage,
-  }) => {
-    await homePage.search('cat');
-    await searchResultPage.waitForResultDisplay();
-
-    await searchResultPage.selectNewestSort();
-    await expect(page).toHaveURL(/srt=-releasedate/);
-
-    await searchResultPage.goToNextPage();
-
-    await test.step('Verify URL và trạng thái sort vẫn giữ nguyên trên Trang 2', async () => {
-      await expect(page).toHaveURL(/srt=-releasedate/);
-      await expect(page).toHaveURL(/(page|p)=2/);
-      expect(await searchResultPage.getActivePageNumber()).toBe('2');
-    });
-  });
-
-  /**
-   * TC-SEARCH-PREM-037: [PAGINATION - DISPLAY COUNT 210] Kiểm tra số lượng ảnh hiển thị của Premium User (210 ảnh/trang) (Sheet Case 14, 16, 21)
-   * Đặc quyền Premium: Cho phép hiển thị tối đa 210 record mỗi trang (khác biệt so với Free/Guest chỉ 70 record)
-   * và giữ nguyên số lượng 210 record khi chuyển trang.
-   * @tags @regression @premium
-   */
-  test('TC-SEARCH-PREM-037: Verify Premium User hiển thị 210 ảnh trên mỗi trang và giữ nguyên khi phân trang @regression @premium', async ({
-    page,
-    homePage,
-    searchResultPage,
-  }) => {
-    await homePage.search('cat');
-    await searchResultPage.waitForResultDisplay();
-
-    await test.step('Kiểm tra radio hiển thị mặc định của Premium User và chọn 210件', async () => {
-      await searchResultPage.openSortDropdown();
-      const is210Default = await searchResultPage.displayCount210Radio.isChecked();
-      if (!is210Default) {
-        // Nếu môi trường staging chưa set default 210, Premium User chủ động chọn 210件ずつ表示
-        await searchResultPage.selectDisplayCount('210');
-      }
-      await expect(page).toHaveURL(/pp=210/);
-      const countPage1 = await searchResultPage.getResultCount();
-      expect(countPage1, 'Số lượng ảnh hiển thị phải là 210').toBe(210);
-    });
-
-    await searchResultPage.goToNextPage();
-
-    await test.step('Verify trang 2 tiếp tục giữ nguyên cấu hình pp=210 và hiển thị đủ 210 ảnh', async () => {
-      await expect(page).toHaveURL(/pp=210/);
-      await expect(page).toHaveURL(/(page|p)=2/);
-      const countPage2 = await searchResultPage.getResultCount();
-      expect(countPage2, 'Số lượng ảnh trên trang 2 của Premium phải tiếp tục là 210').toBe(210);
+      const countBackToPage1 = await searchResultPage.getResultCount();
+      expect(countBackToPage1, 'Quay lại trang 1 phải có đủ 210 ảnh').toBe(210);
     });
   });
 

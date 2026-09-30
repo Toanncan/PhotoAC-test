@@ -12,7 +12,7 @@ export class HomePage extends BasePage {
 
   /** Search input on the dashboard */
   /** Search input on the dashboard (AC-Illust uses #search_frm input[name="search_word"]) */
-  readonly searchInput = this.page.locator('#search_frm input[name="search_word"], form:not(#search_frm_fixed) input[name="search_word"]:visible, input[name="search_word"]:visible').first();
+  readonly searchInput = this.page.locator('#search_frm input[name="search_word"]').first();
 
   /** User menu / account dropdown */
   private readonly userMenu = this.page.locator('[class*="user-menu"], [class*="user-nav"]').first();
@@ -45,7 +45,7 @@ export class HomePage extends BasePage {
   readonly categoryLinks = this.page.locator('a[href*="cid="][href*="utm_source=categories"], a[href*="c_id="][href*="utm_source=categories"], a[href*="c_names"]');
 
   /** Main search submit button */
-  readonly searchSubmitButton = this.page.locator('form:not(#search_frm_fixed) button.execloginbtn:visible, button.execloginbtn:visible, button.search_btn, #search_btn').first();
+  readonly searchSubmitButton = this.page.locator('#search_frm button.execloginbtn:visible, #search_frm #search_btn:visible, #search_frm button[type="submit"]:visible, form:not(#search_frm_fixed) button.execloginbtn:visible').first();
 
   // ─── Methods ──────────────────────────────────────────────────────────────
 
@@ -175,11 +175,15 @@ export class HomePage extends BasePage {
       });
 
       // Wait for navigation triggered by window.location.href to /search/ris
+      // AC-Illust jQuery listener specifically reads $("input[type='file']")[0]
       await Promise.all([
         this.page.waitForURL(/\/search\/ris/i, { timeout: 30_000, waitUntil: 'domcontentloaded' }),
         (async () => {
-          await this.fileUploadInput.setInputFiles(filePath);
-          await this.fileUploadInput.dispatchEvent('change').catch(() => {});
+          const fileInputs = this.page.locator('input[type="file"]');
+          const count = await fileInputs.count();
+          for (let i = 0; i < count; i++) {
+            await fileInputs.nth(i).setInputFiles(filePath).catch(() => {});
+          }
         })(),
       ]);
     });

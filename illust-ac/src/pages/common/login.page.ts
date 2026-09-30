@@ -75,12 +75,11 @@ export class LoginPage extends BasePage {
         await this.clickElement(this.submitDowloaderButton);
       })
 
-      // Wait for redirect to complete after login — ensures session cookies are fully established
+      // Wait for redirect and user menu to be visible — ensures session cookies are fully established
       await this.page.waitForURL(/\/(user|$)/, { waitUntil: 'domcontentloaded', timeout: 30_000 });
       await this.closePhotoAiModelContent();
-      // Wait for user avatar to be visible, ensuring session cookies are fully established in the context
-      // await this.page.locator('#user-info-dropdown img').nth(1).waitFor({ state: 'visible', timeout: 15_000 });
-      await this.page.waitForTimeout(3000);
+      // Wait for user info menu to confirm login succeeded — non-blocking fallback if selector differs
+      await this.page.locator('#user-info-dropdown, [class*="user-menu"], .user-nav').first().waitFor({ state: 'visible', timeout: 15_000 }).catch(() => {});
     })
   }
 

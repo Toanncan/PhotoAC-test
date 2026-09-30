@@ -21,25 +21,25 @@ export class SearchResultPage extends BasePage {
   readonly resultsOrNoResultLocator: Locator = this.resultItems.first().or(this.noResultMessage.first());
 
   /**
-   * Search results main heading (e.g. 「cat」のイラスト素材 212,012点)
-   * NOTE: AC-Illust does NOT use <h1>. Heading is a <span class="d-inline-block"> element.
+   * Search results main heading (e.g. 「cat」のイラスト素材 212,012点 or アップロードした画像に似ているイラストのイラスト素材)
+   * AC-Illust keyword search uses <span class="d-inline-block">, while RIS image search uses <h1>.
    */
-  readonly resultHeading: Locator = this.page.locator('span.d-inline-block').filter({ hasText: 'のイラスト素材' }).first();
+  readonly resultHeading: Locator = this.page.locator('span.d-inline-block, h1, .ac-section-title').filter({ hasText: 'のイラスト素材' }).first();
 
   /** Result count / total text */
-  readonly resultCount: Locator = this.page.locator('span.d-inline-block').filter({ hasText: 'のイラスト素材' }).first();
+  readonly resultCount: Locator = this.page.locator('span.d-inline-block, h1, .ac-section-title').filter({ hasText: 'のイラスト素材' }).first();
 
   /**
    * Search keyword input box on results page.
-   * AC-Illust uses name="search_word" (NOT name="q" or id="sw" like photo-ac).
+   * Scoped to #search_frm to avoid matching hidden fixed header input or mobile drawer.
    */
-  readonly searchInput: Locator = this.page.locator('input[name="search_word"].input-search-word').first();
+  readonly searchInput: Locator = this.page.locator('#search_frm input[name="search_word"]').first();
 
-  /** Reset keyword button inside search box */
-  readonly resetKeywordButton: Locator = this.page.getByRole('button', { name: 'リセット' });
+  /** Reset keyword button inside search box (scoped to #search_frm to avoid multiple match) */
+  readonly resetKeywordButton: Locator = this.page.locator('#search_frm button.reset-keywords-btn, #search_frm button[aria-label="リセット"]').first();
 
   /** Submit search button */
-  readonly searchSubmitButton: Locator = this.page.locator('#search_frm button.execloginbtn:visible, #search_frm button[type="submit"]:visible, button.execloginbtn:visible, button.search_btn, #search_btn').first();
+  readonly searchSubmitButton: Locator = this.page.locator('#search_frm button.execloginbtn:visible, #search_frm #search_btn:visible, #search_frm button[type="submit"]:visible, button.execloginbtn:visible').first();
 
   // ─── Sort Dropdown Locators ────────────────────────────────────────────────
 
@@ -103,26 +103,26 @@ export class SearchResultPage extends BasePage {
   // ─── Filter Toolbar Locators ───────────────────────────────────────────────
 
   /** Filter button: Category (カテゴリー) */
-  readonly categoryFilterButton: Locator = this.page.locator('#filter-dropdown-categories > button, button:has-text("カテゴリー")').first();
+  readonly categoryFilterButton: Locator = this.page.locator('#filter-dropdown-categories > button');
 
   /**
    * Filter button: File & Format (ファイル・向き)
    * AC-Illust uses #filter-dropdown-format (NOT #filter-dropdown-sizesec like photo-ac).
    */
-  readonly fileOrientationButton: Locator = this.page.locator('#filter-dropdown-format > button, button:has-text("ファイル・向き")').first();
+  readonly fileOrientationButton: Locator = this.page.locator('#filter-dropdown-format > button');
 
   /** Filter button: Color (色) */
-  readonly colorFilterButton: Locator = this.page.locator('#filter-dropdown-color > button, button:has-text("色")').first();
+  readonly colorFilterButton: Locator = this.page.locator('#filter-dropdown-color > button');
   // NOTE: 人物指定 filter (personFilterButton) does NOT exist on AC-Illust — removed.
 
   /** Filter button: Exclude Keyword (除外キーワード) */
-  readonly excludeKeywordFilterButton: Locator = this.page.locator('#filter-dropdown-exclude-kw > button, button:has-text("除外キーワード")').first();
+  readonly excludeKeywordFilterButton: Locator = this.page.locator('#filter-dropdown-exclude-kw > button');
 
   /** Filter button: Detailed Search (詳細検索) */
-  readonly detailedFilterButton: Locator = this.page.locator('#filter-dropdown-detail > button, button:has-text("詳細検索")').first();
+  readonly detailedFilterButton: Locator = this.page.locator('#filter-dropdown-detail > button');
 
   /** Filter button: Display Conditions (表示条件) */
-  readonly displayConditionFilterButton: Locator = this.page.locator('#filter-dropdown-display > button, button:has-text("表示条件")').first();
+  readonly displayConditionFilterButton: Locator = this.page.locator('#filter-dropdown-display > button');
 
   /** Filter clear all link ("すべてクリア") displayed when any filter is active */
   readonly clearAllFiltersButton: Locator = this.page.getByRole('link', { name: 'すべてクリア' })
@@ -194,10 +194,10 @@ export class SearchResultPage extends BasePage {
   readonly paginationActivePage: Locator = this.page.locator('div.pagination_bottom a.paginator_p.selected, div.pagination_bottom .paginator_p_current');
 
   /** Next page button */
-  readonly paginationNextButton: Locator = this.page.locator('div.pagination_bottom a.paginator_next, div.pagination_bottom a[class*="next"]').first();
+  readonly paginationNextButton: Locator = this.page.locator('div.pagination_bottom a.next-page, div.pagination_bottom a[rel="next"], div.pagination_bottom a[class*="next"]').first();
 
   /** Previous page button */
-  readonly paginationPrevButton: Locator = this.page.locator('div.pagination_bottom a.paginator_prev, div.pagination_bottom a[class*="prev"]').first();
+  readonly paginationPrevButton: Locator = this.page.locator('div.pagination_bottom a.prevpage-page, div.pagination_bottom a[rel="prev"], div.pagination_bottom a[class*="prev"]').first();
   // NOTE: AI Search (.search-by-ai) and AI Face (.face-list .face-item) do NOT exist on AC-Illust.
 
   /** Introductory / promotional dialog popup (e.g. Premium feature tips dialog) */
@@ -282,12 +282,15 @@ export class SearchResultPage extends BasePage {
   async openSortDropdown(): Promise<void> {
     await test.step('Open sort dropdown menu', async () => {
       await this.dismissIntroDialogIfPresent();
-      await expect(async () => {
-        if (!await this.sortRelevanceLabel.isVisible()) {
-          await this.clickElement(this.sortDropdownButton);
-        }
-        await expect(this.sortRelevanceLabel).toBeVisible({ timeout: 1_000 });
-      }).toPass({ intervals: [500, 1_000], timeout: 10_000 });
+      if (await this.sortRelevanceLabel.isVisible().catch(() => false)) {
+        return;
+      }
+      const isExpanded = await this.sortDropdownButton.getAttribute('aria-expanded').catch(() => null);
+      if (isExpanded !== 'true') {
+        await this.sortDropdownButton.scrollIntoViewIfNeeded().catch(() => {});
+        await this.clickElement(this.sortDropdownButton);
+      }
+      await expect(this.sortRelevanceLabel).toBeVisible({ timeout: 5_000 });
     });
   }
 
@@ -572,7 +575,7 @@ export class SearchResultPage extends BasePage {
       await this.clickElement(ddclSelector);
       const categoryOption = this.page.locator(`#filter-dropdown-categories label:has-text("${categoryName}")`).first();
       await this.clickElement(categoryOption, { force: true });
-      const submitBtn = this.page.locator('#filter-horizontal button[type="submit"].position-absolute, #search_frm_menu button.position-absolute, #filter-dropdown-categories button[type="submit"]').first();
+      const submitBtn = this.page.locator('button.opacity-0.position-absolute, button[onclick*="searchExecMenu"], button[aria-label="submit"], #filter-horizontal button[type="submit"]').first();
       await this.clickElement(submitBtn, { force: true });
       await this.waitForResultDisplay();
     });
@@ -599,17 +602,21 @@ export class SearchResultPage extends BasePage {
    * @param expectedOption - The option locator inside the dropdown menu that should become visible
    * @param timeout - Maximum timeout in ms (default 10_000)
    */
-  async openToolbarDropdown(dropdownButton: Locator, expectedOption: Locator, timeout: number = 10_000): Promise<void> {
-    await expect(async () => {
-      const isVisible = await expectedOption.isVisible().catch(() => false);
-      if (!isVisible) {
-        await dropdownButton.scrollIntoViewIfNeeded().catch(() => {});
-        await dropdownButton.click().catch(async () => {
-          await dropdownButton.click({ force: true });
-        });
-      }
-      await expect(expectedOption).toBeVisible({ timeout: 2_000 });
-    }).toPass({ timeout, intervals: [400, 800, 1_200] });
+  async openToolbarDropdown(dropdownButton: Locator, expectedOption?: Locator, timeout: number = 10_000): Promise<void> {
+    await this.dismissIntroDialogIfPresent();
+    if (expectedOption && await expectedOption.isVisible().catch(() => false)) {
+      return;
+    }
+    const isExpanded = await dropdownButton.getAttribute('aria-expanded').catch(() => null);
+    if (isExpanded !== 'true') {
+      await dropdownButton.scrollIntoViewIfNeeded().catch(() => {});
+      await dropdownButton.click().catch(async () => {
+        await dropdownButton.click({ force: true });
+      });
+    }
+    if (expectedOption) {
+      await expect(expectedOption).toBeVisible({ timeout: Math.min(timeout, 5_000) });
+    }
   }
 
   /**
@@ -701,11 +708,9 @@ export class SearchResultPage extends BasePage {
    */
   async applyExcludeKeyword(excludeKeyword: string): Promise<void> {
     await test.step(`Apply exclude keyword: "${excludeKeyword}"`, async () => {
-      if (!await this.excludeKeywordInput.isVisible()) {
-        await this.clickElement(this.excludeKeywordFilterButton);
-      }
+      await this.openToolbarDropdown(this.excludeKeywordFilterButton, this.excludeKeywordInput);
       await this.fillInput(this.excludeKeywordInput, excludeKeyword);
-      await this.page.keyboard.press('Enter');
+      await this.excludeKeywordInput.press('Enter');
       await this.waitForResultDisplay();
     });
   }
@@ -797,7 +802,7 @@ export class SearchResultPage extends BasePage {
       await this.openToolbarDropdown(this.detailedFilterButton, this.detailedPhotoIdInput);
       await expect(this.detailedPhotoIdInput).toBeVisible({ timeout: 5_000 });
       await this.detailedPhotoIdInput.fill(photoId);
-      const submitBtn = this.page.locator('#search_frm_menu button.position-absolute, #filter-dropdown-detail button[type="submit"]').first();
+      const submitBtn = this.page.locator('button.opacity-0.position-absolute, button[onclick*="searchExecMenu"], button[aria-label="submit"], #filter-horizontal button[type="submit"]').first();
       await this.clickElement(submitBtn, { force: true });
       await this.waitForResultDisplay();
     });
@@ -809,12 +814,12 @@ export class SearchResultPage extends BasePage {
    */
   async searchByDetailedCreator(creatorName: string = 'Acworks'): Promise<void> {
     await test.step(`Search by Creator "${creatorName}" via Detailed Search`, async () => {
-      const creatorPlaceholder = this.page.locator('#filter-dropdown-detail span:has-text("クリエイター名を入力")').first();
+      const creatorPlaceholder = this.page.locator('#filter-dropdown-detail span:has-text("クリエイター名を入力"), #filter-dropdown-detail .tag-editor').first();
       await this.openToolbarDropdown(this.detailedFilterButton, creatorPlaceholder);
       await this.clickElement(creatorPlaceholder, { force: true });
       await this.page.keyboard.type(creatorName);
       await this.page.keyboard.press('Enter');
-      const submitBtn = this.page.locator('#search_frm_menu button.position-absolute, #filter-dropdown-detail button[type="submit"]').first();
+      const submitBtn = this.page.locator('button.opacity-0.position-absolute, button[onclick*="searchExecMenu"], button[aria-label="submit"], #filter-horizontal button[type="submit"]').first();
       await this.clickElement(submitBtn, { force: true });
       await this.waitForResultDisplay();
     });
@@ -831,7 +836,7 @@ export class SearchResultPage extends BasePage {
       await this.clickElement(ngPlaceholder, { force: true });
       await this.page.keyboard.type(ngCreatorName);
       await this.page.keyboard.press('Enter');
-      const submitBtn = this.page.locator('#search_frm_menu button.position-absolute, #filter-dropdown-detail button[type="submit"]').first();
+      const submitBtn = this.page.locator('button.opacity-0.position-absolute, button[onclick*="searchExecMenu"], button[aria-label="submit"], #filter-horizontal button[type="submit"]').first();
       await this.clickElement(submitBtn, { force: true });
       await this.waitForResultDisplay();
     });
