@@ -22,22 +22,12 @@ const PROJECTS = {
   'photo-ac': {
     id: 'photo-ac',
     name: 'Photo-AC',
-    dir: fs.existsSync(path.join(ROOT_DIR, 'photo-ac')) ? path.join(ROOT_DIR, 'photo-ac') : ROOT_DIR,
-    testsDir: fs.existsSync(path.join(ROOT_DIR, 'photo-ac', 'src', 'tests'))
-      ? path.join(ROOT_DIR, 'photo-ac', 'src', 'tests')
-      : path.join(ROOT_DIR, 'src', 'tests'),
-    allureResultsDir: fs.existsSync(path.join(ROOT_DIR, 'photo-ac'))
-      ? path.join(ROOT_DIR, 'photo-ac', 'allure-results')
-      : path.join(ROOT_DIR, 'allure-results'),
-    allureReportDir: fs.existsSync(path.join(ROOT_DIR, 'photo-ac'))
-      ? path.join(ROOT_DIR, 'photo-ac', 'allure-report')
-      : path.join(ROOT_DIR, 'allure-report'),
-    playwrightReportDir: fs.existsSync(path.join(ROOT_DIR, 'photo-ac'))
-      ? path.join(ROOT_DIR, 'photo-ac', 'playwright-report')
-      : path.join(ROOT_DIR, 'playwright-report'),
-    testResultsDir: fs.existsSync(path.join(ROOT_DIR, 'photo-ac'))
-      ? path.join(ROOT_DIR, 'photo-ac', 'test-results')
-      : path.join(ROOT_DIR, 'test-results')
+    dir: path.join(ROOT_DIR, 'photo-ac'),
+    testsDir: path.join(ROOT_DIR, 'photo-ac', 'src', 'tests'),
+    allureResultsDir: path.join(ROOT_DIR, 'photo-ac', 'allure-results'),
+    allureReportDir: path.join(ROOT_DIR, 'photo-ac', 'allure-report'),
+    playwrightReportDir: path.join(ROOT_DIR, 'photo-ac', 'playwright-report'),
+    testResultsDir: path.join(ROOT_DIR, 'photo-ac', 'test-results')
   },
   'illust-ac': {
     id: 'illust-ac',
