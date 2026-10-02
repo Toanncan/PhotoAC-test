@@ -1,5 +1,6 @@
 import * as path from 'path';
 import { test, expect } from '../../fixtures/base.fixture';
+import { captureEvidenceWithUrl } from '../../utils/helpers';
 
 /**
  * ============================================================================
@@ -29,6 +30,15 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
 
     await homePage.goToHomePage();
     await homePage.isHomePageLoaded();
+  });
+
+  test.afterEach(async ({ page, searchResultPage }, testInfo) => {
+    // 1. Chụp ảnh lưu bằng chứng lúc bộ lọc đang hiển thị đầy đủ
+    if (testInfo.status === 'passed' && (await searchResultPage.hasActiveFilters())) {
+      await captureEvidenceWithUrl(page, testInfo, 'filter-applied-evidence');
+    }
+    // 2. Dọn dẹp sạch sẽ bộ lọc cho test case tiếp theo
+    await searchResultPage.clearAllFilters();
   });
 
   // ============================================================================
@@ -104,47 +114,32 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-004: Tìm kiếm tiếp từ thanh tìm kiếm trên trang kết quả (Search Again)
+   * TC-SEARCH-GUEST-004: Xóa nhanh từ khóa bằng nút Reset và tìm kiếm từ khóa mới trực tiếp trên trang kết quả (Search Again)
    * @tags @guest
    */
-  test('TC-SEARCH-GUEST-004: Tìm kiếm từ khóa mới trực tiếp từ trang kết quả @guest', async ({
+  test('TC-SEARCH-GUEST-004: Guest xóa từ khóa bằng nút Reset và tìm kiếm từ khóa mới trực tiếp từ trang kết quả @guest', async ({
     page,
     homePage,
     searchResultPage,
   }) => {
-    await homePage.search('cat');
-    await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
-
+    const initialKeyword = 'cat';
     const newKeyword = 'dog';
-    await searchResultPage.searchAgain(newKeyword);
 
-    await test.step('Verify URL và heading cập nhật sang từ khóa mới', async () => {
+    await homePage.search(initialKeyword);
+    await searchResultPage.waitForResultDisplay();
+
+    await test.step('Verify từ khóa hiển thị trong ô tìm kiếm và xóa bằng nút Reset', async () => {
+      await expect(searchResultPage.searchInput).toHaveValue(initialKeyword);
+      await searchResultPage.clickResetKeyword();
+      await expect(searchResultPage.searchInput).toHaveValue('');
+    });
+
+    await test.step('Nhập từ khóa mới và tìm kiếm lại trực tiếp trên trang kết quả', async () => {
+      await searchResultPage.searchAgain(newKeyword);
       await expect(page).toHaveURL(new RegExp(`/main/search\\?.*q=${newKeyword}`));
       await expect(searchResultPage.resultHeading).toContainText(`「${newKeyword}」の写真素材`);
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
-    });
-  });
-
-  /**
-   * TC-SEARCH-GUEST-005: Xóa từ khóa bằng nút Reset trên ô tìm kiếm
-   * @tags @guest
-   */
-  test('TC-SEARCH-GUEST-005: Xóa nhanh từ khóa trong ô tìm kiếm bằng nút Reset @guest', async ({
-    homePage,
-    searchResultPage,
-  }) => {
-    const keyword = 'cat';
-
-    await homePage.search(keyword);
-    await searchResultPage.waitForResultDisplay();
-
-    await expect(searchResultPage.searchInput).toHaveValue(keyword);
-    await searchResultPage.clickResetKeyword();
-
-    await test.step('Verify giá trị trong ô searchbox bị xóa về rỗng', async () => {
-      await expect(searchResultPage.searchInput).toHaveValue('');
+      expect(count, 'Kết quả tìm kiếm từ khóa mới phải có ảnh hiển thị').toBeGreaterThan(0);
     });
   });
 
@@ -205,54 +200,42 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   // ============================================================================
 
   /**
-   * TC-SEARCH-GUEST-008: Filter ảnh theo Chiều dọc (縦長)
+   * TC-SEARCH-GUEST-008: Lọc ảnh theo Chiều dọc (縦長) và chuyển đổi sang Chiều ngang (横長) qua Toolbar
    * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-008: Filter ảnh theo Chiều dọc (縦長) @guest @filter', async ({
+  test('TC-SEARCH-GUEST-008: Guest lọc và chuyển đổi Chiều ảnh (Dọc 縦長 / Ngang 横長) qua Toolbar @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
-  }) => {
+  }, testInfo) => {
     const keyword = 'cat';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
-    await searchResultPage.selectOrientation('vertical');
-
-    await test.step('Verify URL cập nhật tham số orientation=0, badge hiển thị và kết quả hiển thị', async () => {
+    await test.step('Lọc theo Chiều dọc (縦長) và verify URL, badge hiển thị', async () => {
+      await searchResultPage.selectOrientation('vertical');
       await expect(page).toHaveURL(/orientation=0/);
       await expect(searchResultPage.getActiveFilterBadge('縦長')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       await expect(searchResultPage.resultHeading).toContainText(`「${keyword}」の写真素材`);
       const count = await searchResultPage.getResultCount();
       expect(count, 'Kết quả sau khi lọc chiều dọc phải có ảnh').toBeGreaterThan(0);
+
+      // Chụp lưu bằng chứng trạng thái Lọc Dọc (TC-008)
+      await captureEvidenceWithUrl(page, testInfo, 'EVD-TC008-orientation-vertical');
     });
-  });
 
-  /**
-   * TC-SEARCH-GUEST-009: Lọc ảnh theo Chiều ngang (横長) qua toolbar
-   * @tags @guest @filter
-   */
-  test('TC-SEARCH-GUEST-009: Filter ảnh theo Chiều ngang (横長) @guest @filter', async ({
-    page,
-    homePage,
-    searchResultPage,
-  }) => {
-    const keyword = 'cat';
-    await homePage.search(keyword);
-    await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
-
-    await searchResultPage.selectOrientation('horizontal');
-
-    await test.step('Verify URL cập nhật tham số orientation=1 và badge hiển thị', async () => {
+    await test.step('Chuyển đổi sang Chiều ngang (横長) và verify URL, badge cập nhật tương ứng', async () => {
+      await searchResultPage.selectOrientation('horizontal');
       await expect(page).toHaveURL(/orientation=1/);
       await expect(searchResultPage.getActiveFilterBadge('横長')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
       const count = await searchResultPage.getResultCount();
       expect(count, 'Kết quả sau khi lọc chiều ngang phải có ảnh').toBeGreaterThan(0);
+
+      // Chụp lưu bằng chứng trạng thái Lọc Ngang (TC-009)
+      await captureEvidenceWithUrl(page, testInfo, 'EVD-TC009-orientation-horizontal');
     });
   });
 
@@ -267,7 +250,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   }) => {
     await homePage.search('frame');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectPsdFormat();
 
@@ -281,52 +263,41 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-011: Lọc kích thước ảnh Mサイズ以上 qua Toolbar "ファイル・向き"
+   * TC-SEARCH-GUEST-011: Lọc và chuyển đổi Kích thước ảnh (M / L) qua Toolbar "ファイル・向き"
    * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-011: Filter kích thước ảnh Mサイズ以上 @guest @filter', async ({
+  test('TC-SEARCH-GUEST-011: Guest lọc và chuyển đổi Kích thước ảnh (M / L) qua Toolbar "ファイル・向き" @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
-  }) => {
+  }, testInfo) => {
     await homePage.search('sky');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
-    await searchResultPage.selectSize('m');
-
-    await test.step('Verify URL cập nhật tham số sizesec=m, badge hiển thị và kết quả hiển thị', async () => {
+    await test.step('Lọc theo kích thước Mサイズ以上 và verify URL, badge hiển thị', async () => {
+      await searchResultPage.selectSize('m');
       await expect(page).toHaveURL(/sizesec=m/);
       await expect(searchResultPage.getActiveFilterBadge('Mサイズ以上がある')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
+
+      // Chụp lưu bằng chứng trạng thái Kích thước M (TC-011)
+      await captureEvidenceWithUrl(page, testInfo, 'EVD-TC011-size-m');
     });
-  });
 
-  /**
-   * TC-SEARCH-GUEST-012: Lọc kích thước ảnh Lサイズ qua Toolbar "ファイル・向き"
-   * @tags @guest @filter
-   */
-  test('TC-SEARCH-GUEST-012: Filter kích thước ảnh Lサイズ @guest @filter', async ({
-    page,
-    homePage,
-    searchResultPage,
-  }) => {
-    await homePage.search('sky');
-    await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
-
-    await searchResultPage.selectSize('l');
-
-    await test.step('Verify URL cập nhật tham số sizesec=l, badge hiển thị và kết quả hiển thị', async () => {
+    await test.step('Chuyển đổi sang kích thước Lサイズ và verify URL, badge cập nhật tương ứng', async () => {
+      await searchResultPage.selectSize('l');
       await expect(page).toHaveURL(/sizesec=l/);
       await expect(searchResultPage.getActiveFilterBadge('Lサイズがある')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
+
+      // Chụp lưu bằng chứng trạng thái Kích thước L (TC-012)
+      await captureEvidenceWithUrl(page, testInfo, 'EVD-TC012-size-l');
     });
   });
 
@@ -341,7 +312,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   }) => {
     await homePage.search('学生');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectCategoryFromToolbar('人物');
 
@@ -366,7 +336,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     const keyword = 'flower';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectColor('blue');
 
@@ -381,77 +350,52 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-015: Filter ảnh Không có người (無人 / model_count=0) qua Toolbar
+   * TC-SEARCH-GUEST-015: Lọc và chuyển đổi số lượng người mẫu (0 người 無人 ➔ 1 người 1人 ➔ 3+ người 3人以上) qua Toolbar "人数"
    * @tags @guest @filter
    */
-  test('TC-SEARCH-GUEST-015: Filter ảnh Không có người (無人) @guest @filter', async ({
+  test('TC-SEARCH-GUEST-015: Guest lọc và chuyển đổi số lượng người mẫu (0 người ➔ 1 người ➔ 3+ người) qua Toolbar @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
-  }) => {
-    const keyword = 'office';
+  }, testInfo) => {
+    const keyword = 'ビジネス';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
-    await searchResultPage.selectModelCount('0');
-
-    await test.step('Verify URL cập nhật tham số model_count=0 và badge hiển thị', async () => {
+    await test.step('1. Lọc ảnh Không có người (無人 / model_count=0) và verify kết quả', async () => {
+      await searchResultPage.selectModelCount('0');
       await expect(page).toHaveURL(/model_count=0/);
       await expect(searchResultPage.getActiveFilterBadge('無人')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
+      expect(count, 'Kết quả sau khi lọc không người phải có ảnh').toBeGreaterThan(0);
+
+      // Chụp lưu bằng chứng trạng thái Không có người (TC-015)
+      await captureEvidenceWithUrl(page, testInfo, 'EVD-TC015-model-count-0');
     });
-  });
 
-  /**
-   * TC-SEARCH-GUEST-016: Filter ảnh có 1 người mẫu (1人 / model_count=1) qua Toolbar
-   * @tags @guest @filter
-   */
-  test('TC-SEARCH-GUEST-016: Filter ảnh có 1 người mẫu (1人) @guest @filter', async ({
-    page,
-    homePage,
-    searchResultPage,
-  }) => {
-    const keyword = 'ビジネス';
-    await homePage.search(keyword);
-    await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
-
-    await searchResultPage.selectModelCount('1');
-
-    await test.step('Verify URL cập nhật tham số model_count=1 và badge hiển thị', async () => {
+    await test.step('2. Chuyển đổi sang ảnh có 1 người mẫu (1人 / model_count=1) và verify kết quả', async () => {
+      await searchResultPage.selectModelCount('1');
       await expect(page).toHaveURL(/model_count=1/);
       await expect(searchResultPage.getActiveFilterBadge('1人')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
+      expect(count, 'Kết quả sau khi lọc 1 người phải có ảnh').toBeGreaterThan(0);
+
+      // Chụp lưu bằng chứng trạng thái 1 người mẫu (TC-016)
+      await captureEvidenceWithUrl(page, testInfo, 'EVD-TC016-model-count-1');
     });
-  });
 
-  /**
-   * TC-SEARCH-GUEST-017: Filter ảnh có từ 3 người mẫu trở lên (3人以上 / model_count=3) qua Toolbar
-   * @tags @guest @filter
-   */
-  test('TC-SEARCH-GUEST-017: Filter ảnh có từ 3 người mẫu trở lên (3人以上) @guest @filter', async ({
-    page,
-    homePage,
-    searchResultPage,
-  }) => {
-    const keyword = '家族';
-    await homePage.search(keyword);
-    await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
-
-    await searchResultPage.selectModelCount('3');
-
-    await test.step('Verify URL cập nhật tham số model_count=3 và badge hiển thị', async () => {
+    await test.step('3. Chuyển đổi sang ảnh có từ 3 người mẫu trở lên (3人以上 / model_count=3) và verify kết quả', async () => {
+      await searchResultPage.selectModelCount('3');
       await expect(page).toHaveURL(/model_count=3/);
       await expect(searchResultPage.getActiveFilterBadge('3人以上')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
+      expect(count, 'Kết quả sau khi lọc 3 người trở lên phải có ảnh').toBeGreaterThan(0);
+
+      // Chụp lưu bằng chứng trạng thái 3+ người mẫu (TC-017)
+      await captureEvidenceWithUrl(page, testInfo, 'EVD-TC017-model-count-3');
     });
   });
 
@@ -467,7 +411,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     const keyword = '学生';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectAge('young');
 
@@ -492,7 +435,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     const keyword = '女性';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectModelRelease(true);
 
@@ -517,7 +459,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     const keyword = '建物';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectPropertyRelease(true);
 
@@ -541,7 +482,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   }) => {
     await homePage.search('landscape');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.toggleExcludeAi(true);
 
@@ -563,7 +503,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   }) => {
     await homePage.search('東京 タワー');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.toggleExactMatch(true);
 
@@ -590,7 +529,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
 
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.applyExcludeKeyword(excludeKeyword);
 
@@ -616,7 +554,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     const creatorName = 'Acworks';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.searchByDetailedCreator(creatorName);
 
@@ -643,7 +580,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     const ngCreatorName = 'Acworks';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.searchByDetailedNgCreator(ngCreatorName);
 
@@ -675,7 +611,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   }) => {
     await homePage.search('学生');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await test.step('Chọn số lượng người mẫu: 2人 trên toolbar', async () => {
       await searchResultPage.selectModelCount('2');
@@ -705,7 +640,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     const keyword = 'office';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await test.step('Chọn chiều ảnh: 横長 (Horizontal) trên toolbar', async () => {
       await searchResultPage.selectOrientation('horizontal');
@@ -768,7 +702,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     const photoId = '1597634';
     await homePage.search('flower');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.searchByDetailedPhotoId(photoId);
 
@@ -929,23 +862,37 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   // ============================================================================
 
   /**
-   * TC-SEARCH-GUEST-033: Sắp xếp kết quả theo "新着順" (Mới nhất)
+   * TC-SEARCH-GUEST-033: Sắp xếp kết quả theo "新着順" (Mới nhất) và giữ nguyên sắp xếp khi sang Trang 2 (Sheet Case 15)
    * @tags @guest
    */
-  test('TC-SEARCH-GUEST-033: Sắp xếp kết quả theo "新着順" (Mới nhất) thành công @guest', async ({
+  test('TC-SEARCH-GUEST-033: Sắp xếp kết quả theo "新着順" (Mới nhất) và giữ nguyên sắp xếp khi sang Trang 2 @guest', async ({
     page,
     homePage,
     searchResultPage,
-  }) => {
+  }, testInfo) => {
     await homePage.search('cat');
     await searchResultPage.waitForResultDisplay();
 
-    await searchResultPage.selectNewestSort();
-
-    await test.step('Verify URL cập nhật tham số srt=-releasedate', async () => {
+    await test.step('1. Sắp xếp theo "新着順" (Mới nhất) và verify URL, kết quả hiển thị', async () => {
+      await searchResultPage.selectNewestSort();
       await expect(page).toHaveURL(/srt=-releasedate/);
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
+      expect(count, 'Kết quả sắp xếp mới nhất phải có ảnh hiển thị').toBeGreaterThan(0);
+
+      // Chụp lưu bằng chứng trạng thái Sắp xếp Mới nhất trên Trang 1 (TC-033)
+      await captureEvidenceWithUrl(page, testInfo, 'EVD-TC033-sort-newest-p1');
+    });
+
+    await test.step('2. Chuyển sang Trang 2 và verify trạng thái sắp xếp "新着順" được giữ nguyên', async () => {
+      await searchResultPage.goToNextPage();
+      await expect(page).toHaveURL(/srt=-releasedate/);
+      await expect(page).toHaveURL(/p=2/);
+      expect(await searchResultPage.getActivePageNumber()).toBe('2');
+      const countPage2 = await searchResultPage.getResultCount();
+      expect(countPage2, 'Trang 2 phải có ảnh hiển thị').toBeGreaterThan(0);
+
+      // Chụp lưu bằng chứng bảo toàn Sắp xếp trên Trang 2 (TC-036)
+      await captureEvidenceWithUrl(page, testInfo, 'EVD-TC036-sort-newest-p2');
     });
   });
 
@@ -975,91 +922,54 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-035: Phân trang - Chuyển trang tiếp theo (Next) và trang trước (Prev)
+   * TC-SEARCH-GUEST-035: Kiểm tra phân trang (Next / Prev) và hiển thị mặc định 70 ảnh/trang (Sheet Case 12, 20, 23)
    * @tags @guest
    */
-  test('TC-SEARCH-GUEST-035: Chuyển trang phân trang (Next / Prev) thành công @guest', async ({
+  test('TC-SEARCH-GUEST-035: Guest hiển thị mặc định 70 ảnh/trang và chuyển trang phân trang (Next / Prev) thành công @guest', async ({
     page,
     homePage,
     searchResultPage,
-  }) => {
+  }, testInfo) => {
     await homePage.search('cat');
     await searchResultPage.waitForResultDisplay();
 
-    await test.step('Verify container phân trang hiển thị và đang ở trang 1', async () => {
-      await expect(searchResultPage.paginationContainer).toBeVisible();
+    await test.step('1. Verify menu "表示件数" có radio 70件 được check mặc định và đếm số lượng trang 1', async () => {
+      await searchResultPage.openSortDropdown();
+      await expect(searchResultPage.displayCount70Radio).toBeChecked();
+      await expect(searchResultPage.sortDropdownButton).toContainText('70件表示');
+      await searchResultPage.clickElement(searchResultPage.sortDropdownButton);
       expect(await searchResultPage.getActivePageNumber()).toBe('1');
+      const countPage1 = await searchResultPage.getResultCount();
+      expect(countPage1, 'Trang 1 phải có ảnh hiển thị').toBeGreaterThan(0);
+      expect(countPage1, 'Trang 1 không được vượt quá giới hạn 70 ảnh').toBeLessThanOrEqual(70);
+
+      // Chụp lưu bằng chứng Trang 1 mặc định 70 ảnh (TC-037)
+      await captureEvidenceWithUrl(page, testInfo, 'EVD-TC037-default-70-items-p1');
     });
 
-    await test.step('Click nút Next và verify URL cập nhật p=2', async () => {
+    await test.step('2. Click nút Next và verify sang trang 2 tiếp tục hiển thị trong giới hạn tối đa 70 ảnh', async () => {
       await searchResultPage.goToNextPage();
       await expect(page).toHaveURL(/p=2/);
       expect(await searchResultPage.getActivePageNumber()).toBe('2');
-      const count = await searchResultPage.getResultCount();
-      expect(count, 'Trang 2 phải có ảnh hiển thị').toBeGreaterThan(0);
+      const countPage2 = await searchResultPage.getResultCount();
+      expect(countPage2, 'Trang 2 phải có ảnh hiển thị').toBeGreaterThan(0);
+      expect(countPage2, 'Trang 2 không được vượt quá giới hạn 70 ảnh').toBeLessThanOrEqual(70);
+
+      // Chụp lưu bằng chứng Phân trang sang Trang 2 (TC-035)
+      await captureEvidenceWithUrl(page, testInfo, 'EVD-TC035-pagination-p2');
     });
 
-    await test.step('Click nút Prev và verify quay lại trang 1', async () => {
+    await test.step('3. Click nút Prev và verify quay lại trang 1 linh hoạt', async () => {
       await searchResultPage.goToPrevPage();
       await expect(page).toHaveURL(/\/main\/search\?.*q=cat/);
       expect(page.url()).not.toContain('p=2');
       expect(await searchResultPage.getActivePageNumber()).toBe('1');
-    });
-  });
+      const countBackToPage1 = await searchResultPage.getResultCount();
+      expect(countBackToPage1, 'Quay lại trang 1 phải có ảnh hiển thị').toBeGreaterThan(0);
+      expect(countBackToPage1, 'Quay lại trang 1 không được vượt quá giới hạn 70 ảnh').toBeLessThanOrEqual(70);
 
-  /**
-   * TC-SEARCH-GUEST-036: Giữ nguyên thứ tự Sắp xếp đã chọn khi chuyển trang (Sheet Case 15)
-   * @tags @guest
-   */
-  test('TC-SEARCH-GUEST-036: Giữ nguyên tùy chọn Sắp xếp "新着順" khi chuyển sang Trang 2 @guest', async ({
-    page,
-    homePage,
-    searchResultPage,
-  }) => {
-    await homePage.search('cat');
-    await searchResultPage.waitForResultDisplay();
-
-    await searchResultPage.selectNewestSort();
-    await expect(page).toHaveURL(/srt=-releasedate/);
-
-    await searchResultPage.goToNextPage();
-
-    await test.step('Verify URL và trạng thái sort vẫn giữ nguyên trên Trang 2', async () => {
-      await expect(page).toHaveURL(/srt=-releasedate/);
-      await expect(page).toHaveURL(/p=2/);
-      expect(await searchResultPage.getActivePageNumber()).toBe('2');
-    });
-  });
-
-  /**
-   * TC-SEARCH-GUEST-037: Kiểm tra hiển thị mặc định 70 ảnh/trang (Sheet Case 12, 20, 23)
-   * @tags @guest
-   */
-  test('TC-SEARCH-GUEST-037: Số lượng ảnh hiển thị mặc định đạt 70 ảnh trên mỗi trang và radio 70 được check default @guest', async ({
-    homePage,
-    searchResultPage,
-  }) => {
-    await homePage.search('cat');
-    await searchResultPage.waitForResultDisplay();
-
-    await test.step('Verify menu "表示件数" có radio 70件ずつ表示 được check default', async () => {
-      await searchResultPage.openSortDropdown();
-      await expect(searchResultPage.displayCount70Radio).toBeChecked();
-      await expect(searchResultPage.sortDropdownButton).toContainText('70件表示');
-    });
-
-    await test.step('Verify trang 1 hiển thị trong giới hạn tối đa 70 ảnh', async () => {
-      const countPage1 = await searchResultPage.getResultCount();
-      expect(countPage1, 'Trang 1 phải có ảnh hiển thị').toBeGreaterThan(0);
-      expect(countPage1, 'Trang 1 không được vượt quá giới hạn 70 ảnh').toBeLessThanOrEqual(70);
-    });
-
-    await searchResultPage.goToNextPage();
-
-    await test.step('Verify trang 2 tiếp tục hiển thị trong giới hạn tối đa 70 ảnh', async () => {
-      const countPage2 = await searchResultPage.getResultCount();
-      expect(countPage2, 'Trang 2 phải có ảnh hiển thị').toBeGreaterThan(0);
-      expect(countPage2, 'Trang 2 không được vượt quá giới hạn 70 ảnh').toBeLessThanOrEqual(70);
+      // Chụp lưu bằng chứng Quay lại Trang 1 (TC-035)
+      await captureEvidenceWithUrl(page, testInfo, 'EVD-TC035-pagination-back-p1');
     });
   });
 

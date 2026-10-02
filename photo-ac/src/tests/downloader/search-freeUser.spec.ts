@@ -1,5 +1,6 @@
 import * as path from 'path';
 import { test, expect } from '../../fixtures/base.fixture';
+import { captureEvidenceWithUrl } from '../../utils/helpers';
 
 /**
  * ============================================================================
@@ -32,9 +33,32 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
 
   const sampleImagePath = path.resolve(__dirname, '../../../test-data/sample-search.jpg');
 
-  test.beforeEach(async ({ homePage }) => {
+  test.beforeEach(async ({ page, homePage }) => {
+    // Targeted Network Mocking: Luôn duy trì hạn mức tìm kiếm (search_zancnt: 4)
+    // nhằm bảo vệ các test case bộ lọc/tìm kiếm thông thường không bị modal #searchLimitModal chặn ngang khi chạy cả suite.
+    await page.route('**/*is_enable_search*', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          status: 'success',
+          message: 'Allowed',
+          data: { search_zancnt: 4 },
+        }),
+      });
+    });
+
     await homePage.goToHomePage();
     await homePage.isHomePageLoaded();
+  });
+
+  test.afterEach(async ({ page, searchResultPage }, testInfo) => {
+    // 1. Chụp ảnh lưu bằng chứng lúc bộ lọc đang hiển thị đầy đủ
+    if (testInfo.status === 'passed' && (await searchResultPage.hasActiveFilters())) {
+      await captureEvidenceWithUrl(page, testInfo, 'filter-applied-evidence');
+    }
+    // 2. Dọn dẹp sạch sẽ bộ lọc cho test case tiếp theo
+    await searchResultPage.clearAllFilters();
   });
 
   // ============================================================================
@@ -120,7 +144,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
   }) => {
     await homePage.search('cat');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     const newKeyword = 'dog';
     await searchResultPage.searchAgain(newKeyword);
@@ -219,7 +242,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
     const keyword = 'cat';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectOrientation('vertical');
 
@@ -245,7 +267,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
     const keyword = 'cat';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectOrientation('horizontal');
 
@@ -269,7 +290,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
   }) => {
     await homePage.search('frame');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectPsdFormat();
 
@@ -294,7 +314,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
   }) => {
     await homePage.search('sky');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectSize('m');
 
@@ -319,7 +338,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
   }) => {
     await homePage.search('sky');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectSize('l');
 
@@ -343,7 +361,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
   }) => {
     await homePage.search('学生');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectCategoryFromToolbar('人物');
 
@@ -368,7 +385,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
     const keyword = 'flower';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectColor('blue');
 
@@ -393,7 +409,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
     const keyword = 'office';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectModelCount('0');
 
@@ -418,7 +433,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
     const keyword = 'ビジネス';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectModelCount('1');
 
@@ -444,7 +458,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
     const keyword = '家族';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectModelCount('3');
 
@@ -470,7 +483,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
     const keyword = '学生';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectAge('young');
 
@@ -495,7 +507,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
     const keyword = '女性';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectModelRelease(true);
 
@@ -521,7 +532,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
     const keyword = '建物';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectPropertyRelease(true);
 
@@ -545,7 +555,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
   }) => {
     await homePage.search('landscape');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.toggleExcludeAi(true);
 
@@ -567,7 +576,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
   }) => {
     await homePage.search('東京 タワー');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.toggleExactMatch(true);
 
@@ -594,7 +602,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
 
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.applyExcludeKeyword(excludeKeyword);
 
@@ -621,7 +628,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
     const creatorName = 'Acworks';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.searchByDetailedCreator(creatorName);
 
@@ -649,7 +655,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
     const ngCreatorName = 'Acworks';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.searchByDetailedNgCreator(ngCreatorName);
 
@@ -682,7 +687,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
   }) => {
     await homePage.search('学生');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await test.step('Chọn số lượng người mẫu: 2人 trên toolbar', async () => {
       await searchResultPage.selectModelCount('2');
@@ -713,7 +717,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
     const keyword = 'office';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await test.step('Chọn chiều ảnh: 横長 (Horizontal) trên toolbar', async () => {
       await searchResultPage.selectOrientation('horizontal');
@@ -778,7 +781,6 @@ test.describe('Search & Filters Feature — Free User (Logged In Account)', () =
     const photoId = '1597634';
     await homePage.search('flower');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.searchByDetailedPhotoId(photoId);
 

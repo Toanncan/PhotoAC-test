@@ -1,5 +1,6 @@
 import * as path from 'path';
 import { test, expect } from '../../fixtures/base.fixture';
+import { captureEvidenceWithUrl } from '../../utils/helpers';
 
 /**
  * ============================================================================
@@ -31,8 +32,12 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     await homePage.isHomePageLoaded();
   });
 
-  test.afterEach(async ({ searchResultPage }) => {
-    // Tự động dọn dẹp bộ lọc sau mỗi test case qua nút "すべてクリア"
+  test.afterEach(async ({ page, searchResultPage }, testInfo) => {
+    // 1. Chụp ảnh lưu bằng chứng lúc bộ lọc đang hiển thị đầy đủ
+    if (testInfo.status === 'passed' && (await searchResultPage.hasActiveFilters())) {
+      await captureEvidenceWithUrl(page, testInfo, 'filter-applied-evidence');
+    }
+    // 2. Dọn dẹp sạch sẽ bộ lọc cho test case tiếp theo
     await searchResultPage.clearAllFilters();
   });
 
@@ -268,7 +273,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   }) => {
     await homePage.search('学生');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectCategoryFromToolbar('人物');
 
@@ -294,7 +298,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     const keyword = 'flower';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectColor('blue');
 
@@ -321,7 +324,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   }) => {
     await homePage.search('landscape');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.toggleExcludeAi(true);
 
@@ -343,7 +345,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   }) => {
     await homePage.search('東京 タワー');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.toggleExactMatch(true);
 
@@ -370,7 +371,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
 
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.applyExcludeKeyword(excludeKeyword);
 
@@ -397,7 +397,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     const creatorName = 'Acworks';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.searchByDetailedCreator(creatorName);
 
@@ -425,7 +424,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     const ngCreatorName = 'Acworks';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.searchByDetailedNgCreator(ngCreatorName);
 
@@ -485,7 +483,6 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     const photoId = '1597634';
     await homePage.search('flower');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.searchByDetailedPhotoId(photoId);
 

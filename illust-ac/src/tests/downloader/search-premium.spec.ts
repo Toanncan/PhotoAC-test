@@ -1,5 +1,6 @@
 import * as path from 'path';
 import { test, expect } from '../../fixtures/base.fixture';
+import { captureEvidenceWithUrl } from '../../utils/helpers';
 
 /**
  * ============================================================================
@@ -26,8 +27,12 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     await homePage.isHomePageLoaded();
   });
 
-  test.afterEach(async ({ searchResultPage }) => {
-    // Tự động dọn dẹp bộ lọc và khôi phục trạng thái mặc định (人気順 & 210件) nếu có thay đổi qua nút "すべてクリア"
+  test.afterEach(async ({ page, searchResultPage }, testInfo) => {
+    // 1. Chụp ảnh lưu bằng chứng lúc bộ lọc đang hiển thị đầy đủ
+    if (testInfo.status === 'passed' && (await searchResultPage.hasActiveFilters())) {
+      await captureEvidenceWithUrl(page, testInfo, 'filter-applied-evidence');
+    }
+    // 2. Dọn dẹp sạch sẽ bộ lọc cho test case tiếp theo
     await searchResultPage.clearAllFilters();
   });
 
@@ -259,7 +264,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
   }) => {
     await homePage.search('学生');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectCategoryFromToolbar('人物');
 
@@ -284,7 +288,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     const keyword = 'flower';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectColor('blue');
 
@@ -308,7 +311,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
   }) => {
     await homePage.search('landscape');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.toggleExcludeAi(true);
 
@@ -330,7 +332,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
   }) => {
     await homePage.search('東京 タワー');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.toggleExactMatch(true);
 
@@ -357,7 +358,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
 
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.applyExcludeKeyword(excludeKeyword);
 
@@ -384,7 +384,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     const creatorName = 'Acworks';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.searchByDetailedCreator(creatorName);
 
@@ -412,7 +411,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     const ngCreatorName = 'Acworks';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.searchByDetailedNgCreator(ngCreatorName);
 
@@ -470,7 +468,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     const photoId = '1597634';
     await homePage.search('flower');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.searchByDetailedPhotoId(photoId);
 
