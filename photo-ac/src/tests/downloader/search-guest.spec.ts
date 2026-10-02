@@ -703,7 +703,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     await homePage.search('flower');
     await searchResultPage.waitForResultDisplay();
 
-    await searchResultPage.searchByDetailedPhotoId(photoId);
+    await searchResultPage.filterByDetailedPhotoId(photoId);
 
     await test.step('Verify URL, badge và kết quả trả về đúng 1 ảnh khớp ID', async () => {
       await expect(page).toHaveURL(new RegExp(`qid=${photoId}`));

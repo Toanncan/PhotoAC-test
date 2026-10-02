@@ -932,13 +932,14 @@ export class SearchResultPage extends BasePage {
    * Search by exact Photo ID (素材ID) using the Detailed Search menu.
    * @param photoId - Numeric photo ID (e.g. '1597634')
    */
-  async searchByDetailedPhotoId(photoId: string): Promise<void> {
-    await test.step(`Search by Photo ID "${photoId}" via Detailed Search`, async () => {
+  async filterByDetailedPhotoId(photoId: string): Promise<void> {
+    await test.step(`Filter by Photo ID "${photoId}" via Detailed Search`, async () => {
       await this.openToolbarDropdown(this.detailedFilterButton, this.detailedPhotoIdInput);
       await expect(this.detailedPhotoIdInput).toBeVisible({ timeout: 5_000 });
       await this.detailedPhotoIdInput.fill(photoId);
-      const submitBtn = this.page.locator('#search_frm_menu button.position-absolute, #filter-dropdown-detail button[type="submit"]').first();
-      await this.clickElement(submitBtn, { force: true });
+      // const submitBtn = this.page.locator('#search_frm_menu button.position-absolute, #filter-dropdown-detail button[type="submit"]').first();
+      // await this.clickElement(submitBtn, { force: true });
+      await this.page.keyboard.press('Enter');
       await this.waitForResultDisplay();
     });
   }

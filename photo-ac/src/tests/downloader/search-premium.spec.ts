@@ -759,7 +759,7 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     await homePage.search('flower');
     await searchResultPage.waitForResultDisplay();
 
-    await searchResultPage.searchByDetailedPhotoId(photoId);
+    await searchResultPage.filterByDetailedPhotoId(photoId);
 
     await test.step('Verify URL, badge và kết quả trả về đúng ảnh khớp ID', async () => {
       await expect(page).toHaveURL(new RegExp(`qid=${photoId}`));
