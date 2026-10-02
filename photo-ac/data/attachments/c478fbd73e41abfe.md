@@ -1,0 +1,729 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: downloader/search-guest.spec.ts >> Search Feature — Guest (No-Login User) >> TC-SEARCH-GUEST-015: Guest lọc và chuyển đổi số lượng người mẫu (0 người ➔ 1 người ➔ 3+ người) qua Toolbar @guest @filter
+- Location: photo-ac/src/tests/downloader/search-guest.spec.ts:356:7
+
+# Error details
+
+```
+Test timeout of 60000ms exceeded.
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic: "URL: https://test-lien.photo-ac.com/main/search?q=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9&by_ai=&sizesec=all&orientation=all&color=all&model_count=3&age=all&nq=&creator=&ngcreator=&qid=&exclude_ai=on&layout=vertical&mdlrlrsec=all&prprlrsec=all&srt=dlrank&pp=70"
+  - paragraph [ref=e3]:
+    - text: 当Webサイトはよりよいユーザー体験を実現するためにCookieを使用しています。これ以降ページを遷移した場合、Cookieの設定および使用に同意したことになります。詳細についてはプライバシーポリシーをご覧ください。
+    - link "詳細" [ref=e4] [cursor=pointer]:
+      - /url: /main/privacy
+    - link "同意" [ref=e5] [cursor=pointer]:
+      - /url: ""
+  - banner [ref=e6]:
+    - generic [ref=e7]:
+      - button "検索フィルター" [ref=e8] [cursor=pointer]:
+        - generic [ref=e9]:
+          - img [ref=e10]
+          - generic [ref=e13]: 
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - link "写真AC" [ref=e18] [cursor=pointer]:
+              - /url: /
+              - img "写真AC" [ref=e19]
+            - text: 
+          - search [ref=e21]:
+            - generic [ref=e23]:
+              - generic [ref=e24]:
+                - text: 
+                - button "AI Search is off" [disabled] [ref=e25]:
+                  - img "AI Search is off" [ref=e26]
+                - text: 
+                - generic [ref=e27]:
+                  - searchbox "キーワード（例：女性）" [ref=e28]: ビジネス
+                  - button "リセット" [ref=e29] [cursor=pointer]:
+                    - img [ref=e31]
+                  - generic [ref=e33]: ビジネス
+                - link "upload file" [ref=e35] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e36]: 
+                - button "search_btn" [ref=e37] [cursor=pointer]:
+                  - generic [ref=e38]: 
+              - button "カテゴリー " [ref=e40] [cursor=pointer]:
+                - text: カテゴリー
+                - generic [ref=e41]: 
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - button "会員登録（無料）" [ref=e45] [cursor=pointer]
+            - text: 
+          - button "ログイン" [ref=e47] [cursor=pointer]:
+            - generic [ref=e48]: 
+            - text: ログイン
+          - button "クリックしてACアプリケーションのリストを表示" [ref=e50] [cursor=pointer]:
+            - img [ref=e51]
+    - text: 
+  - text:      
+  - generic:      
+  - text:     
+  - generic [ref=e53]:
+    - generic [ref=e56]:
+      - generic "ボタンホーム" [ref=e57]:
+        - link "ホーム" [ref=e58] [cursor=pointer]:
+          - /url: /
+          - img [ref=e59]
+      - generic "ボタンフォロー" [ref=e61]:
+        - link "ファン登録" [ref=e62] [cursor=pointer]:
+          - /url: /user/following/
+          - generic [ref=e63]: 
+      - generic "ボタンブックマーク" [ref=e64]:
+        - link "コレクション" [ref=e65] [cursor=pointer]:
+          - /url: /user/bookmarks/
+          - generic [ref=e66]: 
+      - img [ref=e71] [cursor=pointer]
+    - generic [ref=e76]:
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - generic [ref=e81]:
+            - navigation "breadcrumb" [ref=e83]:
+              - list [ref=e84]:
+                - listitem [ref=e85]:
+                  - link "写真AC" [ref=e86] [cursor=pointer]:
+                    - /url: /
+                - listitem [ref=e87]:
+                  - text: /
+                  - link "ビジネス" [ref=e88] [cursor=pointer]:
+                    - /url: /main/search?q=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9
+            - button "広告を非表示にする 広告を非表示にする" [ref=e93] [cursor=pointer]:
+              - img "広告を非表示にする" [ref=e94]
+              - generic [ref=e95]: 広告を非表示にする
+            - generic [ref=e96]:
+              - heading "「ビジネス」の写真素材" [level=1] [ref=e97]
+              - text: 10,505点
+          - generic [ref=e100]:
+            - button "検索" [ref=e101] [cursor=pointer]
+            - generic [ref=e102]:
+              - generic [ref=e104]:
+                - generic [ref=e105]: 検索フィルター
+                - generic [ref=e106]:
+                  - button "カテゴリー " [ref=e107] [cursor=pointer]:
+                    - text: カテゴリー
+                    - generic [ref=e108]: 
+                  - text:  
+                - button "ファイル・向き " [ref=e110] [cursor=pointer]:
+                  - text: ファイル・向き
+                  - generic [ref=e111]: 
+                - button "色 " [ref=e113] [cursor=pointer]:
+                  - generic [ref=e115]: 色
+                  - generic [ref=e116]: 
+                - button "人物指定 " [ref=e118] [cursor=pointer]:
+                  - text: 人物指定
+                  - generic [ref=e119]: 
+                - button "除外キーワード " [ref=e121] [cursor=pointer]:
+                  - text: 除外キーワード
+                  - generic [ref=e122]: 
+                - button "詳細検索 " [ref=e124] [cursor=pointer]:
+                  - text: 詳細検索
+                  - generic [ref=e125]: 
+                - button "表示条件 " [ref=e127] [cursor=pointer]:
+                  - text: 表示条件
+                  - generic [ref=e128]: 
+              - button "関連性の高い順／70件表示 " [ref=e133] [cursor=pointer]:
+                - text: 関連性の高い順／70件表示
+                - generic [ref=e134]: 
+            - generic [ref=e136]:
+              - button "3人以上 削除" [ref=e137] [cursor=pointer]:
+                - text: 3人以上
+                - link "削除" [ref=e138]:
+                  - /url: /main/search?q=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9&layout=vertical
+                  - img [ref=e139]
+              - link "すべてクリア" [ref=e141] [cursor=pointer]:
+                - /url: /main/search?q=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9
+          - generic [ref=e142]:
+            - generic [ref=e143]:
+              - figure [ref=e144]:
+                - generic [ref=e145]:
+                  - img "プレミアム素材" [ref=e147]
+                  - text: 
+                - img "会議中の男女 ビジネス,会議,テーブルの写真素材" [ref=e148]
+                - text: 
+              - figure [ref=e149]:
+                - button "広告を非表示にする 広告を非表示にする" [ref=e152] [cursor=pointer]:
+                  - img "広告を非表示にする" [ref=e153]
+                  - generic [ref=e154]: 広告を非表示にする
+              - figure [ref=e156]:
+                - link "pinterest-btn-share" [ref=e160] [cursor=pointer]:
+                  - /url: "https://pinterest.com/pin/create/bookmarklet/?media=https://thumb.photo-ac.com/6c/6ca950723a11ae66a2b89fbf8ebd440f_w.jpg&url=https://test-lien.photo-ac.com/main/detail/4191096&title=男女のビジネスパーソンの写真&description=%E7%94%B7%E5%A5%B3%E3%81%AE%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9%E3%83%91%E3%83%BC%E3%82%BD%E3%83%B3の写真写真AC - No: 4191096／写真素材なら「写真AC」"
+                  - generic [ref=e161]: 
+                - img "男女のビジネスパーソン ビジネス,ビジネスマン,営業の写真素材" [ref=e162]
+                - generic [ref=e165]:
+                  - generic [ref=e166]: 男女のビジネスパーソン
+                  - paragraph [ref=e167]:
+                    - link "FineGraphics" [ref=e168] [cursor=pointer]:
+                      - /url: /profile/638920
+                      - generic [ref=e169]: 
+                      - text: FineGraphics
+                    - link "関連写真" [ref=e170] [cursor=pointer]:
+                      - /url: /main/related?id=4191096
+                      - text: 関連写真
+                      - generic [ref=e171]: 
+              - figure [ref=e172]:
+                - generic [ref=e173]: 
+                - img "作業服を着た日本人女性（建設・事務） 作業服,作業着,エンジニアの写真素材" [ref=e174]
+                - text:  
+              - figure [ref=e175]:
+                - generic [ref=e176]: 
+                - img "打ち合わせをするビジネスマン 女性,笑顔,ビジネスシーンの写真素材" [ref=e177]
+                - text:  
+              - figure [ref=e178]:
+                - generic [ref=e179]: 
+                - img "会議・打ち合わせ・ミーティングする男女 ビジネス,会議,打ち合わせの写真素材" [ref=e180]
+                - text:  
+              - figure [ref=e181]:
+                - generic [ref=e182]: 
+                - img "オフィスで新人の研修をする上司の女性 パソコン,ビジネス,新人研修の写真素材" [ref=e183]
+                - text:  
+              - figure [ref=e184]:
+                - generic [ref=e185]: 
+                - img "休憩でリフレッシュするビジネスウーマン リフレッシュ,休憩,コーヒーの写真素材" [ref=e186]
+                - text:  
+              - figure [ref=e187]:
+                - generic [ref=e188]: 
+                - img "オフィスで会議をする男女のビジネスマン ビジネスマン,会議,ビジネスの写真素材" [ref=e189]
+                - text:  
+              - figure [ref=e190]:
+                - button "広告を非表示にする 広告を非表示にする" [ref=e193] [cursor=pointer]:
+                  - img "広告を非表示にする" [ref=e194]
+                  - generic [ref=e195]: 広告を非表示にする
+              - figure [ref=e197]:
+                - generic [ref=e198]:
+                  - img "プレミアム素材" [ref=e200]
+                  - text: 
+                - img "会議室のテーブルで握手する男女 会議,ビジネス,テーブルの写真素材" [ref=e201]
+                - text: 
+              - figure [ref=e202]:
+                - generic [ref=e203]: 
+                - img "打ち合わせする男女 ビジネス,打ち合わせ,オフィスの写真素材" [ref=e204]
+                - text:  
+              - figure [ref=e205]:
+                - generic [ref=e206]: 
+                - img "オフィスで部下と話す上司のビジネスマン プロジェクト,会議,ビジネスの写真素材" [ref=e207]
+                - text:  
+              - figure [ref=e208]:
+                - generic [ref=e209]: 
+                - img "オフィスで会議をする男女のビジネスマン ビジネスマン,会議,ビジネスの写真素材" [ref=e210]
+                - text:  
+              - figure [ref=e211]:
+                - generic [ref=e212]: 
+                - img "コーヒーを持ちながら話すアジア人女性 同僚,ビジネスウーマン,ビジネスの写真素材" [ref=e213]
+                - text:  
+              - figure [ref=e214]:
+                - generic [ref=e215]: 
+                - img "会議・打ち合わせ・ミーティングする男女 ビジネス,会議,打ち合わせの写真素材" [ref=e216]
+                - text:  
+              - figure [ref=e217]:
+                - generic [ref=e218]: 
+                - img "面接を受ける大学生・就活生（就職活動） ビジネス,面接,就活生の写真素材" [ref=e219]
+                - text:  
+              - figure [ref=e221]:
+                - generic [ref=e222]: 
+                - img "会議・ミーティング 会議,ビジネス,ビジネスマンの写真素材" [ref=e223]
+                - text:  
+              - figure [ref=e224]:
+                - generic [ref=e225]: 
+                - img "会議・ミーティング・打ち合わせ ビジネス,会議,ミーティングの写真素材" [ref=e226]
+                - text:  
+              - figure [ref=e227]:
+                - generic [ref=e228]: 
+                - img "会議室でミーティングをするスーツ姿の男女 会議,提案,アイディアの写真素材" [ref=e229]
+                - text:  
+              - figure [ref=e230]:
+                - generic [ref=e231]: 
+                - img "会議をするビジネスウーマン(営業・企画) ビジネス,パソコン,企画の写真素材" [ref=e232]
+                - text:  
+              - figure [ref=e233]:
+                - generic [ref=e234]: 
+                - img "企画書を見ながらミーティングをする男女 ビジネス,同僚,ミーティングの写真素材" [ref=e235]
+                - text:  
+              - figure [ref=e236]:
+                - generic [ref=e237]: 
+                - img "研修をするビジネスマン・ビジネスウーマン ビジネス,ビジネスマン,ビジネスウーマンの写真素材" [ref=e238]
+                - text:  
+              - figure [ref=e239]:
+                - generic [ref=e240]: 
+                - img "打ち合わせする男女 ビジネス,打ち合わせ,オフィスの写真素材" [ref=e241]
+                - text:  
+              - figure [ref=e242]:
+                - generic [ref=e243]: 
+                - img "若いビジネスパーソン 会議,ビジネス,オフィスの写真素材" [ref=e244]
+                - text:  
+              - figure [ref=e246]:
+                - generic [ref=e247]: 
+                - img "マスクをして打ち合わせする男女 ビジネス,マスク,olの写真素材" [ref=e248]
+                - text:  
+              - figure [ref=e249]:
+                - generic [ref=e250]: 
+                - img "打ち合わせするファイナンシャルプランナー ビジネス,相談,ビジネスウーマンの写真素材" [ref=e251]
+                - text:  
+              - figure [ref=e252]:
+                - generic [ref=e253]: 
+                - img "オフィスで企画会議するビジネスウーマン ビジネス,会議,プロジェクトの写真素材" [ref=e254]
+                - text:  
+              - figure [ref=e255]:
+                - generic [ref=e256]: 
+                - img "仲の良いビジネスウーマン（歩く） 就職活動,新入社員,ビジネスの写真素材" [ref=e257]
+                - text:  
+              - figure [ref=e258]:
+                - generic [ref=e259]: 
+                - img "明るいオフィスで働くビジネスパーソン コワーキングスペース,ビジネスパーソン,働き方改革の写真素材" [ref=e260]
+                - text:  
+              - figure [ref=e261]:
+                - generic [ref=e262]: 
+                - img "夫婦と打ち合わせするビジネスウーマン 相談,ビジネスウーマン,夫婦の写真素材" [ref=e263]
+                - text:  
+              - figure [ref=e264]:
+                - generic [ref=e265]: 
+                - img "スーツ姿のビジネスマンとビジネスウーマン ビジネス,スーツ,オフィスの写真素材" [ref=e266]
+                - text:  
+              - figure [ref=e267]:
+                - generic [ref=e268]: 
+                - img "ミーティングをするビジネスパーソン ビジネス,会議,パソコンの写真素材" [ref=e269]
+                - text:  
+              - figure [ref=e271]:
+                - generic [ref=e272]: 
+                - img "ビルの前に立つ女性3人・ビジネスウーマン ビジネス,働き方改革,ストレスフリーの写真素材" [ref=e273]
+                - text:  
+              - figure [ref=e274]:
+                - generic [ref=e275]: 
+                - img "外回りをするビジネスマン スーツ,ビジネス,男女の写真素材" [ref=e276]
+                - text:  
+              - figure [ref=e277]:
+                - generic [ref=e278]: 
+                - img "PLAN 計画を考えるビジネスパーソン プラン,計画,planの写真素材" [ref=e279]
+                - text:  
+              - figure [ref=e280]:
+                - generic [ref=e281]: 
+                - img "作業着をきた男女 建設,工務店,建築の写真素材" [ref=e282]
+                - text:  
+              - figure [ref=e283]:
+                - generic [ref=e284]: 
+                - img "打ち合わせしてガッツポーズする男女 ビジネス,打ち合わせ,オフィスの写真素材" [ref=e285]
+                - text:  
+              - figure [ref=e286]:
+                - generic [ref=e287]: 
+                - img "オフィスにいるスーツ姿の男女 ビジネス,ビジネスマン,ビジネスウーマンの写真素材" [ref=e288]
+                - text:  
+              - figure [ref=e289]:
+                - generic [ref=e290]: 
+                - img "会議中のビジネスパーソン 会議,ビジネス,オフィスの写真素材" [ref=e291]
+                - text:  
+              - figure [ref=e292]:
+                - generic [ref=e293]: 
+                - img "会議・打ち合わせの途中で休憩をする男女 休憩,会議,同僚の写真素材" [ref=e294]
+                - text:  
+              - figure [ref=e296]:
+                - generic [ref=e297]: 
+                - img "青空の下のスーツ姿の男女（カメラ目線） ビジネス,スーツ,ビジネスマンの写真素材" [ref=e298]
+                - text:  
+              - figure [ref=e299]:
+                - generic [ref=e300]:
+                  - img "プレミアム素材" [ref=e302]
+                  - text: 
+                - img "会議中の男女 ビジネス,会議,仕事の写真素材" [ref=e303]
+                - text: 
+              - figure [ref=e304]:
+                - generic [ref=e305]: 
+                - img "ミーティングをするビジネスパーソン オフィス,ミーティング,ビジネスの写真素材" [ref=e306]
+                - text:  
+              - figure [ref=e307]:
+                - generic [ref=e308]: 
+                - img "会議・ミーティング・打ち合わせ ビジネス,クリエイター,エンジニアの写真素材" [ref=e309]
+                - text:  
+              - figure [ref=e310]:
+                - generic [ref=e311]: 
+                - img "カフェ・オフィスで会議する会社員 ビジネス,打ち合わせ,オフィスの写真素材" [ref=e312]
+                - text:  
+              - figure [ref=e313]:
+                - generic [ref=e314]: 
+                - img "笑顔でこちらを見る男女 会議,ビジネス,オフィスの写真素材" [ref=e315]
+                - text:  
+              - figure [ref=e316]:
+                - generic [ref=e317]:
+                  - img "プレミアム素材" [ref=e319]
+                  - text: 
+                - img "外国人ビジネスマン303 サラリーマン,キャリアウーマン,仕事の写真素材" [ref=e320]
+                - text: 
+              - figure [ref=e321]:
+                - generic [ref=e322]: 
+                - img "オフィスで並ぶ同僚・会社員の男女5人 ビジネス,会社員,同僚の写真素材" [ref=e323]
+                - text:  
+              - figure [ref=e325]:
+                - generic [ref=e326]: 
+                - img "ノートパソコンでビデオチャットをする男性の手-ビジネス背景 パソコン,男性,ビジネスの写真素材" [ref=e327]
+                - text:  
+              - figure [ref=e328]:
+                - generic [ref=e329]:
+                  - img "プレミアム素材" [ref=e331]
+                  - text: 
+                - img "打合せをする男女 ビジネス,会議,打合せの写真素材" [ref=e332]
+                - text: 
+              - figure [ref=e333]:
+                - generic [ref=e334]: 
+                - img "男女の会社員 ビジネス,会社員,正社員の写真素材" [ref=e335]
+                - text:  
+              - figure [ref=e336]:
+                - generic [ref=e337]:
+                  - img "プレミアム素材" [ref=e339]
+                  - text: 
+                - img "オシャレなオフィスで仕事する会社員41 ビジネス,俯瞰,パソコンの写真素材" [ref=e340]
+                - text: 
+              - figure [ref=e341]:
+                - generic [ref=e342]: 
+                - img "オンライン会議・リモート会議・WEB会議 オンライン会議,商談,リモート会議の写真素材" [ref=e343]
+                - text:  
+              - figure [ref=e344]:
+                - generic [ref=e345]: 
+                - img "外を歩くスーツの男女 Business ビジネス,スーツ,リクルートの写真素材" [ref=e346]
+                - text:  
+              - figure [ref=e347]:
+                - generic [ref=e348]: 
+                - img "笑顔で話し合うビジネスパーソン 会議,ビジネス,オフィスの写真素材" [ref=e349]
+                - text:  
+              - figure [ref=e350]:
+                - generic [ref=e351]: 
+                - img "新入社員の日本人女性とビジネスマン ビジネス,新入社員,ビジネスマンの写真素材" [ref=e352]
+                - text:  
+              - figure [ref=e354]:
+                - generic [ref=e355]: 
+                - img "会議・ミーティングをするビジネスウーマン ビジネスウーマン,企画会議,女性の写真素材" [ref=e356]
+                - text:  
+              - figure [ref=e357]:
+                - generic [ref=e358]: 
+                - img "カフェで電話をするビジネスウーマン カフェ,カウンター,スマホの写真素材" [ref=e359]
+                - text:  
+              - figure [ref=e360]:
+                - generic [ref=e361]: 
+                - img "カフェで会議をするビジネスウーマン 商談,会議,営業の写真素材" [ref=e362]
+                - text:  
+              - figure [ref=e363]:
+                - generic [ref=e364]: 
+                - img "オフィスの階段で話をするビジネスパーソン オフィス,階段,ビジネスシーンの写真素材" [ref=e365]
+                - text:  
+              - figure [ref=e366]:
+                - generic [ref=e367]: 
+                - img "パソコンを見て話し合うアジア人 会議,ビジネス,オフィスの写真素材" [ref=e368]
+                - text:  
+              - figure [ref=e369]:
+                - generic [ref=e370]: 
+                - img "スーツ姿のビジネスマン・ビジネスウーマン ビジネス,スーツ,就職活動の写真素材" [ref=e371]
+                - text:  
+              - figure [ref=e372]:
+                - generic [ref=e373]: 
+                - img "打ち合わせしてガッツポーズする男女 ビジネス,打ち合わせ,オフィスの写真素材" [ref=e374]
+                - text:  
+              - figure [ref=e375]:
+                - generic [ref=e376]: 
+                - img "会議・ミーティング・打ち合わせ・企画 会議,ミーティング,企画の写真素材" [ref=e377]
+                - text:  
+              - figure [ref=e379]:
+                - generic [ref=e380]: 
+                - img "会議・ミーティング 会議,ビジネス,ビジネスマンの写真素材" [ref=e381]
+                - text:  
+              - figure [ref=e382]:
+                - generic [ref=e383]: 
+                - img "こちらを見るビジネスパーソン ビジネスパーソン,ビジネスパートナー,ビジネスの写真素材" [ref=e384]
+                - text:  
+              - figure [ref=e385]:
+                - generic [ref=e386]: 
+                - img "ミーティングをするビジネスパーソン ビジネス,会議,パソコンの写真素材" [ref=e387]
+                - text:  
+              - figure [ref=e388]:
+                - generic [ref=e389]: 
+                - img "四人のビジネスマン キャリア,ビジネス,ビジネスマンの写真素材" [ref=e390]
+                - text:  
+              - figure [ref=e391]:
+                - generic [ref=e392]: 
+                - img "スーツ姿のビジネスマン・ビジネスウーマン ビジネス,スーツ,就職活動の写真素材" [ref=e393]
+                - text:  
+              - figure [ref=e394]:
+                - generic [ref=e395]: 
+                - img "ガッツポーズするビジネスウーマン ビジネスウーマン,ビジネス,女性の写真素材" [ref=e396]
+                - text:  
+              - figure [ref=e397]:
+                - generic [ref=e398]: 
+                - img "社内研修 Business ビジネス,セミナー,講習会の写真素材" [ref=e399]
+                - text:  
+            - generic [ref=e400]:
+              - generic [ref=e401]: 関連キーワード
+              - link " 仕事" [ref=e402] [cursor=pointer]:
+                - /url: /main/search?q=%E4%BB%95%E4%BA%8B&model_count=3&layout=vertical
+                - generic [ref=e403]: 
+                - text: 仕事
+              - link " 女性 ビジネス" [ref=e404] [cursor=pointer]:
+                - /url: /main/search?q=%E5%A5%B3%E6%80%A7+%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9&model_count=3&layout=vertical
+                - generic [ref=e405]: 
+                - text: 女性 ビジネス
+              - link " 女性 仕事" [ref=e406] [cursor=pointer]:
+                - /url: /main/search?q=%E5%A5%B3%E6%80%A7+%E4%BB%95%E4%BA%8B&model_count=3&layout=vertical
+                - generic [ref=e407]: 
+                - text: 女性 仕事
+              - link " ビジネス 握手" [ref=e408] [cursor=pointer]:
+                - /url: /main/search?q=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9+%E6%8F%A1%E6%89%8B&model_count=3&layout=vertical
+                - generic [ref=e409]: 
+                - text: ビジネス 握手
+              - link " ビジネス 女性" [ref=e410] [cursor=pointer]:
+                - /url: /main/search?q=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9+%E5%A5%B3%E6%80%A7&model_count=3&layout=vertical
+                - generic [ref=e411]: 
+                - text: ビジネス 女性
+              - link " 男性 ビジネス" [ref=e412] [cursor=pointer]:
+                - /url: /main/search?q=%E7%94%B7%E6%80%A7+%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9&model_count=3&layout=vertical
+                - generic [ref=e413]: 
+                - text: 男性 ビジネス
+              - link " ビジネス 背景" [ref=e414] [cursor=pointer]:
+                - /url: /main/search?q=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9+%E8%83%8C%E6%99%AF&model_count=3&layout=vertical
+                - generic [ref=e415]: 
+                - text: ビジネス 背景
+              - link " ビジネスホテル" [ref=e416] [cursor=pointer]:
+                - /url: /main/search?q=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9%E3%83%9B%E3%83%86%E3%83%AB&model_count=3&layout=vertical
+                - generic [ref=e417]: 
+                - text: ビジネスホテル
+              - link " CG ビジネス" [ref=e418] [cursor=pointer]:
+                - /url: /main/search?q=CG+%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9&model_count=3&layout=vertical
+                - generic [ref=e419]: 
+                - text: CG ビジネス
+              - link " ビジネスシーン" [ref=e420] [cursor=pointer]:
+                - /url: /main/search?q=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9%E3%82%B7%E3%83%BC%E3%83%B3&model_count=3&layout=vertical
+                - generic [ref=e421]: 
+                - text: ビジネスシーン
+              - link " 不動産 ビジネス" [ref=e422] [cursor=pointer]:
+                - /url: /main/search?q=%E4%B8%8D%E5%8B%95%E7%94%A3+%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9&model_count=3&layout=vertical
+                - generic [ref=e423]: 
+                - text: 不動産 ビジネス
+              - link " パソコン ビジネス" [ref=e424] [cursor=pointer]:
+                - /url: /main/search?q=%E3%83%91%E3%82%BD%E3%82%B3%E3%83%B3+%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9&model_count=3&layout=vertical
+                - generic [ref=e425]: 
+                - text: パソコン ビジネス
+              - link " ビジネス イメージ" [ref=e426] [cursor=pointer]:
+                - /url: /main/search?q=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9+%E3%82%A4%E3%83%A1%E3%83%BC%E3%82%B8&model_count=3&layout=vertical
+                - generic [ref=e427]: 
+                - text: ビジネス イメージ
+              - link " ビジネス 男性" [ref=e428] [cursor=pointer]:
+                - /url: /main/search?q=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9+%E7%94%B7%E6%80%A7&model_count=3&layout=vertical
+                - generic [ref=e429]: 
+                - text: ビジネス 男性
+              - link " 電話 ビジネス" [ref=e430] [cursor=pointer]:
+                - /url: /main/search?q=%E9%9B%BB%E8%A9%B1+%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9&model_count=3&layout=vertical
+                - generic [ref=e431]: 
+                - text: 電話 ビジネス
+              - link " 外国人 ビジネス" [ref=e432] [cursor=pointer]:
+                - /url: /main/search?q=%E5%A4%96%E5%9B%BD%E4%BA%BA+%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9&model_count=3&layout=vertical
+                - generic [ref=e433]: 
+                - text: 外国人 ビジネス
+              - link " ネットビジネス" [ref=e434] [cursor=pointer]:
+                - /url: /main/search?q=%E3%83%8D%E3%83%83%E3%83%88%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9&model_count=3&layout=vertical
+                - generic [ref=e435]: 
+                - text: ネットビジネス
+              - link " ビジネス 笑顔" [ref=e436] [cursor=pointer]:
+                - /url: /main/search?q=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9+%E7%AC%91%E9%A1%94&model_count=3&layout=vertical
+                - generic [ref=e437]: 
+                - text: ビジネス 笑顔
+              - link " ビジネス 会議" [ref=e438] [cursor=pointer]:
+                - /url: /main/search?q=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9+%E4%BC%9A%E8%AD%B0&model_count=3&layout=vertical
+                - generic [ref=e439]: 
+                - text: ビジネス 会議
+            - list [ref=e440]:
+              - listitem [ref=e441]:
+                - link "1" [ref=e442] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e443]:
+                - link "2" [ref=e444] [cursor=pointer]:
+                  - /url: /main/search?q=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9&model_count=3&p=2&layout=vertical
+              - listitem [ref=e445]:
+                - link "3" [ref=e446] [cursor=pointer]:
+                  - /url: /main/search?q=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9&model_count=3&p=3&layout=vertical
+              - listitem [ref=e447]:
+                - link "4" [ref=e448] [cursor=pointer]:
+                  - /url: /main/search?q=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9&model_count=3&p=4&layout=vertical
+              - listitem [ref=e449]:
+                - link "5" [ref=e450] [cursor=pointer]:
+                  - /url: /main/search?q=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9&model_count=3&p=5&layout=vertical
+              - listitem [ref=e451]:
+                - link "6" [ref=e452] [cursor=pointer]:
+                  - /url: /main/search?q=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9&model_count=3&p=6&layout=vertical
+              - listitem [ref=e453]: ...
+              - listitem [ref=e454]:
+                - link "次に" [ref=e455] [cursor=pointer]:
+                  - /url: /main/search?q=%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9&model_count=3&p=2&layout=vertical
+                  - generic [ref=e456]: 
+            - generic [ref=e457]: 全10,505件中1 - 70件
+            - paragraph [ref=e458]:
+              - text: 「
+              - strong [ref=e459]: ビジネス
+              - text: 」のキーワードで新規投稿されたフリー写真素材・画像を掲載しております。JPEG形式の高解像度画像が無料でダウンロードできます。気に入った
+              - strong [ref=e460]: ビジネス
+              - text: の写真素材・画像が見つかったら、写真をクリックして、無料ダウンロードページへお進み下さい。高品質なロイヤリティーフリー写真素材を無料でダウンロードしていただけます。商用利用もOKなので、ビジネス写真をチラシやポスター、WEBサイトなどの広告、ポストカードや年賀状などにもご利用いただけます。クレジット表記や許可も必要ありません。
+            - generic [ref=e461]:
+              - generic [ref=e463]: 写真ACグループサイトの「ビジネス」の検索結果（同じアカウントで無料ダウンロードできます）
+              - img "loading" [ref=e466]
+              - separator [ref=e467]
+              - button "広告を非表示にする 広告を非表示にする" [ref=e472] [cursor=pointer]:
+                - img "広告を非表示にする" [ref=e473]
+                - generic [ref=e474]: 広告を非表示にする
+              - separator [ref=e475]
+              - img "loading" [ref=e478]
+              - separator [ref=e479]
+              - img "loading" [ref=e482]
+              - separator [ref=e483]
+              - img "loading" [ref=e486]
+              - separator [ref=e487]
+            - generic [ref=e490]:
+              - strong [ref=e491]: 写真素材リクエスト受け付け中
+              - text: ※100%対応はできませんが最大限努力をいたします。
+              - generic [ref=e492]:
+                - textbox "リクエストしたいキーワードを入力（例：掃除をする人） リクエストを送信" [ref=e494]
+                - button "素材をリクエスト" [ref=e495] [cursor=pointer]
+        - text: 
+      - contentinfo [ref=e497]:
+        - generic [ref=e500]:
+          - generic [ref=e501]: 昨日のダウンロード数：43,960
+          - generic [ref=e502]: 先月のダウンロード数：1,124,624
+          - generic [ref=e503]: 総会員数：1600万人を突破しました
+        - generic [ref=e505]:
+          - generic [ref=e506]:
+            - generic [ref=e507]:
+              - generic [ref=e508]: 写真ACについて 
+              - list [ref=e509]:
+                - listitem [ref=e510]:
+                  - link "写真ACとは" [ref=e511] [cursor=pointer]:
+                    - /url: /main/guide/
+                - listitem [ref=e512]:
+                  - link "運営会社" [ref=e513] [cursor=pointer]:
+                    - /url: /main/about/
+                - listitem [ref=e514]:
+                  - link "個人情報保護方針" [ref=e515] [cursor=pointer]:
+                    - /url: /main/privacy/
+                - listitem [ref=e516]:
+                  - link "特定個人情報基本方針" [ref=e517] [cursor=pointer]:
+                    - /url: /main/policy_personal_info/
+                - listitem [ref=e518]:
+                  - link "特定商取引法に基づく表記" [ref=e519] [cursor=pointer]:
+                    - /url: /main/commercial_transactions/
+                - listitem [ref=e520]:
+                  - link "サイトマップ" [ref=e521] [cursor=pointer]:
+                    - /url: /main/sitemap
+                - listitem [ref=e522]:
+                  - link "セキュリティポリシー" [ref=e523] [cursor=pointer]:
+                    - /url: https://acworks.co.jp/security-policy/
+            - generic [ref=e524]:
+              - generic [ref=e525]: 会員登録 
+              - list [ref=e526]:
+                - listitem [ref=e527]:
+                  - link "無料会員登録" [ref=e528] [cursor=pointer]:
+                    - /url: https://test-accounts.ac-illust.com/signup?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252Fmain%252Fsearch%253Fq%253D%2525E3%252583%252593%2525E3%252582%2525B8%2525E3%252583%25258D%2525E3%252582%2525B9%2526by_ai%253D%2526sizesec%253Dall%2526orientation%253Dall%2526color%253Dall%2526model_count%253D3%2526age%253Dall%2526nq%253D%2526creator%253D%2526ngcreator%253D%2526qid%253D%2526exclude_ai%253Don%2526layout%253Dvertical%2526mdlrlrsec%253Dall%2526prprlrsec%253Dall%2526srt%253Ddlrank%2526pp%253D70&lang=jp
+                - listitem [ref=e529]:
+                  - link "プレミアム会員登録" [ref=e530] [cursor=pointer]:
+                    - /url: https://test-accounts.ac-illust.com/signup?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252Fmain%252Fsearch%253Fq%253D%2525E3%252583%252593%2525E3%252582%2525B8%2525E3%252583%25258D%2525E3%252582%2525B9%2526by_ai%253D%2526sizesec%253Dall%2526orientation%253Dall%2526color%253Dall%2526model_count%253D3%2526age%253Dall%2526nq%253D%2526creator%253D%2526ngcreator%253D%2526qid%253D%2526exclude_ai%253Don%2526layout%253Dvertical%2526mdlrlrsec%253Dall%2526prprlrsec%253Dall%2526srt%253Ddlrank%2526pp%253D70&lang=jp&fromButton=premium_action
+                - listitem [ref=e531]:
+                  - link "無料クリエイター会員登録" [ref=e532] [cursor=pointer]:
+                    - /url: /creator/auth/register
+            - generic [ref=e533]:
+              - generic [ref=e534]: プレミアム会員サービス 
+              - list [ref=e535]:
+                - listitem [ref=e536]:
+                  - link "プレミアム会員登録" [ref=e537] [cursor=pointer]:
+                    - /url: https://test-lien.photo-ac.com/premium/campaign?target=premium_sozai
+                - listitem [ref=e538]:
+                  - link "法人・複数名向けプラン" [ref=e539] [cursor=pointer]:
+                    - /url: https://test-lien.photo-ac.com/premium/business
+                - listitem [ref=e540]:
+                  - link "商品化ライセンス" [ref=e541] [cursor=pointer]:
+                    - /url: /main/extra_license_terms/
+                - listitem [ref=e542]:
+                  - link "あんしんサポート" [ref=e543] [cursor=pointer]:
+                    - /url: /indemnity/
+            - generic [ref=e544]:
+              - generic [ref=e545]: ヘルプ＆ガイド 
+              - list [ref=e546]:
+                - listitem [ref=e547]:
+                  - link "ヘルプ" [ref=e548] [cursor=pointer]:
+                    - /url: https://help.freebie-ac.jp/
+                - listitem [ref=e549]:
+                  - link "利用規約" [ref=e550] [cursor=pointer]:
+                    - /url: /main/terms/
+                - listitem [ref=e551]:
+                  - link "プレミアム会員利用規約" [ref=e552] [cursor=pointer]:
+                    - /url: /main/terms_premium/
+                - listitem [ref=e553]:
+                  - link "AC写真AIラボ利用規約" [ref=e554] [cursor=pointer]:
+                    - /url: /image-generator/terms
+            - generic [ref=e555]:
+              - generic [ref=e556]: グループサイト 
+              - list [ref=e557]:
+                - listitem [ref=e558]:
+                  - link "イラストAC" [ref=e559] [cursor=pointer]:
+                    - /url: https://www.ac-illust.com/
+                - listitem [ref=e560]:
+                  - link "シルエットAC" [ref=e561] [cursor=pointer]:
+                    - /url: https://www.silhouette-ac.com/
+                - listitem [ref=e562]:
+                  - link "フリービーAC" [ref=e563] [cursor=pointer]:
+                    - /url: https://www.freebie-ac.jp/
+                - listitem [ref=e564]:
+                  - link "年賀状AC" [ref=e565] [cursor=pointer]:
+                    - /url: https://www.new-year.bz/
+                - listitem [ref=e566]:
+                  - link "動画AC" [ref=e567] [cursor=pointer]:
+                    - /url: https://video-ac.com
+                - listitem [ref=e568]:
+                  - link "デザインAC" [ref=e569] [cursor=pointer]:
+                    - /url: https://www.design-ac.net/
+                - listitem [ref=e570]:
+                  - link "ACデータ" [ref=e571] [cursor=pointer]:
+                    - /url: https://ac-data.info/
+                - listitem [ref=e572]:
+                  - link "明細AC" [ref=e573] [cursor=pointer]:
+                    - /url: https://meisai-ac.com/
+          - generic [ref=e574]:
+            - link "twitter_btn" [ref=e575] [cursor=pointer]:
+              - /url: https://x.com/ACworks2011
+              - button "twitter_btn" [ref=e576]:
+                - img [ref=e577]
+            - link "facebook_btn" [ref=e579] [cursor=pointer]:
+              - /url: https://www.facebook.com/ACworks2011/
+              - button "facebook_btn" [ref=e580]:
+                - generic [ref=e581]: 
+            - link "pinterest_btn" [ref=e582] [cursor=pointer]:
+              - /url: https://www.pinterest.jp/acworks/
+              - button "pinterest_btn" [ref=e583]:
+                - generic [ref=e584]: 
+            - link "blog_btn" [ref=e585] [cursor=pointer]:
+              - /url: http://blog.acworks.co.jp/
+              - button "blog_btn" [ref=e586]:
+                - generic [ref=e587]: 
+            - link "feedback_modal_btn" [ref=e588] [cursor=pointer]:
+              - /url: "#feedbackModal"
+              - button "feedback_modal_btn" [ref=e589]:
+                - generic [ref=e590]: 
+                - text: ご意見・ご要望
+          - generic [ref=e592]:
+            - text: © 2011-2026
+            - link "写真AC" [ref=e593] [cursor=pointer]:
+              - /url: https://test-lien.photo-ac.com/
+      - generic [ref=e595]:
+        - generic [ref=e596]: 無料で高品質な写真をダウンロードできます！加工や商用利用もOK！
+        - link "無料ダウンロード会員登録はこちら" [ref=e597] [cursor=pointer]:
+          - /url: https://test-accounts.ac-illust.com/signup?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252Fmain%252Fsearch%253Fq%253D%2525E3%252583%252593%2525E3%252582%2525B8%2525E3%252583%25258D%2525E3%252582%2525B9%2526by_ai%253D%2526sizesec%253Dall%2526orientation%253Dall%2526color%253Dall%2526model_count%253D3%2526age%253Dall%2526nq%253D%2526creator%253D%2526ngcreator%253D%2526qid%253D%2526exclude_ai%253Don%2526layout%253Dvertical%2526mdlrlrsec%253Dall%2526prprlrsec%253Dall%2526srt%253Ddlrank%2526pp%253D70&lang=jp
+  - text:                   
+  - generic [ref=e598] [cursor=pointer]:
+    - generic:
+      - paragraph: ご質問は
+      - paragraph: こちらから！
+    - img "chat-icon" [ref=e600]
+    - generic [ref=e601]: ×
+```
