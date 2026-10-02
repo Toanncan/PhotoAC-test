@@ -1,0 +1,491 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: downloader/search-guest.spec.ts >> Search Feature — Guest (No-Login User) >> TC-SEARCH-GUEST-030: Truy cập Recommended Search và giữ tham số rcm=1 khi chuyển trang @guest
+- Location: photo-ac/src/tests/downloader/search-guest.spec.ts:722:7
+
+# Error details
+
+```
+Test timeout of 60000ms exceeded.
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic: "📍 URL: https://test-lien.photo-ac.com/main/search?referer=more_recommended&rcm=1&p=3"
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - button "検索フィルター" [ref=e4] [cursor=pointer]:
+        - generic [ref=e5]:
+          - img [ref=e6]
+          - generic [ref=e9]: 
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - generic [ref=e13]:
+            - link "写真AC" [ref=e14] [cursor=pointer]:
+              - /url: /
+              - img "写真AC" [ref=e15]
+            - text: 
+          - search [ref=e17]:
+            - generic [ref=e19]:
+              - generic [ref=e20]:
+                - text: 
+                - button "AI Search is off" [ref=e21] [cursor=pointer]:
+                  - img "AI Search is off" [ref=e22]
+                - text: 
+                - searchbox "キーワード（例：女性）" [ref=e24]
+                - link "upload file" [ref=e26] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e27]: 
+                - button "search_btn" [ref=e28] [cursor=pointer]:
+                  - generic [ref=e29]: 
+              - button "カテゴリー " [ref=e31] [cursor=pointer]:
+                - text: カテゴリー
+                - generic [ref=e32]: 
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - button "会員登録（無料）" [ref=e36] [cursor=pointer]
+            - text: 
+          - button "ログイン" [ref=e38] [cursor=pointer]:
+            - generic [ref=e39]: 
+            - text: ログイン
+          - button "クリックしてACアプリケーションのリストを表示" [ref=e41] [cursor=pointer]:
+            - img [ref=e42]
+    - text: 
+  - text:      
+  - generic:      
+  - text:     
+  - generic [ref=e44]:
+    - generic [ref=e47]:
+      - generic "ボタンホーム" [ref=e48]:
+        - link "ホーム" [ref=e49] [cursor=pointer]:
+          - /url: /
+          - img [ref=e50]
+      - generic "ボタンフォロー" [ref=e52]:
+        - link "ファン登録" [ref=e53] [cursor=pointer]:
+          - /url: /user/following/
+          - generic [ref=e54]: 
+      - generic "ボタンブックマーク" [ref=e55]:
+        - link "コレクション" [ref=e56] [cursor=pointer]:
+          - /url: /user/bookmarks/
+          - generic [ref=e57]: 
+      - img [ref=e62] [cursor=pointer]
+    - generic [ref=e70]:
+      - generic [ref=e71]:
+        - generic [ref=e72]:
+          - button "広告を非表示にする 広告を非表示にする" [ref=e77] [cursor=pointer]:
+            - img "広告を非表示にする" [ref=e78]
+            - generic [ref=e79]: 広告を非表示にする
+          - generic [ref=e80]:
+            - heading "「おすすめ」の写真素材" [level=1] [ref=e81]
+            - text: 11,490,684点
+        - generic [ref=e84]:
+          - button "検索" [ref=e85] [cursor=pointer]
+          - generic [ref=e86]:
+            - generic [ref=e88]:
+              - generic [ref=e89]: 検索フィルター
+              - generic [ref=e90]:
+                - button "カテゴリー " [ref=e91] [cursor=pointer]:
+                  - text: カテゴリー
+                  - generic [ref=e92]: 
+                - text:  
+              - button "ファイル・向き " [ref=e94] [cursor=pointer]:
+                - text: ファイル・向き
+                - generic [ref=e95]: 
+              - button "色 " [ref=e97] [cursor=pointer]:
+                - generic [ref=e99]: 色
+                - generic [ref=e100]: 
+              - button "人物指定 " [ref=e102] [cursor=pointer]:
+                - text: 人物指定
+                - generic [ref=e103]: 
+              - button "除外キーワード " [ref=e105] [cursor=pointer]:
+                - text: 除外キーワード
+                - generic [ref=e106]: 
+              - button "詳細検索 " [ref=e108] [cursor=pointer]:
+                - text: 詳細検索
+                - generic [ref=e109]: 
+              - button "表示条件 " [ref=e111] [cursor=pointer]:
+                - text: 表示条件
+                - generic [ref=e112]: 
+            - button "関連性の高い順／70件表示 " [ref=e117] [cursor=pointer]:
+              - text: 関連性の高い順／70件表示
+              - generic [ref=e118]: 
+        - generic [ref=e119]:
+          - generic [ref=e120]:
+            - figure [ref=e121]:
+              - generic [ref=e122]: 
+              - img "岡山県宇野港を出港するカーフェリー フェリー,カーフェリー,船舶の写真素材" [ref=e123]
+              - text:  
+            - figure [ref=e124]
+            - figure [ref=e125]:
+              - generic [ref=e126]: 
+              - img "水鳥が泳ぐセントジェームズパーク セントジェームズパーク,ロンドン,イギリスの写真素材" [ref=e127]
+              - text:  
+            - figure [ref=e128]:
+              - generic [ref=e129]: 
+              - img "【北海道】函館市・函館ハリストス正教会 函館ハリストス正教会,北海道,函館市の写真素材" [ref=e130]
+              - generic [ref=e132]: New
+              - text:  
+            - figure [ref=e133]:
+              - generic [ref=e134]: 
+              - img "姫路城 世界遺産,木造,兵庫県の写真素材" [ref=e135]
+              - text:  
+            - figure [ref=e136]:
+              - generic [ref=e137]: 
+              - img "あわじ花さじき 2026年122 向日葵 兵庫県,あわじ花さじき,2026年の写真素材" [ref=e138]
+              - text:  
+            - figure [ref=e139]:
+              - generic [ref=e140]: 
+              - img "裏摩周展望台から見た景色 裏摩周展望台,摩周湖,北海道の写真素材" [ref=e141]
+              - text:  
+            - figure [ref=e142]:
+              - generic [ref=e143]: 
+              - img "メグラスガーデンナゴヤ 愛知県,名古屋,尾張の写真素材" [ref=e144]
+              - generic [ref=e146]: New
+              - text:  
+            - figure [ref=e147]:
+              - generic [ref=e148]: 
+              - img "大分県耶馬溪 紅葉に染まる渓谷 耶馬溪,紅葉,山の写真素材" [ref=e149]
+              - generic [ref=e151]: New
+              - text:  
+            - figure [ref=e152]
+            - figure [ref=e153]:
+              - generic [ref=e154]: 
+              - img "滝 白銀の滝,雄冬岬,増毛町の写真素材" [ref=e155]
+              - text:  
+            - figure [ref=e156]:
+              - generic [ref=e157]: 
+              - img "能登金剛 巌門洞窟周辺の絶壁 能登金剛,巌門洞窟,厳門の写真素材" [ref=e158]
+              - generic [ref=e160]: New
+              - text:  
+            - figure [ref=e161]:
+              - generic [ref=e162]: 
+              - img "ソグネフィヨルド ソグネフィヨルド,ノルウェー,ベルゲンの写真素材" [ref=e163]
+              - text:  
+            - figure [ref=e164]:
+              - generic [ref=e165]: 
+              - img "青森県 恐山の秋景色 恐山,秋,紅葉の写真素材" [ref=e166]
+              - text:  
+            - figure [ref=e167]:
+              - generic [ref=e168]: 
+              - img "５月の牛窓 せとうち,牛窓,初夏の写真素材" [ref=e169]
+              - text:  
+            - figure [ref=e170]:
+              - generic [ref=e171]: 
+              - img "佐賀駅前 佐賀駅,駅前,九州の写真素材" [ref=e172]
+              - generic [ref=e174]: New
+              - text:  
+            - figure [ref=e175]:
+              - generic [ref=e176]: 
+              - img "キュナードビル（リヴァプール） キュナードビル,世界遺産,スリーグレースの写真素材" [ref=e177]
+              - generic [ref=e179]: New
+              - text:  
+            - figure [ref=e181]:
+              - generic [ref=e182]: 
+              - img "勝沼の葡萄畑とぶどうの丘 ぶどう畑,ぶどうの丘,勝沼の写真素材" [ref=e183]
+              - text:  
+            - figure [ref=e184]:
+              - generic [ref=e185]: 
+              - img "チューリッヒの街並み スイス,チューリッヒ,ヨーロッパの写真素材" [ref=e186]
+              - text:  
+            - figure [ref=e187]:
+              - generic [ref=e188]: 
+              - img "小樽手宮緑化公園と小樽港03 風景,自然,空の写真素材" [ref=e189]
+              - generic [ref=e191]: New
+              - text:  
+            - figure [ref=e192]:
+              - generic [ref=e193]: 
+              - img "ソグネフィヨルド ソグネフィヨルド,ノルウェー,ベルゲンの写真素材" [ref=e194]
+              - text:  
+            - figure [ref=e195]:
+              - generic [ref=e196]: 
+              - img "イタリアのブドウ畑 ブドウ畑,畑,段々畑の写真素材" [ref=e197]
+              - generic [ref=e199]: New
+              - text:  
+            - figure [ref=e200]:
+              - generic [ref=e201]: 
+              - img "橋越しに望む城 城,橋,観光の写真素材" [ref=e202]
+              - text:  
+            - figure [ref=e203]:
+              - generic [ref=e204]: 
+              - img "JR北海道 函館本線 東森駅 駅舎 jr北海道,函館本線,東森駅の写真素材" [ref=e205]
+              - generic [ref=e207]: New
+              - text:  
+            - figure [ref=e208]:
+              - generic [ref=e209]: 
+              - img "西教寺本堂の角柱 滋賀,大津市,西教寺の写真素材" [ref=e210]
+              - text:  
+            - figure [ref=e212]:
+              - generic [ref=e213]: 
+              - img "夏の晴天の風景 青空,自然,山の写真素材" [ref=e214]
+              - text:  
+            - figure [ref=e215]:
+              - generic [ref=e216]: 
+              - img "平飼いの名古屋コーチン（メス） 名古屋コーチン,鶏,ニワトリの写真素材" [ref=e217]
+              - text:  
+            - figure [ref=e218]:
+              - generic [ref=e219]: 
+              - img "ニラの花とツマグロヒョウモン ツマグロヒョウモン,蝶,昆虫の写真素材" [ref=e220]
+              - generic [ref=e222]: New
+              - text:  
+            - figure [ref=e223]:
+              - generic [ref=e224]: 
+              - img "冬の龍野城 龍野城,櫓,建物の写真素材" [ref=e225]
+              - text:  
+            - figure [ref=e226]:
+              - generic [ref=e227]: 
+              - img "晩秋の白馬の街並み 秋,風景,景色の写真素材" [ref=e228]
+              - text:  
+            - figure [ref=e229]:
+              - generic [ref=e230]: 
+              - img "冬の川と山並み 川,川辺,水辺の写真素材" [ref=e231]
+              - generic [ref=e233]: New
+              - text:  
+            - figure [ref=e234]:
+              - generic [ref=e235]: 
+              - img "尾道水道 尾道水道,フェリー,漁船の写真素材" [ref=e236]
+              - text:  
+            - figure [ref=e237]:
+              - generic [ref=e238]: 
+              - img "紅葉と冠雪の山 紅葉,冠雪,雪の写真素材" [ref=e239]
+              - text:  
+            - figure [ref=e241]:
+              - generic [ref=e242]: 
+              - img "礼文島・香深港近くの歓迎アーチと町並み 礼文島,北海道,礼文郡の写真素材" [ref=e243]
+              - generic [ref=e245]: New
+              - text:  
+            - figure [ref=e246]:
+              - generic [ref=e247]: 
+              - img "金沢街並み４ kanazawa,金沢,街並みの写真素材" [ref=e248]
+              - text:  
+            - figure [ref=e249]:
+              - generic [ref=e250]: 
+              - img "蔦の絡む壁と青空 ツタ,ナツヅタ,ボストンアイビーの写真素材" [ref=e251]
+              - generic [ref=e253]: New
+              - text:  
+            - figure [ref=e254]:
+              - generic [ref=e255]: 
+              - img "夏の兼六園 霞ヶ池 兼六園,夏,池松の写真素材" [ref=e256]
+              - text:  
+            - figure [ref=e257]:
+              - generic [ref=e258]: 
+              - img "青空とコンクリート壁の背景素材 青空,空,快晴の写真素材" [ref=e259]
+              - generic [ref=e261]: New
+              - text:  
+            - figure [ref=e262]:
+              - generic [ref=e263]: 
+              - img "下鴨神社の御手洗池 御手洗池,下鴨神社,京都の写真素材" [ref=e264]
+              - generic [ref=e266]: New
+              - text:  
+            - figure [ref=e267]:
+              - generic [ref=e268]: 
+              - img "東武東上線・朝霞駅 南口 東武東上線,朝霞駅,朝霞の写真素材" [ref=e269]
+              - generic [ref=e271]: New
+              - text:  
+            - figure [ref=e272]:
+              - generic [ref=e273]: 
+              - img "新発田城（二の丸隅櫓） 新発田城,新発田城（二の丸隅櫓）,あやめ城の写真素材" [ref=e274]
+              - generic [ref=e276]: New
+              - text:  
+            - figure [ref=e278]:
+              - generic [ref=e279]: 
+              - img "秋深まる湖 秋,湖,湖畔の写真素材" [ref=e280]
+              - text:  
+            - figure [ref=e281]:
+              - generic [ref=e282]: 
+              - img "海岸線 海岸線,太地町,夏山海岸の写真素材" [ref=e283]
+              - generic [ref=e285]: New
+              - text:  
+            - figure [ref=e286]:
+              - generic [ref=e287]: 
+              - img "多幸湾から見る天上山 天上山,神津島,伊豆諸島の写真素材" [ref=e288]
+              - text:  
+            - figure [ref=e289]:
+              - generic [ref=e290]: 
+              - img "能登半島 能登金剛 ヤセの断崖の遊歩道 義経の舟隠し,ヤセの断崖,能登金剛の写真素材" [ref=e291]
+              - generic [ref=e293]: New
+              - text:  
+            - figure [ref=e294]:
+              - generic [ref=e295]:
+                - img "プレミアム素材" [ref=e297]
+                - text: 
+              - img "万里の長城８ 中国,中華人民共和国,外国の写真素材" [ref=e298]
+              - text: 
+            - figure [ref=e299]:
+              - generic [ref=e300]: 
+              - img "京都のランドマーク「京都タワー」 京都タワー,京都,京都観光の写真素材" [ref=e301]
+              - generic [ref=e303]: New
+              - text:  
+            - figure [ref=e304]:
+              - generic [ref=e305]: 
+              - img "着陸する白い飛行機と爽やかな青空 飛行機,旅客機,機体の写真素材" [ref=e306]
+              - generic [ref=e308]: New
+              - text:  
+            - figure [ref=e309]:
+              - generic [ref=e310]: 
+              - img "松江城 南東zoom 水平level 松江城,天守閣,国宝の写真素材" [ref=e311]
+              - text:  
+            - figure [ref=e313]:
+              - generic [ref=e314]: 
+              - img "大阪城天守閣 大阪城公園,大阪城,城郭の写真素材" [ref=e315]
+              - text:  
+            - figure [ref=e316]:
+              - generic [ref=e317]: 
+              - img "津島神社 愛知県,津島市,神社の写真素材" [ref=e318]
+              - text:  
+            - figure [ref=e319]:
+              - generic [ref=e320]: 
+              - img "貯水池とダム ダム,水,貯水池の写真素材" [ref=e321]
+              - generic [ref=e323]: New
+              - text:  
+            - figure [ref=e324]:
+              - generic [ref=e325]: 
+              - img "大分県耶馬溪 紅葉に染まる渓谷 耶馬溪,紅葉,山の写真素材" [ref=e326]
+              - generic [ref=e328]: New
+              - text:  
+            - figure [ref=e329]:
+              - generic [ref=e330]: 
+              - img "ワンプレート 朝食,食卓,ワンプレートの写真素材" [ref=e331]
+              - text:  
+            - figure [ref=e332]:
+              - generic [ref=e333]: 
+              - img "辻堂駅 辻堂駅,駅,駅舎の写真素材" [ref=e334]
+              - text:  
+            - figure [ref=e335]:
+              - generic [ref=e336]: 
+              - img "燃える秋 紅葉,黄葉,褐葉の写真素材" [ref=e337]
+              - generic [ref=e339]: New
+              - text:  
+            - figure [ref=e340]:
+              - generic [ref=e341]: 
+              - img "春の田んぼと花 田んぼ,青空,花の写真素材" [ref=e342]
+              - text:  
+            - figure [ref=e344]:
+              - generic [ref=e345]: 
+              - img "ダム 五十里ダム,重力式コンクリートダム,非常用洪水吐の写真素材" [ref=e346]
+              - text:  
+            - figure [ref=e347]:
+              - generic [ref=e348]: 
+              - img "海岸線 海岸線,太地町,夏山海岸の写真素材" [ref=e349]
+              - generic [ref=e351]: New
+              - text:  
+            - figure [ref=e352]:
+              - generic [ref=e353]: 
+              - img "ソーラーパネル 太陽電池パネル,発電,電力の写真素材" [ref=e354]
+              - generic [ref=e356]: New
+              - text:  
+            - figure [ref=e357]:
+              - generic [ref=e358]: 
+              - img "晩秋と冠雪 晩秋,秋,初冬の写真素材" [ref=e359]
+              - generic [ref=e361]: New
+              - text:  
+            - figure [ref=e362]:
+              - generic [ref=e363]: 
+              - img "真冬の富士山 富士山,雪,冬の写真素材" [ref=e364]
+              - text:  
+            - figure [ref=e365]:
+              - generic [ref=e366]: 
+              - img "男女3人のビジネスチームワークイメージ ビジネス,人物,男女の写真素材" [ref=e367]
+              - text:  
+            - figure [ref=e368]:
+              - generic [ref=e369]: 
+              - img "辰巳ダム（石川県）6 ダム,辰巳ダム,石碑の写真素材" [ref=e370]
+              - generic [ref=e372]: New
+              - text:  
+            - figure [ref=e373]:
+              - generic [ref=e374]: 
+              - img "仙厳園の秀成荘 鹿児島市吉野町 仙厳園,磯庭園,庭園の写真素材" [ref=e375]
+              - text:  
+            - figure [ref=e377]:
+              - generic [ref=e378]: 
+              - img "干潮時の厳島神社社殿 厳島神社,宮島,社殿の写真素材" [ref=e379]
+              - text:  
+            - figure [ref=e380]:
+              - generic [ref=e381]: 
+              - img "水面を見ながら飛び出すカワセミの雄 カワセミ,オス,飛翔写真の写真素材" [ref=e382]
+              - text:  
+            - figure [ref=e383]:
+              - generic [ref=e384]: 
+              - img "天上山からの景色 天上山,神津島,伊豆諸島の写真素材" [ref=e385]
+              - text:  
+            - figure [ref=e386]:
+              - generic [ref=e387]: 
+              - img "コスモスの花 秋の風景 コスモス,コスモス畑,秋の写真素材" [ref=e388]
+              - text:  
+            - figure [ref=e389]:
+              - generic [ref=e390]: 
+              - img "住宅模型 不動産 家,不動産,住宅の写真素材" [ref=e391]
+              - text:  
+            - figure [ref=e392]:
+              - generic [ref=e393]: 
+              - img "深緑の山 三台続くタンクローリー タンクローリー,ガソリン,ガソリン輸送車の写真素材" [ref=e394]
+              - text:  
+            - figure [ref=e395]:
+              - generic [ref=e396]: 
+              - img "夏の角島大橋 ドライブデート,風景,海の写真素材" [ref=e397]
+              - text:  
+          - list [ref=e398]:
+            - listitem [ref=e399]:
+              - link "前の" [ref=e400] [cursor=pointer]:
+                - /url: /main/search?referer=more_recommended&rcm=1&p=2
+                - generic [ref=e401]: 
+            - listitem [ref=e402]:
+              - link "1" [ref=e403] [cursor=pointer]:
+                - /url: /main/search?referer=more_recommended&rcm=1
+            - listitem [ref=e404]:
+              - link "2" [ref=e405] [cursor=pointer]:
+                - /url: /main/search?referer=more_recommended&rcm=1&p=2
+            - listitem [ref=e406]:
+              - link "3" [ref=e407] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e408]:
+              - link "4" [ref=e409] [cursor=pointer]:
+                - /url: /main/search?referer=more_recommended&rcm=1&p=4
+            - listitem [ref=e410]:
+              - link "5" [ref=e411] [cursor=pointer]:
+                - /url: /main/search?referer=more_recommended&rcm=1&p=5
+            - listitem [ref=e412]:
+              - link "6" [ref=e413] [cursor=pointer]:
+                - /url: /main/search?referer=more_recommended&rcm=1&p=6
+            - listitem [ref=e414]: ...
+            - listitem [ref=e415]:
+              - link "次に" [ref=e416] [cursor=pointer]:
+                - /url: /main/search?referer=more_recommended&rcm=1&p=4
+                - generic [ref=e417]: 
+          - generic [ref=e418]: 全11,490,684件中141 - 210件
+          - paragraph [ref=e419]:
+            - text: 「
+            - strong [ref=e420]: おすすめ
+            - text: 」のキーワードで新規投稿されたフリー写真素材・画像を掲載しております。JPEG形式の高解像度画像が無料でダウンロードできます。気に入った
+            - strong [ref=e421]: おすすめ
+            - text: の写真素材・画像が見つかったら、写真をクリックして、無料ダウンロードページへお進み下さい。高品質なロイヤリティーフリー写真素材を無料でダウンロードしていただけます。商用利用もOKなので、ビジネス写真をチラシやポスター、WEBサイトなどの広告、ポストカードや年賀状などにもご利用いただけます。クレジット表記や許可も必要ありません。
+          - generic [ref=e422]:
+            - generic [ref=e424]: 写真ACグループサイトの「おすすめ」の検索結果（同じアカウントで無料ダウンロードできます）
+            - img "loading" [ref=e427]
+            - separator [ref=e428]
+            - button "広告を非表示にする 広告を非表示にする" [ref=e433] [cursor=pointer]:
+              - img "広告を非表示にする" [ref=e434]
+              - generic [ref=e435]: 広告を非表示にする
+            - separator [ref=e436]
+            - img "loading" [ref=e439]
+            - separator [ref=e440]
+            - img "loading" [ref=e443]
+            - separator [ref=e444]
+            - img "loading" [ref=e447]
+            - separator [ref=e448]
+          - generic [ref=e451]:
+            - strong [ref=e452]: 写真素材リクエスト受け付け中
+            - text: ※100%対応はできませんが最大限努力をいたします。
+            - generic [ref=e453]:
+              - textbox "リクエストしたいキーワードを入力（例：掃除をする人） リクエストを送信" [ref=e455]
+              - button "素材をリクエスト" [ref=e456] [cursor=pointer]
+      - text: 
+  - img [ref=e458]
+```
