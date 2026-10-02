@@ -1,3 +1,5 @@
+import { type Page, type TestInfo } from '@playwright/test';
+
 /**
  * Common helper utilities for test automation.
  * Contains reusable pure functions for formatting, random data, and wait conditions.
@@ -87,4 +89,62 @@ export const retry = async <T>(
     }
   }
   throw lastError;
+};
+
+/**
+ * Chụp ảnh bằng chứng có gắn thanh URL Watermark lên DOM và attach vào Allure Report.
+ * An toàn tuyệt đối: Bọc try/catch, không bao giờ ném lỗi làm ảnh hưởng tới kết quả test.
+ * @param page - Playwright Page instance
+ * @param testInfo - Playwright TestInfo instance
+ * @param attachmentName - Tên file đính kèm trong Allure Report (mặc định: 'filter-applied-evidence')
+ */
+export const captureEvidenceWithUrl = async (
+  page: Page,
+  testInfo: TestInfo,
+  attachmentName: string = 'filter-applied-evidence',
+): Promise<void> => {
+  try {
+    if (page.isClosed()) return;
+    const currentUrl = page.url();
+
+    // 1. Gắn thanh URL Watermark màu xanh đen trên đỉnh màn hình (đồng bộ với fixture)
+    await page.evaluate((url) => {
+      let banner = document.getElementById('qa-screenshot-url-banner');
+      if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'qa-screenshot-url-banner';
+        banner.style.position = 'fixed';
+        banner.style.top = '0';
+        banner.style.left = '0';
+        banner.style.width = '100%';
+        banner.style.backgroundColor = 'rgba(15, 23, 42, 0.92)';
+        banner.style.color = '#22c55e';
+        banner.style.fontFamily = 'Consolas, Menlo, Monaco, monospace';
+        banner.style.fontSize = '13px';
+        banner.style.fontWeight = 'bold';
+        banner.style.padding = '6px 14px';
+        banner.style.zIndex = '2147483647';
+        banner.style.borderBottom = '2px solid #22c55e';
+        banner.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.5)';
+        banner.style.pointerEvents = 'none';
+        document.body.prepend(banner);
+      }
+      banner.textContent = 'URL: ' + url;
+    }, currentUrl).catch(() => { });
+
+    // 2. Chụp ảnh toàn trang lúc bộ lọc đang hiển thị đầy đủ
+    const screenshot = await page.screenshot({ fullPage: true });
+    await testInfo.attach(attachmentName, {
+      body: screenshot,
+      contentType: 'image/png',
+    });
+
+    // 3. Đính kèm URL text vào Allure để copy 1-click
+    await testInfo.attach(`${attachmentName}-url`, {
+      body: currentUrl,
+      contentType: 'text/plain',
+    });
+  } catch {
+    // Nuốt lỗi an toàn nếu page bị đóng đột ngột
+  }
 };

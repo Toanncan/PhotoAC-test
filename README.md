@@ -173,49 +173,38 @@ Cấu trúc thư mục thực tế của dự án được tổ chức theo chu�
 
 ```
 photo-ac-test/
-├── playwright.config.ts        # Cấu hình chính của Playwright (Timeout, viewport, browser...)
-├── package.json                # Định nghĩa các thư viện phụ thuộc & script chạy test
-├── tsconfig.json               # Cấu hình TypeScript (chế độ kiểm tra nghiêm ngặt strict)
-├── .env.example                # File mẫu định nghĩa các biến môi trường
-├── .env                        # File chứa tài khoản mật khẩu thực tế (bị gitignore)
-├── .gitignore                  # Chỉ định các file/thư mục Git không theo dõi
-├── README.md                   # Tài liệu hướng dẫn này
+├── photo-ac/                   # Workspace kiểm thử cho website Photo-AC (photo-ac.com)
+│   ├── playwright.config.ts    # Cấu hình Playwright riêng cho Photo-AC
+│   ├── tsconfig.json           # Cấu hình TypeScript riêng cho Photo-AC
+│   ├── package.json            # Package config của Photo-AC workspace
+│   ├── test-data/              # Dữ liệu test mẫu của Photo-AC
+│   └── src/
+│       ├── pages/              # [Page Object Classes] Khai báo Selector và Action UI
+│       │   ├── common/         # Page objects dùng chung (Home, Login, Search Results...)
+│       │   ├── downloader/     # Page objects cho Downloader (Profile, Receipts...)
+│       │   ├── creator/        # Page objects cho Creator (Ranking...)
+│       │   └── mobile/         # Page objects cho giao diện Mobile
+│       ├── fixtures/           # [Custom Fixtures] Khởi tạo Page Objects & Auth Session
+│       ├── tests/              # [Test Specifications] Test scripts (auth, downloader, creator, mobile)
+│       └── utils/              # [Utilities] Tiện ích (Email, PDF, helpers, test-data...)
 │
-├── src/
-│   ├── pages/                  # [Page Object Classes] Khai báo các Selector và Action trên giao diện
-│   │   ├── base.page.ts        # Page cơ sở chứa các hàm dùng chung (Click, Type, Wait...)
-│   │   ├── login.page.ts       # Trang đăng nhập của Member / Downloader
-│   │   ├── creator-login.page.ts # Trang đăng nhập của Creator (Người sáng tạo)
-│   │   ├── dashboard.page.ts   # Giao diện trang chủ / Dashboard sau đăng nhập
-│   │   └── ranking.page.ts     # Giao diện trang Bảng xếp hạng (Ranking)
-│   │
-│   ├── fixtures/               # [Custom Fixtures] Khởi tạo sẵn các Page giúp code test gọn hơn
-│   │   ├── base.fixture.ts     # Mở rộng Playwright test để tự động inject các page instances
-│   │   └── auth.fixture.ts     # Xử lý lưu và tái sử dụng trạng thái đăng nhập (Session state)
-│   │
-│   ├── utils/                  # [Utilities] Các module bổ trợ tiện ích
-│   │   ├── env.config.ts       # Đọc và định kiểu dữ liệu (Strict type) cho các biến .env
-│   │   ├── global-setup.ts     # Cấu hình khởi chạy ban đầu (tạo môi trường ghi log Allure)
-│   │   ├── helpers.ts          # Các helper function xử lý chuỗi, thời gian, định dạng...
-│   │   └── test-data.ts        # Generator tạo dữ liệu test ngẫu nhiên, không trùng lặp
-│   │
-│   └── tests/                  # [Test Specifications] Chứa các test script thực tế
-│       ├── auth/
-│       │   ├── auth.setup.ts   # Thực hiện đăng nhập trước và lưu lại session token (.auth/)
-│       │   └── login.spec.ts   # Các ca kiểm thử liên quan đến Đăng nhập
-│       ├── creator/
-│       │   └── ranking.spec.ts # Các ca kiểm thử liên quan đến Bảng xếp hạng Creator
-│       └── downloader/         # Các ca kiểm thử cho Downloader (Chưa triển khai)
+├── illust-ac/                  # Workspace kiểm thử cho website AC-Illust (ac-illust.com)
+│   ├── playwright.config.ts    # Cấu hình Playwright riêng cho AC-Illust
+│   ├── tsconfig.json           # Cấu hình TypeScript riêng cho AC-Illust
+│   ├── package.json            # Package config của AC-Illust workspace
+│   ├── test-data/              # Dữ liệu test mẫu của AC-Illust
+│   └── src/
+│       ├── pages/              # Page objects cho AC-Illust
+│       ├── fixtures/           # Fixtures cho AC-Illust
+│       ├── tests/              # Test specs cho AC-Illust
+│       └── utils/              # Tiện ích bổ trợ cho AC-Illust
 │
-├── test-data/
-│   └── users.json              # Dữ liệu test tĩnh (Data-driven) như tài khoản mẫu
-│
-├── allure-results/             # Dữ liệu Allure thô (Tự sinh ra khi chạy test)
-├── allure-report/              # Thư mục chứa trang báo cáo Allure hoàn chỉnh (HTML tĩnh)
-├── playwright-report/          # Thư mục báo cáo HTML mặc định của Playwright
-└── .github/
-    └── workflows/
-        └── playwright.yml      # File cấu hình tự động chạy test trên GitHub Actions (CI/CD)
+├── dashboard/                  # Server & Web Test Portal UI cho team QA (Chạy test 1-click)
+├── .github/workflows/          # CI/CD pipelines (photo-ac.yml & illust-ac.yml)
+├── package.json                # Quản lý Workspaces & Scripts điều phối
+├── tsconfig.json               # Cấu hình TypeScript gốc cho Monorepo
+├── Run-Test-App.bat            # Launcher khởi động Test Portal trên Windows
+└── Setup-Lan-Dau.bat           # Script cài đặt môi trường ban đầu
 ```
 
 ---

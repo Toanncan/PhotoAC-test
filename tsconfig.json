@@ -12,24 +12,20 @@
     "resolveJsonModule": true,
     "outDir": "./dist",
     "rootDir": ".",
-    "baseUrl": ".",
-    "paths": {
-      "@pages/*": ["src/pages/*"],
-      "@fixtures/*": ["src/fixtures/*"],
-      "@utils/*": ["src/utils/*"],
-      "@tests/*": ["src/tests/*"],
-      "@test-data/*": ["test-data/*"]
-    }
+    "baseUrl": "."
   },
   "include": [
-    "src/**/*.ts",
-    "playwright.config.ts"
+    "photo-ac/src/**/*.ts",
+    "illust-ac/src/**/*.ts"
   ],
   "exclude": [
     "node_modules",
     "dist",
     "allure-results",
     "allure-report",
-    "playwright-report"
+    "playwright-report",
+    "**/allure-results",
+    "**/allure-report",
+    "**/playwright-report"
   ]
 }

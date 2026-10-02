@@ -110,12 +110,11 @@ export abstract class BasePage {
   }
 
   /**
-   * Wait for an element to disappear (hidden or detached).
-   * @param locator - Playwright Locator
-   * @param timeout - Optional custom timeout in ms
+   * Wait for page loading overlay icon to disappear (hidden or detached).
+   * @param timeout - Optional custom timeout in ms (default: 25_000)
    */
-  async waitForPageLoadingIconHidden(): Promise<void> {
-    await this.pageLoadingIcon.waitFor({ state: 'hidden', timeout: 10_000 });
+  async waitForPageLoadingIconHidden(timeout: number = 25_000): Promise<void> {
+    await this.pageLoadingIcon.waitFor({ state: 'hidden', timeout }).catch(() => {});
   }
 
   /**

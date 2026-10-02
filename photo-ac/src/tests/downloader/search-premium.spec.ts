@@ -1,5 +1,6 @@
 import * as path from 'path';
 import { test, expect } from '../../fixtures/base.fixture';
+import { captureEvidenceWithUrl } from '../../utils/helpers';
 
 /**
  * ============================================================================
@@ -26,6 +27,15 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
   test.beforeEach(async ({ homePage }) => {
     await homePage.goToHomePage();
     await homePage.isHomePageLoaded();
+  });
+
+  test.afterEach(async ({ page, searchResultPage }, testInfo) => {
+    // 1. Chụp ảnh lưu bằng chứng lúc bộ lọc đang hiển thị đầy đủ
+    if (testInfo.status === 'passed' && (await searchResultPage.hasActiveFilters())) {
+      await captureEvidenceWithUrl(page, testInfo, 'filter-applied-evidence');
+    }
+    // 2. Dọn dẹp sạch sẽ bộ lọc cho test case tiếp theo
+    await searchResultPage.clearAllFilters();
   });
 
   // ============================================================================
@@ -111,7 +121,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
   }) => {
     await homePage.search('cat');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     const newKeyword = 'dog';
     await searchResultPage.searchAgain(newKeyword);
@@ -210,7 +219,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     const keyword = 'cat';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectOrientation('vertical');
 
@@ -236,7 +244,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     const keyword = 'cat';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectOrientation('horizontal');
 
@@ -260,7 +267,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
   }) => {
     await homePage.search('frame');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectPsdFormat();
 
@@ -285,7 +291,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
   }) => {
     await homePage.search('sky');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectSize('m');
 
@@ -310,7 +315,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
   }) => {
     await homePage.search('sky');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectSize('l');
 
@@ -334,7 +338,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
   }) => {
     await homePage.search('学生');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectCategoryFromToolbar('人物');
 
@@ -359,7 +362,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     const keyword = 'flower';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectColor('blue');
 
@@ -384,7 +386,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     const keyword = 'office';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectModelCount('0');
 
@@ -409,7 +410,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     const keyword = 'ビジネス';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectModelCount('1');
 
@@ -435,7 +435,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     const keyword = '家族';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectModelCount('3');
 
@@ -461,7 +460,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     const keyword = '学生';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectAge('young');
 
@@ -486,7 +484,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     const keyword = '女性';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectModelRelease(true);
 
@@ -512,7 +509,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     const keyword = '建物';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.selectPropertyRelease(true);
 
@@ -536,7 +532,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
   }) => {
     await homePage.search('landscape');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.toggleExcludeAi(true);
 
@@ -558,7 +553,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
   }) => {
     await homePage.search('東京 タワー');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.toggleExactMatch(true);
 
@@ -585,7 +579,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
 
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.applyExcludeKeyword(excludeKeyword);
 
@@ -612,7 +605,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     const creatorName = 'Acworks';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.searchByDetailedCreator(creatorName);
 
@@ -640,7 +632,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     const ngCreatorName = 'Acworks';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.searchByDetailedNgCreator(ngCreatorName);
 
@@ -673,7 +664,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
   }) => {
     await homePage.search('学生');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await test.step('Chọn số lượng người mẫu: 2人 trên toolbar', async () => {
       await searchResultPage.selectModelCount('2');
@@ -704,7 +694,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     const keyword = 'office';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await test.step('Chọn chiều ảnh: 横長 (Horizontal) trên toolbar', async () => {
       await searchResultPage.selectOrientation('horizontal');
@@ -769,7 +758,6 @@ test.describe('Search & Filters Feature — Premium User (Paid Downloader Accoun
     const photoId = '1597634';
     await homePage.search('flower');
     await searchResultPage.waitForResultDisplay();
-    await searchResultPage.clearAllFilters();
 
     await searchResultPage.searchByDetailedPhotoId(photoId);
 
