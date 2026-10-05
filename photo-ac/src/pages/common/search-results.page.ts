@@ -89,6 +89,13 @@ export class SearchResultPage extends BasePage {
   /** Link to upgrade to Premium inside search limit modal */
   readonly searchLimitPremiumLink: Locator = this.page.locator('#searchLimitModal a:has-text("検索し放題のプレミアム会員になる")');
 
+  /** Tooltip displayed when clicking Premium link inside search limit modal as guest (先にログインしてください。初めての方は無料会員登録) */
+  readonly searchLimitTooltip: Locator = this.page
+    .locator('.popover.show, .tooltip.show, [role="tooltip"]:visible')
+    .filter({ hasText: '先にログインしてください' })
+    .or(this.page.locator('.popover.show .popover-body, .tooltip.show .tooltip-inner').filter({ hasText: '先にログインしてください' }))
+    .or(this.page.getByText('先にログインしてください。初めての方は無料会員登録').locator(':visible'));
+
   /** Guest CTA to register inside search limit modal */
   readonly searchLimitRegisterCta: Locator = this.page.locator('#searchLimitModal .cta-pill');
 
@@ -97,6 +104,18 @@ export class SearchResultPage extends BasePage {
 
   /** Close button for search limit modal */
   readonly searchLimitCloseButton: Locator = this.page.locator('#searchLimitModal button.close');
+
+  /** Coupon dialog displayed inside search limit modal when clicking "一日検索し放題券を使う" */
+  readonly searchLimitCouponDialog: Locator = this.page.locator('#search-limit-coupon-dialog');
+
+  /** Title inside coupon dialog (一日検索し放題券がありません。 / 一日検索し放題チケットが...枚あります。) */
+  readonly searchLimitCouponTitle: Locator = this.page.locator('#search-limit-coupon-dialog .modal-title');
+
+  /** Back button ("戻る") inside coupon dialog to return to main search limit dialog */
+  readonly searchLimitCouponBackButton: Locator = this.page.locator('#search-limit-coupon-dialog .btn-back');
+
+  /** Action button ("獲得方法" or "使用する") inside coupon dialog */
+  readonly searchLimitCouponActionLink: Locator = this.page.locator('#search-limit-coupon-dialog .action a.ac-btn-photo');
 
   // ─── Filter Toolbar Locators ───────────────────────────────────────────────
 
@@ -184,6 +203,7 @@ export class SearchResultPage extends BasePage {
   readonly modelReleaseOnLabel: Locator = this.page.locator('#filter-dropdown-display label[for="mdlrlrsec-on"]').first();
   readonly modelReleaseAllLabel: Locator = this.page.locator('#filter-dropdown-display label[for="mdlrlrsec-all"]').first();
   readonly propertyReleaseOnLabel: Locator = this.page.locator('#filter-dropdown-display label[for="prprlrsec-on"]').first();
+  readonly propertyReleaseAllLabel: Locator = this.page.locator('#filter-dropdown-display label[for="prprlrsec-all"]').first();
 
   // ─── AI Search (AI検索) Locators ─────────────────────────────────────────
 
@@ -300,12 +320,7 @@ export class SearchResultPage extends BasePage {
   async openSortDropdown(): Promise<void> {
     await test.step('Open sort dropdown menu', async () => {
       await this.dismissIntroDialogIfPresent();
-      await expect(async () => {
-        if (!await this.sortRelevanceLabel.isVisible()) {
-          await this.clickElement(this.sortDropdownButton);
-        }
-        await expect(this.sortRelevanceLabel).toBeVisible({ timeout: 1_000 });
-      }).toPass({ intervals: [500, 1_000], timeout: 10_000 });
+      await this.openToolbarDropdown(this.sortDropdownButton, this.sortRelevanceLabel);
     });
   }
 
@@ -314,8 +329,8 @@ export class SearchResultPage extends BasePage {
    */
   async selectNewestSort(): Promise<void> {
     await test.step('Select "新着順" (Newest) sort', async () => {
-      await this.openSortDropdown();
-      await this.clickElement(this.sortNewestLabel);
+      await this.openToolbarDropdown(this.sortDropdownButton, this.sortNewestLabel);
+      await this.clickElement(this.sortNewestLabel, { force: true, noWaitAfter: true });
       await this.waitForResultDisplay();
     });
   }
@@ -325,8 +340,8 @@ export class SearchResultPage extends BasePage {
    */
   async clickPopularSort(): Promise<void> {
     await test.step('Click "人気順" (Popularity) sort option', async () => {
-      await this.openSortDropdown();
-      await this.clickElement(this.sortPopularLabel);
+      await this.openToolbarDropdown(this.sortDropdownButton, this.sortPopularLabel);
+      await this.clickElement(this.sortPopularLabel, { force: true });
     });
   }
 
@@ -335,8 +350,8 @@ export class SearchResultPage extends BasePage {
    */
   async selectPopularSort(): Promise<void> {
     await test.step('Select "人気順" (Popularity) sort for Premium user', async () => {
-      await this.openSortDropdown();
-      await this.clickElement(this.sortPopularLabel);
+      await this.openToolbarDropdown(this.sortDropdownButton, this.sortPopularLabel);
+      await this.clickElement(this.sortPopularLabel, { force: true, noWaitAfter: true });
       await this.waitForResultDisplay();
     });
   }
@@ -346,8 +361,8 @@ export class SearchResultPage extends BasePage {
    */
   async selectRelevanceSort(): Promise<void> {
     await test.step('Select "関連性の高い順" (Relevance) sort', async () => {
-      await this.openSortDropdown();
-      await this.clickElement(this.sortRelevanceLabel);
+      await this.openToolbarDropdown(this.sortDropdownButton, this.sortRelevanceLabel);
+      await this.clickElement(this.sortRelevanceLabel, { force: true, noWaitAfter: true });
       await this.waitForResultDisplay();
     });
   }
@@ -357,11 +372,11 @@ export class SearchResultPage extends BasePage {
    */
   async selectDisplayCount(count: '70' | '140' | '210'): Promise<void> {
     await test.step(`Select display count: ${count} items per page`, async () => {
-      await this.openSortDropdown();
       const targetLabel = count === '210'
         ? this.displayCount210Label
         : (count === '140' ? this.displayCount140Label : this.displayCount70Label);
-      await this.clickElement(targetLabel);
+      await this.openToolbarDropdown(this.sortDropdownButton, targetLabel);
+      await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
       await this.waitForResultDisplay();
     });
   }
@@ -403,57 +418,78 @@ export class SearchResultPage extends BasePage {
     });
   }
 
+  /**
+   * Click premium upgrade link inside search limit modal.
+   */
+  async clickSearchLimitPremiumLink(): Promise<void> {
+    await test.step('Click premium link in Search Limit modal', async () => {
+      await this.searchLimitPremiumLink.scrollIntoViewIfNeeded().catch(() => { });
+      await this.clickElement(this.searchLimitPremiumLink);
+    });
+  }
+
+  /**
+   * Click coupon button inside search limit modal to open coupon dialog.
+   */
+  async openSearchLimitCouponDialog(): Promise<void> {
+    await test.step('Click coupon button in Search Limit modal', async () => {
+      await this.clickElement(this.searchLimitCouponButton);
+      await expect(this.searchLimitCouponDialog).toBeVisible({ timeout: 5_000 });
+    });
+  }
+
+  /**
+   * Click "戻る" (Back) button inside coupon dialog to return to main search limit view.
+   */
+  async backFromCouponDialog(): Promise<void> {
+    await test.step('Click "戻る" (Back) button in coupon dialog', async () => {
+      await this.clickElement(this.searchLimitCouponBackButton);
+      await expect(this.searchLimitCouponDialog).toBeHidden({ timeout: 5_000 });
+    });
+  }
+
   // ─── Pagination Actions ───────────────────────────────────────────────────
 
   /**
-   * Click the Next page button in pagination with progressive 3-tier fallback to ensure reliable navigation cross-browser.
+   * Click the Next page button in pagination with ArrowRight keyboard fallback.
    */
   async goToNextPage(): Promise<void> {
     await test.step('Navigate to next page in pagination', async () => {
       const currentPage = await this.getActivePageNumber().catch(() => '1');
       const targetPage = String(Number(currentPage) + 1);
 
-      // Tier 1: Scroll element into center of viewport to avoid bottom fixed banners (Cookie, Signup CTA)
+      // Scroll element into center of viewport to avoid bottom fixed banners (Cookie, Signup CTA)
       await this.paginationNextButton.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => { });
-      await this.clickElement(this.paginationNextButton);
 
-      // Check if navigation occurred within 2.5s
-      const navigated = await this.page.waitForFunction(
-        (target) => {
-          const activeEl = document.querySelector('ul.ac-pagination li.active a');
-          const url = window.location.href;
-          return (activeEl && activeEl.textContent?.trim() === target) || url.includes(`p=${target}`);
-        },
-        targetPage,
-        { timeout: 2_500 }
-      ).then(() => true).catch(() => false);
-
-      if (!navigated) {
-        // Tier 2: Trigger Photo-AC native keyboard shortcut ArrowRight
-        await this.page.keyboard.press('ArrowRight');
-        const keyboardNavigated = await this.page.waitForFunction(
+      const checkNavigated = async (timeoutMs: number): Promise<boolean> => {
+        return this.page.waitForFunction(
           (target) => {
             const activeEl = document.querySelector('ul.ac-pagination li.active a');
             const url = window.location.href;
             return (activeEl && activeEl.textContent?.trim() === target) || url.includes(`p=${target}`);
           },
           targetPage,
-          { timeout: 2_500 }
+          { timeout: timeoutMs }
         ).then(() => true).catch(() => false);
+      };
 
-        if (!keyboardNavigated) {
-          // Tier 3: Native DOM anchor click dispatch
-          await this.paginationNextButton.evaluate((el: HTMLAnchorElement) => el.click()).catch(() => { });
-          await this.page.waitForFunction(
-            (target) => {
-              const activeEl = document.querySelector('ul.ac-pagination li.active a');
-              const url = window.location.href;
-              return (activeEl && activeEl.textContent?.trim() === target) || url.includes(`p=${target}`);
-            },
-            targetPage,
-            { timeout: 10_000 }
-          ).catch(() => { });
-        }
+      let clicked = false;
+      try {
+        // Ưu tiên tương tác người dùng thật: Click nút Next trực tiếp trên giao diện
+        await this.paginationNextButton.click({ timeout: 5_000 });
+        clicked = true;
+      } catch {
+        // Nếu không click được (nút bị che, bị overlay hoặc lỗi tương tác) -> Fallback bấm phím ArrowRight
+        await this.page.keyboard.press('ArrowRight');
+      }
+
+      // Chờ trang chuyển sang targetPage
+      let navigated = await checkNavigated(6_000);
+
+      // Nếu đã click được nhưng sau 6s trang vẫn chưa chuyển (click bị nuốt) -> Thử bấm phím ArrowRight
+      if (!navigated && clicked) {
+        await this.page.keyboard.press('ArrowRight');
+        navigated = await checkNavigated(6_000);
       }
 
       await this.waitForResultDisplay();
@@ -482,54 +518,43 @@ export class SearchResultPage extends BasePage {
   }
 
   /**
-   * Click the Previous page button in pagination with progressive 3-tier fallback to ensure reliable navigation cross-browser.
+   * Click the Previous page button in pagination with ArrowLeft keyboard fallback.
    */
   async goToPrevPage(): Promise<void> {
     await test.step('Navigate to previous page in pagination', async () => {
       const currentPage = await this.getActivePageNumber().catch(() => '2');
       const targetPage = String(Math.max(1, Number(currentPage) - 1));
 
-      // Tier 1: Scroll element into center of viewport to avoid bottom fixed banners
+      // Scroll element into center of viewport to avoid bottom fixed banners
       await this.paginationPrevButton.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => { });
-      await this.clickElement(this.paginationPrevButton);
 
-      // Check if navigation occurred within 2.5s
-      const navigated = await this.page.waitForFunction(
-        (target) => {
-          const activeEl = document.querySelector('ul.ac-pagination li.active a');
-          const url = window.location.href;
-          return (activeEl && activeEl.textContent?.trim() === target) || (target === '1' && !url.includes('p=2'));
-        },
-        targetPage,
-        { timeout: 2_500 }
-      ).then(() => true).catch(() => false);
-
-      if (!navigated) {
-        // Tier 2: Trigger Photo-AC native keyboard shortcut ArrowLeft
-        await this.page.keyboard.press('ArrowLeft');
-        const keyboardNavigated = await this.page.waitForFunction(
+      const checkNavigated = async (timeoutMs: number): Promise<boolean> => {
+        return this.page.waitForFunction(
           (target) => {
             const activeEl = document.querySelector('ul.ac-pagination li.active a');
             const url = window.location.href;
             return (activeEl && activeEl.textContent?.trim() === target) || (target === '1' && !url.includes('p=2'));
           },
           targetPage,
-          { timeout: 2_500 }
+          { timeout: timeoutMs }
         ).then(() => true).catch(() => false);
+      };
 
-        if (!keyboardNavigated) {
-          // Tier 3: Native DOM anchor click dispatch
-          await this.paginationPrevButton.evaluate((el: HTMLAnchorElement) => el.click()).catch(() => { });
-          await this.page.waitForFunction(
-            (target) => {
-              const activeEl = document.querySelector('ul.ac-pagination li.active a');
-              const url = window.location.href;
-              return (activeEl && activeEl.textContent?.trim() === target) || (target === '1' && !url.includes('p=2'));
-            },
-            targetPage,
-            { timeout: 10_000 }
-          ).catch(() => { });
-        }
+      let clicked = false;
+      try {
+        // Ưu tiên tương tác người dùng thật: Click nút Prev trực tiếp trên giao diện
+        await this.paginationPrevButton.click({ timeout: 5_000 });
+        clicked = true;
+      } catch {
+        // Nếu không click được -> Fallback bấm phím ArrowLeft
+        await this.page.keyboard.press('ArrowLeft');
+      }
+
+      let navigated = await checkNavigated(6_000);
+
+      if (!navigated && clicked) {
+        await this.page.keyboard.press('ArrowLeft');
+        navigated = await checkNavigated(6_000);
       }
 
       await this.waitForResultDisplay();
@@ -589,8 +614,7 @@ export class SearchResultPage extends BasePage {
       await this.clickElement(ddclSelector);
       const categoryOption = this.page.locator(`#filter-dropdown-categories label:has-text("${categoryName}")`).first();
       await this.clickElement(categoryOption, { force: true });
-      const submitBtn = this.page.locator('#search_frm_menu button.position-absolute, #filter-dropdown-categories button[type="submit"]').first();
-      await this.clickElement(submitBtn, { force: true });
+      await this.page.keyboard.press('Enter');
       await this.waitForResultDisplay();
     });
   }
@@ -616,17 +640,21 @@ export class SearchResultPage extends BasePage {
    * @param expectedOption - The option locator inside the dropdown menu that should become visible
    * @param timeout - Maximum timeout in ms (default 10_000)
    */
-  async openToolbarDropdown(dropdownButton: Locator, expectedOption: Locator, timeout: number = 10_000): Promise<void> {
+  async openToolbarDropdown(dropdownButton: Locator, expectedOption: Locator, timeout: number = 15_000): Promise<void> {
+    await this.waitForPageLoadingIconHidden(10_000);
+    if (await expectedOption.isVisible().catch(() => false)) {
+      return;
+    }
     await expect(async () => {
       const isVisible = await expectedOption.isVisible().catch(() => false);
       if (!isVisible) {
         await dropdownButton.scrollIntoViewIfNeeded().catch(() => { });
-        await dropdownButton.click().catch(async () => {
-          await dropdownButton.click({ force: true });
+        await dropdownButton.click({ force: true, noWaitAfter: true }).catch(async () => {
+          await dropdownButton.click({ noWaitAfter: true });
         });
       }
       await expect(expectedOption).toBeVisible({ timeout: 2_000 });
-    }).toPass({ timeout, intervals: [400, 800, 1_200] });
+    }).toPass({ timeout, intervals: [500, 1_000, 1_500] });
   }
 
   /**
@@ -675,19 +703,9 @@ export class SearchResultPage extends BasePage {
       const targetLabel = orientation === 'vertical'
         ? this.orientationVerticalLabel
         : (orientation === 'horizontal' ? this.orientationHorizontalLabel : this.orientationAllLabel);
-      const radioId = orientation === 'vertical'
-        ? 'orientation-0'
-        : (orientation === 'horizontal' ? 'orientation-1' : 'orientation-all');
-      const targetRadio = this.page.locator(`#filter-dropdown-sizesec #${radioId}, #${radioId}`).first();
 
       await this.openToolbarDropdown(this.fileOrientationButton, targetLabel);
-      await this.clickElement(targetLabel, { force: true });
-
-      // Cross-browser: Ensure underlying radio is checked and change event dispatches in Gecko/WebKit
-      const isChecked = await targetRadio.isChecked().catch(() => false);
-      if (!isChecked) {
-        await targetRadio.check({ force: true }).catch(() => { });
-      }
+      await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
       await this.waitForResultDisplay();
     });
   }
@@ -697,14 +715,8 @@ export class SearchResultPage extends BasePage {
    */
   async selectPsdFormat(): Promise<void> {
     await test.step('Filter by PSD format via toolbar', async () => {
-      const targetRadio = this.page.locator('#filter-dropdown-sizesec #sizesec-psd, #sizesec-psd').first();
       await this.openToolbarDropdown(this.fileOrientationButton, this.sizesecPsdLabel);
-      await this.clickElement(this.sizesecPsdLabel, { force: true });
-
-      const isChecked = await targetRadio.isChecked().catch(() => false);
-      if (!isChecked) {
-        await targetRadio.check({ force: true }).catch(() => { });
-      }
+      await this.clickElement(this.sizesecPsdLabel, { force: true, noWaitAfter: true });
       await this.waitForResultDisplay();
     });
   }
@@ -716,14 +728,8 @@ export class SearchResultPage extends BasePage {
   async selectSize(size: 'm' | 'l'): Promise<void> {
     await test.step(`Filter by image size "${size}" via toolbar`, async () => {
       const targetLabel = size === 'm' ? this.sizesecMLabel : this.sizesecLLabel;
-      const targetRadio = this.page.locator(`#filter-dropdown-sizesec #sizesec-${size}, #sizesec-${size}`).first();
       await this.openToolbarDropdown(this.fileOrientationButton, targetLabel);
-      await this.clickElement(targetLabel, { force: true });
-
-      const isChecked = await targetRadio.isChecked().catch(() => false);
-      if (!isChecked) {
-        await targetRadio.check({ force: true }).catch(() => { });
-      }
+      await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
       await this.waitForResultDisplay();
     });
   }
@@ -734,9 +740,7 @@ export class SearchResultPage extends BasePage {
    */
   async applyExcludeKeyword(excludeKeyword: string): Promise<void> {
     await test.step(`Apply exclude keyword: "${excludeKeyword}"`, async () => {
-      if (!await this.excludeKeywordInput.isVisible()) {
-        await this.clickElement(this.excludeKeywordFilterButton);
-      }
+      await this.openToolbarDropdown(this.excludeKeywordFilterButton, this.excludeKeywordInput);
       await this.fillInput(this.excludeKeywordInput, excludeKeyword);
       await this.page.keyboard.press('Enter');
       await this.waitForResultDisplay();
@@ -760,16 +764,9 @@ export class SearchResultPage extends BasePage {
       } else if (count === '3') {
         targetLabel = this.modelCountThreePlusLabel;
       }
-      const radioId = count === '-1' ? 'model_count-all' : `model_count-${count}`;
-      const targetRadio = this.page.locator(`#filter-dropdown-other #${radioId}, #${radioId}`).first();
 
       await this.openToolbarDropdown(this.personFilterButton, targetLabel);
-      await this.clickElement(targetLabel, { force: true });
-
-      const isChecked = await targetRadio.isChecked().catch(() => false);
-      if (!isChecked) {
-        await targetRadio.check({ force: true }).catch(() => { });
-      }
+      await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
       await this.waitForResultDisplay();
     });
   }
@@ -795,16 +792,9 @@ export class SearchResultPage extends BasePage {
           targetLabel = this.ageAdultLabel;
           break;
       }
-      const ageKey = age === 'baby' ? 'A' : (age === 'child' ? 'K' : (age === 'young' ? 'W' : 'O'));
-      const targetRadio = this.page.locator(`#filter-dropdown-other #age-${ageKey}, #age-${ageKey}`).first();
 
       await this.openToolbarDropdown(this.personFilterButton, targetLabel);
-      await this.clickElement(targetLabel, { force: true });
-
-      const isChecked = await targetRadio.isChecked().catch(() => false);
-      if (!isChecked) {
-        await targetRadio.check({ force: true }).catch(() => { });
-      }
+      await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
       await this.waitForResultDisplay();
     });
   }
@@ -844,7 +834,7 @@ export class SearchResultPage extends BasePage {
           break;
       }
       await this.openToolbarDropdown(this.colorFilterButton, targetOption);
-      await this.clickElement(targetOption, { force: true });
+      await this.clickElement(targetOption, { force: true, noWaitAfter: true });
       await this.waitForResultDisplay();
     });
   }
@@ -856,16 +846,9 @@ export class SearchResultPage extends BasePage {
   async selectModelRelease(enable: boolean = true): Promise<void> {
     await test.step(`Filter by Model Release: ${enable ? 'Obtained Only' : 'All'}`, async () => {
       const targetLabel = enable ? this.modelReleaseOnLabel : this.modelReleaseAllLabel;
-      const radioId = enable ? 'mdlrlrsec-on' : 'mdlrlrsec-all';
-      const targetRadio = this.page.locator(`#filter-dropdown-display #${radioId}, #${radioId}`).first();
 
       await this.openToolbarDropdown(this.displayConditionFilterButton, targetLabel);
-      await this.clickElement(targetLabel, { force: true });
-
-      const isChecked = await targetRadio.isChecked().catch(() => false);
-      if (!isChecked) {
-        await targetRadio.check({ force: true }).catch(() => { });
-      }
+      await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
       await this.waitForResultDisplay();
     });
   }
@@ -876,16 +859,10 @@ export class SearchResultPage extends BasePage {
    */
   async selectPropertyRelease(enable: boolean = true): Promise<void> {
     await test.step(`Filter by Property Release: ${enable ? 'Obtained Only' : 'All'}`, async () => {
-      const targetLabel = this.propertyReleaseOnLabel;
-      const targetRadio = this.page.locator('#filter-dropdown-display #prprlrsec-on, #prprlrsec-on').first();
+      const targetLabel = enable ? this.propertyReleaseOnLabel : this.propertyReleaseAllLabel;
 
       await this.openToolbarDropdown(this.displayConditionFilterButton, targetLabel);
-      await this.clickElement(targetLabel, { force: true });
-
-      const isChecked = await targetRadio.isChecked().catch(() => false);
-      if (!isChecked) {
-        await targetRadio.check({ force: true }).catch(() => { });
-      }
+      await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
       await this.waitForResultDisplay();
     });
   }
@@ -899,11 +876,7 @@ export class SearchResultPage extends BasePage {
       await this.openToolbarDropdown(this.displayConditionFilterButton, this.excludeAiLabel);
       const isCurrentlyChecked = await this.excludeAiCheckbox.isChecked().catch(() => false);
       if (isCurrentlyChecked !== enable) {
-        await this.clickElement(this.excludeAiLabel, { force: true });
-        const isStillWrong = (await this.excludeAiCheckbox.isChecked().catch(() => false)) !== enable;
-        if (isStillWrong) {
-          await this.excludeAiCheckbox.setChecked(enable, { force: true }).catch(() => { });
-        }
+        await this.clickElement(this.excludeAiLabel, { force: true, noWaitAfter: true });
         await this.waitForResultDisplay();
       }
     });
@@ -918,11 +891,7 @@ export class SearchResultPage extends BasePage {
       await this.openToolbarDropdown(this.displayConditionFilterButton, this.exactMatchLabel);
       const isCurrentlyChecked = await this.exactMatchCheckbox.isChecked().catch(() => false);
       if (isCurrentlyChecked !== enable) {
-        await this.clickElement(this.exactMatchLabel, { force: true });
-        const isStillWrong = (await this.exactMatchCheckbox.isChecked().catch(() => false)) !== enable;
-        if (isStillWrong) {
-          await this.exactMatchCheckbox.setChecked(enable, { force: true }).catch(() => { });
-        }
+        await this.clickElement(this.exactMatchLabel, { force: true, noWaitAfter: true });
         await this.waitForResultDisplay();
       }
     });
@@ -932,13 +901,12 @@ export class SearchResultPage extends BasePage {
    * Search by exact Photo ID (素材ID) using the Detailed Search menu.
    * @param photoId - Numeric photo ID (e.g. '1597634')
    */
-  async searchByDetailedPhotoId(photoId: string): Promise<void> {
-    await test.step(`Search by Photo ID "${photoId}" via Detailed Search`, async () => {
+  async filterByDetailedPhotoId(photoId: string): Promise<void> {
+    await test.step(`Filter by Photo ID "${photoId}" via Detailed Search`, async () => {
       await this.openToolbarDropdown(this.detailedFilterButton, this.detailedPhotoIdInput);
       await expect(this.detailedPhotoIdInput).toBeVisible({ timeout: 5_000 });
       await this.detailedPhotoIdInput.fill(photoId);
-      const submitBtn = this.page.locator('#search_frm_menu button.position-absolute, #filter-dropdown-detail button[type="submit"]').first();
-      await this.clickElement(submitBtn, { force: true });
+      await this.page.keyboard.press('Enter');
       await this.waitForResultDisplay();
     });
   }
@@ -954,8 +922,7 @@ export class SearchResultPage extends BasePage {
       await this.clickElement(creatorPlaceholder, { force: true });
       await this.page.keyboard.type(creatorName);
       await this.page.keyboard.press('Enter');
-      const submitBtn = this.page.locator('#search_frm_menu button.position-absolute, #filter-dropdown-detail button[type="submit"]').first();
-      await this.clickElement(submitBtn, { force: true });
+      await this.page.keyboard.press('Enter');
       await this.waitForResultDisplay();
     });
   }
@@ -971,8 +938,7 @@ export class SearchResultPage extends BasePage {
       await this.clickElement(ngPlaceholder, { force: true });
       await this.page.keyboard.type(ngCreatorName);
       await this.page.keyboard.press('Enter');
-      const submitBtn = this.page.locator('#search_frm_menu button.position-absolute, #filter-dropdown-detail button[type="submit"]').first();
-      await this.clickElement(submitBtn, { force: true });
+      await this.page.keyboard.press('Enter');
       await this.waitForResultDisplay();
     });
   }

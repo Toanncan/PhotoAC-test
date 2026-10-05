@@ -380,11 +380,7 @@ function startTestRun(options) {
 
   if (grep && grep.trim()) {
     const cleanGrep = grep.trim();
-    if (/[ &|<>\^]/.test(cleanGrep)) {
-      args.push(`--grep="${cleanGrep.replace(/"/g, '\\"')}"`);
-    } else {
-      args.push(`--grep=${cleanGrep}`);
-    }
+    args.push(`--grep=${cleanGrep}`);
   }
 
   if (workers && Number(workers) > 0) {
@@ -399,7 +395,17 @@ function startTestRun(options) {
   const relReporter = path.relative(proj.dir, path.join(ROOT_DIR, 'dashboard', 'reporter.js')).replace(/\\/g, '/');
   args.push(`--reporter=${relReporter},allure-playwright,html`);
 
-  const cmd = process.platform === 'win32' ? 'npx.cmd' : 'npx';
+  const localPlaywrightCli = path.join(ROOT_DIR, 'node_modules', '@playwright', 'test', 'cli.js');
+  let cmd = process.platform === 'win32' ? 'npx.cmd' : 'npx';
+  let useShell = true;
+  let finalArgs = args;
+
+  if (fs.existsSync(localPlaywrightCli)) {
+    // Chạy trực tiếp qua node engine mà không qua cmd.exe để tránh vỡ pipe '|' và shell injection trên Windows
+    cmd = process.execPath;
+    finalArgs = [localPlaywrightCli, ...args.slice(1)];
+    useShell = false;
+  }
 
   // Sanitize options to avoid exposing sensitive passwords via SSE
   const sanitizedOptions = {
@@ -411,11 +417,15 @@ function startTestRun(options) {
       creatorUser: customAccounts.creatorUser ? { ...customAccounts.creatorUser, password: customAccounts.creatorUser.password ? '********' : undefined } : undefined,
     } : undefined
   };
-  broadcast('runStarted', { options: sanitizedOptions, project: proj.id, command: `npx ${args.join(' ')}` });
+  broadcast('runStarted', { options: sanitizedOptions, project: proj.id, command: `playwright ${args.join(' ')}` });
+
+  // Lấy các biến môi trường từ file .env riêng của dự án được chọn (photo-ac hoặc illust-ac)
+  const projEnv = getProjectEnv(siteId);
 
   // Prepare environment variables with dynamic overrides
   const env = {
     ...process.env,
+    ...projEnv,
     HEADLESS: headed ? 'false' : 'true'
   };
 
@@ -494,16 +504,19 @@ function startTestRun(options) {
     return res;
   }
 
-  currentProcess = spawn(cmd, args, {
+  currentProcess = spawn(cmd, finalArgs, {
     cwd: proj.dir,
-    shell: true,
+    shell: useShell,
     detached: process.platform !== 'win32',
     env
   });
 
+  // Safe Line Buffer: Chống đứt đoạn stream chunk làm mất event testEnd
+  let stdoutBuffer = '';
   currentProcess.stdout.on('data', (data) => {
-    const text = data.toString();
-    const lines = text.split('\n');
+    stdoutBuffer += data.toString();
+    const lines = stdoutBuffer.split(/\r?\n/);
+    stdoutBuffer = lines.pop(); // Giữ lại phần dư chưa có ký tự xuống dòng
 
     for (const line of lines) {
       const trimmed = line.trim();
@@ -515,7 +528,7 @@ function startTestRun(options) {
           const event = JSON.parse(jsonStr);
           handleTestEvent(event);
         } catch (e) {
-          console.error('Parse event error:', e);
+          console.error('[STREAM ERROR] Parse event error:', e.message, line.slice(0, 100));
         }
       } else {
         const masked = maskLog(trimmed);
@@ -525,16 +538,35 @@ function startTestRun(options) {
     }
   });
 
+  let stderrBuffer = '';
   currentProcess.stderr.on('data', (data) => {
-    const text = data.toString().trim();
-    if (text) {
-      const masked = maskLog(text);
-      currentRun.logs.push(masked);
-      broadcast('log', { text: masked, isError: true });
+    stderrBuffer += data.toString();
+    const lines = stderrBuffer.split(/\r?\n/);
+    stderrBuffer = lines.pop();
+
+    for (const line of lines) {
+      const text = line.trim();
+      if (text) {
+        const masked = maskLog(text);
+        currentRun.logs.push(masked);
+        broadcast('log', { text: masked, isError: true });
+      }
     }
   });
 
   currentProcess.on('close', async (code) => {
+    // Flush nốt buffer còn lại nếu có
+    if (stdoutBuffer && stdoutBuffer.trim()) {
+      const trimmed = stdoutBuffer.trim();
+      if (trimmed.startsWith('__TEST_EVENT__')) {
+        try {
+          const event = JSON.parse(trimmed.slice('__TEST_EVENT__'.length));
+          handleTestEvent(event);
+        } catch (e) {}
+      }
+      stdoutBuffer = '';
+    }
+
     currentRun.running = false;
     currentProcess = null;
     broadcast('runFinished', {
@@ -552,6 +584,10 @@ function startTestRun(options) {
   return { success: true };
 }
 
+function normalizeKey(str) {
+  return (str || '').replace(/\\/g, '/').toLowerCase().trim();
+}
+
 function handleTestEvent(event) {
   if (event.type === 'suiteStart') {
     if (!currentRun.isRerun) {
@@ -559,18 +595,33 @@ function handleTestEvent(event) {
     }
     broadcast('suiteStart', event);
   } else if (event.type === 'testBegin') {
-    const existing = currentRun.tests.find(t => t.id === event.id);
+    // Tìm test theo ID hoặc Composite Key (file + project + title) để chống duplicate key
+    const existing = currentRun.tests.find(t => 
+      t.id === event.id || 
+      (normalizeKey(t.file) === normalizeKey(event.file) && 
+       normalizeKey(t.project) === normalizeKey(event.project) && 
+       normalizeKey(t.title) === normalizeKey(event.title))
+    );
+
     if (!existing) {
       currentRun.tests.push({ ...event, status: 'running' });
     } else {
+      existing.id = event.id; // cập nhật ID mới nhất từ Playwright
       existing.status = 'running';
       existing.error = null;
     }
     broadcast('testBegin', event);
   } else if (event.type === 'testEnd') {
-    const existing = currentRun.tests.find(t => t.id === event.id);
+    const existing = currentRun.tests.find(t => 
+      t.id === event.id || 
+      (normalizeKey(t.file) === normalizeKey(event.file) && 
+       normalizeKey(t.project) === normalizeKey(event.project) && 
+       normalizeKey(t.title) === normalizeKey(event.title))
+    );
+
     const oldStatus = existing ? existing.status : null;
     if (existing) {
+      existing.id = event.id;
       existing.status = event.status;
       existing.duration = event.duration;
       existing.error = event.error;

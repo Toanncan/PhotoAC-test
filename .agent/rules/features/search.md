@@ -50,6 +50,8 @@ trigger: model_decision
 | **Search Limit: 4 lần/ngày** | ✅ | ✅ | Guest + Free User |
 | **Heading format kết quả** | `「kw」の写真素材` | `「kw」のイラスト素材` | Khác nhau |
 | **Image Upload heading** | `アップロードされた画像に似ている写真素材` | `アップロードされた画像に似ているイラスト素材` | Khác nhau |
+| **Sticky Header Search** | ✅ | ✅ | Cả 2 site đều có `.search-box-top-fixed-area` và `#search_frm_fixed` khi cuộn trang |
+| **Trang Trends** | ✅ (`/main/trends`) | ❌ (Trả về 404) | Chỉ có trên Photo-AC |
 
 ---
 

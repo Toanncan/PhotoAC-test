@@ -47,6 +47,17 @@ export class HomePage extends BasePage {
   /** Main search submit button */
   readonly searchSubmitButton = this.page.locator('#search_frm button.execloginbtn:visible, #search_frm #search_btn:visible, #search_frm button[type="submit"]:visible, form:not(#search_frm_fixed) button.execloginbtn:visible').first();
 
+  // ─── Sticky Header Search Bar Locators ──────────────────────────────────────
+
+  /** Sticky search bar container (.search-box-top-fixed-area) displayed upon scrolling */
+  readonly stickySearchArea = this.page.locator('.search-box-top-fixed-area');
+
+  /** Sticky search input field (#search_frm_fixed input[name="search_word"]) */
+  readonly stickySearchInput = this.page.locator('form#search_frm_fixed input[name="search_word"], form#search_frm_fixed input[name="q"], form#search_frm_fixed input#sw').first();
+
+  /** Sticky search submit button (form#search_frm_fixed button[type="submit"]) */
+  readonly stickySearchSubmitButton = this.page.locator('form#search_frm_fixed button.execloginbtn:visible, form#search_frm_fixed button[type="submit"]:visible, form#search_frm_fixed #search_btn:visible').first();
+
   // ─── Methods ──────────────────────────────────────────────────────────────
 
   constructor(page: Page) {
@@ -197,6 +208,58 @@ export class HomePage extends BasePage {
     await test.step(`Click Category: "${categoryName}" from HomePage`, async () => {
       const categoryLink = this.categoryLinks.filter({ hasText: categoryName }).first();
       await this.clickElement(categoryLink);
+    });
+  }
+
+  /**
+   * Scroll down the page to trigger the Sticky Header Search Bar (.search-box-top-fixed-area).
+   * @param scrollDistance - Scroll distance in pixels (default 1200)
+   */
+  async scrollToActivateStickySearch(scrollDistance = 1200): Promise<void> {
+    await test.step('Scroll down to activate Sticky Header Search Bar', async () => {
+      await this.page.evaluate((y) => {
+        window.scrollTo(0, y);
+        document.documentElement.scrollTop = y;
+        if ((window as any).jQuery) {
+          (window as any).jQuery(window).trigger('scroll');
+        }
+        window.dispatchEvent(new Event('scroll'));
+      }, scrollDistance);
+      await this.stickySearchArea.waitFor({ state: 'visible', timeout: 10_000 });
+    });
+  }
+
+  /**
+   * Scroll back to the top of the page (scrollTop = 0) to deactivate/hide the Sticky Header Search Bar.
+   */
+  async scrollToTop(): Promise<void> {
+    await test.step('Scroll back to top of page', async () => {
+      await this.page.evaluate(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        if ((window as any).jQuery) {
+          (window as any).jQuery(window).trigger('scroll');
+        }
+        window.dispatchEvent(new Event('scroll'));
+      });
+      await this.stickySearchArea.waitFor({ state: 'hidden', timeout: 10_000 });
+    });
+  }
+
+  /**
+   * Perform a search from the Sticky Header Search Bar.
+   * @param keyword - Search keyword
+   */
+  async searchViaStickyBar(keyword: string): Promise<void> {
+    await test.step(`Search via Sticky Search Bar with keyword: "${keyword}"`, async () => {
+      await this.fillInput(this.stickySearchInput, keyword);
+      if (await this.stickySearchSubmitButton.isVisible().catch(() => false)) {
+        await this.stickySearchSubmitButton.click({ noWaitAfter: true }).catch(async () => {
+          await this.stickySearchInput.press('Enter', { noWaitAfter: true });
+        });
+      } else {
+        await this.stickySearchInput.press('Enter', { noWaitAfter: true });
+      }
     });
   }
 }

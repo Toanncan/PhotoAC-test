@@ -115,15 +115,22 @@ export const test = base.extend<PageFixtures>({
   /**
    * screenshotOnPass — Auto fixture to capture final screenshot when test passes.
    * auto: true → runs automatically for every test without explicit declaration.
+   * Chụp Viewport (1920x1080) siêu nhẹ và nhanh.
+   * Tránh trùng lặp nếu testcase đã có ảnh Evidence đính kèm trong case.
    */
   screenshotOnPass: [async ({ page }, use, testInfo) => {
     await use();
     if (testInfo.status === 'passed') {
-      const screenshot = await page.screenshot({ fullPage: true });
-      await testInfo.attach('final-screenshot-passed', {
-        body: screenshot,
-        contentType: 'image/png',
-      });
+      const hasCustomScreenshot = testInfo.attachments.some(
+        (att) => att.contentType === 'image/png' && att.name !== 'final-screenshot-passed'
+      );
+      if (!hasCustomScreenshot && !page.isClosed()) {
+        const screenshot = await page.screenshot({ fullPage: false });
+        await testInfo.attach('final-screenshot-passed', {
+          body: screenshot,
+          contentType: 'image/png',
+        });
+      }
     }
   }, { auto: true }],
 

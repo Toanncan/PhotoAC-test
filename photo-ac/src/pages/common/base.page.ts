@@ -51,13 +51,17 @@ export abstract class BasePage {
    * Click an element after ensuring it is visible and enabled.
    * @param locator - Playwright Locator object
    */
-  async clickElement(locator: Locator, options?: { force?: boolean }): Promise<void> {
+  async clickElement(locator: Locator, options?: { force?: boolean; noWaitAfter?: boolean }): Promise<void> {
     await locator.waitFor({ state: 'visible', timeout: 20_000 });
-    if (options?.force) {
-      await locator.click({ force: true });
+    const clickOpts = {
+      ...(options?.force ? { force: true } : {}),
+      ...(options?.noWaitAfter ? { noWaitAfter: true } : {}),
+    };
+    if (options?.force || options?.noWaitAfter) {
+      await locator.click(clickOpts);
     } else {
-      await locator.click().catch(async () => {
-        await locator.click({ force: true });
+      await locator.click(clickOpts).catch(async () => {
+        await locator.click({ force: true, ...(options?.noWaitAfter ? { noWaitAfter: true } : {}) });
       });
     }
   }
