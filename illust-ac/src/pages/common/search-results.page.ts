@@ -311,8 +311,8 @@ export class SearchResultPage extends BasePage {
   async clickPopularSort(): Promise<void> {
     await test.step('Click "人気順" (Popularity) sort option', async () => {
       await this.openSortDropdown();
+      await this.clickElement(this.sortPopularLabel, { force: true });
       await this.sortPopularLabel.hover().catch(() => {});
-      await this.clickElement(this.sortPopularLabel);
     });
   }
 
@@ -356,8 +356,11 @@ export class SearchResultPage extends BasePage {
    * Get the text from the Premium upsell popover on popular sort.
    */
   async getPopularSortPopoverText(): Promise<string> {
+    if (!(await this.popularSortPopoverBody.isVisible().catch(() => false))) {
+      await this.sortPopularLabel.hover().catch(() => {});
+    }
     await expect(this.popularSortPopoverBody).toBeVisible({ timeout: 5_000 });
-    return this.getText(this.popularSortPopoverBody);
+    return (await this.popularSortPopoverBody.textContent())?.trim() ?? '';
   }
 
   /**

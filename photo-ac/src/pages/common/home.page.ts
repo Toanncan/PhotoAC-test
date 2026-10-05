@@ -61,7 +61,9 @@ export class HomePage extends BasePage {
   readonly aiLimitClockIcon = this.searchByAiButton.locator('.overlay-icon-clock');
 
   /** Main search submit button */
-  readonly searchSubmitButton = this.page.locator('form#search_frm button#search_btn, form#search_frm button[type="submit"]').first();
+  readonly searchSubmitButton = this.page.locator(
+    'form#search_frm button.execloginbtn:visible, form#search_frm button#search_btn:visible, form#search_frm button[type="submit"]:visible'
+  ).first();
 
   /** Semantic search introduction modal displayed when AI search is activated upon reaching limit */
   readonly semanticSearchModal = this.page.locator('.modal:has-text("AI検索を3回使えます"), .modal.show:has-text("AI検索")').first();
@@ -78,7 +80,7 @@ export class HomePage extends BasePage {
   readonly stickySearchInput = this.page.locator('form#search_frm_fixed input#sw, form#search_frm_fixed input[name="q"]').first();
 
   /** Sticky search submit button (form#search_frm_fixed button[type="submit"]) */
-  readonly stickySearchSubmitButton = this.page.locator('form#search_frm_fixed button[type="submit"], form#search_frm_fixed button.execloginbtn').first();
+  readonly stickySearchSubmitButton = this.page.locator('form#search_frm_fixed button.execloginbtn:visible, form#search_frm_fixed button[type="submit"]:visible').first();
 
   // ─── Methods ──────────────────────────────────────────────────────────────
 
@@ -110,9 +112,11 @@ export class HomePage extends BasePage {
     await test.step(`Search with keyword: "${keyword}"`, async () => {
       await this.fillInput(this.searchInput, keyword);
       if (await this.searchSubmitButton.isVisible().catch(() => false)) {
-        await this.clickElement(this.searchSubmitButton);
+        await this.searchSubmitButton.click({ noWaitAfter: true }).catch(async () => {
+          await this.searchInput.press('Enter', { noWaitAfter: true });
+        });
       } else {
-        await this.searchInput.press('Enter');
+        await this.searchInput.press('Enter', { noWaitAfter: true });
       }
     });
   }
@@ -168,6 +172,7 @@ export class HomePage extends BasePage {
   async clickPopularTag(tag: string): Promise<void> {
     await test.step(`Click Popular Tag: "${tag}"`, async () => {
       const tagElement = this.popularTags.filter({ hasText: tag }).first();
+      await tagElement.scrollIntoViewIfNeeded().catch(() => { });
       await this.clickElement(tagElement);
     });
   }
@@ -210,7 +215,7 @@ export class HomePage extends BasePage {
         this.page.waitForURL(/\/search\/ris/i, { timeout: 30_000, waitUntil: 'domcontentloaded' }),
         (async () => {
           await this.fileUploadInput.setInputFiles(filePath);
-          await this.fileUploadInput.dispatchEvent('change').catch(() => {});
+          await this.fileUploadInput.dispatchEvent('change').catch(() => { });
         })(),
       ]);
     });
@@ -244,11 +249,11 @@ export class HomePage extends BasePage {
     if (isVisible) {
       await test.step('Dismiss Semantic Search Modal', async () => {
         if (await this.semanticSearchModalCloseButton.isVisible().catch(() => false)) {
-          await this.semanticSearchModalCloseButton.click().catch(() => {});
+          await this.semanticSearchModalCloseButton.click().catch(() => { });
         }
-        await this.page.keyboard.press('Escape').catch(() => {});
-        await this.semanticSearchModal.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
-        await this.page.locator('.modal-backdrop').waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+        await this.page.keyboard.press('Escape').catch(() => { });
+        await this.semanticSearchModal.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => { });
+        await this.page.locator('.modal-backdrop').waitFor({ state: 'detached', timeout: 5000 }).catch(() => { });
       });
     }
   }
@@ -319,9 +324,11 @@ export class HomePage extends BasePage {
     await test.step(`Search via Sticky Search Bar with keyword: "${keyword}"`, async () => {
       await this.fillInput(this.stickySearchInput, keyword);
       if (await this.stickySearchSubmitButton.isVisible().catch(() => false)) {
-        await this.clickElement(this.stickySearchSubmitButton);
+        await this.stickySearchSubmitButton.click({ noWaitAfter: true }).catch(async () => {
+          await this.stickySearchInput.press('Enter', { noWaitAfter: true });
+        });
       } else {
-        await this.stickySearchInput.press('Enter');
+        await this.stickySearchInput.press('Enter', { noWaitAfter: true });
       }
     });
   }

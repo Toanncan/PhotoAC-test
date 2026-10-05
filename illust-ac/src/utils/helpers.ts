@@ -132,8 +132,8 @@ export const captureEvidenceWithUrl = async (
       banner.textContent = 'URL: ' + url;
     }, currentUrl).catch(() => { });
 
-    // 2. Chụp ảnh toàn trang lúc bộ lọc đang hiển thị đầy đủ
-    const screenshot = await page.screenshot({ fullPage: true });
+    // 2. Chụp ảnh Viewport hiển thị (1920x1080) lúc bộ lọc đang hiển thị đầy đủ
+    const screenshot = await page.screenshot({ fullPage: false });
     await testInfo.attach(attachmentName, {
       body: screenshot,
       contentType: 'image/png',
@@ -148,4 +148,82 @@ export const captureEvidenceWithUrl = async (
     // Nuốt lỗi an toàn nếu page bị đóng đột ngột
   }
 };
+
+/**
+ * Danh sách regex domain quảng cáo và trackers bên thứ ba.
+ * Tập trung vào mạng quảng cáo Nhật Bản (Photo-AC / Illust-AC) và quốc tế.
+ * Không chặn nhầm domain hệ thống (*.photo-ac.com, *.ac-illust.com, cdn, api).
+ */
+const AD_TRACKER_PATTERN =
+  /googlesyndication|googleads|doubleclick|pagead|adservice\.google|yads\.c\.yimg\.jp|s\.yimg\.jp|microad\.(net|jp)|geniee\.jp|fluct\.jp|criteo\.(com|net)|taboola\.com|outbrain\.com|teads\.tv|amazon-adsystem\.com|gmossp\.jp|rtb-oveeo\.com|syncingbridge\.com|simpli\.fi|33across\.com|adnxs\.com|adpushup\.com|rubiconproject\.com/;
+
+/**
+ * CSS Rule ẩn triệt để các khung chứa quảng cáo, banner, và vignette overlay
+ * để chống Layout Shift và ngăn chặn overlay che khuất các phần tử UI.
+ */
+const AD_HIDE_STYLES = `
+  iframe[id*="google_ads"],
+  iframe[src*="doubleclick"],
+  iframe[src*="ad"],
+  iframe[id*="aswift"],
+  div[id*="google_ads"],
+  div[id*="gpt-ad"],
+  div[id*="ad-"],
+  div[id*="ad_"],
+  .ad-container,
+  .ad_box,
+  .ad-slot,
+  .adsbygoogle,
+  .advertisement,
+  div[class*="ad-banner"],
+  div[class*="ad_wrapper"],
+  div[class*="google-ad"],
+  ins.adsbygoogle {
+    display: none !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    min-height: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+  }
+`;
+
+/**
+ * Kích hoạt Ad Blocker 2 tầng tối ưu (Network Abort + CSS Hidden).
+ * - Tầng 1: Abort ngay lập tức các network request tới máy chủ quảng cáo và trackers bên thứ 3.
+ * - Tầng 2: Inject script tự động chèn CSS ẩn khung chứa quảng cáo trước khi trang render, triệt tiêu Layout Shift.
+ *
+ * Lưu ý: Áp dụng có chọn lọc cho Free User / Guest User trong beforeEach.
+ *
+ * @param page - Playwright Page instance
+ */
+export const enableAdBlocker = async (page: Page): Promise<void> => {
+  try {
+    if (page.isClosed()) return;
+
+    // 1. Tầng Network: Abort request đến máy chủ quảng cáo & trackers
+    await page.route(AD_TRACKER_PATTERN, (route) => route.abort('blockedbyclient').catch(() => {}));
+
+    // 2. Tầng CSS: Tự động ẩn container quảng cáo ngay khi DOM bắt đầu render
+    await page.addInitScript((css) => {
+      const injectStyle = () => {
+        const style = document.createElement('style');
+        style.id = 'qa-adblock-styles';
+        style.textContent = css;
+        if (document.head) {
+          document.head.appendChild(style);
+        } else {
+          document.addEventListener('DOMContentLoaded', () => {
+            document.head?.appendChild(style);
+          }, { once: true });
+        }
+      };
+      injectStyle();
+    }, AD_HIDE_STYLES).catch(() => {});
+  } catch {
+    // Nuốt lỗi an toàn nếu page bị đóng sớm
+  }
+};
+
 

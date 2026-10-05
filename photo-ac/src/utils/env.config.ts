@@ -1,8 +1,8 @@
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
-// Load .env file relative to project root
-dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+// Load .env file relative to project directory (always points to photo-ac/.env)
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 /**
  * Typed environment configuration object.

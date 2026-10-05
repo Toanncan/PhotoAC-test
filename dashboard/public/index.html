@@ -797,6 +797,9 @@
         if (typeof fetchProjectEnvDefaults === 'function') {
           fetchProjectEnvDefaults();
         }
+        if (typeof updateEnvIndicatorUI === 'function') {
+          updateEnvIndicatorUI();
+        }
       } catch (err) {
         console.error('Lỗi khi chuyển đổi dự án:', err);
       }
@@ -1086,32 +1089,57 @@
       // 1. Nếu có mã TC (ví dụ: TC-SEARCH-FREE-001, TC_AUTH_01, TC01, TC001, TC-01)
       const tcMatch = testTitle.match(/(TC[-_]?[0-9]+[-_A-Za-z0-9]*|TC[-_][A-Za-z0-9_-]+)/i);
       if (tcMatch) {
-        return `\\b${tcMatch[1]}\\b`;
+        // Trả về chính xác mã TC đã escape, KHÔNG dùng \b vì '-' không thuộc \w trong regex
+        return escapeRegex(tcMatch[1]);
       }
       // 2. Hoặc phần mã trước dấu hai chấm ':' hoặc dấu gạch ngang '-'
       const prefixMatch = testTitle.match(/^([^:\-]{2,25})[:\-]/);
       if (prefixMatch) {
         const cleanPrefix = prefixMatch[1].trim();
-        return `\\b${escapeRegex(cleanPrefix)}\\b`;
+        return escapeRegex(cleanPrefix);
       }
-      // 3. Fallback: Lấy title sạch không có @tags, escape ký tự regex nhưng KHÔNG bọc ^ và $
+      // 3. Fallback: Lấy title sạch không có @tags
       const cleanTitle = testTitle.split('@')[0].trim();
       return escapeRegex(cleanTitle);
+    }
+
+    function getTestUniqueKey(test) {
+      if (!test) return '';
+      const file = (test.file || '').replace(/\\/g, '/').toLowerCase().trim();
+      const project = (test.project || '').toLowerCase().trim();
+      const title = (test.title || '').trim();
+      return `${file}::${project}::${title}`;
+    }
+
+    function findExistingTest(test) {
+      if (!test) return null;
+      if (test.id && state.tests.has(test.id)) {
+        return state.tests.get(test.id);
+      }
+      const key = getTestUniqueKey(test);
+      for (const t of state.tests.values()) {
+        if (getTestUniqueKey(t) === key) {
+          return t;
+        }
+      }
+      return null;
     }
 
     function recalculateMetrics() {
       let passed = 0;
       let failed = 0;
       let skipped = 0;
+      let running = 0;
 
       for (const t of state.tests.values()) {
         if (t.status === 'passed') passed++;
         else if (t.status === 'failed' || t.status === 'timedOut') failed++;
         else if (t.status === 'skipped') skipped++;
+        else if (t.status === 'running') running++;
       }
 
-      // Giữ nguyên tổng số test case cố định từ suiteStart (hoặc state.tests.size nếu lớn hơn)
-      const total = Math.max(state.total, state.tests.size);
+      // Giữ nguyên tổng số test case cố định từ suiteStart nếu có, fallback state.tests.size
+      const total = state.total > 0 ? state.total : state.tests.size;
       state.total = total;
       state.passed = passed;
       state.failed = failed;
@@ -1344,6 +1372,7 @@
             grep: pattern,
             isRerun: true,
             rerunTestId: test.id,
+            rerunTestKey: getTestUniqueKey(test),
             cleanReport: false
           });
         });
@@ -1422,21 +1451,50 @@
 
       evtSource.addEventListener('testBegin', (e) => {
         const test = JSON.parse(e.data);
-        const existing = state.tests.get(test.id) || {};
-        state.tests.set(test.id, { ...existing, ...test, status: 'running', error: null });
+        const existing = findExistingTest(test);
+        if (existing) {
+          if (existing.id !== test.id) {
+            state.tests.delete(existing.id);
+            existing.id = test.id;
+            state.tests.set(test.id, existing);
+          }
+          Object.assign(existing, test, { status: 'running', error: null });
+        } else {
+          state.tests.set(test.id, { ...test, status: 'running', error: null });
+        }
         renderTestList();
       });
 
       evtSource.addEventListener('testEnd', (e) => {
         const test = JSON.parse(e.data);
-        const existing = state.tests.get(test.id) || {};
-        state.tests.set(test.id, { ...existing, ...test });
+        const existing = findExistingTest(test);
+        if (existing) {
+          if (existing.id !== test.id) {
+            state.tests.delete(existing.id);
+            existing.id = test.id;
+            state.tests.set(test.id, existing);
+          }
+          Object.assign(existing, test);
+        } else {
+          state.tests.set(test.id, { ...test });
+        }
         recalculateMetrics();
         renderTestList();
       });
 
       evtSource.addEventListener('runFinished', (e) => {
         const data = JSON.parse(e.data);
+
+        // Quét sạch: không để test nào bị kẹt ở trạng thái 'running' sau khi tiến trình đã kết thúc
+        for (const t of state.tests.values()) {
+          if (t.status === 'running') {
+            t.status = 'failed';
+            if (!t.error) {
+              t.error = 'Tiến trình kết thúc mà không trả về kết quả hoàn thành.';
+            }
+          }
+        }
+
         recalculateMetrics();
         const totalFailed = state.failed;
         setRunningState(false, totalFailed > 0 ? `Hoàn tất với ${totalFailed} lỗi.` : 'Hoàn tất! Tất cả tests đều Passed 🎉');
@@ -1510,15 +1568,22 @@
       postRunBanner.classList.remove('hidden');
       state.lastFailedTests = Array.from(state.tests.values()).filter(t => t.status === 'failed' || t.status === 'timedOut');
 
-      if (data.failed > 0) {
+      const isAllPassed = data.total > 0 && data.passed === data.total && data.failed === 0;
+
+      if (!isAllPassed && (data.failed > 0 || (data.passed + data.skipped < data.total))) {
+        const displayFailed = Math.max(data.failed, data.total - data.passed - data.skipped);
         postRunBanner.className = 'rounded-2xl p-4 border border-rose-800/60 bg-rose-950/30 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg';
         postRunIcon.className = 'w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center flex-shrink-0 text-base font-bold';
         postRunIcon.innerHTML = `<svg class="w-5 h-5 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg>`;
-        postRunTitle.textContent = `Phát hiện ${data.failed} testcase bị lỗi!`;
-        postRunDesc.textContent = `Tổng cộng: ${data.total} tests • ${data.passed} Passed • ${data.failed} Failed • ${data.skipped} Skipped`;
+        postRunTitle.textContent = `Phát hiện ${displayFailed} testcase chưa đạt!`;
+        postRunDesc.textContent = `Tổng cộng: ${data.total} tests • ${data.passed} Passed • ${displayFailed} Failed • ${data.skipped} Skipped`;
 
-        btnRerunFailed.classList.remove('hidden');
-        btnRerunFailed.textContent = `Chạy lại ${state.lastFailedTests.length} test lỗi`;
+        if (state.lastFailedTests.length > 0) {
+          btnRerunFailed.classList.remove('hidden');
+          btnRerunFailed.textContent = `Chạy lại ${state.lastFailedTests.length} test lỗi`;
+        } else {
+          btnRerunFailed.classList.add('hidden');
+        }
       } else {
         postRunBanner.className = 'rounded-2xl p-4 border border-emerald-800/60 bg-emerald-950/30 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg';
         postRunIcon.className = 'w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 text-base font-bold';
@@ -1537,6 +1602,8 @@
     });
 
     btnRerunFailed.addEventListener('click', async () => {
+      // Luôn tính lại danh sách test còn failed thực tế ở thời điểm hiện tại
+      state.lastFailedTests = Array.from(state.tests.values()).filter(t => t.status === 'failed' || t.status === 'timedOut');
       if (state.lastFailedTests.length === 0) return;
 
       // 1. Thu thập danh sách file spec chứa test lỗi
@@ -1618,6 +1685,8 @@
       } else {
         // RERUN: BẢO LƯU KẾT QUẢ CŨ! Chỉ chuyển test được chạy lại sang trạng thái 'running'
         const targetIds = overrideOptions.rerunTestIds || (overrideOptions.rerunTestId ? [overrideOptions.rerunTestId] : []);
+        const targetKey = overrideOptions.rerunTestKey;
+
         if (targetIds.length > 0) {
           for (const id of targetIds) {
             const t = state.tests.get(id);
@@ -1626,13 +1695,25 @@
               t.error = null;
             }
           }
-        } else if (overrideOptions.grep) {
+        }
+        if (targetKey) {
           for (const t of state.tests.values()) {
-            if (overrideOptions.grep.includes(t.title) || (t.title && t.title.includes(overrideOptions.grep))) {
+            if (getTestUniqueKey(t) === targetKey) {
               t.status = 'running';
               t.error = null;
             }
           }
+        }
+        if (targetIds.length === 0 && !targetKey && overrideOptions.grep) {
+          try {
+            const grepReg = new RegExp(overrideOptions.grep, 'i');
+            for (const t of state.tests.values()) {
+              if (grepReg.test(t.title)) {
+                t.status = 'running';
+                t.error = null;
+              }
+            }
+          } catch (e) {}
         }
         renderTestList();
         recalculateMetrics();
@@ -1754,27 +1835,32 @@
     // ==========================================
     // 7. ENVIRONMENT & ACCOUNTS CONFIG MODAL
     // ==========================================
-    const ENV_STORAGE_KEY = 'test_portal_custom_env_config';
+    // Lưu trữ cấu hình môi trường tùy chỉnh độc lập theo từng dự án (photo-ac / illust-ac)
+    function getEnvStorageKey(siteId = state.currentProjectSite || 'photo-ac') {
+      return `test_portal_custom_env_${siteId}`;
+    }
 
-    function getSavedCustomEnvConfig() {
+    function getSavedCustomEnvConfig(siteId = state.currentProjectSite || 'photo-ac') {
       try {
-        const raw = localStorage.getItem(ENV_STORAGE_KEY);
+        const raw = localStorage.getItem(getEnvStorageKey(siteId));
         return raw ? JSON.parse(raw) : null;
       } catch (e) {
         return null;
       }
     }
 
-    function saveCustomEnvConfig(cfg) {
+    function saveCustomEnvConfig(cfg, siteId = state.currentProjectSite || 'photo-ac') {
       try {
-        localStorage.setItem(ENV_STORAGE_KEY, JSON.stringify(cfg));
+        localStorage.setItem(getEnvStorageKey(siteId), JSON.stringify(cfg));
       } catch (e) { }
       updateEnvIndicatorUI();
     }
 
-    function clearCustomEnvConfig() {
+    function clearCustomEnvConfig(siteId = state.currentProjectSite || 'photo-ac') {
       try {
-        localStorage.removeItem(ENV_STORAGE_KEY);
+        localStorage.removeItem(getEnvStorageKey(siteId));
+        // Xóa luôn legacy key cũ (nếu có) để tránh dữ liệu cũ sót lại
+        localStorage.removeItem('test_portal_custom_env_config');
       } catch (e) { }
       updateEnvIndicatorUI();
     }
