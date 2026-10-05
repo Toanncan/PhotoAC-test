@@ -634,26 +634,31 @@ export class SearchResultPage extends BasePage {
   // ─── Filter Toolbar Actions ───────────────────────────────────────────────
 
   /**
-   * Safely opens a toolbar dropdown menu and ensures the target option is visible.
+   * Safely opens a toolbar dropdown menu and ensures the target option is visible AND settled.
    * Handles hydration delays, layout shifts, and CSS animations across all browsers.
+   *
+   * The whole "open → verify" sequence runs inside a single retry block, so if the menu auto-collapses
+   * (pjax re-render of the toolbar, CSS transition) between the check and the caller's click,
+   * the next attempt re-opens it instead of leaving the caller waiting on a hidden option.
+   * "Settled" = still visible after two render frames. A trial click is intentionally NOT used:
+   * Bootstrap custom-control labels are overlaid by their hidden <input>, which intercepts pointer events.
    * @param dropdownButton - The dropdown toggle button
    * @param expectedOption - The option locator inside the dropdown menu that should become visible
-   * @param timeout - Maximum timeout in ms (default 10_000)
+   * @param timeout - Maximum timeout in ms (default 15_000)
    */
   async openToolbarDropdown(dropdownButton: Locator, expectedOption: Locator, timeout: number = 15_000): Promise<void> {
     await this.waitForPageLoadingIconHidden(10_000);
-    if (await expectedOption.isVisible().catch(() => false)) {
-      return;
-    }
     await expect(async () => {
       const isVisible = await expectedOption.isVisible().catch(() => false);
       if (!isVisible) {
         await dropdownButton.scrollIntoViewIfNeeded().catch(() => { });
-        await dropdownButton.click({ force: true, noWaitAfter: true }).catch(async () => {
-          await dropdownButton.click({ noWaitAfter: true });
-        });
+        await dropdownButton.click({ timeout: 3_000, noWaitAfter: true });
       }
       await expect(expectedOption).toBeVisible({ timeout: 2_000 });
+      await this.page.evaluate(() => new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      }));
+      await expect(expectedOption).toBeVisible({ timeout: 1_000 });
     }).toPass({ timeout, intervals: [500, 1_000, 1_500] });
   }
 

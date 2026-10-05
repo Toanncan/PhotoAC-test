@@ -51,14 +51,27 @@ export abstract class BasePage {
    * Click an element after ensuring it is visible and enabled.
    * @param locator - Playwright Locator object
    */
-  async clickElement(locator: Locator, options?: { force?: boolean }): Promise<void> {
+  async clickElement(locator: Locator, options?: { force?: boolean; noWaitAfter?: boolean }): Promise<void> {
     await locator.waitFor({ state: 'visible', timeout: 20_000 });
-    if (options?.force) {
-      await locator.click({ force: true });
+    const startUrl = this.page.url();
+    const clickOpts = {
+      ...(options?.force ? { force: true } : {}),
+      ...(options?.noWaitAfter ? { noWaitAfter: true } : {}),
+    };
+    if (options?.force || options?.noWaitAfter) {
+      await locator.click(clickOpts);
     } else {
-      await locator.click().catch(async () => {
-        await locator.click({ force: true });
-      });
+      try {
+        await locator.click(clickOpts);
+      } catch (err: any) {
+        // Nếu URL đã thay đổi (click đã kích hoạt điều hướng thành công), không retry trên element cũ của trang trước!
+        if (this.page.url() !== startUrl) return;
+        const errMessage = String(err?.message || '');
+        if (errMessage.includes('Execution context was destroyed') || errMessage.includes('frame was detached')) {
+          return;
+        }
+        await locator.click({ force: true, ...(options?.noWaitAfter ? { noWaitAfter: true } : {}) });
+      }
     }
   }
 

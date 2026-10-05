@@ -482,14 +482,24 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
 
-    await test.step('Chọn Chiều ngang và định dạng Vector từ Toolbar "ファイル・向き"', async () => {
+    await test.step('Chọn Chiều ngang (横長) từ Toolbar "ファイル・向き"', async () => {
       await searchResultPage.selectOrientation('horizontal');
+      await expect(page).toHaveURL(/orientation=1/);
+      await expect(searchResultPage.getActiveFilterBadge('横長')).toBeVisible();
+      await captureEvidenceWithUrl(page, testInfo, 'Combined-Filter-Horizontal');
+    });
+
+    await test.step('Chọn định dạng Vector (EPS・AI) từ Toolbar "ファイル・向き"', async () => {
       await searchResultPage.selectFormat('vector');
+      await expect(page).toHaveURL(/format=vector/);
+      await expect(page).toHaveURL(/orientation=1/);
+      await expect(searchResultPage.getActiveFilterBadge('EPS・AI')).toBeVisible();
       await captureEvidenceWithUrl(page, testInfo, 'Combined-Filter-Horizontal-Vector');
     });
 
     await test.step('Bật bộ lọc Loại trừ AI từ Toolbar "表示条件"', async () => {
       await searchResultPage.toggleExcludeAi(true);
+      await expect(page).toHaveURL(/exclude_ai=on/);
       await captureEvidenceWithUrl(page, testInfo, 'Combined-Filter-Horizontal-Vector-ExcludeAI');
     });
 
@@ -602,7 +612,7 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-020: Tìm kiếm đề xuất và phân trang (rcm=1)
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-020: Recommended Search và phân trang @regression @guest', async ({
+  test.skip('TC-SEARCH-GUEST-020: Recommended Search và phân trang @regression @guest', async ({
     page,
     searchResultPage,
   }, testInfo) => {

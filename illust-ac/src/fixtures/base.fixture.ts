@@ -119,7 +119,7 @@ export const test = base.extend<PageFixtures>({
   screenshotOnPass: [async ({ page }, use, testInfo) => {
     await use();
     if (testInfo.status === 'passed') {
-      const screenshot = await page.screenshot({ fullPage: true });
+      const screenshot = await page.screenshot({ fullPage: false });
       await testInfo.attach('final-screenshot-passed', {
         body: screenshot,
         contentType: 'image/png',
@@ -165,7 +165,7 @@ export const test = base.extend<PageFixtures>({
           banner.style.pointerEvents = 'none';
           banner.textContent = '📍 URL: ' + url;
           document.body.prepend(banner);
-        }, currentUrl).catch(() => {});
+        }, currentUrl).catch(() => { });
       }
     } catch {
       // Ignore if page is already closed or destroyed

@@ -53,6 +53,7 @@ export abstract class BasePage {
    */
   async clickElement(locator: Locator, options?: { force?: boolean; noWaitAfter?: boolean }): Promise<void> {
     await locator.waitFor({ state: 'visible', timeout: 20_000 });
+    const startUrl = this.page.url();
     const clickOpts = {
       ...(options?.force ? { force: true } : {}),
       ...(options?.noWaitAfter ? { noWaitAfter: true } : {}),
@@ -60,9 +61,17 @@ export abstract class BasePage {
     if (options?.force || options?.noWaitAfter) {
       await locator.click(clickOpts);
     } else {
-      await locator.click(clickOpts).catch(async () => {
+      try {
+        await locator.click(clickOpts);
+      } catch (err: any) {
+        // Nếu URL đã thay đổi (click đã kích hoạt điều hướng thành công), không retry trên element cũ của trang trước!
+        if (this.page.url() !== startUrl) return;
+        const errMessage = String(err?.message || '');
+        if (errMessage.includes('Execution context was destroyed') || errMessage.includes('frame was detached')) {
+          return;
+        }
         await locator.click({ force: true, ...(options?.noWaitAfter ? { noWaitAfter: true } : {}) });
-      });
+      }
     }
   }
 

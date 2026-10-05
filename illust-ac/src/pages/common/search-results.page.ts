@@ -31,12 +31,12 @@ export class SearchResultPage extends BasePage {
 
   /**
    * Search keyword input box on results page.
-   * Scoped to #search_frm to avoid matching hidden fixed header input or mobile drawer.
+   * Prioritizes visible input (main header #search_frm or sticky fixed header #search_frm_fixed).
    */
-  readonly searchInput: Locator = this.page.locator('#search_frm input[name="search_word"]').first();
+  readonly searchInput: Locator = this.page.locator('#search_frm input[name="search_word"]:visible, #search_frm_fixed input[name="search_word"]:visible, #search_frm input[name="search_word"]').first();
 
-  /** Reset keyword button inside search box (scoped to #search_frm to avoid multiple match) */
-  readonly resetKeywordButton: Locator = this.page.locator('#search_frm button.reset-keywords-btn, #search_frm button[aria-label="リセット"]').first();
+  /** Reset keyword button inside search box */
+  readonly resetKeywordButton: Locator = this.page.locator('#search_frm button.reset-keywords-btn:visible, #search_frm button[aria-label="リセット"]:visible, #search_frm_fixed button.reset-keywords-btn:visible, #search_frm_fixed button[aria-label="リセット"]:visible, #search_frm button.reset-keywords-btn, #search_frm button[aria-label="リセット"]').first();
 
   /** Submit search button */
   readonly searchSubmitButton: Locator = this.page.locator('#search_frm button.execloginbtn:visible, #search_frm #search_btn:visible, #search_frm button[type="submit"]:visible, button.execloginbtn:visible').first();
@@ -172,10 +172,18 @@ export class SearchResultPage extends BasePage {
 
   // ─── Filter Option Locators: 5. Detailed Search (詳細検索) ──────────────────
   // NOTE: AC-Illust uses id="creator_mf" (NOT #form_creator like photo-ac)
-  // NOTE: NG creator & Photo ID have no id — use name attribute
-  readonly detailedCreatorInput: Locator = this.page.locator('#filter-dropdown-detail #creator_mf, #filter-dropdown-detail input[name="creator"]').first();
-  readonly detailedNgCreatorInput: Locator = this.page.locator('#filter-dropdown-detail input[name="ngcreator"]');
-  readonly detailedPhotoIdInput: Locator = this.page.locator('#filter-dropdown-detail input[name="qid"]');
+  // NOTE: jQuery tagEditor plugin dynamically converts/inserts hidden inputs; explicitly exclude type="hidden" and support dynamic typing input
+  readonly detailedCreatorInput: Locator = this.page.locator(
+    '#filter-dropdown-detail input[type="text"][name="creator"], ' +
+    '#filter-dropdown-detail #creator_mf:not([type="hidden"]), ' +
+    '#filter-dropdown-detail .form-control.h-auto input, ' +
+    '#filter-dropdown-detail div:has(> span:has-text("イラストレーター名を入力")) input, ' +
+    '#filter-dropdown-detail input[placeholder="イラストレーター名を入力"]:visible, ' +
+    '#filter-dropdown-detail input[name="creator"]:not([type="hidden"])'
+  ).first();
+
+  readonly detailedNgCreatorInput: Locator = this.page.locator('#filter-dropdown-detail input[type="text"][name="ngcreator"], #filter-dropdown-detail input[placeholder="除外イラストレーター名を入力"]:visible, #filter-dropdown-detail input[name="ngcreator"]:not([type="hidden"])').first();
+  readonly detailedPhotoIdInput: Locator = this.page.locator('#filter-dropdown-detail input[type="text"][name="qid"], #filter-dropdown-detail input[placeholder="素材のIDを入力"]:visible, #filter-dropdown-detail input[name="qid"]:not([type="hidden"])').first();
 
   // ─── Filter Option Locators: 6. Display Conditions (表示条件) ───────────────
   readonly exactMatchCheckbox: Locator = this.page.locator('#filter-dropdown-display #type_search, #type_search');
@@ -220,11 +228,11 @@ export class SearchResultPage extends BasePage {
     try {
       if (await this.introDialog.first().isVisible().catch(() => false)) {
         if (await this.introDialogCloseButton.first().isVisible().catch(() => false)) {
-          await this.introDialogCloseButton.first().click({ force: true }).catch(() => {});
+          await this.introDialogCloseButton.first().click({ force: true }).catch(() => { });
         } else {
-          await this.page.keyboard.press('Escape').catch(() => {});
+          await this.page.keyboard.press('Escape').catch(() => { });
         }
-        await this.introDialog.first().waitFor({ state: 'hidden', timeout: 2_000 }).catch(() => {});
+        await this.introDialog.first().waitFor({ state: 'hidden', timeout: 2_000 }).catch(() => { });
       }
     } catch {
       // Ignore if no dialog is present
@@ -252,7 +260,7 @@ export class SearchResultPage extends BasePage {
    */
   async getResultCount(options?: { timeout?: number }): Promise<number> {
     const timeout = options?.timeout ?? 10_000;
-    await this.resultsOrNoResultLocator.waitFor({ state: 'visible', timeout }).catch(() => {});
+    await this.resultsOrNoResultLocator.waitFor({ state: 'visible', timeout }).catch(() => { });
     return this.resultItems.count();
   }
 
@@ -261,6 +269,9 @@ export class SearchResultPage extends BasePage {
    */
   async searchAgain(keyword: string): Promise<void> {
     await test.step(`Search again with keyword: "${keyword}"`, async () => {
+      if (!await this.searchInput.isVisible().catch(() => false)) {
+        await this.page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' })).catch(() => { });
+      }
       await this.fillInput(this.searchInput, keyword);
       await this.page.keyboard.press('Enter');
       await this.waitForResultDisplay();
@@ -287,7 +298,7 @@ export class SearchResultPage extends BasePage {
       }
       const isExpanded = await this.sortDropdownButton.getAttribute('aria-expanded').catch(() => null);
       if (isExpanded !== 'true') {
-        await this.sortDropdownButton.scrollIntoViewIfNeeded().catch(() => {});
+        await this.sortDropdownButton.scrollIntoViewIfNeeded().catch(() => { });
         await this.clickElement(this.sortDropdownButton);
       }
       await expect(this.sortRelevanceLabel).toBeVisible({ timeout: 5_000 });
@@ -300,7 +311,7 @@ export class SearchResultPage extends BasePage {
   async selectNewestSort(): Promise<void> {
     await test.step('Select "新着順" (Newest) sort', async () => {
       await this.openSortDropdown();
-      await this.clickElement(this.sortNewestLabel);
+      await this.clickElement(this.sortNewestLabel, { force: true });
       await this.waitForResultDisplay();
     });
   }
@@ -312,7 +323,7 @@ export class SearchResultPage extends BasePage {
     await test.step('Click "人気順" (Popularity) sort option', async () => {
       await this.openSortDropdown();
       await this.clickElement(this.sortPopularLabel, { force: true });
-      await this.sortPopularLabel.hover().catch(() => {});
+      await this.sortPopularLabel.hover().catch(() => { });
     });
   }
 
@@ -322,7 +333,7 @@ export class SearchResultPage extends BasePage {
   async selectPopularSort(): Promise<void> {
     await test.step('Select "人気順" (Popularity) sort for Premium user', async () => {
       await this.openSortDropdown();
-      await this.clickElement(this.sortPopularLabel);
+      await this.clickElement(this.sortPopularLabel, { force: true });
       await this.waitForResultDisplay();
     });
   }
@@ -333,7 +344,7 @@ export class SearchResultPage extends BasePage {
   async selectRelevanceSort(): Promise<void> {
     await test.step('Select "関連性の高い順" (Relevance) sort', async () => {
       await this.openSortDropdown();
-      await this.clickElement(this.sortRelevanceLabel);
+      await this.clickElement(this.sortRelevanceLabel, { force: true });
       await this.waitForResultDisplay();
     });
   }
@@ -347,7 +358,7 @@ export class SearchResultPage extends BasePage {
       const targetLabel = count === '210'
         ? this.displayCount210Label
         : (count === '140' ? this.displayCount140Label : this.displayCount70Label);
-      await this.clickElement(targetLabel);
+      await this.clickElement(targetLabel, { force: true });
       await this.waitForResultDisplay();
     });
   }
@@ -357,7 +368,7 @@ export class SearchResultPage extends BasePage {
    */
   async getPopularSortPopoverText(): Promise<string> {
     if (!(await this.popularSortPopoverBody.isVisible().catch(() => false))) {
-      await this.sortPopularLabel.hover().catch(() => {});
+      await this.sortPopularLabel.hover().catch(() => { });
     }
     await expect(this.popularSortPopoverBody).toBeVisible({ timeout: 5_000 });
     return (await this.popularSortPopoverBody.textContent())?.trim() ?? '';
@@ -403,7 +414,7 @@ export class SearchResultPage extends BasePage {
       const targetPage = String(Number(currentPage) + 1);
 
       // Tier 1: Scroll element into center of viewport to avoid bottom fixed banners (Cookie, Signup CTA)
-      await this.paginationNextButton.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => {});
+      await this.paginationNextButton.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => { });
       await this.clickElement(this.paginationNextButton);
 
       // Check if navigation occurred within 2.5s
@@ -432,7 +443,7 @@ export class SearchResultPage extends BasePage {
 
         if (!keyboardNavigated) {
           // Tier 3: Native DOM anchor click dispatch
-          await this.paginationNextButton.evaluate((el: HTMLAnchorElement) => el.click()).catch(() => {});
+          await this.paginationNextButton.evaluate((el: HTMLAnchorElement) => el.click()).catch(() => { });
           await this.page.waitForFunction(
             (target) => {
               const activeEl = document.querySelector('div.pagination_bottom a.paginator_p.selected, ul.ac-pagination li.active a');
@@ -441,7 +452,7 @@ export class SearchResultPage extends BasePage {
             },
             targetPage,
             { timeout: 10_000 }
-          ).catch(() => {});
+          ).catch(() => { });
         }
       }
 
@@ -465,7 +476,7 @@ export class SearchResultPage extends BasePage {
         },
         targetPage,
         { timeout: 15_000 }
-      ).catch(() => {});
+      ).catch(() => { });
       await this.waitForResultDisplay();
     });
   }
@@ -479,7 +490,7 @@ export class SearchResultPage extends BasePage {
       const targetPage = String(Math.max(1, Number(currentPage) - 1));
 
       // Tier 1: Scroll element into center of viewport to avoid bottom fixed banners
-      await this.paginationPrevButton.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => {});
+      await this.paginationPrevButton.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => { });
       await this.clickElement(this.paginationPrevButton);
 
       // Check if navigation occurred within 2.5s
@@ -508,7 +519,7 @@ export class SearchResultPage extends BasePage {
 
         if (!keyboardNavigated) {
           // Tier 3: Native DOM anchor click dispatch
-          await this.paginationPrevButton.evaluate((el: HTMLAnchorElement) => el.click()).catch(() => {});
+          await this.paginationPrevButton.evaluate((el: HTMLAnchorElement) => el.click()).catch(() => { });
           await this.page.waitForFunction(
             (target) => {
               const activeEl = document.querySelector('div.pagination_bottom a.paginator_p.selected, ul.ac-pagination li.active a');
@@ -517,7 +528,7 @@ export class SearchResultPage extends BasePage {
             },
             targetPage,
             { timeout: 10_000 }
-          ).catch(() => {});
+          ).catch(() => { });
         }
       }
 
@@ -541,7 +552,7 @@ export class SearchResultPage extends BasePage {
         },
         targetPage,
         { timeout: 15_000 }
-      ).catch(() => {});
+      ).catch(() => { });
       await this.waitForResultDisplay();
     });
   }
@@ -552,7 +563,7 @@ export class SearchResultPage extends BasePage {
   async goToPageNumber(pageNumber: number): Promise<void> {
     await test.step(`Navigate to page ${pageNumber} in pagination`, async () => {
       const pageLink = this.paginationContainer.locator(`a:text-is("${pageNumber}")`);
-      await pageLink.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => {});
+      await pageLink.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => { });
       await this.clickElement(pageLink);
       await this.waitForResultDisplay();
     });
@@ -578,8 +589,7 @@ export class SearchResultPage extends BasePage {
       await this.clickElement(ddclSelector);
       const categoryOption = this.page.locator(`#filter-dropdown-categories label:has-text("${categoryName}")`).first();
       await this.clickElement(categoryOption, { force: true });
-      const submitBtn = this.page.locator('button.opacity-0.position-absolute, button[onclick*="searchExecMenu"], button[aria-label="submit"], #filter-horizontal button[type="submit"]').first();
-      await this.clickElement(submitBtn, { force: true });
+      await this.page.keyboard.press('Enter');
       await this.waitForResultDisplay();
     });
   }
@@ -603,22 +613,39 @@ export class SearchResultPage extends BasePage {
    * Handles hydration delays, layout shifts, and CSS animations across all browsers.
    * @param dropdownButton - The dropdown toggle button
    * @param expectedOption - The option locator inside the dropdown menu that should become visible
-   * @param timeout - Maximum timeout in ms (default 10_000)
+   * @param timeout - Maximum timeout in ms (default 15_000)
    */
-  async openToolbarDropdown(dropdownButton: Locator, expectedOption?: Locator, timeout: number = 10_000): Promise<void> {
+  async openToolbarDropdown(dropdownButton: Locator, expectedOption?: Locator, timeout: number = 15_000): Promise<void> {
     await this.dismissIntroDialogIfPresent();
-    if (expectedOption && await expectedOption.isVisible().catch(() => false)) {
+    await this.waitForPageLoadingIconHidden().catch(() => { });
+
+    const isExpanded = await dropdownButton.getAttribute('aria-expanded').catch(() => null) === 'true';
+    const isOptionVisible = expectedOption ? await expectedOption.isVisible().catch(() => false) : false;
+    if (isExpanded && (!expectedOption || isOptionVisible)) {
       return;
     }
-    const isExpanded = await dropdownButton.getAttribute('aria-expanded').catch(() => null);
-    if (isExpanded !== 'true') {
-      await dropdownButton.scrollIntoViewIfNeeded().catch(() => {});
-      await dropdownButton.click().catch(async () => {
-        await dropdownButton.click({ force: true });
-      });
-    }
+
     if (expectedOption) {
-      await expect(expectedOption).toBeVisible({ timeout: Math.min(timeout, 5_000) });
+      await expect(async () => {
+        const expanded = await dropdownButton.getAttribute('aria-expanded').catch(() => null) === 'true';
+        const visible = await expectedOption.isVisible().catch(() => false);
+        if (!visible) {
+          if (!expanded) {
+            await dropdownButton.scrollIntoViewIfNeeded().catch(() => { });
+            await dropdownButton.click({ noWaitAfter: true }).catch(async () => {
+              await dropdownButton.click({ force: true, noWaitAfter: true });
+            });
+          }
+        }
+        await expect(expectedOption).toBeVisible({ timeout: 2_000 });
+      }).toPass({ timeout, intervals: [500, 1_000, 1_500] });
+    } else {
+      if (!isExpanded) {
+        await dropdownButton.scrollIntoViewIfNeeded().catch(() => { });
+        await dropdownButton.click({ force: true, noWaitAfter: true }).catch(async () => {
+          await dropdownButton.click({ noWaitAfter: true });
+        });
+      }
     }
   }
 
@@ -661,6 +688,7 @@ export class SearchResultPage extends BasePage {
 
   /**
    * Filter by photo orientation (縦長, 横長, 全て) via the toolbar.
+   * Automatically preserves any active format filter (Vector/PNG) present in URL.
    * @param orientation - 'vertical' (0), 'horizontal' (1), or 'all'
    */
   async selectOrientation(orientation: 'vertical' | 'horizontal' | 'all'): Promise<void> {
@@ -668,25 +696,31 @@ export class SearchResultPage extends BasePage {
       const targetLabel = orientation === 'vertical'
         ? this.orientationVerticalLabel
         : (orientation === 'horizontal' ? this.orientationHorizontalLabel : this.orientationAllLabel);
-      const radioId = orientation === 'vertical'
-        ? 'orientation-0'
-        : (orientation === 'horizontal' ? 'orientation-1' : 'orientation-all');
-      const targetRadio = this.page.locator(`#filter-dropdown-format #${radioId}, #${radioId}`).first();
 
       await this.openToolbarDropdown(this.fileOrientationButton, targetLabel);
-      await this.clickElement(targetLabel, { force: true });
 
-      // Cross-browser: Ensure underlying radio is checked and change event dispatches in Gecko/WebKit
-      const isChecked = await targetRadio.isChecked().catch(() => false);
-      if (!isChecked) {
-        await targetRadio.check({ force: true }).catch(() => {});
+      // Preserve active format filter from URL to avoid form overwrite
+      const currentUrl = this.page.url();
+      if (currentUrl.includes('format=vector')) {
+        const isVectorChecked = await this.page.locator('#filter-dropdown-format #format-vector').first().isChecked().catch(() => false);
+        if (!isVectorChecked) {
+          await this.clickElement(this.formatVectorLabel, { force: true });
+        }
+      } else if (currentUrl.includes('format=png')) {
+        const isPngChecked = await this.page.locator('#filter-dropdown-format #format-png').first().isChecked().catch(() => false);
+        if (!isPngChecked) {
+          await this.clickElement(this.formatPngLabel, { force: true });
+        }
       }
+
+      await this.clickElement(targetLabel, { force: true });
       await this.waitForResultDisplay();
     });
   }
 
   /**
    * Filter by Format (フォーマット) via "ファイル・向き" toolbar dropdown.
+   * Automatically preserves any active orientation filter (0/1) present in URL.
    * AC-Illust supports Vector (EPS/AI) and PNG — NOT PSD/M/L size like photo-ac.
    * @param format - 'all' | 'vector' | 'png'
    */
@@ -694,13 +728,52 @@ export class SearchResultPage extends BasePage {
     await test.step(`Filter by format "${format}" via toolbar`, async () => {
       const labelMap = { all: this.formatAllLabel, vector: this.formatVectorLabel, png: this.formatPngLabel };
       const targetLabel = labelMap[format];
-      const targetRadio = this.page.locator(`#filter-dropdown-format #format-${format}`).first();
       await this.openToolbarDropdown(this.fileOrientationButton, targetLabel);
-      await this.clickElement(targetLabel, { force: true });
-      const isChecked = await targetRadio.isChecked().catch(() => false);
-      if (!isChecked) {
-        await targetRadio.check({ force: true }).catch(() => {});
+
+      // Preserve active orientation filter from URL to avoid form overwrite
+      const currentUrl = this.page.url();
+      if (currentUrl.includes('orientation=1')) {
+        const isOri1Checked = await this.page.locator('#filter-dropdown-format #orientation-1').first().isChecked().catch(() => false);
+        if (!isOri1Checked) {
+          await this.clickElement(this.orientationHorizontalLabel, { force: true });
+        }
+      } else if (currentUrl.includes('orientation=0')) {
+        const isOri0Checked = await this.page.locator('#filter-dropdown-format #orientation-0').first().isChecked().catch(() => false);
+        if (!isOri0Checked) {
+          await this.clickElement(this.orientationVerticalLabel, { force: true });
+        }
       }
+
+      await this.clickElement(targetLabel, { force: true });
+      await this.waitForResultDisplay();
+    });
+  }
+
+  /**
+   * Filter by both file format and photo orientation within the shared "ファイル・向き" toolbar dropdown.
+   * Ensures both radio selections are applied without overriding each other.
+   * @param options.format - 'all' | 'vector' | 'png'
+   * @param options.orientation - 'vertical' | 'horizontal' | 'all'
+   */
+  async selectFormatAndOrientation(options: {
+    format?: 'all' | 'vector' | 'png';
+    orientation?: 'vertical' | 'horizontal' | 'all';
+  }): Promise<void> {
+    await test.step(`Filter by format "${options.format ?? 'unchanged'}" and orientation "${options.orientation ?? 'unchanged'}" via toolbar`, async () => {
+      const { format, orientation } = options;
+      const expectedOption = orientation === 'horizontal' ? this.orientationHorizontalLabel
+        : (orientation === 'vertical' ? this.orientationVerticalLabel : this.formatVectorLabel);
+      await this.openToolbarDropdown(this.fileOrientationButton, expectedOption);
+
+      if (orientation) {
+        const oriLabel = orientation === 'vertical' ? this.orientationVerticalLabel : (orientation === 'horizontal' ? this.orientationHorizontalLabel : this.orientationAllLabel);
+        await this.clickElement(oriLabel, { force: true });
+      }
+      if (format) {
+        const formatLabelMap = { all: this.formatAllLabel, vector: this.formatVectorLabel, png: this.formatPngLabel };
+        await this.clickElement(formatLabelMap[format], { force: true });
+      }
+
       await this.waitForResultDisplay();
     });
   }
@@ -753,7 +826,7 @@ export class SearchResultPage extends BasePage {
           break;
       }
       await this.openToolbarDropdown(this.colorFilterButton, targetOption);
-      await this.clickElement(targetOption, { force: true });
+      await this.clickElement(targetOption);
       await this.waitForResultDisplay();
     });
   }
@@ -768,10 +841,6 @@ export class SearchResultPage extends BasePage {
       const isCurrentlyChecked = await this.excludeAiCheckbox.isChecked().catch(() => false);
       if (isCurrentlyChecked !== enable) {
         await this.clickElement(this.excludeAiLabel, { force: true });
-        const isStillWrong = (await this.excludeAiCheckbox.isChecked().catch(() => false)) !== enable;
-        if (isStillWrong) {
-          await this.excludeAiCheckbox.setChecked(enable, { force: true }).catch(() => {});
-        }
         await this.waitForResultDisplay();
       }
     });
@@ -787,10 +856,6 @@ export class SearchResultPage extends BasePage {
       const isCurrentlyChecked = await this.exactMatchCheckbox.isChecked().catch(() => false);
       if (isCurrentlyChecked !== enable) {
         await this.clickElement(this.exactMatchLabel, { force: true });
-        const isStillWrong = (await this.exactMatchCheckbox.isChecked().catch(() => false)) !== enable;
-        if (isStillWrong) {
-          await this.exactMatchCheckbox.setChecked(enable, { force: true }).catch(() => {});
-        }
         await this.waitForResultDisplay();
       }
     });
@@ -805,8 +870,7 @@ export class SearchResultPage extends BasePage {
       await this.openToolbarDropdown(this.detailedFilterButton, this.detailedPhotoIdInput);
       await expect(this.detailedPhotoIdInput).toBeVisible({ timeout: 5_000 });
       await this.detailedPhotoIdInput.fill(photoId);
-      const submitBtn = this.page.locator('button.opacity-0.position-absolute, button[onclick*="searchExecMenu"], button[aria-label="submit"], #filter-horizontal button[type="submit"]').first();
-      await this.clickElement(submitBtn, { force: true });
+      await this.detailedPhotoIdInput.press('Enter');
       await this.waitForResultDisplay();
     });
   }
@@ -817,13 +881,13 @@ export class SearchResultPage extends BasePage {
    */
   async searchByDetailedCreator(creatorName: string = 'Acworks'): Promise<void> {
     await test.step(`Search by Creator "${creatorName}" via Detailed Search`, async () => {
-      const creatorPlaceholder = this.page.locator('#filter-dropdown-detail span:has-text("クリエイター名を入力"), #filter-dropdown-detail .tag-editor').first();
-      await this.openToolbarDropdown(this.detailedFilterButton, creatorPlaceholder);
-      await this.clickElement(creatorPlaceholder, { force: true });
-      await this.page.keyboard.type(creatorName);
+      await this.openToolbarDropdown(this.detailedFilterButton, this.detailedCreatorInput);
+      await expect(this.detailedCreatorInput).toBeVisible({ timeout: 5_000 });
+      await expect(async () => {
+        await this.detailedCreatorInput.fill(creatorName);
+      }).toPass({ timeout: 5_000, intervals: [300, 500] });
+      await this.detailedCreatorInput.press('Enter');
       await this.page.keyboard.press('Enter');
-      const submitBtn = this.page.locator('button.opacity-0.position-absolute, button[onclick*="searchExecMenu"], button[aria-label="submit"], #filter-horizontal button[type="submit"]').first();
-      await this.clickElement(submitBtn, { force: true });
       await this.waitForResultDisplay();
     });
   }
@@ -834,13 +898,13 @@ export class SearchResultPage extends BasePage {
    */
   async searchByDetailedNgCreator(ngCreatorName: string = 'Acworks'): Promise<void> {
     await test.step(`Search excluding Creator "${ngCreatorName}" via Detailed Search`, async () => {
-      const ngPlaceholder = this.page.locator('#filter-dropdown-detail .placeholder:has-text("除外クリエイター名を入力"), #filter-dropdown-detail .tag-editor').first();
-      await this.openToolbarDropdown(this.detailedFilterButton, ngPlaceholder);
-      await this.clickElement(ngPlaceholder, { force: true });
-      await this.page.keyboard.type(ngCreatorName);
+      await this.openToolbarDropdown(this.detailedFilterButton, this.detailedNgCreatorInput);
+      await expect(this.detailedNgCreatorInput).toBeVisible({ timeout: 5_000 });
+      await expect(async () => {
+        await this.detailedNgCreatorInput.fill(ngCreatorName);
+      }).toPass({ timeout: 5_000, intervals: [300, 500] });
+      await this.detailedNgCreatorInput.press('Enter');
       await this.page.keyboard.press('Enter');
-      const submitBtn = this.page.locator('button.opacity-0.position-absolute, button[onclick*="searchExecMenu"], button[aria-label="submit"], #filter-horizontal button[type="submit"]').first();
-      await this.clickElement(submitBtn, { force: true });
       await this.waitForResultDisplay();
     });
   }

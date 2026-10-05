@@ -154,7 +154,7 @@ export class HomePage extends BasePage {
   async clickTopKeyword(keyword: string): Promise<void> {
     await test.step(`Click Top Keyword: "${keyword}"`, async () => {
       const keywordChip = this.topKeywords.filter({ hasText: keyword }).first();
-      await this.clickElement(keywordChip);
+      await this.clickElement(keywordChip, { noWaitAfter: true });
     });
   }
 
@@ -173,7 +173,7 @@ export class HomePage extends BasePage {
     await test.step(`Click Popular Tag: "${tag}"`, async () => {
       const tagElement = this.popularTags.filter({ hasText: tag }).first();
       await tagElement.scrollIntoViewIfNeeded().catch(() => { });
-      await this.clickElement(tagElement);
+      await this.clickElement(tagElement, { noWaitAfter: true });
     });
   }
 
@@ -228,7 +228,7 @@ export class HomePage extends BasePage {
   async clickCategory(categoryName: string): Promise<void> {
     await test.step(`Click Category: "${categoryName}" from HomePage`, async () => {
       const categoryLink = this.categoryLinks.filter({ hasText: categoryName }).first();
-      await this.clickElement(categoryLink);
+      await this.clickElement(categoryLink, { noWaitAfter: true });
     });
   }
 
