@@ -258,7 +258,7 @@
               class="role-btn py-2.5 px-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 text-xs font-semibold hover:border-slate-700 transition-all flex items-center justify-center text-center">
               <span>Free User</span>
             </button>
-            <button type="button" data-role="downloader"
+            <button type="button" data-role="premium"
               class="role-btn py-2.5 px-3 rounded-xl border text-xs font-semibold transition-all flex items-center justify-center text-center bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm">
               <span>Premium</span>
             </button>
@@ -306,17 +306,18 @@
           </select>
         </div>
 
-        <!-- 6. WORKERS SELECTION (CHỈ 2 VÀ 4) -->
+        <!-- 6. WORKERS SELECTION (DROPDOWN) -->
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1.5">6. Số Luồng Chạy (Workers)</label>
-          <div class="grid grid-cols-2 gap-2">
-            <button type="button" data-workers="2"
-              class="worker-btn py-1.5 px-2 rounded-lg border text-xs font-medium transition-all bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm">2
-              (Chuẩn)</button>
-            <button type="button" data-workers="4"
-              class="worker-btn py-1.5 px-2 rounded-lg border text-xs font-medium transition-all border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700">4
-              (Tốc độ)</button>
-          </div>
+          <label for="workersSelect" class="block text-xs font-semibold text-slate-300 mb-1.5">6. Số Luồng Chạy
+            (Workers)</label>
+          <select id="workersSelect"
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
+            <option value="1">1</option>
+            <option value="2" selected>2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
         </div>
 
         <!-- 7. HEADED / HEADLESS TOGGLE -->
@@ -562,6 +563,7 @@
       workers: 2,
       activeFilter: 'all', // 'all' | 'running' | 'failed' | 'passed' | 'skipped'
       allExpanded: true,
+      groupExpanded: new Map(), // file -> boolean (user-chosen expand/collapse override)
       total: 0,
       passed: 0,
       failed: 0,
@@ -569,7 +571,7 @@
       tests: new Map(),
       fileSelection: new Set(),
       selectedBrowsers: new Set(['chromium']),
-      selectedRoles: new Set(['downloader']),
+      selectedRoles: new Set(['premium']),
       currentProjectSite: 'photo-ac',
       lastFailedTests: []
     };
@@ -822,6 +824,7 @@
       'guest': 'Guest',
       'free-user': 'Free User',
       'downloader': 'Premium',
+      'premium': 'Premium',
       'creator': 'Creator'
     };
 
@@ -836,7 +839,7 @@
       if (lower.includes('freeuser') || lower.includes('free-user')) {
         return 'free-user';
       }
-      return 'downloader';
+      return 'premium';
     }
 
     function updateRoleButtonsUI() {
@@ -894,7 +897,7 @@
       if (detected.size > 0) {
         state.selectedRoles = detected;
       } else {
-        state.selectedRoles = new Set(['downloader']);
+        state.selectedRoles = new Set(['premium']);
       }
       updateRoleButtonsUI();
     }
@@ -953,15 +956,11 @@
     btnBrowserChromium.addEventListener('click', () => toggleBrowser('chromium'));
     btnBrowserFirefox.addEventListener('click', () => toggleBrowser('firefox'));
 
-    // Workers buttons
-    document.querySelectorAll('.worker-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.worker-btn').forEach(b => {
-          b.className = 'worker-btn py-1.5 px-2 rounded-lg border text-xs font-medium transition-all border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700';
-        });
-        btn.className = 'worker-btn py-1.5 px-2 rounded-lg border text-xs font-medium transition-all bg-indigo-600/20 border-indigo-500/50 text-indigo-200 shadow-sm';
-        state.workers = Number(btn.getAttribute('data-workers')) || 2;
-      });
+    // Workers dropdown
+    const workersSelect = document.getElementById('workersSelect');
+    state.workers = Number(workersSelect.value) || 2;
+    workersSelect.addEventListener('change', () => {
+      state.workers = Number(workersSelect.value) || 2;
     });
 
     // Toggle Headed / Headless
@@ -986,6 +985,9 @@
     // Expand / Collapse All
     btnToggleExpandAll.addEventListener('click', () => {
       state.allExpanded = !state.allExpanded;
+      for (const t of state.tests.values()) {
+        state.groupExpanded.set(t.file || 'Chung / Khác', state.allExpanded);
+      }
       document.querySelectorAll('.file-group-body').forEach(body => {
         if (state.allExpanded) body.classList.remove('hidden');
         else body.classList.add('hidden');
@@ -1255,12 +1257,17 @@
       const totalMs = tests.reduce((acc, t) => acc + (t.duration || 0), 0);
       const totalDurStr = totalMs > 0 ? `${(totalMs / 1000).toFixed(2)}s` : '';
 
+      // User-chosen state wins; otherwise auto-expand failed/running groups
+      const isExpanded = state.groupExpanded.has(file)
+        ? state.groupExpanded.get(file)
+        : (hasFail || hasRunning || state.allExpanded);
+
       // Header
       const header = document.createElement('div');
       header.className = `p-3.5 bg-slate-900/90 border-b ${groupBorderColor} flex items-center justify-between cursor-pointer select-none hover:bg-slate-850 transition-colors`;
       header.innerHTML = `
         <div class="flex items-center space-x-2.5 truncate flex-1 mr-2">
-          <svg class="file-group-arrow w-4 h-4 text-slate-400 transition-transform duration-200 flex-shrink-0" style="transform: ${hasFail || hasRunning || state.allExpanded ? 'rotate(90deg)' : 'rotate(0deg)'}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="file-group-arrow w-4 h-4 text-slate-400 transition-transform duration-200 flex-shrink-0" style="transform: ${isExpanded ? 'rotate(90deg)' : 'rotate(0deg)'}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
           <span class="text-xs font-bold text-slate-200 font-mono truncate">${escapeHtml(file)}</span>
@@ -1274,7 +1281,7 @@
 
       // Body
       const body = document.createElement('div');
-      body.className = `file-group-body p-2 space-y-2 ${hasFail || hasRunning || state.allExpanded ? '' : 'hidden'}`;
+      body.className = `file-group-body p-2 space-y-2 ${isExpanded ? '' : 'hidden'}`;
 
       for (const test of tests) {
         body.appendChild(createTestCardElement(test, true));
@@ -1282,6 +1289,7 @@
 
       header.addEventListener('click', () => {
         body.classList.toggle('hidden');
+        state.groupExpanded.set(file, !body.classList.contains('hidden'));
         const arrow = header.querySelector('.file-group-arrow');
         arrow.style.transform = body.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(90deg)';
       });
@@ -1297,10 +1305,12 @@
         'chromium-guest': 'Chromium • Guest',
         'chromium-free-user': 'Chromium • Free User',
         'chromium-downloader': 'Chromium • Premium',
+        'chromium-premium': 'Chromium • Premium',
         'chromium-creator': 'Chromium • Creator',
         'firefox-guest': 'Firefox • Guest',
         'firefox-free-user': 'Firefox • Free User',
         'firefox-downloader': 'Firefox • Premium',
+        'firefox-premium': 'Firefox • Premium',
         'firefox-creator': 'Firefox • Creator'
       };
       return map[proj] || proj;
@@ -1429,6 +1439,7 @@
         if (!state.isRerun) {
           state.total = data.total;
           state.tests.clear();
+          state.groupExpanded.clear();
           if (Array.isArray(data.tests)) {
             for (const t of data.tests) {
               state.tests.set(t.id, {
@@ -1634,8 +1645,9 @@
 
       const projects = [];
       for (const r of roles) {
+        const roleKey = (r === 'downloader') ? 'premium' : r;
         for (const b of browsers) {
-          projects.push(`${b}-${r}`);
+          projects.push(`${b}-${roleKey}`);
         }
       }
       return projects;
@@ -1680,6 +1692,7 @@
       if (!isRerun) {
         // Khởi chạy mới toàn bộ: reset state và xóa dữ liệu cũ
         state.tests.clear();
+        state.groupExpanded.clear();
         renderTestList();
         updateMetrics(0, 0, 0, 0);
       } else {
@@ -1713,7 +1726,7 @@
                 t.error = null;
               }
             }
-          } catch (e) {}
+          } catch (e) { }
         }
         renderTestList();
         recalculateMetrics();

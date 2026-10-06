@@ -16,7 +16,7 @@ import { captureEvidenceWithUrl } from '../../utils/helpers';
  * NHÓM 7: THANH TÌM KIẾM CỐ ĐỊNH TRÊN HEADER (TC-026 ➔ TC-027)
  */
 test.describe('Search & Filters — Premium User (Full Privileges)', () => {
-  // Session Premium User được tự động inject bởi project cấu hình (chromium-downloader / firefox-downloader)
+  // Session Premium User được tự động inject bởi project cấu hình (chromium-premium / firefox-premium)
 
   const sampleImagePath = path.resolve(__dirname, '../../../test-data/sample-search.jpg');
 

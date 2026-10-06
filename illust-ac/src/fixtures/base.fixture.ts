@@ -43,8 +43,8 @@ export const test = base.extend<PageFixtures>({
       role = 'Guest';
     } else if (filePath.includes('freeuser') || projectName.includes('free-user')) {
       role = 'FreeUser';
-    } else if (filePath.includes('downloader') || projectName.includes('downloader')) {
-      role = 'Downloader';
+    } else if (filePath.includes('premium') || projectName.includes('premium')) {
+      role = 'PremiumUser';
     } else if (filePath.includes('creator') || projectName.includes('creator')) {
       role = 'Creator';
     } else if (filePath.includes('admin') || projectName.includes('admin')) {
@@ -63,7 +63,7 @@ export const test = base.extend<PageFixtures>({
       browserName = testInfo.project.name;
     }
 
-    await allure.parentSuite(`Photo AC - ${role}`);
+    await allure.parentSuite(`Illust AC - ${role}`);
     await allure.suite(path.basename(testInfo.file, path.extname(testInfo.file)));
     await allure.subSuite(browserName);
 

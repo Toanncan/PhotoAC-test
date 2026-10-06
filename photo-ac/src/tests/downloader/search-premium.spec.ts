@@ -8,7 +8,7 @@ import { captureEvidenceWithUrl } from '../../utils/helpers';
  * ============================================================================
  */
 test.describe('Search — Premium User', () => {
-  // Session Premium User được tự động inject bởi project cấu hình (chromium-downloader / firefox-downloader)
+  // Session Premium User được tự động inject bởi project cấu hình (chromium-premium / firefox-premium)
 
   const sampleImagePath = path.resolve(__dirname, '../../../test-data/sample-search.jpg');
 

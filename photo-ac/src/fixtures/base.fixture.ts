@@ -43,8 +43,8 @@ export const test = base.extend<PageFixtures>({
       role = 'Guest';
     } else if (filePath.includes('freeuser') || projectName.includes('free-user')) {
       role = 'FreeUser';
-    } else if (filePath.includes('downloader') || projectName.includes('downloader')) {
-      role = 'Downloader';
+    } else if (filePath.includes('premium') || projectName.includes('premium')) {
+      role = 'PremiumUser';
     } else if (filePath.includes('creator') || projectName.includes('creator')) {
       role = 'Creator';
     } else if (filePath.includes('admin') || projectName.includes('admin')) {
