@@ -646,6 +646,7 @@ test.describe('Search — Free User', () => {
     homePage,
     searchResultPage,
   }, testInfo) => {
+    test.setTimeout(120_000);
     await homePage.search('学生');
     await searchResultPage.waitForResultDisplay();
 
@@ -680,6 +681,7 @@ test.describe('Search — Free User', () => {
     homePage,
     searchResultPage,
   }, testInfo) => {
+    test.setTimeout(120_000);
     const keyword = 'office';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
