@@ -563,7 +563,7 @@
       workers: 2,
       activeFilter: 'all', // 'all' | 'running' | 'failed' | 'passed' | 'skipped'
       allExpanded: true,
-      groupExpanded: new Map(), // file -> boolean (user-chosen expand/collapse override)
+      groupExpanded: new Map(), // `${activeFilter}::${file}` -> boolean (user override, independent per tab)
       total: 0,
       passed: 0,
       failed: 0,
@@ -986,7 +986,7 @@
     btnToggleExpandAll.addEventListener('click', () => {
       state.allExpanded = !state.allExpanded;
       for (const t of state.tests.values()) {
-        state.groupExpanded.set(t.file || 'Chung / Khác', state.allExpanded);
+        state.groupExpanded.set(groupKey(t.file || 'Chung / Khác'), state.allExpanded);
       }
       document.querySelectorAll('.file-group-body').forEach(body => {
         if (state.allExpanded) body.classList.remove('hidden');
@@ -1227,6 +1227,10 @@
       }
     }
 
+    function groupKey(file) {
+      return `${state.activeFilter}::${file}`;
+    }
+
     function createFileGroupElement(file, tests) {
       const groupEl = document.createElement('div');
       groupEl.className = 'border border-slate-800 rounded-2xl bg-slate-950/60 overflow-hidden transition-all shadow-sm';
@@ -1258,8 +1262,8 @@
       const totalDurStr = totalMs > 0 ? `${(totalMs / 1000).toFixed(2)}s` : '';
 
       // User-chosen state wins; otherwise auto-expand failed/running groups
-      const isExpanded = state.groupExpanded.has(file)
-        ? state.groupExpanded.get(file)
+      const isExpanded = state.groupExpanded.has(groupKey(file))
+        ? state.groupExpanded.get(groupKey(file))
         : (hasFail || hasRunning || state.allExpanded);
 
       // Header
@@ -1289,7 +1293,7 @@
 
       header.addEventListener('click', () => {
         body.classList.toggle('hidden');
-        state.groupExpanded.set(file, !body.classList.contains('hidden'));
+        state.groupExpanded.set(groupKey(file), !body.classList.contains('hidden'));
         const arrow = header.querySelector('.file-group-arrow');
         arrow.style.transform = body.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(90deg)';
       });
