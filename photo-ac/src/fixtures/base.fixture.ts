@@ -7,6 +7,7 @@ import { RankingPage } from '../pages/creator/ranking.page';
 import { ReceiptsPage } from '../pages/downloader/receipts.page';
 import { ProfileEditPage } from '../pages/downloader/profile-edit.page';
 import { SearchResultPage } from '@pages/common/search-results.page';
+import { DownloadImagePage } from '../pages/downloader/download-image.page';
 import { envConfig } from '../utils/env.config';
 
 /**
@@ -20,6 +21,7 @@ type PageFixtures = {
   receiptsPage: ReceiptsPage;
   profileEditPage: ProfileEditPage;
   searchResultPage: SearchResultPage;
+  downloadImagePage: DownloadImagePage;
   allureMetadata: void;
   screenshotOnPass: void;
   urlOverlayAndAttachment: void;
@@ -110,6 +112,10 @@ export const test = base.extend<PageFixtures>({
   searchResultPage: async ({ page }, use) => {
     const searchResultPage = new SearchResultPage(page);
     await use(searchResultPage);
+  },
+  downloadImagePage: async ({ page }, use) => {
+    const downloadImagePage = new DownloadImagePage(page);
+    await use(downloadImagePage);
   },
 
   /**
