@@ -1,1 +1,1 @@
-[{"data":{"failed":1,"broken":2,"skipped":76,"passed":36,"unknown":0,"total":115}},{"buildOrder":2,"reportUrl":"https://Toanncan.github.io/PhotoAC-test/2","reportName":"Allure Report with history","data":{"failed":4,"broken":0,"skipped":40,"passed":85,"unknown":0,"total":129}}]
+[{"data":{"failed":4,"broken":0,"skipped":39,"passed":80,"unknown":0,"total":123}},{"buildOrder":2,"reportUrl":"https://Toanncan.github.io/PhotoAC-test/2","reportName":"Allure Report with history","data":{"failed":4,"broken":0,"skipped":40,"passed":85,"unknown":0,"total":129}}]
