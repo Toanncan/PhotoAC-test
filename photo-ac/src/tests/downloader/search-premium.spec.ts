@@ -1,6 +1,7 @@
 import * as path from 'path';
 import { test, expect } from '../../fixtures/base.fixture';
 import { captureEvidenceWithUrl } from '../../utils/helpers';
+import { GROUP_SITES } from '../../utils/test-data';
 
 /**
  * ============================================================================
@@ -1115,5 +1116,80 @@ test.describe('Search — Premium User', () => {
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
     });
+  });
+
+  // ============================================================================
+  // NHÓM 12: TƯƠNG TÁC ẢNH KẾT QUẢ & CÁC TRANG NHÓM (GROUP SITES)
+  // ============================================================================
+
+  /**
+   * TC-SEARCH-PREM-037: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview với các nút download trực tiếp cho Premium
+   * @tags @premium @regression
+   */
+  test('TC-SEARCH-PREM-037: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview với các nút download trực tiếp @premium @regression', async ({
+    page,
+    searchResultPage,
+  }, testInfo) => {
+    // Note: Deep-link URL được sử dụng theo yêu cầu kiểm thử để cố định bộ dữ liệu ổn định (creator=acworks, layout=vertical)
+    await test.step('Truy cập trang tìm kiếm với từ khóa "秋" và lọc creator=acworks, layout=vertical', async () => {
+      await searchResultPage.navigate('/main/search?q=%E7%A7%8B&creator=acworks&layout=vertical');
+      await searchResultPage.waitForResultDisplay();
+    });
+
+    await test.step('Click vào hình ảnh đầu tiên trong danh sách kết quả', async () => {
+      await searchResultPage.openQuickViewForItem(0);
+    });
+
+    await test.step('Verify hiển thị popup QuickView cho Premium User', async () => {
+      await expect(searchResultPage.quickViewModal).toBeVisible({ timeout: 10_000 });
+      // Không hiển thị form yêu cầu đăng ký
+      await expect(searchResultPage.guestRegisterPromptTitle).toBeHidden();
+    });
+
+    await test.step('Verify hiển thị các nút tải ảnh trực tiếp theo các kích cỡ (S, M, L JPEG)', async () => {
+      await expect(searchResultPage.premiumDownloadButtons.first()).toBeVisible({ timeout: 10_000 });
+      const downloadCount = await searchResultPage.premiumDownloadButtons.count();
+      expect(downloadCount).toBeGreaterThanOrEqual(3);
+
+      // Sử dụng regex-prefix helper chống strict-mode substring conflict với dung lượng file (ví dụ: '1.33M')
+      await expect(searchResultPage.getQuickViewDownloadButton('S')).toBeVisible({ timeout: 5_000 });
+      await expect(searchResultPage.getQuickViewDownloadButton('M')).toBeVisible({ timeout: 5_000 });
+      await expect(searchResultPage.getQuickViewDownloadButton('L')).toBeVisible({ timeout: 5_000 });
+    });
+
+    await captureEvidenceWithUrl(page, testInfo, 'Premium-QuickView-Download-Popup');
+
+    await test.step('Đóng popup QuickView', async () => {
+      await searchResultPage.closeQuickViewModal();
+    });
+  });
+
+  /**
+   * TC-SEARCH-PREM-038: Click vào tác phẩm của các trang nhóm (Design AC, Illust AC, Silhouette AC, Video AC) ở cuối trang hiển thị popup tương ứng
+   * @tags @premium @regression
+   */
+  test('TC-SEARCH-PREM-038: Click tác phẩm của các trang nhóm (Design, Illust, Silhouette, Video) hiển thị popup tương ứng @premium @regression', async ({
+    page,
+    searchResultPage,
+  }, testInfo) => {
+    await test.step('Truy cập trang tìm kiếm với từ khóa "秋" và lọc creator=acworks, layout=vertical', async () => {
+      await searchResultPage.navigate('/main/search?q=%E7%A7%8B&creator=acworks&layout=vertical');
+      await searchResultPage.waitForResultDisplay();
+    });
+
+    for (const site of GROUP_SITES) {
+      await test.step(`Click vào tác phẩm ${site.name} -> Verify hiển thị popup thông báo và nút tải tương ứng`, async () => {
+        await searchResultPage.clickGroupSiteItem(site.service, 0);
+
+        await expect(searchResultPage.relatedSearchModal).toBeVisible({ timeout: 10_000 });
+        await expect(searchResultPage.relatedModalNotice).toHaveText(site.expectedNotice);
+        await expect(searchResultPage.relatedModalDownloadButton).toBeVisible();
+        await expect(searchResultPage.relatedModalDownloadButton).toHaveAttribute('href', new RegExp(site.expectedDomain));
+
+        await captureEvidenceWithUrl(page, testInfo, `Premium-GroupSite-${site.service}-Modal`);
+
+        await searchResultPage.closeRelatedSearchModal();
+      });
+    }
   });
 });

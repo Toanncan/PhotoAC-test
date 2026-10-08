@@ -1,6 +1,7 @@
 import * as path from 'path';
 import { test, expect } from '../../fixtures/base.fixture';
 import { captureEvidenceWithUrl, enableAdBlocker } from '../../utils/helpers';
+import { GROUP_SITES } from '../../utils/test-data';
 
 /**
  * ============================================================================
@@ -1207,6 +1208,77 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
     });
+  });
+
+  // ============================================================================
+  // NHÓM 12: TƯƠNG TÁC ẢNH KẾT QUẢ & CÁC TRANG NHÓM (GROUP SITES)
+  // ============================================================================
+
+  /**
+   * TC-SEARCH-GUEST-037: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập
+   * @tags @guest @regression
+   */
+  test('TC-SEARCH-GUEST-037: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập @guest @regression', async ({
+    page,
+    searchResultPage,
+  }, testInfo) => {
+    // Note: Deep-link URL được sử dụng theo yêu cầu kiểm thử để cố định bộ dữ liệu ổn định (creator=acworks, layout=vertical)
+    await test.step('Truy cập trang tìm kiếm với từ khóa "秋" và lọc creator=acworks, layout=vertical', async () => {
+      await searchResultPage.navigate('/main/search?q=%E7%A7%8B&creator=acworks&layout=vertical');
+      await searchResultPage.waitForResultDisplay();
+    });
+
+    await test.step('Click vào hình ảnh đầu tiên trong danh sách kết quả', async () => {
+      await searchResultPage.openQuickViewForItem(0);
+    });
+
+    await test.step('Verify hiển thị popup QuickView với tiêu đề yêu cầu đăng ký tài khoản', async () => {
+      await expect(searchResultPage.quickViewModal).toBeVisible({ timeout: 10_000 });
+      await expect(searchResultPage.guestRegisterPromptTitle).toBeVisible();
+      await expect(searchResultPage.guestRegisterPromptTitle).toHaveText('会員登録で今すぐダウンロード！');
+    });
+
+    await test.step('Verify hiển thị nút Đăng ký miễn phí (無料ダウンロード) và Đăng nhập (ログイン)', async () => {
+      await expect(searchResultPage.guestRegisterCtaButton).toBeVisible();
+      await expect(searchResultPage.guestLoginLink).toBeVisible();
+      await expect(searchResultPage.guestRegisterCtaButton).toHaveAttribute('href', /signup/);
+      await expect(searchResultPage.guestLoginLink).toHaveAttribute('href', /login/);
+    });
+
+    await captureEvidenceWithUrl(page, testInfo, 'Guest-QuickView-Register-Popup');
+
+    await test.step('Đóng popup QuickView', async () => {
+      await searchResultPage.closeQuickViewModal();
+    });
+  });
+
+  /**
+   * TC-SEARCH-GUEST-038: Click vào tác phẩm của các trang nhóm (Design AC, Illust AC, Silhouette AC, Video AC) ở cuối trang hiển thị popup tương ứng
+   * @tags @guest @regression
+   */
+  test('TC-SEARCH-GUEST-038: Click tác phẩm của các trang nhóm (Design, Illust, Silhouette, Video) hiển thị popup tương ứng @guest @regression', async ({
+    page,
+    searchResultPage,
+  }, testInfo) => {
+    await test.step('Truy cập trang tìm kiếm với từ khóa "秋" và lọc creator=acworks, layout=vertical', async () => {
+      await searchResultPage.navigate('/main/search?q=%E7%A7%8B&creator=acworks&layout=vertical');
+      await searchResultPage.waitForResultDisplay();
+    });
+
+    for (const site of GROUP_SITES) {
+      await test.step(`Click vào tác phẩm ${site.name} -> Verify hiển thị popup thông báo và nút tải tương ứng`, async () => {
+        await searchResultPage.clickGroupSiteItem(site.service, 0);
+
+        await expect(searchResultPage.relatedSearchModal).toBeVisible({ timeout: 10_000 });
+        await expect(searchResultPage.relatedModalNotice).toHaveText(site.expectedNotice);
+        await expect(searchResultPage.relatedModalDownloadButton).toBeVisible();
+        await expect(searchResultPage.relatedModalDownloadButton).toHaveAttribute('href', new RegExp(site.expectedDomain));
+
+        await captureEvidenceWithUrl(page, testInfo, `Guest-GroupSite-${site.service}-Modal`);
+
+        await searchResultPage.closeRelatedSearchModal();
+      });
+    }
   });
 });
 

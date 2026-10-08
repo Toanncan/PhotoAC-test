@@ -76,3 +76,41 @@ export const generatePassword = (): string => {
 export const generateDisplayName = (testName: string): string => {
   return `Auto ${testName} ${getRandomSuffix(4)}`;
 };
+
+/**
+ * Group Sites info for related search test cases (Design AC, Illust AC, Silhouette AC, Video AC).
+ */
+export interface GroupSiteInfo {
+  service: 'design' | 'illust' | 'silhouette' | 'video';
+  name: string;
+  expectedNotice: string;
+  expectedDomain: string;
+}
+
+export const GROUP_SITES: readonly GroupSiteInfo[] = [
+  {
+    service: 'design',
+    name: 'Design AC',
+    expectedNotice: 'グループサイトのデザインACが開きます。',
+    expectedDomain: 'design-ac.net',
+  },
+  {
+    service: 'illust',
+    name: 'Illust AC',
+    expectedNotice: 'グループサイトのイラストACが開きます。',
+    expectedDomain: 'ac-illust.com',
+  },
+  {
+    service: 'silhouette',
+    name: 'Silhouette AC',
+    expectedNotice: 'グループサイトのシルエットACが開きます。',
+    expectedDomain: 'silhouette-ac.com',
+  },
+  {
+    service: 'video',
+    name: 'Video AC',
+    expectedNotice: 'グループサイトの動画ACが開きます。',
+    expectedDomain: 'video-ac.com',
+  },
+] as const;
+

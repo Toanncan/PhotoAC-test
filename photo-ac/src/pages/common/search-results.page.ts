@@ -242,6 +242,29 @@ export class SearchResultPage extends BasePage {
   readonly introDialog: Locator = this.page.locator('dialog:has(a[href*="function_introduction"]), dialog[open], [role="dialog"]:has(.icon-close)');
   readonly introDialogCloseButton: Locator = this.page.locator('dialog .icon-close, dialog [aria-label="Close"], [role="region"][aria-label="Close"], dialog button.close');
 
+  // ─── QuickView & Detail Modal Locators ─────────────────────────────────────
+  readonly resultFigures: Locator = this.page.locator('figure.ac-ig-item');
+  readonly quickViewModal: Locator = this.page.locator('#quickViewBox');
+  readonly quickViewCloseButton: Locator = this.page.locator('.modal-quickview button.close, .modal-quickview [aria-label="Close"]').first();
+  readonly guestRegisterPromptTitle: Locator = this.page.locator('#quickViewBox h6:has-text("会員登録で今すぐダウンロード！")');
+  readonly guestRegisterCtaButton: Locator = this.page.locator('#quickViewBox a:has-text("無料ダウンロード")');
+  readonly guestLoginLink: Locator = this.page.locator('#quickViewBox a:has-text("ログイン")');
+  readonly premiumDownloadButtons: Locator = this.page.locator('#quickViewBox a.disable-on-click:has-text("JPEG")');
+
+  // ─── Group Sites Locators (写真ACグループサイト) ─────────────────────────────────
+  readonly designListContainer: Locator = this.page.locator('#design_list');
+  readonly illustListContainer: Locator = this.page.locator('#illust_list');
+  readonly silhouetteListContainer: Locator = this.page.locator('#slh_list');
+  readonly videoListContainer: Locator = this.page.locator('#video_list');
+  readonly designItems: Locator = this.page.locator('#design_list a.show-related-modal');
+  readonly illustItems: Locator = this.page.locator('#illust_list a.show-related-modal');
+  readonly silhouetteItems: Locator = this.page.locator('#slh_list a.show-related-modal');
+  readonly videoItems: Locator = this.page.locator('#video_list a.show-related-modal');
+  readonly relatedSearchModal: Locator = this.page.locator('#relatedSearchModal');
+  readonly relatedModalNotice: Locator = this.page.locator('#relatedSearchModal .modal-body p');
+  readonly relatedModalDownloadButton: Locator = this.page.locator('#relatedSearchModal a.ac-btn:has-text("ダウンロードページ")');
+  readonly relatedModalCloseButton: Locator = this.page.locator('#relatedSearchModal button.close');
+
   // ─── Constructor ──────────────────────────────────────────────────────────
 
   constructor(page: Page) {
@@ -1044,6 +1067,109 @@ export class SearchResultPage extends BasePage {
       await this.clickElement(faceLink);
       await this.page.waitForLoadState('domcontentloaded').catch(() => { });
       await this.waitForResultDisplay();
+    });
+  }
+
+  /**
+   * Open detail page for a specific search result thumbnail (Free user behavior).
+   * Hovers over figure, strips target="_blank" to ensure same-tab navigation, and clicks the detail link.
+   * @param index - Index of figure item (default 0)
+   */
+  async openDetailPageForItem(index: number = 0): Promise<void> {
+    await test.step(`Open detail page for item index ${index}`, async () => {
+      const figure = this.resultFigures.nth(index);
+      await figure.hover();
+      const detailLink = figure.locator('a.link-to-detail');
+      await expect(detailLink).toBeAttached({ timeout: 10_000 });
+      await detailLink.evaluate((el: HTMLAnchorElement) => {
+        el.removeAttribute('target');
+        el.removeAttribute('rel');
+      });
+      await this.clickElement(detailLink, { force: true });
+    });
+  }
+
+  /**
+   * Open QuickView modal for a specific search result figure by hovering then clicking.
+   * @param index - Index of figure item (default 0)
+   */
+  async openQuickViewForItem(index: number = 0): Promise<void> {
+    await test.step(`Open QuickView modal for item index ${index}`, async () => {
+      const figure = this.resultFigures.nth(index);
+      await figure.hover();
+      const qvOverlay = figure.locator('.link-to-detail.quickview');
+      await this.clickElement(qvOverlay, { force: true });
+      await expect(this.quickViewModal).toBeVisible({ timeout: 10_000 });
+    });
+  }
+
+  /**
+   * Get direct download button in QuickView modal by size ('S' | 'M' | 'L').
+   * Matches exact size prefix (e.g. "S JPEG", "M JPEG", "L JPEG") to prevent strict-mode substring conflicts with file sizes like '0.19M', '1.33M'.
+   */
+  getQuickViewDownloadButton(size: 'S' | 'M' | 'L'): Locator {
+    return this.quickViewModal.locator('a.disable-on-click').filter({ hasText: new RegExp(`^\\s*${size}\\s+JPEG`, 'i') });
+  }
+
+  /**
+   * Close QuickView modal via close button or Escape key.
+   */
+  async closeQuickViewModal(): Promise<void> {
+    await test.step('Close QuickView modal', async () => {
+      const isCloseBtnVisible = await this.quickViewCloseButton.isVisible().catch(() => false);
+      if (isCloseBtnVisible) {
+        await this.clickElement(this.quickViewCloseButton);
+      } else {
+        await this.page.keyboard.press('Escape');
+      }
+      await expect(this.quickViewModal).toBeHidden({ timeout: 5_000 });
+    });
+  }
+
+  /**
+   * Click an item in a specific group site list (Design AC, Illust AC, Silhouette AC, Video AC).
+   * Automatically scrolls to container to trigger lazy loading.
+   * @param service - 'design' | 'illust' | 'silhouette' | 'video'
+   * @param index - Index of item to click (default 0)
+   */
+  async clickGroupSiteItem(service: 'design' | 'illust' | 'silhouette' | 'video', index: number = 0): Promise<void> {
+    await test.step(`Click ${service} group site item index ${index}`, async () => {
+      let container: Locator;
+      let items: Locator;
+      switch (service) {
+        case 'design':
+          container = this.designListContainer;
+          items = this.designItems;
+          break;
+        case 'illust':
+          container = this.illustListContainer;
+          items = this.illustItems;
+          break;
+        case 'silhouette':
+          container = this.silhouetteListContainer;
+          items = this.silhouetteItems;
+          break;
+        case 'video':
+          container = this.videoListContainer;
+          items = this.videoItems;
+          break;
+      }
+
+      await container.scrollIntoViewIfNeeded();
+      const targetItem = items.nth(index);
+      await expect(targetItem).toBeVisible({ timeout: 15_000 });
+      await this.clickElement(targetItem);
+      await expect(this.relatedSearchModal).toBeVisible({ timeout: 10_000 });
+    });
+  }
+
+  /**
+   * Close the related search modal (#relatedSearchModal).
+   */
+  async closeRelatedSearchModal(): Promise<void> {
+    await test.step('Close related search modal', async () => {
+      await this.clickElement(this.relatedModalCloseButton);
+      await expect(this.relatedSearchModal).toBeHidden({ timeout: 5_000 });
     });
   }
 
