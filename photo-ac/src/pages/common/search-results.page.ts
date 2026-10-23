@@ -3,12 +3,11 @@ import { BasePage } from './base.page';
 
 /**
  * SearchResultPage — Page Object for the search results page.
- * Follows Playwright best practices with semantic locators and smart auto-waiting.
  */
 export class SearchResultPage extends BasePage {
-  // ─── Locators ─────────────────────────────────────────────────────────────
+  //Locators
 
-  /** Image thumbnails displayed in search results (standard search uses .thumbnail-image, AI/Image search uses .thumbnail) */
+  /** Image thumbnails displayed in search results */
   readonly resultItems: Locator = this.page.locator('img.thumbnail-image, img.thumbnail');
 
   /** Quickview link overlays on thumbnails */

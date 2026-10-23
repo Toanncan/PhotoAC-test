@@ -4,19 +4,16 @@ import { captureEvidenceWithUrl, enableAdBlocker } from '../../utils/helpers';
 import { GROUP_SITES } from '../../utils/test-data';
 
 /**
- * ============================================================================
  * TEST SUITE: SEARCH FEATURE — GUEST USER
- * ============================================================================
  */
 test.describe('Search Feature — Guest (No-Login User)', () => {
-  // Bắt buộc cô lập context không mang thông tin đăng nhập
+  // cô lập context không mang thông tin đăng nhập
   test.use({ storageState: { cookies: [], origins: [] } });
 
   const sampleImagePath = path.resolve(__dirname, '../../../test-data/sample-search.jpg');
 
   test.beforeEach(async ({ page, homePage }) => {
     // Targeted Network Mocking: Luôn duy trì hạn mức tìm kiếm (search_zancnt: 4)
-    // nhằm bảo vệ các test case bộ lọc/tìm kiếm thông thường không bị modal #searchLimitModal chặn ngang khi chạy cả suite.
     await page.route('**/ajax/public/is_enable_search', async (route) => {
       await route.fulfill({
         status: 200,
@@ -29,7 +26,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
       });
     });
 
-    // Kích hoạt Ad Blocker 2 tầng (Network Abort + CSS Hidden) chống nghẽn mạng & Layout Shift
+    // Kích hoạt Ad Blocker 2 tầng (Network Abort + CSS Hidden)
     await enableAdBlocker(page);
 
     await homePage.goToHomePage();
@@ -48,10 +45,8 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     }
   });
 
-  // ============================================================================
-  // NHÓM 1: TÌM KIẾM CƠ BẢN
-  // ============================================================================
 
+  // NHÓM 1: TÌM KIẾM CƠ BẢN
   /**
    * TC-SEARCH-GUEST-001: Tìm kiếm với từ khóa hợp lệ
    * @tags @guest

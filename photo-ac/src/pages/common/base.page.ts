@@ -2,8 +2,7 @@ import { type Page, type Locator, expect } from '@playwright/test';
 
 /**
  * BasePage — Abstract base class for all Page Object classes.
- * Contains common reusable methods with smart waits.
- * NEVER place assertions here — assertions belong in test files.
+ * Contains common reusable methods.
  */
 export abstract class BasePage {
   protected readonly page: Page;
@@ -21,8 +20,8 @@ export abstract class BasePage {
     this.pageLoadingIcon = page.locator('#full_page_loading').first();
   }
 
-  // ─── Navigation ──────────────────────────────────────────────────────────
 
+  // Navigation
   /**
    * Navigate to a URL path relative to baseURL with resilient retry on transient network timeouts.
    * @param path - Relative path (e.g., '/login') or absolute URL
@@ -45,7 +44,7 @@ export abstract class BasePage {
     await this.page.waitForLoadState('domcontentloaded', { timeout: 15_000 });
   }
 
-  // ─── Element Interaction ─────────────────────────────────────────────────
+  // Element Interaction
 
   /**
    * Click an element after ensuring it is visible and enabled.
@@ -127,7 +126,7 @@ export abstract class BasePage {
    * @param timeout - Optional custom timeout in ms (default: 25_000)
    */
   async waitForPageLoadingIconHidden(timeout: number = 25_000): Promise<void> {
-    await this.pageLoadingIcon.waitFor({ state: 'hidden', timeout }).catch(() => {});
+    await this.pageLoadingIcon.waitFor({ state: 'hidden', timeout }).catch(() => { });
   }
 
   /**
@@ -160,7 +159,7 @@ export abstract class BasePage {
     }
   }
 
-  // ─── URL and Title ───────────────────────────────────────────────────────
+  // URL and Title
 
   /**
    * Get current page URL.
@@ -176,7 +175,7 @@ export abstract class BasePage {
     return this.page.title();
   }
 
-  // ─── Screenshot ──────────────────────────────────────────────────────────
+  // Screenshot
 
   /**
    * Take a screenshot and return the Buffer.

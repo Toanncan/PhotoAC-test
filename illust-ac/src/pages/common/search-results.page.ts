@@ -212,6 +212,26 @@ export class SearchResultPage extends BasePage {
   readonly introDialog: Locator = this.page.locator('dialog:has(a[href*="function_introduction"]), dialog[open], [role="dialog"]:has(.icon-close)');
   readonly introDialogCloseButton: Locator = this.page.locator('dialog .icon-close, dialog [aria-label="Close"], [role="region"][aria-label="Close"], dialog button.close');
 
+  // ─── QuickView Locators (verified on test-lien.ac-illust.com) ──────────────
+  readonly resultFigures: Locator = this.page.locator('figure.figure-item');
+  readonly quickViewModal: Locator = this.page.locator('#quickviewModal');
+  readonly quickViewCloseButton: Locator = this.page.locator('#quickviewModal button.close');
+  readonly guestRegisterPromptTitle: Locator = this.page.locator('#quickviewModal #quickViewBox h6').filter({ hasText: '会員登録で今すぐダウンロード！' });
+  readonly guestRegisterCtaButton: Locator = this.page.locator('#quickviewModal #quickViewBox a').filter({ hasText: '無料ダウンロード' });
+  readonly guestLoginLink: Locator = this.page.locator('#quickviewModal #quickViewBox a').filter({ hasText: 'ログイン' });
+
+  // ─── Group Sites Locators (イラストACグループサイト) ─────────────────────────
+  // NOTE: Photo AC (#photo-search) and Silhouette AC (#slh-search) lists exist on the DOM but
+  // cannot render on the test environment (test-yano.photo-ac.com API returns 404).
+  readonly designListContainer: Locator = this.page.locator('#design-search');
+  readonly videoListContainer: Locator = this.page.locator('#video-search');
+  readonly designItems: Locator = this.page.locator('#design-search a.show-related-modal');
+  readonly videoItems: Locator = this.page.locator('#video-search a.show-related-modal');
+  readonly relatedSearchModal: Locator = this.page.locator('#relatedSearchModal');
+  readonly relatedModalNotice: Locator = this.page.locator('#relatedSearchModal .modal-body p');
+  readonly relatedModalDownloadButton: Locator = this.page.locator('#relatedSearchModal a.ac-btn').filter({ hasText: 'ダウンロードページ' });
+  readonly relatedModalCloseButton: Locator = this.page.locator('#relatedSearchModal button.close');
+
   // ─── Constructor ──────────────────────────────────────────────────────────
 
   constructor(page: Page) {
@@ -942,6 +962,61 @@ export class SearchResultPage extends BasePage {
     await test.step(`Navigate to photo detail page: ${photoId}`, async () => {
       await this.navigate(`/main/detail.php?id=${photoId}`);
       await this.waitForPageLoad();
+    });
+  }
+
+  /**
+   * Open QuickView modal for a specific search result figure by hovering then clicking its overlay.
+   * @param index - Index of figure item (default 0)
+   */
+  async openQuickViewForItem(index: number = 0): Promise<void> {
+    await test.step(`Open QuickView modal for item index ${index}`, async () => {
+      const figure = this.resultFigures.nth(index);
+      await expect(figure).toBeVisible({ timeout: 10_000 });
+      await figure.hover();
+      const quickViewOverlay = figure.locator('.link-to-detail.quickview');
+      await expect(quickViewOverlay).toBeVisible({ timeout: 10_000 });
+      await this.clickElement(quickViewOverlay);
+      await expect(this.quickViewModal).toBeVisible({ timeout: 10_000 });
+    });
+  }
+
+  /**
+   * Close QuickView modal via the close button.
+   */
+  async closeQuickViewModal(): Promise<void> {
+    await test.step('Close QuickView modal', async () => {
+      await this.clickElement(this.quickViewCloseButton);
+      await expect(this.quickViewModal).toBeHidden({ timeout: 5_000 });
+    });
+  }
+
+  /**
+   * Click an item in a group site list (Design AC / Video AC).
+   * Scrolls the lazy-load container to viewport center to trigger its data fetch.
+   * @param service - 'design' | 'video'
+   * @param index - Index of item to click (default 0)
+   */
+  async clickGroupSiteItem(service: 'design' | 'video', index: number = 0): Promise<void> {
+    await test.step(`Click ${service} group site item index ${index}`, async () => {
+      const container = service === 'design' ? this.designListContainer : this.videoListContainer;
+      const items = service === 'design' ? this.designItems : this.videoItems;
+
+      await container.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+      const targetItem = items.nth(index);
+      await expect(targetItem).toBeVisible({ timeout: 20_000 });
+      await this.clickElement(targetItem);
+      await expect(this.relatedSearchModal).toBeVisible({ timeout: 10_000 });
+    });
+  }
+
+  /**
+   * Close the related search modal (#relatedSearchModal).
+   */
+  async closeRelatedSearchModal(): Promise<void> {
+    await test.step('Close related search modal', async () => {
+      await this.clickElement(this.relatedModalCloseButton);
+      await expect(this.relatedSearchModal).toBeHidden({ timeout: 5_000 });
     });
   }
 

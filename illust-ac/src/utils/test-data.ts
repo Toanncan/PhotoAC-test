@@ -76,3 +76,31 @@ export const generatePassword = (): string => {
 export const generateDisplayName = (testName: string): string => {
   return `Auto ${testName} ${getRandomSuffix(4)}`;
 };
+
+/**
+ * Group Sites info for related search test cases on Illust-AC.
+ * NOTE: Only Design AC and Video AC are listed. On the test environment, the Photo AC and
+ * Silhouette AC lists depend on test-yano.photo-ac.com/api/search/* which returns 404,
+ * so they never render and cannot be verified.
+ */
+export interface GroupSiteInfo {
+  service: 'design' | 'video';
+  name: string;
+  expectedNotice: string;
+  expectedDomain: string;
+}
+
+export const GROUP_SITES: readonly GroupSiteInfo[] = [
+  {
+    service: 'design',
+    name: 'Design AC',
+    expectedNotice: 'グループサイトのデザインACが開きます。',
+    expectedDomain: 'design-ac.net',
+  },
+  {
+    service: 'video',
+    name: 'Video AC',
+    expectedNotice: 'グループサイトの動画ACが開きます。',
+    expectedDomain: 'video-ac.com',
+  },
+] as const;
