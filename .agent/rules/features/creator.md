@@ -14,8 +14,11 @@ trigger: model_decision
 | Tính năng | Photo-AC | Illust-AC | Ghi chú |
 |---|:---:|:---:|---|
 | **Creator Ranking** | ✅ | ✅ | Page: `ranking.page.ts` / `ranking.spec.ts` |
-| **Upload tác phẩm** | ✅ | ✅ | Chỉ Creator role |
-| **Quản lý portfolio** | ✅ | ✅ | `/user/myworks` hoặc tương đương |
+| **Upload tác phẩm** | ✅ | ✅ | Page: `upload.page.ts` / `upload.spec.ts` (Chỉ Creator role) |
+| **Tìm kiếm tác phẩm (Search)** | ✅ | ✅ | Page: `upload.page.ts` / `upload.spec.ts` (`/creator/list?pl_q=...`) |
+| **Chỉnh sửa tác phẩm (Edit)** | ✅ | ✅ | Page: `upload.page.ts` / `upload.spec.ts` (`/creator/dataedit/[id]`) |
+| **Xóa tác phẩm (Delete)** | ✅ | ✅ | Page: `upload.page.ts` / `upload.spec.ts` (`#confirm-dialog`) |
+| **Quản lý portfolio** | ✅ | ✅ | `/creator/list` hoặc tương đương |
 | **Creator Dashboard** | ✅ | ✅ | Thống kê lượt xem / tải |
 | **AI-generated label** | ✅ | ✅ | Đánh dấu ảnh do AI tạo khi upload |
 

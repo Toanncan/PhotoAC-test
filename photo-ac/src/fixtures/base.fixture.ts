@@ -4,6 +4,7 @@ import * as path from 'path';
 import { LoginPage } from '../pages/common/login.page';
 import { HomePage } from '../pages/common/home.page';
 import { RankingPage } from '../pages/creator/ranking.page';
+import { UploadPage } from '../pages/creator/upload.page';
 import { ReceiptsPage } from '../pages/downloader/receipts.page';
 import { ProfileEditPage } from '../pages/downloader/profile-edit.page';
 import { SearchResultPage } from '@pages/common/search-results.page';
@@ -21,6 +22,7 @@ type PageFixtures = {
   homePage: HomePage;
   registerPage: RegisterPage;
   rankingPage: RankingPage;
+  uploadPage: UploadPage;
   receiptsPage: ReceiptsPage;
   profileEditPage: ProfileEditPage;
   searchResultPage: SearchResultPage;
@@ -98,6 +100,12 @@ export const test = base.extend<PageFixtures>({
   rankingPage: async ({ page }, use) => {
     const rankingPage = new RankingPage(page);
     await use(rankingPage);
+  },
+
+  // Provides an UploadPage instance for creator photo upload tests
+  uploadPage: async ({ page }, use) => {
+    const uploadPage = new UploadPage(page);
+    await use(uploadPage);
   },
 
   // Provides a ReceiptsPage instance for receipt issuance tests
