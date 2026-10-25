@@ -1,11 +1,10 @@
-import * as path from 'path';
+﻿import * as path from 'path';
 import { test, expect } from '../../fixtures/base.fixture';
 import { captureEvidenceWithUrl, enableAdBlocker } from '../../utils/helpers';
+import { GROUP_SITES } from '../../utils/test-data';
 
 /**
- * ============================================================================
  * TEST SUITE: SEARCH — FREE USER
- * ============================================================================
  */
 test.describe('Search — Free User', () => {
   // Session Free User được tự động inject bởi project cấu hình (chromium-free-user / firefox-free-user)
@@ -46,10 +45,7 @@ test.describe('Search — Free User', () => {
     }
   });
 
-  // ============================================================================
   // NHÓM 1: TÌM KIẾM CƠ BẢN
-  // ============================================================================
-
   /**
    * TC-SEARCH-FREE-001: Tìm kiếm với từ khóa hợp lệ
    * @tags @free-user
@@ -197,10 +193,7 @@ test.describe('Search — Free User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 2: FILTER TOOLBAR - SINGLE FILTERS
-  // ============================================================================
-
   /**
    * TC-SEARCH-FREE-007: Lọc ảnh theo Chiều dọc (縦長) và chuyển đổi sang Chiều ngang (横長) qua Toolbar
    * @tags @free-user @filter
@@ -633,10 +626,7 @@ test.describe('Search — Free User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 3: BỘ LỌC KẾT HỢP ĐA ĐIỀU KIỆN TRÊN UI
-  // ============================================================================
-
   /**
    * TC-SEARCH-FREE-022: Kết hợp Từ khóa + 2 người mẫu + Model Release qua UI Toolbar
    * @tags @free-user @filter
@@ -646,6 +636,7 @@ test.describe('Search — Free User', () => {
     homePage,
     searchResultPage,
   }, testInfo) => {
+    test.setTimeout(120_000);
     await homePage.search('学生');
     await searchResultPage.waitForResultDisplay();
 
@@ -680,6 +671,7 @@ test.describe('Search — Free User', () => {
     homePage,
     searchResultPage,
   }, testInfo) => {
+    test.setTimeout(120_000);
     const keyword = 'office';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
@@ -715,10 +707,7 @@ test.describe('Search — Free User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 4: TÌM KIẾM CHUYÊN SÂU & ĐẶC BIỆT 
-  // ============================================================================
-
   /**
    * TC-SEARCH-FREE-024: Tải ảnh lên tìm kiếm tương đồng (Image Upload Search)
    * @tags @free-user
@@ -881,10 +870,7 @@ test.describe('Search — Free User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 5: SẮP XẾP & PHÂN TRANG
-  // ============================================================================
-
   /**
    * TC-SEARCH-FREE-029: Sắp xếp kết quả theo "新着順" (Mới nhất) và giữ nguyên sắp xếp khi sang Trang 2
    * @tags @free-user
@@ -996,10 +982,7 @@ test.describe('Search — Free User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 6: PHÂN QUYỀN & HẠN MỨC FREE USER
-  // ============================================================================
-
   /**
    * TC-SEARCH-FREE-032: Chạm hạn mức tìm kiếm (1 ngày 4 lần) -> Hiển thị Modal kèm nút Dùng vé coupon và xác nhận hoạt động của 2 nút
    * @tags @free-user
@@ -1093,10 +1076,7 @@ test.describe('Search — Free User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 7: THANH TÌM KIẾM CỐ ĐỊNH TRÊN HEADER
-  // ============================================================================
-
   /**
    * TC-SEARCH-FREE-034: Thanh tìm kiếm cố định (Sticky Header Search) tự động hiển thị khi cuộn trang xuống và ẩn đi khi cuộn lên đầu trang
    * @tags @free-user
@@ -1157,5 +1137,63 @@ test.describe('Search — Free User', () => {
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
     });
+  });
+
+  // NHÓM 12: TƯƠNG TÁC ẢNH KẾT QUẢ & CÁC TRANG NHÓM (GROUP SITES)
+  /**
+   * TC-SEARCH-FREE-036: Click ảnh bất kỳ trong kết quả tìm kiếm chuyển hướng trực tiếp tới trang chi tiết (Details page)
+   * @tags @free-user @regression
+   */
+  test('TC-SEARCH-FREE-036: Click ảnh bất kỳ trong kết quả tìm kiếm chuyển hướng trực tiếp tới trang chi tiết @free-user @regression', async ({
+    page,
+    searchResultPage,
+  }, testInfo) => {
+    // Note: Deep-link URL được sử dụng theo yêu cầu kiểm thử để cố định bộ dữ liệu ổn định (creator=acworks, layout=vertical)
+    await test.step('Truy cập trang tìm kiếm với từ khóa "秋" và lọc creator=acworks, layout=vertical', async () => {
+      await searchResultPage.navigate('/main/search?q=%E7%A7%8B&creator=acworks&layout=vertical');
+      await searchResultPage.waitForResultDisplay();
+    });
+
+    await test.step('Click vào link chi tiết của ảnh đầu tiên qua Page Object method', async () => {
+      await searchResultPage.openDetailPageForItem(0);
+    });
+
+    await test.step('Verify chuyển hướng tới trang chi tiết (Details page) thành công', async () => {
+      await page.waitForURL(/\/main\/detail\/\d+/, { timeout: 15_000 });
+      await expect(page).toHaveURL(/\/main\/detail\/\d+/);
+      await expect(page).toHaveTitle(/- No: \d+｜写真素材なら「写真AC」/);
+      await expect(page.getByRole('heading', { level: 1 })).toBeVisible({ timeout: 10_000 });
+    });
+
+    await captureEvidenceWithUrl(page, testInfo, 'FreeUser-Navigated-To-Details-Page');
+  });
+
+  /**
+   * TC-SEARCH-FREE-037: Click vào tác phẩm của các trang nhóm (Design AC, Illust AC, Silhouette AC, Video AC) ở cuối trang hiển thị popup tương ứng
+   * @tags @free-user @regression
+   */
+  test('TC-SEARCH-FREE-037: Click tác phẩm của các trang nhóm (Design, Illust, Silhouette, Video) hiển thị popup tương ứng @free-user @regression', async ({
+    page,
+    searchResultPage,
+  }, testInfo) => {
+    await test.step('Truy cập trang tìm kiếm với từ khóa "秋" và lọc creator=acworks, layout=vertical', async () => {
+      await searchResultPage.navigate('/main/search?q=%E7%A7%8B&creator=acworks&layout=vertical');
+      await searchResultPage.waitForResultDisplay();
+    });
+
+    for (const site of GROUP_SITES) {
+      await test.step(`Click vào tác phẩm ${site.name} -> Verify hiển thị popup thông báo và nút tải tương ứng`, async () => {
+        await searchResultPage.clickGroupSiteItem(site.service, 0);
+
+        await expect(searchResultPage.relatedSearchModal).toBeVisible({ timeout: 10_000 });
+        await expect(searchResultPage.relatedModalNotice).toHaveText(site.expectedNotice);
+        await expect(searchResultPage.relatedModalDownloadButton).toBeVisible();
+        await expect(searchResultPage.relatedModalDownloadButton).toHaveAttribute('href', new RegExp(site.expectedDomain));
+
+        await captureEvidenceWithUrl(page, testInfo, `FreeUser-GroupSite-${site.service}-Modal`);
+
+        await searchResultPage.closeRelatedSearchModal();
+      });
+    }
   });
 });

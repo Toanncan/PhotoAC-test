@@ -1,4 +1,4 @@
-import { type Page, type Locator, test, expect } from '@playwright/test';
+﻿import { type Page, type Locator, test, expect } from '@playwright/test';
 import { SearchResultPage } from '../common/search-results.page';
 
 /**
@@ -8,8 +8,7 @@ import { SearchResultPage } from '../common/search-results.page';
  * such as the slide-out filter drawer (#filter-horizontal) triggered by "詳細検索 ▼".
  */
 export class MobileSearchResultPage extends SearchResultPage {
-  // ─── Mobile-Specific Locators ─────────────────────────────────────────────
-
+  // Mobile-Specific Locators
   /** Mobile "詳細検索 ▼" button in search box (only visible on screens < 1024px) */
   readonly detailedSearchButton: Locator = this.page.locator('a.d-1024-none:has-text("詳細検索"), a.d-1024-none[role="button"]').first();
 
@@ -22,8 +21,7 @@ export class MobileSearchResultPage extends SearchResultPage {
   /** Cookie consent "同意" button at bottom of mobile screen */
   readonly cookieConsentButton: Locator = this.page.locator('a:has-text("同意"), button:has-text("同意")').first();
 
-  // ─── Mobile Filter Elements inside #filter-horizontal ──────────────────────
-
+  // Mobile Filter Elements inside #filter-horizontal
   /** Orientation radio labels inside drawer */
   readonly mobileOrientationVerticalLabel: Locator = this.page.locator('#filter-horizontal label[for="orientation-0"], #filter-horizontal label:has-text("縦長")').first();
   readonly mobileOrientationHorizontalLabel: Locator = this.page.locator('#filter-horizontal label[for="orientation-1"], #filter-horizontal label:has-text("横長")').first();
@@ -38,8 +36,7 @@ export class MobileSearchResultPage extends SearchResultPage {
     super(page);
   }
 
-  // ─── Mobile Actions ───────────────────────────────────────────────────────
-
+  // Mobile Actions
   /**
    * Dismiss cookie consent banner if present to avoid intercepting touches/clicks on mobile.
    */
@@ -117,3 +114,4 @@ export class MobileSearchResultPage extends SearchResultPage {
     });
   }
 }
+

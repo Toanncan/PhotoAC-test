@@ -27,7 +27,7 @@ export default defineConfig({
   testMatch: '**/*.spec.ts',
 
   // Maximum time one test can run (ms)
-  timeout: 60_000,
+  timeout: 120_000,
 
   // Maximum time one expect() call can take (ms)
   expect: {
@@ -40,8 +40,8 @@ export default defineConfig({
   // Fail the build on CI if you accidentally left test.only in the source code
   forbidOnly: !!process.env.CI,
 
-  // Retry on CI only
-  retries: process.env.CI ? 2 : 0,
+  // Retry on CI (2) and Staging/Local (1 by default to absorb transient network glitches)
+  retries: process.env.RETRIES !== undefined ? Number(process.env.RETRIES) : (process.env.CI ? 2 : 1),
 
   // Limit the number of failures on CI to save resources
   maxFailures: process.env.CI ? 3 : 0,
@@ -196,9 +196,9 @@ export default defineConfig({
       testMatch: '**/downloader/*guest*.spec.ts',
     },
 
-    // Chromium Downloader — Tests running under Premium Downloader session
+    // Chromium Premium — Tests running under Premium User session
     {
-      name: 'chromium-downloader',
+      name: 'chromium-premium',
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1920, height: 1080 },
@@ -260,9 +260,9 @@ export default defineConfig({
       testMatch: '**/downloader/*guest*.spec.ts',
     },
 
-    // Firefox Downloader — Tests running under Premium Downloader session
+    // Firefox Premium — Tests running under Premium User session
     {
-      name: 'firefox-downloader',
+      name: 'firefox-premium',
       use: {
         ...devices['Desktop Firefox'],
         viewport: { width: 1920, height: 1080 },

@@ -2,8 +2,7 @@ import { type Page, type Locator, expect } from '@playwright/test';
 
 /**
  * BasePage — Abstract base class for all Page Object classes.
- * Contains common reusable methods with smart waits.
- * NEVER place assertions here — assertions belong in test files.
+ * Contains common reusable methods.
  */
 export abstract class BasePage {
   protected readonly page: Page;
@@ -21,8 +20,8 @@ export abstract class BasePage {
     this.pageLoadingIcon = page.locator('#full_page_loading').first();
   }
 
-  // ─── Navigation ──────────────────────────────────────────────────────────
 
+  // Navigation
   /**
    * Navigate to a URL path relative to baseURL with resilient retry on transient network timeouts.
    * @param path - Relative path (e.g., '/login') or absolute URL
@@ -45,7 +44,7 @@ export abstract class BasePage {
     await this.page.waitForLoadState('domcontentloaded', { timeout: 15_000 });
   }
 
-  // ─── Element Interaction ─────────────────────────────────────────────────
+  // Element Action
 
   /**
    * Click an element after ensuring it is visible and enabled.
@@ -53,6 +52,7 @@ export abstract class BasePage {
    */
   async clickElement(locator: Locator, options?: { force?: boolean; noWaitAfter?: boolean }): Promise<void> {
     await locator.waitFor({ state: 'visible', timeout: 20_000 });
+    const startUrl = this.page.url();
     const clickOpts = {
       ...(options?.force ? { force: true } : {}),
       ...(options?.noWaitAfter ? { noWaitAfter: true } : {}),
@@ -60,9 +60,17 @@ export abstract class BasePage {
     if (options?.force || options?.noWaitAfter) {
       await locator.click(clickOpts);
     } else {
-      await locator.click(clickOpts).catch(async () => {
+      try {
+        await locator.click(clickOpts);
+      } catch (err: any) {
+        // If URL has changed (navigation already triggered), do not retry on detached element from previous page
+        if (this.page.url() !== startUrl) return;
+        const errMessage = String(err?.message || '');
+        if (errMessage.includes('Execution context was destroyed') || errMessage.includes('frame was detached')) {
+          return;
+        }
         await locator.click({ force: true, ...(options?.noWaitAfter ? { noWaitAfter: true } : {}) });
-      });
+      }
     }
   }
 
@@ -118,7 +126,7 @@ export abstract class BasePage {
    * @param timeout - Optional custom timeout in ms (default: 25_000)
    */
   async waitForPageLoadingIconHidden(timeout: number = 25_000): Promise<void> {
-    await this.pageLoadingIcon.waitFor({ state: 'hidden', timeout }).catch(() => {});
+    await this.pageLoadingIcon.waitFor({ state: 'hidden', timeout }).catch(() => { });
   }
 
   /**
@@ -151,7 +159,7 @@ export abstract class BasePage {
     }
   }
 
-  // ─── URL and Title ───────────────────────────────────────────────────────
+  // URL and Title
 
   /**
    * Get current page URL.
@@ -167,7 +175,7 @@ export abstract class BasePage {
     return this.page.title();
   }
 
-  // ─── Screenshot ──────────────────────────────────────────────────────────
+  // Screenshot
 
   /**
    * Take a screenshot and return the Buffer.
@@ -186,3 +194,4 @@ export abstract class BasePage {
     }
   }
 }
+

@@ -52,6 +52,30 @@ trigger: model_decision
 | **Image Upload heading** | `アップロードされた画像に似ている写真素材` | `アップロードされた画像に似ているイラスト素材` | Khác nhau |
 | **Sticky Header Search** | ✅ | ✅ | Cả 2 site đều có `.search-box-top-fixed-area` và `#search_frm_fixed` khi cuộn trang |
 | **Trang Trends** | ✅ (`/main/trends`) | ❌ (Trả về 404) | Chỉ có trên Photo-AC |
+| **Group Sites Gợi Ý Cuối Trang** | ✅ (`.related-search`) | ✅ | Gồm Design, Illust, Silhouette, Video AC |
+
+---
+
+## Behavior Matrix Khi Click Thumbnail Kết Quả Tìm Kiếm
+
+| Vai trò | Phần tử lớp phủ | Hành vi UI | Assertions / Verification |
+|---|---|---|---|
+| **Guest** | `div.link-to-detail.quickview` | Mở QuickView popup `#quickViewBox` | - Tiêu đề: `会員登録で今すぐダウンロード！`<br>- Nút đăng ký: `無料ダウンロード` trỏ tới `/signup`<br>- Nút đăng nhập: `ログイン` trỏ tới `/login` |
+| **Free User** | `a.link-to-detail[target="_blank"]` | **Navigate tới trang Details** | - Chuyển sang URL `/main/detail/<id>&title=...`<br>- Tiêu đề trang chứa `- No: <id>｜写真素材なら「写真AC」...`<br>- Không mở popup QuickView |
+| **Premium** | `div.link-to-detail.quickview` | Mở QuickView popup `#quickViewBox` | - Hiển thị trực tiếp các nút tải ảnh: `S JPEG`, `M JPEG`, `L JPEG`<br>- Không hiển thị popup yêu cầu đăng ký |
+
+---
+
+## Group Sites Modal Matrix (写真ACグループサイト - #relatedSearchModal)
+
+Áp dụng cho mọi vai trò (Guest / Free / Premium) khi click item trong khu vực `.related-search` ở cuối trang:
+
+| Nhóm Dịch Vụ | ID Container (Lazy Load) | Hàm Trigger Lazy | Dòng Text Thông Báo trong Modal | Link Nút Hành Động |
+|---|---|---|---|---|
+| **Design AC** | `#design_list` | `executeDesign` | `グループサイトのデザインACが開きます。` (`.ac-text-design`) | `ダウンロードページ` trỏ tới `design-ac.net` |
+| **Illust AC** | `#illust_list` | `executeIllust` | `グループサイトのイラストACが開きます。` (`.ac-text-danger`) | `ダウンロードページ` trỏ tới `ac-illust.com` |
+| **Silhouette AC** | `#slh_list` | `executeSilhouette` | `グループサイトのシルエットACが開きます。` (`.ac-text-blue`) | `ダウンロードページ` trỏ tới `silhouette-ac.com` |
+| **Video AC** | `#video_list` | `executeVideo` | `グループサイトの動画ACが開きます。` (`.ac-text-video`) | `ダウンロードページ` trỏ tới `video-ac.com` |
 
 ---
 

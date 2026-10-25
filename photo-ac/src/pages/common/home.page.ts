@@ -1,11 +1,11 @@
-import { type Page, test } from '@playwright/test';
+﻿import { type Page, test } from '@playwright/test';
 import { BasePage } from './base.page';
 
 /**
  * HomePage — Page Object for the main home page after login.
  */
 export class HomePage extends BasePage {
-  // ─── Locators ─────────────────────────────────────────────────────────────
+  // Locators
 
   /** Page heading / main title of the dashboard */
   private readonly pageHeading = this.page.getByRole('heading', { level: 1 });
@@ -20,9 +20,9 @@ export class HomePage extends BasePage {
   private readonly logoutButton = this.page.getByRole('button', { name: /logout|sign out|ログアウト/i })
     .or(this.page.getByRole('link', { name: /logout|sign out|ログアウト/i }));
 
-  // ─── Search Entrypoint Locators ───────────────────────────────────────────
+  // Search Entrypoint Locators
 
-  /** Top keyword chips displayed directly under the main search bar (e.g. 女性, ビジネス, 秋, 和紙, 犬) */
+  /** Top keyword chips displayed directly under the main search bar */
   readonly topKeywords = this.page.locator('a.top-search');
 
   /** Popular tags cloud located towards the bottom/sidebar */
@@ -43,8 +43,7 @@ export class HomePage extends BasePage {
   /** Category links on the home page */
   readonly categoryLinks = this.page.locator('a[href*="c_id="][href*="utm_source=categories"]');
 
-  // ─── AI Search (AI検索 β版) Locators ─────────────────────────────────────────
-
+  // AI Search (AI検索 β版) Locators
   /** AI Search toggle button (.search-by-ai) */
   readonly searchByAiButton = this.page.locator('form#search_frm .search-by-ai');
 
@@ -71,8 +70,7 @@ export class HomePage extends BasePage {
   /** Close / dismiss button for semantic search continue modal */
   readonly semanticSearchModalCloseButton = this.semanticSearchModal.locator('button.close, [data-dismiss="modal"], .btn-close, [aria-label="Close"]').first();
 
-  // ─── Sticky Header Search Bar Locators ──────────────────────────────────────
-
+  // Sticky Header Search Bar Locators
   /** Sticky search bar container (.search-box-top-fixed-area) displayed upon scrolling */
   readonly stickySearchArea = this.page.locator('.search-box-top-fixed-area');
 
@@ -82,8 +80,7 @@ export class HomePage extends BasePage {
   /** Sticky search submit button (form#search_frm_fixed button[type="submit"]) */
   readonly stickySearchSubmitButton = this.page.locator('form#search_frm_fixed button.execloginbtn:visible, form#search_frm_fixed button[type="submit"]:visible').first();
 
-  // ─── Methods ──────────────────────────────────────────────────────────────
-
+  // Methods
   constructor(page: Page) {
     super(page);
   }
@@ -154,7 +151,7 @@ export class HomePage extends BasePage {
   async clickTopKeyword(keyword: string): Promise<void> {
     await test.step(`Click Top Keyword: "${keyword}"`, async () => {
       const keywordChip = this.topKeywords.filter({ hasText: keyword }).first();
-      await this.clickElement(keywordChip);
+      await this.clickElement(keywordChip, { noWaitAfter: true });
     });
   }
 
@@ -173,7 +170,7 @@ export class HomePage extends BasePage {
     await test.step(`Click Popular Tag: "${tag}"`, async () => {
       const tagElement = this.popularTags.filter({ hasText: tag }).first();
       await tagElement.scrollIntoViewIfNeeded().catch(() => { });
-      await this.clickElement(tagElement);
+      await this.clickElement(tagElement, { noWaitAfter: true });
     });
   }
 
@@ -228,7 +225,7 @@ export class HomePage extends BasePage {
   async clickCategory(categoryName: string): Promise<void> {
     await test.step(`Click Category: "${categoryName}" from HomePage`, async () => {
       const categoryLink = this.categoryLinks.filter({ hasText: categoryName }).first();
-      await this.clickElement(categoryLink);
+      await this.clickElement(categoryLink, { noWaitAfter: true });
     });
   }
 
@@ -333,5 +330,6 @@ export class HomePage extends BasePage {
     });
   }
 }
+
 
 

@@ -1,4 +1,4 @@
-// import { test, expect } from '../../fixtures/base.fixture';
+﻿// import { test, expect } from '../../fixtures/base.fixture';
 // import { PdfUtils } from '../../utils/pdf.utils';
 // import { EmailVerificationHelper } from '../../utils/email-verification.helper';
 
@@ -15,26 +15,26 @@
 //     page,
 //     receiptsPage,
 //   }) => {
-//     // ─── Step 1: Navigate directly to /user/receipts ──────────────────────
+//     // Step 1: Navigate directly to /user/receipts
 //     await test.step('Navigate directly to 領収書発行 page (/user/receipts)', async () => {
 //       await receiptsPage.goToReceiptsPage();
 //     });
 
-//     // ─── Step 2: Verify page loaded ───────────────────────────────────────
+//     // Step 2: Verify page loaded
 //     await test.step('Verify 領収書発行 page is displayed', async () => {
 //       await expect(receiptsPage.pageHeading).toBeVisible({ timeout: 10_000 });
 //       await expect(receiptsPage.companyNameInput).toBeVisible();
 //       await expect(receiptsPage.personNameInput).toBeVisible();
 //     });
 
-//     // ─── Step 3: Fill in recipient info ───────────────────────────────────
+//     // Step 3: Fill in recipient info
 //     await test.step(`Fill 会社名="${testCompanyName}" and 担当者名="${testPersonName}"`, async () => {
 //       await receiptsPage.fillRecipientInfo(testCompanyName, testPersonName);
 //       await expect(receiptsPage.companyNameInput).toHaveValue(testCompanyName);
 //       await expect(receiptsPage.personNameInput).toHaveValue(testPersonName);
 //     });
 
-//     // ─── Step 4: Save recipient info (handle native JS alert) ─────────────
+//     // Step 4: Save recipient info (handle native JS alert)
 //     await test.step('Click 宛名保存 and accept JS alert (宛名を保存しました。)', async () => {
 //       page.once('dialog', async (dialog) => {
 //         expect(dialog.message()).toContain('保存しました');
@@ -44,13 +44,13 @@
 //       await expect(receiptsPage.saveRecipientButton).toBeEnabled({ timeout: 10_000 });
 //     });
 
-//     // ─── Step 5: Verify saved values persisted ────────────────────────────
+//     // Step 5: Verify saved values persisted
 //     await test.step('Verify saved recipient info persists in form fields', async () => {
 //       expect(await receiptsPage.getCompanyNameValue()).toBe(testCompanyName);
 //       expect(await receiptsPage.getPersonNameValue()).toBe(testPersonName);
 //     });
 
-//     // ─── Step 6: Select first radio + capture service label ───────────────
+//     // Step 6: Select first radio + capture service label
 //     let selectedServiceLabel = '';
 //     await test.step('Select first billing item (radio button outid_0)', async () => {
 //       await expect(receiptsPage.firstRadioButton).toBeVisible({ timeout: 10_000 });
@@ -61,7 +61,7 @@
 //       selectedServiceLabel = (await receiptsPage.getRadioLabelText(0)).trim();
 //     });
 
-//     // ─── Step 7: Download PDF ─────────────────────────────────────────────
+//     // Step 7: Download PDF
 //     let downloadPath = '';
 //     await test.step('Click ダウンロード and capture PDF download', async () => {
 //       await expect(receiptsPage.downloadButton).toBeVisible({ timeout: 10_000 });
@@ -73,13 +73,13 @@
 //       downloadPath = await PdfUtils.saveAndAttach(download, test.info(), 'receipt');
 //     });
 
-//     // ─── Step 8: Verify PDF binary structure ──────────────────────────────
+//     // Step 8: Verify PDF binary structure
 //     await test.step('Verify PDF file exists and has valid structure', async () => {
 //       // Validate file exists, has correct size, extension, and magic bytes
 //       PdfUtils.validatePdfStructure(downloadPath, 10000);
 //     });
 
-//     // ─── Step 9: Verify PDF text content using pdf-parse ─────────────────
+//     // Step 9: Verify PDF text content using pdf-parse
 //     await test.step('Verify PDF text content: 領収書, 会社名, 担当者名, サービス名', async () => {
 //       const pdfData = await PdfUtils.getMetadata(downloadPath);
 //       const pdfText: string = pdfData.text;
@@ -149,7 +149,7 @@
 //   //     await expect(page.getByText('宛名')).toBeVisible();
 //   //   });
 
-//   //   // ─── Verify first radio button label has billing info ────────────────
+//   //   // Verify first radio button label has billing info
 //   //   await test.step('Verify first billing item radio button has text content', async () => {
 //   //     const firstLabel = page.locator('label[for="outid_0"]');
 //   //     // Label text should contain billing period info (e.g., ACプレミアム会員サービス)
@@ -158,3 +158,4 @@
 //   //   });
 //   // });
 // });
+

@@ -360,12 +360,19 @@ function startTestRun(options) {
     }
   }
 
+  // Chuẩn hóa tên project (hỗ trợ alias tương thích ngược chromium-downloader -> chromium-premium)
+  const normalizeProject = (p) => {
+    if (p === 'chromium-downloader') return 'chromium-premium';
+    if (p === 'firefox-downloader') return 'firefox-premium';
+    return p;
+  };
+
   // Hỗ trợ chọn 1 project hoặc nhiều projects (ví dụ chromium-guest + firefox-guest)
   let selectedProjects = [];
   if (Array.isArray(projects) && projects.length > 0) {
-    selectedProjects = projects.filter(p => p && p !== 'all');
+    selectedProjects = projects.filter(p => p && p !== 'all').map(normalizeProject);
   } else if (project && project !== 'all') {
-    selectedProjects = [project];
+    selectedProjects = [normalizeProject(project)];
   }
 
   if (selectedProjects.length > 0) {
@@ -814,11 +821,11 @@ const server = http.createServer(async (req, res) => {
       { id: 'all', name: 'Tất cả Projects (Chromium & Firefox)' },
       { id: 'chromium-guest', name: 'Chromium - Guest (Không Cần Đăng Nhập)' },
       { id: 'chromium-free-user', name: 'Chromium - Free User (Miễn Phí)' },
-      { id: 'chromium-downloader', name: 'Chromium - Downloader (Premium)' },
+      { id: 'chromium-premium', name: 'Chromium - Premium User' },
       { id: 'chromium-creator', name: 'Chromium - Creator Session' },
       { id: 'firefox-guest', name: 'Firefox - Guest (Không Cần Đăng Nhập)' },
       { id: 'firefox-free-user', name: 'Firefox - Free User (Miễn Phí)' },
-      { id: 'firefox-downloader', name: 'Firefox - Downloader (Premium)' },
+      { id: 'firefox-premium', name: 'Firefox - Premium User' },
       { id: 'firefox-creator', name: 'Firefox - Creator Session' }
     ];
 

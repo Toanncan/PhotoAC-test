@@ -1,21 +1,19 @@
-import * as path from 'path';
+﻿import * as path from 'path';
 import { test, expect } from '../../fixtures/base.fixture';
 import { captureEvidenceWithUrl, enableAdBlocker } from '../../utils/helpers';
+import { GROUP_SITES } from '../../utils/test-data';
 
 /**
- * ============================================================================
  * TEST SUITE: SEARCH FEATURE — GUEST USER
- * ============================================================================
  */
 test.describe('Search Feature — Guest (No-Login User)', () => {
-  // Bắt buộc cô lập context không mang thông tin đăng nhập
+  // cô lập context không mang thông tin đăng nhập
   test.use({ storageState: { cookies: [], origins: [] } });
 
   const sampleImagePath = path.resolve(__dirname, '../../../test-data/sample-search.jpg');
 
   test.beforeEach(async ({ page, homePage }) => {
     // Targeted Network Mocking: Luôn duy trì hạn mức tìm kiếm (search_zancnt: 4)
-    // nhằm bảo vệ các test case bộ lọc/tìm kiếm thông thường không bị modal #searchLimitModal chặn ngang khi chạy cả suite.
     await page.route('**/ajax/public/is_enable_search', async (route) => {
       await route.fulfill({
         status: 200,
@@ -28,7 +26,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
       });
     });
 
-    // Kích hoạt Ad Blocker 2 tầng (Network Abort + CSS Hidden) chống nghẽn mạng & Layout Shift
+    // Kích hoạt Ad Blocker 2 tầng (Network Abort + CSS Hidden)
     await enableAdBlocker(page);
 
     await homePage.goToHomePage();
@@ -47,10 +45,8 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     }
   });
 
-  // ============================================================================
-  // NHÓM 1: TÌM KIẾM CƠ BẢN
-  // ============================================================================
 
+  // NHÓM 1: TÌM KIẾM CƠ BẢN
   /**
    * TC-SEARCH-GUEST-001: Tìm kiếm với từ khóa hợp lệ
    * @tags @guest
@@ -201,10 +197,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 2: FILTER TOOLBAR - SINGLE FILTERS
-  // ============================================================================
-
   /**
    * TC-SEARCH-GUEST-007: Lọc ảnh theo Chiều dọc (縦長) và chuyển đổi sang Chiều ngang (横長) qua Toolbar
    * @tags @guest @filter
@@ -628,10 +621,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 3: BỘ LỌC KẾT HỢP ĐA ĐIỀU KIỆN TRÊN UI
-  // ============================================================================
-
   /**
    * TC-SEARCH-GUEST-022: Kết hợp Từ khóa + 2 người mẫu + Model Release qua UI Toolbar
    * @tags @guest @filter
@@ -710,10 +700,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 4: TÌM KIẾM CHUYÊN SÂU & ĐẶC BIỆT
-  // ============================================================================
-
   /**
    * TC-SEARCH-GUEST-024: Tải ảnh lên tìm kiếm tương đồng
    * @tags @guest
@@ -879,10 +866,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 5: SẮP XẾP & PHÂN TRANG
-  // ============================================================================
-
   /**
    * TC-SEARCH-GUEST-029: Sắp xếp kết quả theo "新着順" (Mới nhất) và giữ nguyên sắp xếp khi sang Trang 2
    * @tags @guest
@@ -992,10 +976,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 6: PHÂN QUYỀN & HẠN MỨC GUEST USER
-  // ============================================================================
-
   /**
    * TC-SEARCH-GUEST-032: Chạm hạn mức tìm kiếm 
    * @tags @guest
@@ -1143,10 +1124,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 7: THANH TÌM KIẾM CỐ ĐỊNH TRÊN HEADER (STICKY HEADER SEARCH BAR)
-  // ============================================================================
-
   /**
    * TC-SEARCH-GUEST-035: Thanh tìm kiếm cố định (Sticky Header Search) tự động hiển thị khi cuộn trang xuống và ẩn đi khi cuộn lên đầu trang
    * @tags @guest
@@ -1208,5 +1186,74 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
       expect(count).toBeGreaterThan(0);
     });
   });
+
+  // NHÓM 12: TƯƠNG TÁC ẢNH KẾT QUẢ & CÁC TRANG NHÓM (GROUP SITES)
+  /**
+   * TC-SEARCH-GUEST-037: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập
+   * @tags @guest @regression
+   */
+  test('TC-SEARCH-GUEST-037: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập @guest @regression', async ({
+    page,
+    searchResultPage,
+  }, testInfo) => {
+    // Note: Deep-link URL được sử dụng theo yêu cầu kiểm thử để cố định bộ dữ liệu ổn định (creator=acworks, layout=vertical)
+    await test.step('Truy cập trang tìm kiếm với từ khóa "秋" và lọc creator=acworks, layout=vertical', async () => {
+      await searchResultPage.navigate('/main/search?q=%E7%A7%8B&creator=acworks&layout=vertical');
+      await searchResultPage.waitForResultDisplay();
+    });
+
+    await test.step('Click vào hình ảnh đầu tiên trong danh sách kết quả', async () => {
+      await searchResultPage.openQuickViewForItem(0);
+    });
+
+    await test.step('Verify hiển thị popup QuickView với tiêu đề yêu cầu đăng ký tài khoản', async () => {
+      await expect(searchResultPage.quickViewModal).toBeVisible({ timeout: 10_000 });
+      await expect(searchResultPage.guestRegisterPromptTitle).toBeVisible();
+      await expect(searchResultPage.guestRegisterPromptTitle).toHaveText('会員登録で今すぐダウンロード！');
+    });
+
+    await test.step('Verify hiển thị nút Đăng ký miễn phí (無料ダウンロード) và Đăng nhập (ログイン)', async () => {
+      await expect(searchResultPage.guestRegisterCtaButton).toBeVisible();
+      await expect(searchResultPage.guestLoginLink).toBeVisible();
+      await expect(searchResultPage.guestRegisterCtaButton).toHaveAttribute('href', /signup/);
+      await expect(searchResultPage.guestLoginLink).toHaveAttribute('href', /login/);
+    });
+
+    await captureEvidenceWithUrl(page, testInfo, 'Guest-QuickView-Register-Popup');
+
+    await test.step('Đóng popup QuickView', async () => {
+      await searchResultPage.closeQuickViewModal();
+    });
+  });
+
+  /**
+   * TC-SEARCH-GUEST-038: Click vào tác phẩm của các trang nhóm (Design AC, Illust AC, Silhouette AC, Video AC) ở cuối trang hiển thị popup tương ứng
+   * @tags @guest @regression
+   */
+  test('TC-SEARCH-GUEST-038: Click tác phẩm của các trang nhóm (Design, Illust, Silhouette, Video) hiển thị popup tương ứng @guest @regression', async ({
+    page,
+    searchResultPage,
+  }, testInfo) => {
+    await test.step('Truy cập trang tìm kiếm với từ khóa "秋" và lọc creator=acworks, layout=vertical', async () => {
+      await searchResultPage.navigate('/main/search?q=%E7%A7%8B&creator=acworks&layout=vertical');
+      await searchResultPage.waitForResultDisplay();
+    });
+
+    for (const site of GROUP_SITES) {
+      await test.step(`Click vào tác phẩm ${site.name} -> Verify hiển thị popup thông báo và nút tải tương ứng`, async () => {
+        await searchResultPage.clickGroupSiteItem(site.service, 0);
+
+        await expect(searchResultPage.relatedSearchModal).toBeVisible({ timeout: 10_000 });
+        await expect(searchResultPage.relatedModalNotice).toHaveText(site.expectedNotice);
+        await expect(searchResultPage.relatedModalDownloadButton).toBeVisible();
+        await expect(searchResultPage.relatedModalDownloadButton).toHaveAttribute('href', new RegExp(site.expectedDomain));
+
+        await captureEvidenceWithUrl(page, testInfo, `Guest-GroupSite-${site.service}-Modal`);
+
+        await searchResultPage.closeRelatedSearchModal();
+      });
+    }
+  });
 });
+
 

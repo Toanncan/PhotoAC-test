@@ -7,6 +7,9 @@ import { RankingPage } from '../pages/creator/ranking.page';
 import { ReceiptsPage } from '../pages/downloader/receipts.page';
 import { ProfileEditPage } from '../pages/downloader/profile-edit.page';
 import { SearchResultPage } from '@pages/common/search-results.page';
+import { DownloadImagePage } from '../pages/downloader/download-image.page';
+import { PremiumRegisterPage } from '../pages/downloader/premium-register.page';
+import { RegisterPage } from '../pages/common/register.page';
 import { envConfig } from '../utils/env.config';
 
 /**
@@ -16,10 +19,13 @@ import { envConfig } from '../utils/env.config';
 type PageFixtures = {
   loginPage: LoginPage;
   homePage: HomePage;
+  registerPage: RegisterPage;
   rankingPage: RankingPage;
   receiptsPage: ReceiptsPage;
   profileEditPage: ProfileEditPage;
   searchResultPage: SearchResultPage;
+  downloadImagePage: DownloadImagePage;
+  premiumRegisterPage: PremiumRegisterPage;
   allureMetadata: void;
   screenshotOnPass: void;
   urlOverlayAndAttachment: void;
@@ -34,7 +40,7 @@ type PageFixtures = {
 export const test = base.extend<PageFixtures>({
 
   allureMetadata: [async ({ }, use, testInfo) => {
-    // ── Determine Role ───────────────────────────────────────────────────────
+    // Role mapping
     const filePath = testInfo.file.toLowerCase();
     const projectName = testInfo.project.name.toLowerCase();
 
@@ -43,15 +49,15 @@ export const test = base.extend<PageFixtures>({
       role = 'Guest';
     } else if (filePath.includes('freeuser') || projectName.includes('free-user')) {
       role = 'FreeUser';
-    } else if (filePath.includes('downloader') || projectName.includes('downloader')) {
-      role = 'Downloader';
+    } else if (filePath.includes('premium') || projectName.includes('premium')) {
+      role = 'PremiumUser';
     } else if (filePath.includes('creator') || projectName.includes('creator')) {
       role = 'Creator';
     } else if (filePath.includes('admin') || projectName.includes('admin')) {
       role = 'Admin';
     }
 
-    // ── Determine Browser Name ───────────────────────────────────────────────
+    // Browser mapping
     let browserName = 'Other';
     if (projectName.includes('chromium')) {
       browserName = 'Chromium';
@@ -67,11 +73,9 @@ export const test = base.extend<PageFixtures>({
     await allure.suite(path.basename(testInfo.file, path.extname(testInfo.file)));
     await allure.subSuite(browserName);
 
-    // ── Categorization ───────────────────────────────────────────────────────
+    // Allure categorization & parameters
     await allure.layer('e2e');
     await allure.tag('ui');
-
-    // ── Environment parameters (visible in Allure report sidebar) ────────────
     await allure.parameter('Environment', envConfig.env);
     await allure.parameter('Base URL', envConfig.baseUrl);
 
@@ -111,12 +115,25 @@ export const test = base.extend<PageFixtures>({
     const searchResultPage = new SearchResultPage(page);
     await use(searchResultPage);
   },
+  downloadImagePage: async ({ page }, use) => {
+    const downloadImagePage = new DownloadImagePage(page);
+    await use(downloadImagePage);
+  },
+
+  // Provides a PremiumRegisterPage instance for premium registration tests
+  premiumRegisterPage: async ({ page }, use) => {
+    const premiumRegisterPage = new PremiumRegisterPage(page);
+    await use(premiumRegisterPage);
+  },
+
+  // Provides a RegisterPage instance for registration tests
+  registerPage: async ({ page }, use) => {
+    const registerPage = new RegisterPage(page);
+    await use(registerPage);
+  },
 
   /**
-   * screenshotOnPass — Auto fixture to capture final screenshot when test passes.
-   * auto: true → runs automatically for every test without explicit declaration.
-   * Chụp Viewport (1920x1080) siêu nhẹ và nhanh.
-   * Tránh trùng lặp nếu testcase đã có ảnh Evidence đính kèm trong case.
+   * Auto fixture: captures viewport screenshot upon test pass (skips if custom evidence exists).
    */
   screenshotOnPass: [async ({ page }, use, testInfo) => {
     await use();
@@ -172,7 +189,7 @@ export const test = base.extend<PageFixtures>({
           banner.style.pointerEvents = 'none';
           banner.textContent = '📍 URL: ' + url;
           document.body.prepend(banner);
-        }, currentUrl).catch(() => {});
+        }, currentUrl).catch(() => { });
       }
     } catch {
       // Ignore if page is already closed or destroyed

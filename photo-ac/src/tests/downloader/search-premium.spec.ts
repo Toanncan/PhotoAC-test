@@ -1,14 +1,13 @@
-import * as path from 'path';
+﻿import * as path from 'path';
 import { test, expect } from '../../fixtures/base.fixture';
 import { captureEvidenceWithUrl } from '../../utils/helpers';
+import { GROUP_SITES } from '../../utils/test-data';
 
 /**
- * ============================================================================
  * TEST SUITE: SEARCH — PREMIUM USER
- * ============================================================================
  */
 test.describe('Search — Premium User', () => {
-  // Session Premium User được tự động inject bởi project cấu hình (chromium-downloader / firefox-downloader)
+  // Session Premium User được tự động inject bởi project cấu hình (chromium-premium / firefox-premium)
 
   const sampleImagePath = path.resolve(__dirname, '../../../test-data/sample-search.jpg');
 
@@ -29,10 +28,7 @@ test.describe('Search — Premium User', () => {
     }
   });
 
-  // ============================================================================
   // NHÓM 1: TÌM KIẾM CƠ BẢN
-  // ============================================================================
-
   /**
    * TC-SEARCH-PREM-001: Tìm kiếm với từ khóa hợp lệ
    * @tags @premium
@@ -190,10 +186,7 @@ test.describe('Search — Premium User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 2: FILTER TOOLBAR - SINGLE FILTERS
-  // ============================================================================
-
   /**
    * TC-SEARCH-PREM-007: Lọc ảnh theo Chiều dọc (縦長) và chuyển đổi sang Chiều ngang (横長) qua Toolbar
    * @tags @premium @filter
@@ -605,10 +598,7 @@ test.describe('Search — Premium User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 3: BỘ LỌC KẾT HỢP ĐA ĐIỀU KIỆN TRÊN UI
-  // ============================================================================
-
   /**
    * TC-SEARCH-PREM-022: Kết hợp Từ khóa + 2 người mẫu + Model Release qua UI Toolbar
    * @tags @premium @filter
@@ -668,10 +658,7 @@ test.describe('Search — Premium User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 4: TÌM KIẾM CHUYÊN SÂU & ĐẶC BIỆT
-  // ============================================================================
-
   /**
    * TC-SEARCH-PREM-024: Tải ảnh lên tìm kiếm tương đồng (Image Search Upload)
    * @tags @premium
@@ -836,10 +823,7 @@ test.describe('Search — Premium User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 5: SẮP XẾP & PHÂN TRANG (SORT & PAGINATION)
-  // ============================================================================
-
   /**
    * TC-SEARCH-PREM-029: Sắp xếp kết quả theo "新着順" (Mới nhất) và giữ nguyên sắp xếp khi sang Trang 2
    * @tags @premium
@@ -973,10 +957,7 @@ test.describe('Search — Premium User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 6: PHÂN QUYỀN KHÔNG GIỚI HẠN & TÌM KIẾM BẰNG AI
-  // ============================================================================
-
   /**
    * TC-SEARCH-PREM-033: Thực hiện tìm kiếm nhiều lần không bị giới hạn hạn mức tìm kiếm
    * Đặc quyền Premium: Không bị giới hạn 4 lần/ngày như Free/Guest, không xuất hiện modal #searchLimitModal.
@@ -1051,10 +1032,7 @@ test.describe('Search — Premium User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 7: THANH TÌM KIẾM CỐ ĐỊNH TRÊN HEADER (STICKY HEADER SEARCH BAR)
-  // ============================================================================
-
   /**
    * TC-SEARCH-PREM-035: Thanh tìm kiếm cố định (Sticky Header Search) tự động hiển thị khi cuộn trang xuống và ẩn đi khi cuộn lên đầu trang
    * @tags @premium
@@ -1116,4 +1094,77 @@ test.describe('Search — Premium User', () => {
       expect(count).toBeGreaterThan(0);
     });
   });
+
+  // NHÓM 12: TƯƠNG TÁC ẢNH KẾT QUẢ & CÁC TRANG NHÓM (GROUP SITES)
+  /**
+   * TC-SEARCH-PREM-037: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview với các nút download trực tiếp cho Premium
+   * @tags @premium @regression
+   */
+  test('TC-SEARCH-PREM-037: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview với các nút download trực tiếp @premium @regression', async ({
+    page,
+    searchResultPage,
+  }, testInfo) => {
+    // Note: Deep-link URL được sử dụng theo yêu cầu kiểm thử để cố định bộ dữ liệu ổn định (creator=acworks, layout=vertical)
+    await test.step('Truy cập trang tìm kiếm với từ khóa "秋" và lọc creator=acworks, layout=vertical', async () => {
+      await searchResultPage.navigate('/main/search?q=%E7%A7%8B&creator=acworks&layout=vertical');
+      await searchResultPage.waitForResultDisplay();
+    });
+
+    await test.step('Click vào hình ảnh đầu tiên trong danh sách kết quả', async () => {
+      await searchResultPage.openQuickViewForItem(0);
+    });
+
+    await test.step('Verify hiển thị popup QuickView cho Premium User', async () => {
+      await expect(searchResultPage.quickViewModal).toBeVisible({ timeout: 10_000 });
+      // Không hiển thị form yêu cầu đăng ký
+      await expect(searchResultPage.guestRegisterPromptTitle).toBeHidden();
+    });
+
+    await test.step('Verify hiển thị các nút tải ảnh trực tiếp theo các kích cỡ (S, M, L JPEG)', async () => {
+      await expect(searchResultPage.premiumDownloadButtons.first()).toBeVisible({ timeout: 10_000 });
+      const downloadCount = await searchResultPage.premiumDownloadButtons.count();
+      expect(downloadCount).toBeGreaterThanOrEqual(3);
+
+      // Sử dụng regex-prefix helper chống strict-mode substring conflict với dung lượng file (ví dụ: '1.33M')
+      await expect(searchResultPage.getQuickViewDownloadButton('S')).toBeVisible({ timeout: 5_000 });
+      await expect(searchResultPage.getQuickViewDownloadButton('M')).toBeVisible({ timeout: 5_000 });
+      await expect(searchResultPage.getQuickViewDownloadButton('L')).toBeVisible({ timeout: 5_000 });
+    });
+
+    await captureEvidenceWithUrl(page, testInfo, 'Premium-QuickView-Download-Popup');
+
+    await test.step('Đóng popup QuickView', async () => {
+      await searchResultPage.closeQuickViewModal();
+    });
+  });
+
+  /**
+   * TC-SEARCH-PREM-038: Click vào tác phẩm của các trang nhóm (Design AC, Illust AC, Silhouette AC, Video AC) ở cuối trang hiển thị popup tương ứng
+   * @tags @premium @regression
+   */
+  test('TC-SEARCH-PREM-038: Click tác phẩm của các trang nhóm (Design, Illust, Silhouette, Video) hiển thị popup tương ứng @premium @regression', async ({
+    page,
+    searchResultPage,
+  }, testInfo) => {
+    await test.step('Truy cập trang tìm kiếm với từ khóa "秋" và lọc creator=acworks, layout=vertical', async () => {
+      await searchResultPage.navigate('/main/search?q=%E7%A7%8B&creator=acworks&layout=vertical');
+      await searchResultPage.waitForResultDisplay();
+    });
+
+    for (const site of GROUP_SITES) {
+      await test.step(`Click vào tác phẩm ${site.name} -> Verify hiển thị popup thông báo và nút tải tương ứng`, async () => {
+        await searchResultPage.clickGroupSiteItem(site.service, 0);
+
+        await expect(searchResultPage.relatedSearchModal).toBeVisible({ timeout: 10_000 });
+        await expect(searchResultPage.relatedModalNotice).toHaveText(site.expectedNotice);
+        await expect(searchResultPage.relatedModalDownloadButton).toBeVisible();
+        await expect(searchResultPage.relatedModalDownloadButton).toHaveAttribute('href', new RegExp(site.expectedDomain));
+
+        await captureEvidenceWithUrl(page, testInfo, `Premium-GroupSite-${site.service}-Modal`);
+
+        await searchResultPage.closeRelatedSearchModal();
+      });
+    }
+  });
 });
+

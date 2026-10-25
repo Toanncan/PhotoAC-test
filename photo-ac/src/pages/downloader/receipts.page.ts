@@ -1,10 +1,9 @@
-import { type Page, test } from '@playwright/test';
+﻿import { type Page, test } from '@playwright/test';
 import { BasePage } from '../common/base.page';
 
 
 export class ReceiptsPage extends BasePage {
-  // ─── Locators ─────────────────────────────────────────────────────────────
-
+  // Locators
   /** Company name text input (会社名) */
   readonly companyNameInput = this.page.locator('#companyname');
 
@@ -23,14 +22,12 @@ export class ReceiptsPage extends BasePage {
   /** Page heading (領収書発行) */
   readonly pageHeading = this.page.getByRole('heading', { name: '領収書発行' });
 
-  // ─── Constructor ──────────────────────────────────────────────────────────
-
+  // Constructor
   constructor(page: Page) {
     super(page);
   }
 
-  // ─── Methods ──────────────────────────────────────────────────────────────
-
+  // Methods
   /**
    * Navigate directly to the receipts page.
    */
@@ -197,4 +194,5 @@ export class ReceiptsPage extends BasePage {
     return texts;
   }
 }
+
 

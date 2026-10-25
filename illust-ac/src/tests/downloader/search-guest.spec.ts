@@ -1,6 +1,7 @@
 import * as path from 'path';
 import { test, expect } from '../../fixtures/base.fixture';
 import { captureEvidenceWithUrl, enableAdBlocker } from '../../utils/helpers';
+import { GROUP_SITES } from '../../utils/test-data';
 
 /**
  * ============================================================================
@@ -482,14 +483,24 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
 
-    await test.step('Chọn Chiều ngang và định dạng Vector từ Toolbar "ファイル・向き"', async () => {
+    await test.step('Chọn Chiều ngang (横長) từ Toolbar "ファイル・向き"', async () => {
       await searchResultPage.selectOrientation('horizontal');
+      await expect(page).toHaveURL(/orientation=1/);
+      await expect(searchResultPage.getActiveFilterBadge('横長')).toBeVisible();
+      await captureEvidenceWithUrl(page, testInfo, 'Combined-Filter-Horizontal');
+    });
+
+    await test.step('Chọn định dạng Vector (EPS・AI) từ Toolbar "ファイル・向き"', async () => {
       await searchResultPage.selectFormat('vector');
+      await expect(page).toHaveURL(/format=vector/);
+      await expect(page).toHaveURL(/orientation=1/);
+      await expect(searchResultPage.getActiveFilterBadge('EPS・AI')).toBeVisible();
       await captureEvidenceWithUrl(page, testInfo, 'Combined-Filter-Horizontal-Vector');
     });
 
     await test.step('Bật bộ lọc Loại trừ AI từ Toolbar "表示条件"', async () => {
       await searchResultPage.toggleExcludeAi(true);
+      await expect(page).toHaveURL(/exclude_ai=on/);
       await captureEvidenceWithUrl(page, testInfo, 'Combined-Filter-Horizontal-Vector-ExcludeAI');
     });
 
@@ -602,7 +613,7 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-020: Tìm kiếm đề xuất và phân trang (rcm=1)
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-020: Recommended Search và phân trang @regression @guest', async ({
+  test.skip('TC-SEARCH-GUEST-020: Recommended Search và phân trang @regression @guest', async ({
     page,
     searchResultPage,
   }, testInfo) => {
@@ -883,5 +894,112 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
 
       await captureEvidenceWithUrl(page, testInfo, 'Guest-Sticky-Search-Results');
     });
+  });
+
+  // ============================================================================
+  // NHÓM 8: RECOMMENDED SEARCH, QUICKVIEW & CÁC TRANG NHÓM (GROUP SITES)
+  // ============================================================================
+
+  /**
+   * TC-SEARCH-GUEST-028: Tìm kiếm đề xuất (Recommended Search) và phân trang
+   * @tags @regression @guest
+   */
+  test('TC-SEARCH-GUEST-028: Recommended Search và phân trang @regression @guest', async ({
+    page,
+    searchResultPage,
+  }) => {
+    // Note: Deep-link được dùng có chủ đích vì test này kiểm tra routing & bảo toàn tham số rcm/referer khi phân trang
+    await searchResultPage.goToRecommendedSearch();
+
+    await test.step('Verify trang Recommended Search hiển thị đúng tham số, tiêu đề và danh sách ảnh', async () => {
+      await expect(page).toHaveURL(/rcm=1/);
+      await expect(searchResultPage.resultHeading).toContainText('のイラスト素材');
+      await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
+      const count = await searchResultPage.getResultCount();
+      expect(count, 'Trang phải có ít nhất 1 ảnh hiển thị').toBeGreaterThan(0);
+      expect(count, 'Số lượng ảnh không được vượt quá 70 ảnh/trang').toBeLessThanOrEqual(70);
+    });
+
+    await searchResultPage.goToNextPage();
+
+    await test.step('Verify URL giữ nguyên tham số rcm=1 và referer khi sang trang 2', async () => {
+      await expect(page).toHaveURL(/rcm=1/);
+      await expect(page).toHaveURL(/referer=more_recommended/);
+      await expect(page).toHaveURL(/page=2/);
+    });
+  });
+
+  /**
+   * TC-SEARCH-GUEST-029: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập
+   * @tags @regression @guest
+   */
+  test('TC-SEARCH-GUEST-029: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập @regression @guest', async ({
+    page,
+    homePage,
+    searchResultPage,
+  }, testInfo) => {
+    const keyword = '秋';
+
+    await test.step(`Tìm kiếm từ khóa "${keyword}" từ trang chủ`, async () => {
+      await homePage.search(keyword);
+      await searchResultPage.waitForResultDisplay();
+    });
+
+    await test.step('Click vào hình ảnh đầu tiên trong danh sách kết quả', async () => {
+      await searchResultPage.openQuickViewForItem(0);
+    });
+
+    await test.step('Verify hiển thị popup QuickView với tiêu đề yêu cầu đăng ký tài khoản', async () => {
+      await expect(searchResultPage.quickViewModal).toBeVisible({ timeout: 10_000 });
+      await expect(searchResultPage.guestRegisterPromptTitle).toBeVisible();
+      await expect(searchResultPage.guestRegisterPromptTitle).toHaveText('会員登録で今すぐダウンロード！');
+    });
+
+    await test.step('Verify hiển thị nút Đăng ký miễn phí (無料ダウンロード) và Đăng nhập (ログイン)', async () => {
+      await expect(searchResultPage.guestRegisterCtaButton).toBeVisible();
+      await expect(searchResultPage.guestLoginLink).toBeVisible();
+      await expect(searchResultPage.guestRegisterCtaButton).toHaveAttribute('href', /signup/);
+      await expect(searchResultPage.guestLoginLink).toHaveAttribute('href', /login/);
+    });
+
+    await captureEvidenceWithUrl(page, testInfo, 'Guest-QuickView-Register-Popup');
+
+    await test.step('Đóng popup QuickView', async () => {
+      await searchResultPage.closeQuickViewModal();
+    });
+  });
+
+  /**
+   * TC-SEARCH-GUEST-030: Click tác phẩm của các trang nhóm (Design AC, Video AC) ở cuối trang hiển thị popup tương ứng
+   * Note: Photo AC / Silhouette AC không được verify do API test-yano.photo-ac.com trả 404 trên môi trường test.
+   * @tags @regression @guest
+   */
+  test('TC-SEARCH-GUEST-030: Click tác phẩm của các trang nhóm (Design, Video) hiển thị popup tương ứng @regression @guest', async ({
+    page,
+    homePage,
+    searchResultPage,
+  }, testInfo) => {
+    // Từ khóa "犬": cả Design AC và Video AC đều có dữ liệu trên môi trường test
+    const keyword = '犬';
+
+    await test.step(`Tìm kiếm từ khóa "${keyword}" từ trang chủ`, async () => {
+      await homePage.search(keyword);
+      await searchResultPage.waitForResultDisplay();
+    });
+
+    for (const site of GROUP_SITES) {
+      await test.step(`Click vào tác phẩm ${site.name} -> Verify hiển thị popup thông báo và nút tải tương ứng`, async () => {
+        await searchResultPage.clickGroupSiteItem(site.service, 0);
+
+        await expect(searchResultPage.relatedSearchModal).toBeVisible({ timeout: 10_000 });
+        await expect(searchResultPage.relatedModalNotice).toHaveText(site.expectedNotice);
+        await expect(searchResultPage.relatedModalDownloadButton).toBeVisible();
+        await expect(searchResultPage.relatedModalDownloadButton).toHaveAttribute('href', new RegExp(site.expectedDomain));
+
+        await captureEvidenceWithUrl(page, testInfo, `Guest-GroupSite-${site.service}-Modal`);
+
+        await searchResultPage.closeRelatedSearchModal();
+      });
+    }
   });
 });
