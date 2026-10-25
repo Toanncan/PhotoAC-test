@@ -1,0 +1,848 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: mobile/search-mobile.spec.ts >> Search Feature — Mobile (Guest User) >> TC-SEARCH-MOBILE-002: Lọc theo hướng ảnh (縦長 - Vertical) qua Drawer 詳細検索 trên Mobile @regression @mobile @guest
+- Location: photo-ac/src/tests/mobile/search-mobile.spec.ts:61:7
+
+# Error details
+
+```
+TimeoutError: locator.waitFor: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator('a.d-1024-none:has-text("詳細検索"), a.d-1024-none[role="button"]').first() to be visible
+    42 × locator resolved to hidden <a role="button" href="javascript:void(0);" onclick="showMobileFixedFilter();" class="border-left border-right-0 border-a2a5a8 on-hover-e6e6e6 shadow-none min-width-90 max-width-90 text-center font-size-12 btn d-flex justify-content-center align-items-center position-static ac-px-2 d-1024-none">…</a>
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic: "📍 URL: https://test-lien.photo-ac.com/main/search?by_ai=0&q=dog&srt=dlrank&nq=&exclude_ai=on&orientation=all&sizesec=all&creator=&ngcreator=&qid=&color=all&model_count=-1&age=all&mdlrlrsec=all&prprlrsec=all"
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - button "検索フィルター" [ref=e4] [cursor=pointer]:
+        - generic [ref=e5]:
+          - img [ref=e6]
+          - generic [ref=e9]: 
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - generic [ref=e13]:
+            - link "写真AC" [ref=e14] [cursor=pointer]:
+              - /url: /
+              - img "写真AC" [ref=e15]
+            - text: 
+          - search [ref=e17]:
+            - generic [ref=e19]:
+              - generic [ref=e20]:
+                - text: 
+                - button "AI Search is off" [disabled] [ref=e21]:
+                  - img "AI Search is off" [ref=e22]
+                - text: 
+                - generic [ref=e23]:
+                  - searchbox "キーワード（例：女性）" [ref=e24]: dog
+                  - button "リセット" [ref=e25] [cursor=pointer]:
+                    - img [ref=e27]
+                  - generic [ref=e29]: dog
+                - link "upload file" [ref=e31] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e32]: 
+                - button "search_btn" [ref=e33] [cursor=pointer]:
+                  - generic [ref=e34]: 
+              - button "カテゴリー " [ref=e36] [cursor=pointer]:
+                - text: カテゴリー
+                - generic [ref=e37]: 
+        - generic [ref=e39]:
+          - generic [ref=e40]:
+            - button "会員登録（無料）" [ref=e41] [cursor=pointer]
+            - text: 
+          - button "ログイン" [ref=e43] [cursor=pointer]:
+            - generic [ref=e44]: 
+            - text: ログイン
+          - button "クリックしてACアプリケーションのリストを表示" [ref=e46] [cursor=pointer]:
+            - img [ref=e47]
+    - text: 
+  - text:      
+  - generic:      
+  - text:     
+  - generic [ref=e49]:
+    - generic [ref=e52]:
+      - generic "ボタンホーム" [ref=e53]:
+        - link "ホーム" [ref=e54] [cursor=pointer]:
+          - /url: /
+          - img [ref=e55]
+      - generic "ボタンフォロー" [ref=e57]:
+        - link "ファン登録" [ref=e58] [cursor=pointer]:
+          - /url: /user/following/
+          - generic [ref=e59]: 
+      - generic "ボタンブックマーク" [ref=e60]:
+        - link "コレクション" [ref=e61] [cursor=pointer]:
+          - /url: /user/bookmarks/
+          - generic [ref=e62]: 
+      - img [ref=e67] [cursor=pointer]
+    - generic [ref=e72]:
+      - generic [ref=e75]:
+        - generic [ref=e76]:
+          - generic [ref=e77]:
+            - navigation "breadcrumb" [ref=e79]:
+              - list [ref=e80]:
+                - listitem [ref=e81]:
+                  - link "写真AC" [ref=e82] [cursor=pointer]:
+                    - /url: /
+                - listitem [ref=e83]:
+                  - text: /
+                  - link "dog" [ref=e84] [cursor=pointer]:
+                    - /url: /main/search?q=dog
+            - generic [ref=e87]:
+              - button "広告を非表示にする 広告を非表示にする" [ref=e89] [cursor=pointer]:
+                - img "広告を非表示にする" [ref=e90]
+                - generic [ref=e91]: 広告を非表示にする
+              - iframe [ref=e94]:
+                
+            - generic [ref=e95]:
+              - heading "「dog」の写真素材" [level=1] [ref=e96]
+              - text: 137,299点
+          - generic [ref=e99]:
+            - button "検索" [ref=e100] [cursor=pointer]
+            - generic [ref=e101]:
+              - generic [ref=e103]:
+                - generic [ref=e104]: 検索フィルター
+                - generic [ref=e105]:
+                  - button "カテゴリー " [ref=e106] [cursor=pointer]:
+                    - text: カテゴリー
+                    - generic [ref=e107]: 
+                  - text:  
+                - button "ファイル・向き " [ref=e109] [cursor=pointer]:
+                  - text: ファイル・向き
+                  - generic [ref=e110]: 
+                - button "色 " [ref=e112] [cursor=pointer]:
+                  - generic [ref=e114]: 色
+                  - generic [ref=e115]: 
+                - generic [ref=e116]:
+                  - button "人物指定 " [ref=e117] [cursor=pointer]:
+                    - text: 人物指定
+                    - generic [ref=e118]: 
+                  - generic [ref=e119]:
+                    - generic [ref=e120]: モデル人数
+                    - generic [ref=e121]:
+                      - generic [ref=e123]:
+                        - radio "全て" [checked] [ref=e124] [cursor=pointer]
+                        - generic [ref=e125] [cursor=pointer]: 全て
+                      - generic [ref=e127]:
+                        - radio "無人" [ref=e128] [cursor=pointer]
+                        - generic [ref=e129] [cursor=pointer]: 無人
+                    - generic [ref=e130]:
+                      - generic [ref=e132]:
+                        - radio "1人" [ref=e133] [cursor=pointer]
+                        - generic [ref=e134] [cursor=pointer]: 1人
+                      - generic [ref=e136]:
+                        - radio "2人" [ref=e137] [cursor=pointer]
+                        - generic [ref=e138] [cursor=pointer]: 2人
+                      - generic [ref=e140]:
+                        - radio "3人以上" [ref=e141] [cursor=pointer]
+                        - generic [ref=e142] [cursor=pointer]: 3人以上
+                    - separator [ref=e143]
+                    - generic [ref=e144]: モデル年代
+                    - generic [ref=e145]:
+                      - generic [ref=e147]:
+                        - radio "全ての年代" [checked] [ref=e148] [cursor=pointer]
+                        - generic [ref=e149] [cursor=pointer]: 全ての年代
+                      - generic [ref=e151]:
+                        - radio "赤ちゃん" [ref=e152] [cursor=pointer]
+                        - generic [ref=e153] [cursor=pointer]: 赤ちゃん
+                      - generic [ref=e155]:
+                        - radio "子供" [ref=e156] [cursor=pointer]
+                        - generic [ref=e157] [cursor=pointer]: 子供
+                      - generic [ref=e159]:
+                        - radio "若者" [ref=e160] [cursor=pointer]
+                        - generic [ref=e161] [cursor=pointer]: 若者
+                      - generic [ref=e163]:
+                        - radio "大人" [ref=e164] [cursor=pointer]
+                        - generic [ref=e165] [cursor=pointer]: 大人
+                      - generic [ref=e167]:
+                        - radio "中高年" [ref=e168] [cursor=pointer]
+                        - generic [ref=e169] [cursor=pointer]: 中高年
+                      - generic [ref=e171]:
+                        - radio "高齢者" [ref=e172] [cursor=pointer]
+                        - generic [ref=e173] [cursor=pointer]: 高齢者
+                - button "除外キーワード " [ref=e175] [cursor=pointer]:
+                  - text: 除外キーワード
+                  - generic [ref=e176]: 
+                - button "詳細検索 " [ref=e178] [cursor=pointer]:
+                  - text: 詳細検索
+                  - generic [ref=e179]: 
+                - button "表示条件 " [ref=e181] [cursor=pointer]:
+                  - text: 表示条件
+                  - generic [ref=e182]: 
+              - button "関連性の高い順／70件表示 " [ref=e187] [cursor=pointer]:
+                - text: 関連性の高い順／70件表示
+                - generic [ref=e188]: 
+          - generic [ref=e189]:
+            - generic [ref=e190]:
+              - figure [ref=e191]:
+                - generic [ref=e192]: 
+                - img "コーギー 犬,イヌ,哺乳動物の写真素材" [ref=e193]
+                - text:  
+              - figure [ref=e194]:
+                - generic [ref=e195]:
+                  - button "広告を非表示にする 広告を非表示にする" [ref=e197] [cursor=pointer]:
+                    - img "広告を非表示にする" [ref=e198]
+                    - generic [ref=e199]: 広告を非表示にする
+                  - iframe [ref=e202]:
+                    
+              - figure [ref=e203]:
+                - generic [ref=e204]: 
+                - img "ポーズ決まってるでしょ ジャックラッセルテリア,ビーグル,犬の写真素材" [ref=e205]
+                - text:  
+              - figure [ref=e206]:
+                - generic [ref=e207]: 
+                - img "マルポメ マルポメ,笑顔,犬の写真素材" [ref=e208]
+                - text:  
+              - figure [ref=e209]:
+                - generic [ref=e210]: 
+                - img "トイプードルと田園風景 子犬,犬,トイプードルの写真素材" [ref=e211]
+                - text:  
+              - figure [ref=e212]:
+                - generic [ref=e213]: 
+                - img "ツタの壁の前で ビーグル,ジャックラッセルテリア,中型犬の写真素材" [ref=e214]
+                - text:  
+              - figure [ref=e215]:
+                - generic [ref=e216]: 
+                - img "何かを見てる犬 秋田犬,大型犬,犬の写真素材" [ref=e217]
+                - text:  
+              - figure [ref=e218]:
+                - generic [ref=e219]: 
+                - img "シェットランド・シープドッグ 家庭犬,散歩,遊ぶの写真素材" [ref=e220]
+                - generic [ref=e222]: New
+                - text:  
+              - figure [ref=e223]:
+                - generic [ref=e224]: 
+                - img "犬の毛玉 犬,イヌ,dogの写真素材" [ref=e225]
+                - text:  
+              - figure [ref=e226]:
+                - generic [ref=e227]:
+                  - button "広告を非表示にする 広告を非表示にする" [ref=e229] [cursor=pointer]:
+                    - img "広告を非表示にする" [ref=e230]
+                    - generic [ref=e231]: 広告を非表示にする
+                  - iframe [ref=e234]:
+                    
+              - figure [ref=e235]:
+                - generic [ref=e236]: 
+                - img "おすわりわんこ 犬,フレブル,フレンチブルドッグの写真素材" [ref=e237]
+                - text:  
+              - figure [ref=e238]:
+                - generic [ref=e239]: 
+                - img "どうしようか考える柴犬 柴犬,日本犬,和犬の写真素材" [ref=e240]
+                - text:  
+              - figure [ref=e241]:
+                - generic [ref=e242]: 
+                - img "どうしようか考えて舌なめずりをする柴犬 柴犬,日本犬,和犬の写真素材" [ref=e243]
+                - text:  
+              - figure [ref=e244]:
+                - generic [ref=e245]: 
+                - img "仁王立ちで大あくびをする柴犬 柴犬,日本犬,和犬の写真素材" [ref=e246]
+                - text:  
+              - figure [ref=e247]:
+                - generic [ref=e248]: 
+                - img "仁王立ちで大あくびをする柴犬 柴犬,日本犬,和犬の写真素材" [ref=e249]
+                - text:  
+              - figure [ref=e250]:
+                - generic [ref=e251]: 
+                - img "森林の中の笑顔の犬たち 犬,いぬ,イヌの写真素材" [ref=e252]
+                - text:  
+              - figure [ref=e253]:
+                - generic [ref=e254]: 
+                - img "麗 レイ 家庭犬,散歩,遊ぶの写真素材" [ref=e255]
+                - text:  
+              - figure [ref=e257]:
+                - generic [ref=e258]: 
+                - img "グリーンとジャックとビーグル ビーグル,ジャックラッセルテリア,犬の写真素材" [ref=e259]
+                - text:  
+              - figure [ref=e260]:
+                - generic [ref=e261]: 
+                - img "ぽかぽか陽気の中のお散歩 ビーグル,ジャックラッセルテリア,犬の写真素材" [ref=e262]
+                - text:  
+              - figure [ref=e263]:
+                - generic [ref=e264]: 
+                - img "シェットランド・シープドッグ 家庭犬,散歩,遊ぶの写真素材" [ref=e265]
+                - generic [ref=e267]: New
+                - text:  
+              - figure [ref=e268]:
+                - generic [ref=e269]: 
+                - img "シェットランド・シープドッグ 家庭犬,散歩,遊ぶの写真素材" [ref=e270]
+                - generic [ref=e272]: New
+                - text:  
+              - figure [ref=e273]:
+                - generic [ref=e274]: 
+                - img "シェルティ 犬,イヌ,シェルティの写真素材" [ref=e275]
+                - text:  
+              - figure [ref=e276]:
+                - generic [ref=e277]: 
+                - img "麗 レイ 家庭犬,散歩,遊ぶの写真素材" [ref=e278]
+                - text:  
+              - figure [ref=e279]:
+                - generic [ref=e280]: 
+                - img "いつもここで休憩するの ジャックラッセルテリア,ビーグル,犬の写真素材" [ref=e281]
+                - text:  
+              - figure [ref=e282]:
+                - generic [ref=e283]: 
+                - img "smile マルポメ,笑顔,犬の写真素材" [ref=e284]
+                - text:  
+              - figure [ref=e286]:
+                - generic [ref=e287]: 
+                - img "麗 レイ 家庭犬,散歩,遊ぶの写真素材" [ref=e288]
+                - text:  
+              - figure [ref=e289]:
+                - generic [ref=e290]: 
+                - img "シェットランド・シープドッグ 家庭犬,散歩,遊ぶの写真素材" [ref=e291]
+                - generic [ref=e293]: New
+                - text:  
+              - figure [ref=e294]:
+                - generic [ref=e295]: 
+                - img "おすわりわんこ 犬,フレブル,フレンチブルドッグの写真素材" [ref=e296]
+                - text:  
+              - figure [ref=e297]:
+                - generic [ref=e298]: 
+                - img "シェットランド・シープドッグ 家庭犬,散歩,遊ぶの写真素材" [ref=e299]
+                - generic [ref=e301]: New
+                - text:  
+              - figure [ref=e302]:
+                - generic [ref=e303]: 
+                - img "麗 レイ 家庭犬,散歩,遊ぶの写真素材" [ref=e304]
+                - text:  
+              - figure [ref=e305]:
+                - generic [ref=e306]: 
+                - img "シェットランド・シープドッグ 家庭犬,散歩,遊ぶの写真素材" [ref=e307]
+                - generic [ref=e309]: New
+                - text:  
+              - figure [ref=e310]:
+                - generic [ref=e311]: 
+                - img "ペロリなお散歩ビーグル 犬,ビーグル,お散歩の写真素材" [ref=e312]
+                - text:  
+              - figure [ref=e313]:
+                - generic [ref=e314]: 
+                - img "麗 レイ 家庭犬,散歩,遊ぶの写真素材" [ref=e315]
+                - text:  
+              - figure [ref=e317]:
+                - generic [ref=e318]: 
+                - img "麗 レイ 家庭犬,散歩,遊ぶの写真素材" [ref=e319]
+                - text:  
+              - figure [ref=e320]:
+                - generic [ref=e321]: 
+                - img "シェットランド・シープドッグ 家庭犬,散歩,遊ぶの写真素材" [ref=e322]
+                - generic [ref=e324]: New
+                - text:  
+              - figure [ref=e325]:
+                - generic [ref=e326]: 
+                - img "シェットランド・シープドッグ 家庭犬,散歩,遊ぶの写真素材" [ref=e327]
+                - generic [ref=e329]: New
+                - text:  
+              - figure [ref=e330]:
+                - generic [ref=e331]: 
+                - img "カーテンから出て来て考える柴犬 柴犬,日本犬,和犬の写真素材" [ref=e332]
+                - text:  
+              - figure [ref=e333]:
+                - generic [ref=e334]: 
+                - img "麗 レイ 家庭犬,散歩,遊ぶの写真素材" [ref=e335]
+                - text:  
+              - figure [ref=e336]:
+                - generic [ref=e337]: 
+                - img "ねぇ、こっちにおいでよ♪ ジャックラッセルテリア,ビーグル,犬の写真素材" [ref=e338]
+                - text:  
+              - figure [ref=e339]:
+                - generic [ref=e340]: 
+                - img "ワイルドにあくびをする柴犬 柴犬,日本犬,和犬の写真素材" [ref=e341]
+                - text:  
+              - figure [ref=e342]:
+                - generic [ref=e343]: 
+                - img "麗 レイ 家庭犬,散歩,遊ぶの写真素材" [ref=e344]
+                - text:  
+              - figure [ref=e346]:
+                - generic [ref=e347]: 
+                - img "出てきたいビーグル ビーグル,犬,必死の写真素材" [ref=e348]
+                - text:  
+              - figure [ref=e349]:
+                - generic [ref=e350]: 
+                - img "素に戻って見つめる柴犬 柴犬,日本犬,和犬の写真素材" [ref=e351]
+                - text:  
+              - figure [ref=e352]:
+                - generic [ref=e353]: 
+                - img "お散歩 パピヨン,犬,dogの写真素材" [ref=e354]
+                - text:  
+              - figure [ref=e355]:
+                - generic [ref=e356]: 
+                - img "笑うビーグル 犬,ビーグル,おすわりの写真素材" [ref=e357]
+                - text:  
+              - figure [ref=e358]:
+                - generic [ref=e359]: 
+                - img "シェットランド・シープドッグ 家庭犬,散歩,遊ぶの写真素材" [ref=e360]
+                - generic [ref=e362]: New
+                - text:  
+              - figure [ref=e363]:
+                - generic [ref=e364]: 
+                - img "ワイルドに舌なめずりをする柴犬 柴犬,日本犬,和犬の写真素材" [ref=e365]
+                - text:  
+              - figure [ref=e366]:
+                - generic [ref=e367]: 
+                - img "くつろぐ室内犬 くつろぐ,室内,いぬの写真素材" [ref=e368]
+                - text:  
+              - figure [ref=e369]:
+                - generic [ref=e370]: 
+                - img "うたた寝わんこ フレンチブルドッグ,ペット,小型犬の写真素材" [ref=e371]
+                - text:  
+              - figure [ref=e373]:
+                - generic [ref=e374]: 
+                - img "チワワ チワワ,犬,ペットの写真素材" [ref=e375]
+                - text:  
+              - figure [ref=e376]:
+                - generic [ref=e377]: 
+                - img "麗 レイ 家庭犬,散歩,遊ぶの写真素材" [ref=e378]
+                - text:  
+              - figure [ref=e379]:
+                - generic [ref=e380]: 
+                - img "アロハスタイルでお出かけ ビーグル,ジャックラッセルテリア,犬の写真素材" [ref=e381]
+                - text:  
+              - figure [ref=e382]:
+                - generic [ref=e383]: 
+                - img "おすわりわんこ 犬,フレブル,フレンチブルドッグの写真素材" [ref=e384]
+                - text:  
+              - figure [ref=e385]:
+                - generic [ref=e386]: 
+                - img "風鈴とチワワ 犬,ペット,かわいいの写真素材" [ref=e387]
+                - text:  
+              - figure [ref=e388]:
+                - generic [ref=e389]: 
+                - img "ミニチュアシュナウザー 犬,動物,dogの写真素材" [ref=e390]
+                - text:  
+              - figure [ref=e391]:
+                - generic [ref=e392]: 
+                - img "散歩中のミックス（雑種）犬「みかん」 犬,いぬ,わんこの写真素材" [ref=e393]
+                - text:  
+              - figure [ref=e394]:
+                - generic [ref=e395]: 
+                - img "お散歩道 犬,お散歩,いぬの写真素材" [ref=e396]
+                - text:  
+              - figure [ref=e398]:
+                - generic [ref=e399]: 
+                - img "お昼寝わんこ フレンチブルドッグ,ペット,小型犬の写真素材" [ref=e400]
+                - text:  
+              - figure [ref=e401]:
+                - generic [ref=e402]: 
+                - img "おすわりわんこ 犬,フレブル,フレンチブルドッグの写真素材" [ref=e403]
+                - text:  
+              - figure [ref=e404]:
+                - generic [ref=e405]: 
+                - img "ワイルドに舌なめずりをする柴犬 柴犬,日本犬,和犬の写真素材" [ref=e406]
+                - text:  
+              - figure [ref=e407]:
+                - generic [ref=e408]: 
+                - img "シェルティ 犬,イヌ,いぬの写真素材" [ref=e409]
+                - text:  
+              - figure [ref=e410]:
+                - generic [ref=e411]: 
+                - img "チワワ 犬,ペット,かわいいの写真素材" [ref=e412]
+                - text:  
+              - figure [ref=e413]:
+                - generic [ref=e414]: 
+                - img "食事前のワンコ 犬,わんこ,犬科の写真素材" [ref=e415]
+                - text:  
+              - figure [ref=e416]:
+                - generic [ref=e417]: 
+                - img "スリングに入ってるヨークシャーテリア ヨークシャーテリア,ヨーキー,春の写真素材" [ref=e418]
+                - text:  
+              - figure [ref=e419]:
+                - generic [ref=e420]: 
+                - img "おもちゃを咥える犬 犬,いぬ,イヌの写真素材" [ref=e421]
+                - text:  
+              - figure [ref=e423]:
+                - generic [ref=e424]: 
+                - img "麗 レイ 家庭犬,散歩,遊ぶの写真素材" [ref=e425]
+                - text:  
+              - figure [ref=e426]:
+                - generic [ref=e427]: 
+                - img "波打ち際を走る犬 犬,イヌ,いぬの写真素材" [ref=e428]
+                - text:  
+              - figure [ref=e429]:
+                - generic [ref=e430]: 
+                - img "くつろぎわんこ フレンチブルドッグ,ペット,小型犬の写真素材" [ref=e431]
+                - text:  
+              - figure [ref=e432]:
+                - generic [ref=e433]: 
+                - img "寝そべりわんこ フレブル,フレンチブル,ブヒの写真素材" [ref=e434]
+                - text:  
+              - figure [ref=e435]:
+                - generic [ref=e436]: 
+                - img "リュックに入るワンコ 犬,わんこ,犬科の写真素材" [ref=e437]
+                - text:  
+              - figure [ref=e438]:
+                - generic [ref=e439]: 
+                - img "伏せをする犬 犬,イヌ,ペットの写真素材" [ref=e440]
+                - text:  
+              - figure [ref=e441]:
+                - generic [ref=e442]: 
+                - img "何かに対して吠える柴犬 柴犬,日本犬,和犬の写真素材" [ref=e443]
+                - text:  
+            - generic [ref=e444]:
+              - generic [ref=e445]: 関連キーワード
+              - link " dog thank you" [ref=e446] [cursor=pointer]:
+                - /url: /main/search?q=dog+thank+you
+                - generic [ref=e447]: 
+                - text: dog thank you
+            - list [ref=e448]:
+              - listitem [ref=e449]:
+                - link "1" [ref=e450] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e451]:
+                - link "2" [ref=e452] [cursor=pointer]:
+                  - /url: /main/search?q=dog&p=2
+              - listitem [ref=e453]:
+                - link "3" [ref=e454] [cursor=pointer]:
+                  - /url: /main/search?q=dog&p=3
+              - listitem [ref=e455]:
+                - link "4" [ref=e456] [cursor=pointer]:
+                  - /url: /main/search?q=dog&p=4
+              - listitem [ref=e457]:
+                - link "5" [ref=e458] [cursor=pointer]:
+                  - /url: /main/search?q=dog&p=5
+              - listitem [ref=e459]:
+                - link "6" [ref=e460] [cursor=pointer]:
+                  - /url: /main/search?q=dog&p=6
+              - listitem [ref=e461]: ...
+              - listitem [ref=e462]:
+                - link "次に" [ref=e463] [cursor=pointer]:
+                  - /url: /main/search?q=dog&p=2
+                  - generic [ref=e464]: 
+            - generic [ref=e465]: 全137,299件中1 - 70件
+            - paragraph [ref=e466]:
+              - text: 「
+              - strong [ref=e467]: dog
+              - text: 」のキーワードで新規投稿されたフリー写真素材・画像を掲載しております。JPEG形式の高解像度画像が無料でダウンロードできます。気に入った
+              - strong [ref=e468]: dog
+              - text: の写真素材・画像が見つかったら、写真をクリックして、無料ダウンロードページへお進み下さい。高品質なロイヤリティーフリー写真素材を無料でダウンロードしていただけます。商用利用もOKなので、ビジネス写真をチラシやポスター、WEBサイトなどの広告、ポストカードや年賀状などにもご利用いただけます。クレジット表記や許可も必要ありません。
+            - generic [ref=e469]:
+              - generic [ref=e471]: 写真ACグループサイトの「dog」の検索結果（同じアカウントで無料ダウンロードできます）
+              - img "loading" [ref=e475]
+              - separator [ref=e476]
+              - generic [ref=e478]:
+                - button "広告を非表示にする 広告を非表示にする" [ref=e480] [cursor=pointer]:
+                  - img "広告を非表示にする" [ref=e481]
+                  - generic [ref=e482]: 広告を非表示にする
+                - iframe [ref=e485]:
+                  
+              - separator [ref=e486]
+              - img "loading" [ref=e490]
+              - separator [ref=e491]
+              - img "loading" [ref=e495]
+              - separator [ref=e496]
+              - img "loading" [ref=e500]
+              - separator [ref=e501]
+            - generic [ref=e504]:
+              - strong [ref=e505]: 写真素材リクエスト受け付け中
+              - text: ※100%対応はできませんが最大限努力をいたします。
+              - generic [ref=e506]:
+                - textbox "リクエストしたいキーワードを入力（例：掃除をする人） リクエストを送信" [ref=e508]
+                - button "素材をリクエスト" [ref=e509] [cursor=pointer]
+        - text: 
+      - contentinfo [ref=e511]:
+        - generic [ref=e514]:
+          - generic [ref=e515]: 昨日のダウンロード数：46,426
+          - generic [ref=e516]: 先月のダウンロード数：1,124,624
+          - generic [ref=e517]: 総会員数：1600万人を突破しました
+        - generic [ref=e519]:
+          - generic [ref=e520]:
+            - generic [ref=e521]:
+              - generic [ref=e522]: 写真ACについて 
+              - list [ref=e523]:
+                - listitem [ref=e524]:
+                  - link "写真ACとは" [ref=e525] [cursor=pointer]:
+                    - /url: /main/guide/
+                - listitem [ref=e526]:
+                  - link "運営会社" [ref=e527] [cursor=pointer]:
+                    - /url: /main/about/
+                - listitem [ref=e528]:
+                  - link "個人情報保護方針" [ref=e529] [cursor=pointer]:
+                    - /url: /main/privacy/
+                - listitem [ref=e530]:
+                  - link "特定個人情報基本方針" [ref=e531] [cursor=pointer]:
+                    - /url: /main/policy_personal_info/
+                - listitem [ref=e532]:
+                  - link "特定商取引法に基づく表記" [ref=e533] [cursor=pointer]:
+                    - /url: /main/commercial_transactions/
+                - listitem [ref=e534]:
+                  - link "サイトマップ" [ref=e535] [cursor=pointer]:
+                    - /url: /main/sitemap
+                - listitem [ref=e536]:
+                  - link "セキュリティポリシー" [ref=e537] [cursor=pointer]:
+                    - /url: https://acworks.co.jp/security-policy/
+            - generic [ref=e538]:
+              - generic [ref=e539]: 会員登録 
+              - list [ref=e540]:
+                - listitem [ref=e541]:
+                  - link "無料会員登録" [ref=e542] [cursor=pointer]:
+                    - /url: https://test-accounts.ac-illust.com/signup?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252Fmain%252Fsearch%253Fby_ai%253D0%2526q%253Ddog%2526srt%253Ddlrank%2526nq%253D%2526exclude_ai%253Don%2526orientation%253Dall%2526sizesec%253Dall%2526creator%253D%2526ngcreator%253D%2526qid%253D%2526color%253Dall%2526model_count%253D-1%2526age%253Dall%2526mdlrlrsec%253Dall%2526prprlrsec%253Dall&lang=jp
+                - listitem [ref=e543]:
+                  - link "プレミアム会員登録" [ref=e544] [cursor=pointer]:
+                    - /url: https://test-accounts.ac-illust.com/signup?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252Fmain%252Fsearch%253Fby_ai%253D0%2526q%253Ddog%2526srt%253Ddlrank%2526nq%253D%2526exclude_ai%253Don%2526orientation%253Dall%2526sizesec%253Dall%2526creator%253D%2526ngcreator%253D%2526qid%253D%2526color%253Dall%2526model_count%253D-1%2526age%253Dall%2526mdlrlrsec%253Dall%2526prprlrsec%253Dall&lang=jp&fromButton=premium_action
+                - listitem [ref=e545]:
+                  - link "無料クリエイター会員登録" [ref=e546] [cursor=pointer]:
+                    - /url: /creator/auth/register
+            - generic [ref=e547]:
+              - generic [ref=e548]: プレミアム会員サービス 
+              - list [ref=e549]:
+                - listitem [ref=e550]:
+                  - link "プレミアム会員登録" [ref=e551] [cursor=pointer]:
+                    - /url: https://test-lien.photo-ac.com/premium/campaign?target=premium_sozai
+                - listitem [ref=e552]:
+                  - link "法人・複数名向けプラン" [ref=e553] [cursor=pointer]:
+                    - /url: https://test-lien.photo-ac.com/premium/business
+                - listitem [ref=e554]:
+                  - link "商品化ライセンス" [ref=e555] [cursor=pointer]:
+                    - /url: /main/extra_license_terms/
+                - listitem [ref=e556]:
+                  - link "あんしんサポート" [ref=e557] [cursor=pointer]:
+                    - /url: /indemnity/
+            - generic [ref=e558]:
+              - generic [ref=e559]: ヘルプ＆ガイド 
+              - list [ref=e560]:
+                - listitem [ref=e561]:
+                  - link "ヘルプ" [ref=e562] [cursor=pointer]:
+                    - /url: https://help.freebie-ac.jp/
+                - listitem [ref=e563]:
+                  - link "利用規約" [ref=e564] [cursor=pointer]:
+                    - /url: /main/terms/
+                - listitem [ref=e565]:
+                  - link "プレミアム会員利用規約" [ref=e566] [cursor=pointer]:
+                    - /url: /main/terms_premium/
+                - listitem [ref=e567]:
+                  - link "AC写真AIラボ利用規約" [ref=e568] [cursor=pointer]:
+                    - /url: /image-generator/terms
+            - generic [ref=e569]:
+              - generic [ref=e570]: グループサイト 
+              - list [ref=e571]:
+                - listitem [ref=e572]:
+                  - link "イラストAC" [ref=e573] [cursor=pointer]:
+                    - /url: https://www.ac-illust.com/
+                - listitem [ref=e574]:
+                  - link "シルエットAC" [ref=e575] [cursor=pointer]:
+                    - /url: https://www.silhouette-ac.com/
+                - listitem [ref=e576]:
+                  - link "フリービーAC" [ref=e577] [cursor=pointer]:
+                    - /url: https://www.freebie-ac.jp/
+                - listitem [ref=e578]:
+                  - link "年賀状AC" [ref=e579] [cursor=pointer]:
+                    - /url: https://www.new-year.bz/
+                - listitem [ref=e580]:
+                  - link "動画AC" [ref=e581] [cursor=pointer]:
+                    - /url: https://video-ac.com
+                - listitem [ref=e582]:
+                  - link "デザインAC" [ref=e583] [cursor=pointer]:
+                    - /url: https://www.design-ac.net/
+                - listitem [ref=e584]:
+                  - link "ACデータ" [ref=e585] [cursor=pointer]:
+                    - /url: https://ac-data.info/
+                - listitem [ref=e586]:
+                  - link "明細AC" [ref=e587] [cursor=pointer]:
+                    - /url: https://meisai-ac.com/
+          - generic [ref=e588]:
+            - link "twitter_btn" [ref=e589] [cursor=pointer]:
+              - /url: https://x.com/ACworks2011
+              - button "twitter_btn" [ref=e590]:
+                - img [ref=e591]
+            - link "facebook_btn" [ref=e593] [cursor=pointer]:
+              - /url: https://www.facebook.com/ACworks2011/
+              - button "facebook_btn" [ref=e594]:
+                - generic [ref=e595]: 
+            - link "pinterest_btn" [ref=e596] [cursor=pointer]:
+              - /url: https://www.pinterest.jp/acworks/
+              - button "pinterest_btn" [ref=e597]:
+                - generic [ref=e598]: 
+            - link "blog_btn" [ref=e599] [cursor=pointer]:
+              - /url: http://blog.acworks.co.jp/
+              - button "blog_btn" [ref=e600]:
+                - generic [ref=e601]: 
+            - link "feedback_modal_btn" [ref=e602] [cursor=pointer]:
+              - /url: "#feedbackModal"
+              - button "feedback_modal_btn" [ref=e603]:
+                - generic [ref=e604]: 
+                - text: ご意見・ご要望
+          - generic [ref=e606]:
+            - text: © 2011-2026
+            - link "写真AC" [ref=e607] [cursor=pointer]:
+              - /url: https://test-lien.photo-ac.com/
+      - generic [ref=e609]:
+        - generic [ref=e610]: 無料で高品質な写真をダウンロードできます！加工や商用利用もOK！
+        - link "無料ダウンロード会員登録はこちら" [ref=e611] [cursor=pointer]:
+          - /url: https://test-accounts.ac-illust.com/signup?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252Fmain%252Fsearch%253Fby_ai%253D0%2526q%253Ddog%2526srt%253Ddlrank%2526nq%253D%2526exclude_ai%253Don%2526orientation%253Dall%2526sizesec%253Dall%2526creator%253D%2526ngcreator%253D%2526qid%253D%2526color%253Dall%2526model_count%253D-1%2526age%253Dall%2526mdlrlrsec%253Dall%2526prprlrsec%253Dall&lang=jp
+  - text: 
+  - generic [ref=e612] [cursor=pointer]:
+    - generic:
+      - paragraph: ご質問は
+      - paragraph: こちらから！
+    - img "chat-icon" [ref=e614]
+    - generic [ref=e615]: ×
+```
+
+# Test source
+
+```ts
+  1   | import { type Page, type Locator, expect } from '@playwright/test';
+  2   | 
+  3   | /**
+  4   |  * BasePage — Abstract base class for all Page Object classes.
+  5   |  * Contains common reusable methods.
+  6   |  */
+  7   | export abstract class BasePage {
+  8   |   protected readonly page: Page;
+  9   | 
+  10  |   protected readonly photoAiModelContent: Locator;
+  11  | 
+  12  |   protected readonly closeButton: Locator;
+  13  | 
+  14  |   protected readonly pageLoadingIcon: Locator;
+  15  | 
+  16  |   constructor(page: Page) {
+  17  |     this.page = page;
+  18  |     this.photoAiModelContent = this.page.locator('.photo-ai-lab-modal__content');
+  19  |     this.closeButton = this.page.getByRole('button', { name: '閉じる' }).nth(1);
+  20  |     this.pageLoadingIcon = page.locator('#full_page_loading').first();
+  21  |   }
+  22  | 
+  23  | 
+  24  |   // Navigation
+  25  |   /**
+  26  |    * Navigate to a URL path relative to baseURL with resilient retry on transient network timeouts.
+  27  |    * @param path - Relative path (e.g., '/login') or absolute URL
+  28  |    * @param options - Optional navigation configuration
+  29  |    */
+  30  |   async navigate(path: string = '/', options?: { timeout?: number }): Promise<void> {
+  31  |     const timeout = options?.timeout ?? 25_000;
+  32  |     try {
+  33  |       await this.page.goto(path, { waitUntil: 'domcontentloaded', timeout });
+  34  |     } catch {
+  35  |       // Retry once if navigation timed out due to staging network latency
+  36  |       await this.page.goto(path, { waitUntil: 'domcontentloaded', timeout });
+  37  |     }
+  38  |   }
+  39  | 
+  40  |   /**
+  41  |    * Wait for the page to reach a stable network state.
+  42  |    */
+  43  |   async waitForPageLoad(): Promise<void> {
+  44  |     await this.page.waitForLoadState('domcontentloaded', { timeout: 15_000 });
+  45  |   }
+  46  | 
+  47  |   // Element Action
+  48  | 
+  49  |   /**
+  50  |    * Click an element after ensuring it is visible and enabled.
+  51  |    * @param locator - Playwright Locator object
+  52  |    */
+  53  |   async clickElement(locator: Locator, options?: { force?: boolean; noWaitAfter?: boolean }): Promise<void> {
+> 54  |     await locator.waitFor({ state: 'visible', timeout: 20_000 });
+      |                   ^ TimeoutError: locator.waitFor: Timeout 20000ms exceeded.
+  55  |     const startUrl = this.page.url();
+  56  |     const clickOpts = {
+  57  |       ...(options?.force ? { force: true } : {}),
+  58  |       ...(options?.noWaitAfter ? { noWaitAfter: true } : {}),
+  59  |     };
+  60  |     if (options?.force || options?.noWaitAfter) {
+  61  |       await locator.click(clickOpts);
+  62  |     } else {
+  63  |       try {
+  64  |         await locator.click(clickOpts);
+  65  |       } catch (err: any) {
+  66  |         // If URL has changed (navigation already triggered), do not retry on detached element from previous page
+  67  |         if (this.page.url() !== startUrl) return;
+  68  |         const errMessage = String(err?.message || '');
+  69  |         if (errMessage.includes('Execution context was destroyed') || errMessage.includes('frame was detached')) {
+  70  |           return;
+  71  |         }
+  72  |         await locator.click({ force: true, ...(options?.noWaitAfter ? { noWaitAfter: true } : {}) });
+  73  |       }
+  74  |     }
+  75  |   }
+  76  | 
+  77  |   /**
+  78  |    * Fill an input field — clears existing value first.
+  79  |    * @param locator - Playwright Locator for the input
+  80  |    * @param value - Text to type into the field
+  81  |    */
+  82  |   async fillInput(locator: Locator, value: string): Promise<void> {
+  83  |     await locator.waitFor({ state: 'visible', timeout: 20_000 });
+  84  |     await locator.fill('');
+  85  |     await locator.fill(value);
+  86  |   }
+  87  | 
+  88  |   /**
+  89  |    * Get trimmed text content of an element.
+  90  |    * @param locator - Playwright Locator
+  91  |    * @returns Text content string
+  92  |    */
+  93  |   async getText(locator: Locator): Promise<string> {
+  94  |     await locator.waitFor({ state: 'visible', timeout: 20_000 });
+  95  |     return (await locator.textContent())?.trim() ?? '';
+  96  |   }
+  97  | 
+  98  |   /**
+  99  |    * Get the value of an input element.
+  100 |    * @param locator - Playwright Locator for the input
+  101 |    */
+  102 |   async getInputValue(locator: Locator): Promise<string> {
+  103 |     return locator.inputValue();
+  104 |   }
+  105 | 
+  106 |   /**
+  107 |    * Check if an element is visible on the page.
+  108 |    * @param locator - Playwright Locator
+  109 |    * @returns true if visible, false otherwise
+  110 |    */
+  111 |   async isVisible(locator: Locator): Promise<boolean> {
+  112 |     return locator.isVisible();
+  113 |   }
+  114 | 
+  115 |   /**
+  116 |    * Wait for an element to become visible within timeout.
+  117 |    * @param locator - Playwright Locator
+  118 |    * @param timeout - Optional custom timeout in ms
+  119 |    */
+  120 |   async waitForElement(locator: Locator, timeout?: number): Promise<void> {
+  121 |     await expect(locator).toBeVisible({ timeout });
+  122 |   }
+  123 | 
+  124 |   /**
+  125 |    * Wait for page loading overlay icon to disappear (hidden or detached).
+  126 |    * @param timeout - Optional custom timeout in ms (default: 25_000)
+  127 |    */
+  128 |   async waitForPageLoadingIconHidden(timeout: number = 25_000): Promise<void> {
+  129 |     await this.pageLoadingIcon.waitFor({ state: 'hidden', timeout }).catch(() => { });
+  130 |   }
+  131 | 
+  132 |   /**
+  133 |    * Select an option in a <select> dropdown by visible text.
+  134 |    * @param locator - Playwright Locator for the select element
+  135 |    * @param label - Visible text of the option to select
+  136 |    */
+  137 |   async selectOption(locator: Locator, label: string): Promise<void> {
+  138 |     await expect(locator).toBeVisible();
+  139 |     await locator.selectOption({ label });
+  140 |   }
+  141 | 
+  142 |   /**
+  143 |    * Check a checkbox if it is not already checked.
+  144 |    * @param locator - Playwright Locator for the checkbox
+  145 |    */
+  146 |   async checkCheckbox(locator: Locator): Promise<void> {
+  147 |     if (!(await locator.isChecked())) {
+  148 |       await locator.check();
+  149 |     }
+  150 |   }
+  151 | 
+  152 |   /**
+  153 |    * Uncheck a checkbox if it is currently checked.
+  154 |    * @param locator - Playwright Locator for the checkbox
+```
