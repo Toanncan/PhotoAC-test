@@ -44,7 +44,7 @@ export abstract class BasePage {
     await this.page.waitForLoadState('domcontentloaded', { timeout: 15_000 });
   }
 
-  // Element Interaction
+  // Element Action
 
   /**
    * Click an element after ensuring it is visible and enabled.
@@ -63,7 +63,7 @@ export abstract class BasePage {
       try {
         await locator.click(clickOpts);
       } catch (err: any) {
-        // Nếu URL đã thay đổi (click đã kích hoạt điều hướng thành công), không retry trên element cũ của trang trước!
+        // If URL has changed (navigation already triggered), do not retry on detached element from previous page
         if (this.page.url() !== startUrl) return;
         const errMessage = String(err?.message || '');
         if (errMessage.includes('Execution context was destroyed') || errMessage.includes('frame was detached')) {
@@ -194,3 +194,4 @@ export abstract class BasePage {
     }
   }
 }
+

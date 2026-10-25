@@ -33,6 +33,13 @@ trigger: always_on
   - Locator biến: `private readonly lowerCamelCase` (vd: `private readonly loginButton`).
   - Fixture / Utils: `kebab-case.fixture.ts` / `kebab-case.ts` hoặc `PascalCase.ts`.
 - **Semantic Locators:** Ưu tiên theo thứ tự: `getByRole` > `getByLabel` > `getByPlaceholder` > `getByText` > `getByTestId` > `css`. CẤM dùng positional xpath hoặc dynamic class.
+- **Quy chuẩn Ngôn ngữ Phân tầng (Hybrid Layered Language Standard):**
+  - **Tầng Kỹ thuật (`src/pages/`, `src/fixtures/`, `src/utils/`):** Bắt buộc **100% Tiếng Anh chuẩn (English only)**. JSDoc súc tích cho methods nhận param hoặc có logic đặc thù. TUYỆT ĐỐI KHÔNG dùng Tiếng Việt trong class Page, Fixture hay Utility.
+  - **Tầng Kiểm thử Nghiệp vụ (`src/tests/`):** Tiêu đề testcase (`test('TC_ID: ...')`) và Allure `test.step('...')` viết bằng **Tiếng Việt**, kết hợp giữ nguyên các từ khóa UI Tiếng Nhật nguyên bản trên màn hình (vd: `「学生」の写真素材`, `今すぐ購入`, `まとめてダウンロード`) để trace chính xác với giao diện thực tế.
+- **Quy tắc Đánh số Test Case ID (Test Case Numbering & Ordering):**
+  - Cấu trúc chuẩn: `TC-[MODULE]-[ROLE]-[001]` (vd: `TC-DOWNLOAD-FREE-001`, `TC-SEARCH-GUEST-001`).
+  - **Bắt buộc tăng dần liên tục từ nhỏ đến lớn:** `001`, `002`, `003`... trong từng file spec.
+  - **TUYỆT ĐỐI CẤM** nhảy cóc số (vd: đang 003 nhảy sang 047) hoặc reset quay đầu số lộn xộn trong cùng một file spec.
 - **Sinh Test Data (`src/utils/test-data.ts`):**
   - Dữ liệu unique (Email, Username...) **bắt buộc sinh động** theo format: `auto_[tenTest]_[timestamp]_[random]` (vd: `generateEmail('register')`).
 - **Assertions:** Mỗi test case bắt buộc có ít nhất 1 assertion Web-First (`toBeVisible()`, `toHaveURL()`, `toHaveText()`). CẤM dùng hard sleep (`waitForTimeout`, `setTimeout`).
@@ -49,6 +56,7 @@ Dự án đã có sẵn các utility chuyên biệt. **BẮT BUỘC tái sử d�
 | **`PdfUtils`** | `src/utils/pdf.utils.ts` | Verify PDF hóa đơn (`/user/receipts`). Dùng: `saveAndAttach(download, testInfo, prefix)`, `validatePdfStructure(filePath, minBytes)`, `getMetadata(filePath)` để kiểm tra text và số trang. |
 | **`test-data.ts`** | `src/utils/test-data.ts` | Sinh dữ liệu traceable: `generateEmail()`, `generateUsername()`, `generatePassword()`, `generatePhone()`, `generateDisplayName()`. |
 | **`helpers.ts`** | `src/utils/helpers.ts` | Tiện ích chung: `retry(fn, maxRetries, delayMs)`, `formatDate(date)`, `normalizeWhitespace(str)`, `randomString(len)`. |
+| **`MailTmHelper`** | `src/utils/mail-tm.helper.ts` | Quản lý fake email ngẫu nhiên qua REST API mail.tm để test luồng đăng ký tài khoản / Premium (vượt qua bộ lọc chặn '+' alias của Photo-AC). Dùng: `createAccount()`, `waitForEmail()`, `extractActivationLink()`, `deleteAccount()`. |
 | **`envConfig`** | `src/utils/env.config.ts` | Cấu hình môi trường (`baseUrl`, `timeout`, credentials). Đọc qua `envConfig`. |
 
 ---
@@ -83,6 +91,8 @@ Mọi thay đổi mã nguồn trước khi merge/commit **bắt buộc tuân th�
    - ⛔ Cấm `page.waitForTimeout` hoặc hard sleep (gây flaky).
    - ⛔ Cấm `console.log` và code comment rác sót lại.
    - ⛔ Cấm hardcode credentials vào source code.
+   - ⛔ Cấm các ký tự ngăn cách rườm rà, trang trí thừa thãi kiểu box-drawing `─────────────────────────────────────────` (U+2500) hoặc divider bar `============================================================================`. Chỉ dùng comment phân nhóm 1 dòng ngắn gọn (vd: `// [Feature Name]`).
+   - ⛔ Cấm comment thừa thãi, hiển nhiên (obvious comments lặp lại tên biến/selector).
 
 ---
 

@@ -1,12 +1,10 @@
-import * as path from 'path';
+﻿import * as path from 'path';
 import { test, expect } from '../../fixtures/base.fixture';
 import { captureEvidenceWithUrl } from '../../utils/helpers';
 import { GROUP_SITES } from '../../utils/test-data';
 
 /**
- * ============================================================================
  * TEST SUITE: SEARCH — PREMIUM USER
- * ============================================================================
  */
 test.describe('Search — Premium User', () => {
   // Session Premium User được tự động inject bởi project cấu hình (chromium-premium / firefox-premium)
@@ -30,10 +28,7 @@ test.describe('Search — Premium User', () => {
     }
   });
 
-  // ============================================================================
   // NHÓM 1: TÌM KIẾM CƠ BẢN
-  // ============================================================================
-
   /**
    * TC-SEARCH-PREM-001: Tìm kiếm với từ khóa hợp lệ
    * @tags @premium
@@ -191,10 +186,7 @@ test.describe('Search — Premium User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 2: FILTER TOOLBAR - SINGLE FILTERS
-  // ============================================================================
-
   /**
    * TC-SEARCH-PREM-007: Lọc ảnh theo Chiều dọc (縦長) và chuyển đổi sang Chiều ngang (横長) qua Toolbar
    * @tags @premium @filter
@@ -606,10 +598,7 @@ test.describe('Search — Premium User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 3: BỘ LỌC KẾT HỢP ĐA ĐIỀU KIỆN TRÊN UI
-  // ============================================================================
-
   /**
    * TC-SEARCH-PREM-022: Kết hợp Từ khóa + 2 người mẫu + Model Release qua UI Toolbar
    * @tags @premium @filter
@@ -669,10 +658,7 @@ test.describe('Search — Premium User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 4: TÌM KIẾM CHUYÊN SÂU & ĐẶC BIỆT
-  // ============================================================================
-
   /**
    * TC-SEARCH-PREM-024: Tải ảnh lên tìm kiếm tương đồng (Image Search Upload)
    * @tags @premium
@@ -837,10 +823,7 @@ test.describe('Search — Premium User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 5: SẮP XẾP & PHÂN TRANG (SORT & PAGINATION)
-  // ============================================================================
-
   /**
    * TC-SEARCH-PREM-029: Sắp xếp kết quả theo "新着順" (Mới nhất) và giữ nguyên sắp xếp khi sang Trang 2
    * @tags @premium
@@ -974,10 +957,7 @@ test.describe('Search — Premium User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 6: PHÂN QUYỀN KHÔNG GIỚI HẠN & TÌM KIẾM BẰNG AI
-  // ============================================================================
-
   /**
    * TC-SEARCH-PREM-033: Thực hiện tìm kiếm nhiều lần không bị giới hạn hạn mức tìm kiếm
    * Đặc quyền Premium: Không bị giới hạn 4 lần/ngày như Free/Guest, không xuất hiện modal #searchLimitModal.
@@ -1052,10 +1032,7 @@ test.describe('Search — Premium User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 7: THANH TÌM KIẾM CỐ ĐỊNH TRÊN HEADER (STICKY HEADER SEARCH BAR)
-  // ============================================================================
-
   /**
    * TC-SEARCH-PREM-035: Thanh tìm kiếm cố định (Sticky Header Search) tự động hiển thị khi cuộn trang xuống và ẩn đi khi cuộn lên đầu trang
    * @tags @premium
@@ -1118,10 +1095,7 @@ test.describe('Search — Premium User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 12: TƯƠNG TÁC ẢNH KẾT QUẢ & CÁC TRANG NHÓM (GROUP SITES)
-  // ============================================================================
-
   /**
    * TC-SEARCH-PREM-037: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview với các nút download trực tiếp cho Premium
    * @tags @premium @regression
@@ -1193,3 +1167,4 @@ test.describe('Search — Premium User', () => {
     }
   });
 });
+

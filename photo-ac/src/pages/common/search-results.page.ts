@@ -1,4 +1,4 @@
-import { type Page, type Locator, test, expect } from '@playwright/test';
+﻿import { type Page, type Locator, test, expect } from '@playwright/test';
 import { BasePage } from './base.page';
 
 /**
@@ -34,8 +34,7 @@ export class SearchResultPage extends BasePage {
   /** Submit search button */
   readonly searchSubmitButton: Locator = this.page.locator('form#search_frm button.execloginbtn:visible, form#search_frm button[type="submit"]:visible').first();
 
-  // ─── Sort Dropdown Locators ────────────────────────────────────────────────
-
+  // Sort Dropdown Locators
   /** Dropdown toggle button for sorting & per-page count */
   readonly sortDropdownButton: Locator = this.page.locator('button:has-text("関連性の高い順"), button:has-text("新着順"), button:has-text("人気順")').first();
 
@@ -55,8 +54,7 @@ export class SearchResultPage extends BasePage {
   readonly popularSortPopover: Locator = this.page.locator('.popover.show');
   readonly popularSortPopoverBody: Locator = this.page.locator('.popover.show .popover-body');
 
-  // ─── Display Count Locators (表示件数) ──────────────────────────────────────
-
+  // Display Count Locators (表示件数)
   /** Display count option: 70 items per page (Default for Guest / Free) */
   readonly displayCount70Radio: Locator = this.page.locator('#pp-70');
   readonly displayCount70Label: Locator = this.page.locator('label[for="pp-70"]');
@@ -69,16 +67,14 @@ export class SearchResultPage extends BasePage {
   readonly displayCount210Radio: Locator = this.page.locator('#pp-210');
   readonly displayCount210Label: Locator = this.page.locator('label[for="pp-210"]');
 
-  // ─── Trends Page Locators (人気写真一覧 - /main/trends) ──────────────────────
-
+  // Trends Page Locators (人気写真一覧 - /main/trends)
   /** Sort select dropdown on Trends page (select#sort) */
   readonly trendsSortSelect: Locator = this.page.locator('select#sort');
 
   /** Display count select dropdown on Trends page (select#pagesize) */
   readonly trendsPageSizeSelect: Locator = this.page.locator('select#pagesize');
 
-  // ─── Search Limit Modal Locators ──────────────────────────────────────────
-
+  // Search Limit Modal Locators
   /** Modal displayed when user reaches the daily search limit (1日4回) */
   readonly searchLimitModal: Locator = this.page.locator('#searchLimitModal');
 
@@ -116,8 +112,7 @@ export class SearchResultPage extends BasePage {
   /** Action button ("獲得方法" or "使用する") inside coupon dialog */
   readonly searchLimitCouponActionLink: Locator = this.page.locator('#search-limit-coupon-dialog .action a.ac-btn-photo');
 
-  // ─── Filter Toolbar Locators ───────────────────────────────────────────────
-
+  // Filter Toolbar Locators
   /** Filter button: Category (カテゴリー) */
   readonly categoryFilterButton: Locator = this.page.locator('#filter-dropdown-categories > button, button:has-text("カテゴリー")').first();
 
@@ -146,7 +141,7 @@ export class SearchResultPage extends BasePage {
   /** Active filter badges/chips displayed directly under the filter toolbar */
   readonly activeFilterBadges: Locator = this.page.locator('button:has(a[aria-label="削除"])');
 
-  // ─── Filter Option Locators: 1. Category (カテゴリー) ──────────────────────
+  // Filter Option Locators: 1. Category (カテゴリー)
   readonly categoryPeopleLabel: Locator = this.page.locator('#filter-dropdown-categories label[for="ddcl-c_names1-i0"], #ddcl-c_names1-ddw label:has-text("人物")').first();
   readonly categoryBusinessLabel: Locator = this.page.locator('#filter-dropdown-categories label[for="ddcl-c_names1-i1"], #ddcl-c_names1-ddw label:has-text("ビジネス")').first();
   readonly categoryAnimalLabel: Locator = this.page.locator('#filter-dropdown-categories label[for="ddcl-c_names1-i2"], #ddcl-c_names1-ddw label:has-text("動物・生き物")').first();
@@ -155,7 +150,7 @@ export class SearchResultPage extends BasePage {
   readonly categoryTownLabel: Locator = this.page.locator('#filter-dropdown-categories label[for="ddcl-c_names1-i5"], #ddcl-c_names1-ddw label:has-text("町並み・建物")').first();
   readonly categoryNatureLabel: Locator = this.page.locator('#filter-dropdown-categories label[for="ddcl-c_names1-i9"], #ddcl-c_names1-ddw label:has-text("自然・風景")').first();
 
-  // ─── Filter Option Locators: 2. File & Orientation (ファイル・向き) ───────────
+  // Filter Option Locators: 2. File & Orientation (ファイル・向き)
   readonly orientationAllLabel: Locator = this.page.locator('#filter-dropdown-sizesec label[for="orientation-all"], label[for="orientation-all"]').first();
   readonly orientationVerticalLabel: Locator = this.page.locator('#filter-dropdown-sizesec label[for="orientation-0"], label[for="orientation-0"]').first();
   readonly orientationHorizontalLabel: Locator = this.page.locator('#filter-dropdown-sizesec label[for="orientation-1"], label[for="orientation-1"]').first();
@@ -163,7 +158,7 @@ export class SearchResultPage extends BasePage {
   readonly sizesecMLabel: Locator = this.page.locator('#filter-dropdown-sizesec label[for="sizesec-m"], label[for="sizesec-m"]').first();
   readonly sizesecLLabel: Locator = this.page.locator('#filter-dropdown-sizesec label[for="sizesec-l"], label[for="sizesec-l"]').first();
 
-  // ─── Filter Option Locators: 3. Color (色) ──────────────────────────────────
+  // Filter Option Locators: 3. Color (色)
   readonly colorAllOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-all"], #filter-dropdown-color .bg-all, label[for="color-all"]').first();
   readonly colorRedOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-ed1d25"], #filter-dropdown-color .bg-ed1d25').first();
   readonly colorPinkOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-ffc7f0"], #filter-dropdown-color .bg-ffc7f0').first();
@@ -175,7 +170,7 @@ export class SearchResultPage extends BasePage {
   readonly colorBlueOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-0000d6"], #filter-dropdown-color .bg-0000d6').first();
   readonly colorWhiteOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-ffffff"], #filter-dropdown-color .bg-ffffff').first();
 
-  // ─── Filter Option Locators: 4. Person Specification (人物指定) ─────────────
+  // Filter Option Locators: 4. Person Specification (人物指定)
   readonly modelCountAllLabel: Locator = this.page.locator('#filter-dropdown-other label[for="model_count-all"], #filter-dropdown-other label[for="model_count--1"]').first();
   readonly modelCountZeroLabel: Locator = this.page.locator('#filter-dropdown-other label[for="model_count-0"]').first(); // 無人 (0 people)
   readonly modelCountOneLabel: Locator = this.page.locator('#filter-dropdown-other label[for="model_count-1"]').first();   // 1人 (1 person)
@@ -186,15 +181,15 @@ export class SearchResultPage extends BasePage {
   readonly ageYoungLabel: Locator = this.page.locator('#filter-dropdown-other label[for="age-W"]').first();  // 若者
   readonly ageAdultLabel: Locator = this.page.locator('#filter-dropdown-other label[for="age-O"]').first();  // 大人
 
-  // ─── Filter Option Locators: 5. Exclude Keyword (除外キーワード) ────────────
+  // Filter Option Locators: 5. Exclude Keyword (除外キーワード)
   readonly excludeKeywordInput: Locator = this.page.locator('#filter-dropdown-exclude-kw #form_nq, #form_nq');
 
-  // ─── Filter Option Locators: 6. Detailed Search (詳細検索) ──────────────────
+  // Filter Option Locators: 6. Detailed Search (詳細検索)
   readonly detailedCreatorInput: Locator = this.page.locator('#filter-dropdown-detail #form_creator, #form_creator');
   readonly detailedNgCreatorInput: Locator = this.page.locator('#filter-dropdown-detail #form_ngcreator, #form_ngcreator');
   readonly detailedPhotoIdInput: Locator = this.page.locator('#filter-dropdown-detail #form_qid, #form_qid');
 
-  // ─── Filter Option Locators: 7. Display Conditions (表示条件) ───────────────
+  // Filter Option Locators: 7. Display Conditions (表示条件)
   readonly exactMatchCheckbox: Locator = this.page.locator('#filter-dropdown-display #type_search, #type_search');
   readonly exactMatchLabel: Locator = this.page.locator('#filter-dropdown-display label[for="type_search"]').first();
   readonly excludeAiCheckbox: Locator = this.page.locator('#filter-dropdown-display #exclude_ai, #exclude_ai');
@@ -204,8 +199,7 @@ export class SearchResultPage extends BasePage {
   readonly propertyReleaseOnLabel: Locator = this.page.locator('#filter-dropdown-display label[for="prprlrsec-on"]').first();
   readonly propertyReleaseAllLabel: Locator = this.page.locator('#filter-dropdown-display label[for="prprlrsec-all"]').first();
 
-  // ─── AI Search (AI検索) Locators ─────────────────────────────────────────
-
+  // AI Search (AI検索) Locators
   /** AI Search toggle button on results page */
   readonly searchByAiButton: Locator = this.page.locator('.search-by-ai').first();
 
@@ -218,8 +212,7 @@ export class SearchResultPage extends BasePage {
   /** AI Search OFF icon */
   readonly aiSearchOffIcon: Locator = this.page.locator('.search-by-ai .search-ai-icon-off').first();
 
-  // ─── Pagination Locators ───────────────────────────────────────────────────
-
+  // Pagination Locators
   /** Pagination container (ul.ac-pagination) */
   readonly paginationContainer: Locator = this.page.locator('ul.ac-pagination');
 
@@ -232,8 +225,7 @@ export class SearchResultPage extends BasePage {
   /** Previous page button */
   readonly paginationPrevButton: Locator = this.page.locator('ul.ac-pagination a.prev, ul.ac-pagination a[rel="prev"]');
 
-  // ─── Photo Detail AI Face Locators ─────────────────────────────────────────
-
+  // Photo Detail AI Face Locators
   /** AI Face thumbnail links displayed on the photo detail page (.face-list a.face-item) */
   readonly faceItemLinks: Locator = this.page.locator('.face-list a.face-item');
 
@@ -241,7 +233,7 @@ export class SearchResultPage extends BasePage {
   readonly introDialog: Locator = this.page.locator('dialog:has(a[href*="function_introduction"]), dialog[open], [role="dialog"]:has(.icon-close)');
   readonly introDialogCloseButton: Locator = this.page.locator('dialog .icon-close, dialog [aria-label="Close"], [role="region"][aria-label="Close"], dialog button.close');
 
-  // ─── QuickView & Detail Modal Locators ─────────────────────────────────────
+  // QuickView & Detail Modal Locators
   readonly resultFigures: Locator = this.page.locator('figure.ac-ig-item');
   readonly quickViewModal: Locator = this.page.locator('#quickViewBox');
   readonly quickViewCloseButton: Locator = this.page.locator('.modal-quickview button.close, .modal-quickview [aria-label="Close"]').first();
@@ -250,7 +242,7 @@ export class SearchResultPage extends BasePage {
   readonly guestLoginLink: Locator = this.page.locator('#quickViewBox a:has-text("ログイン")');
   readonly premiumDownloadButtons: Locator = this.page.locator('#quickViewBox a.disable-on-click:has-text("JPEG")');
 
-  // ─── Group Sites Locators (写真ACグループサイト) ─────────────────────────────────
+  // Group Sites Locators (写真ACグループサイト)
   readonly designListContainer: Locator = this.page.locator('#design_list');
   readonly illustListContainer: Locator = this.page.locator('#illust_list');
   readonly silhouetteListContainer: Locator = this.page.locator('#slh_list');
@@ -264,14 +256,12 @@ export class SearchResultPage extends BasePage {
   readonly relatedModalDownloadButton: Locator = this.page.locator('#relatedSearchModal a.ac-btn:has-text("ダウンロードページ")');
   readonly relatedModalCloseButton: Locator = this.page.locator('#relatedSearchModal button.close');
 
-  // ─── Constructor ──────────────────────────────────────────────────────────
-
+  // Constructor
   constructor(page: Page) {
     super(page);
   }
 
-  // ─── Actions ──────────────────────────────────────────────────────────────
-
+  // Actions
   /**
    * Dismiss introductory/promotional dialog if visible on the page (e.g. Premium feature tips dialog).
    * Checks immediately without stalling test execution when no dialog is present.
@@ -470,8 +460,7 @@ export class SearchResultPage extends BasePage {
     });
   }
 
-  // ─── Pagination Actions ───────────────────────────────────────────────────
-
+  // Pagination Actions
   /**
    * Click the Next page button in pagination with ArrowRight keyboard fallback.
    */
@@ -623,8 +612,7 @@ export class SearchResultPage extends BasePage {
     return this.getText(this.paginationActivePage);
   }
 
-  // ─── Category Search Actions ──────────────────────────────────────────────
-
+  // Category Search Actions
   /**
    * Select a category directly from the Filter Toolbar dropdown menu (UI interaction).
    * @param categoryName - Display name (e.g. '人物', 'ビジネス', '動物・生き物', '自然・風景')
@@ -653,8 +641,7 @@ export class SearchResultPage extends BasePage {
     });
   }
 
-  // ─── Filter Toolbar Actions ───────────────────────────────────────────────
-
+  // Filter Toolbar Actions
   /**
    * Safely opens a toolbar dropdown menu and ensures the target option is visible AND settled.
    * Handles hydration delays, layout shifts, and CSS animations across all browsers.
@@ -1172,8 +1159,7 @@ export class SearchResultPage extends BasePage {
     });
   }
 
-  // ─── Backward-compatible Assertions (Prefer asserting in test specs) ────────
-
+  // Backward-compatible Assertions (Prefer asserting in test specs)
   async assertHasResults(minCount: number = 1): Promise<void> {
     const count = await this.getResultCount();
     await test.step(`assert Has Results : ${count} records`, async () => {
@@ -1187,3 +1173,4 @@ export class SearchResultPage extends BasePage {
     });
   }
 }
+

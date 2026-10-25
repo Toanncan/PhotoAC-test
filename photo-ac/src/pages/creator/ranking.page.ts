@@ -1,27 +1,23 @@
-import { type Page, type Locator, test } from '@playwright/test';
+﻿import { type Page, type Locator, test } from '@playwright/test';
 import { BasePage } from '../common/base.page';
 
 
 export class RankingPage extends BasePage {
-  // ─── URL ─────────────────────────────────────────────────────────────────
-
+  // URL
   readonly PAGE_URL = '/creator/ranking';
 
-  // ─── Page Heading ─────────────────────────────────────────────────────────
-
+  // Page Heading
   /** H1 heading: ランキング */
   readonly pageHeading: Locator = this.page.getByRole('heading', {
     name: 'ランキング',
     level: 1,
   });
 
-  // ─── Info Alert (point calculation notice) ───────────────────────────────
-
+  // Info Alert (point calculation notice)
   /** Alert message: ポイントを計測中です。結果の反映まで今しばらくお待ちください。 */
   readonly pointCalcAlert: Locator = this.page.getByRole('alert');
 
-  // ─── Section Headers ─────────────────────────────────────────────────────
-
+  // Section Headers
   /** Section 1 header text: ■ダウンロードランキング */
   readonly downloadRankingSection: Locator = this.page.locator(
     'text=■ダウンロードランキング'
@@ -42,13 +38,11 @@ export class RankingPage extends BasePage {
     'text=■写真掲載数・NICE!数・ファン数ランキング'
   );
 
-  // ─── Tables ───────────────────────────────────────────────────────────────
-
+  // Tables
   /** All ranking tables — expects 4 tables on the page */
   readonly rankingTables: Locator = this.page.getByRole('table');
 
-  // ─── Table 1: Download Ranking ────────────────────────────────────────────
-
+  // Table 1: Download Ranking
   /** Column headers for Download Ranking table */
   readonly downloadTableHeaders: Locator = this.rankingTables
     .first()
@@ -64,8 +58,7 @@ export class RankingPage extends BasePage {
     name: /ランキング/,
   });
 
-  // ─── Table 2: License Sales Ranking ─────────────────────────────────────
-
+  // Table 2: License Sales Ranking
   /** License sales count row */
   readonly licenseSalesCountRow: Locator = this.rankingTables.nth(1).getByRole('row', {
     name: /ダウンロード数/,
@@ -76,8 +69,7 @@ export class RankingPage extends BasePage {
     name: /獲得ポイント数/,
   });
 
-  // ─── Table 3: Page View Ranking ───────────────────────────────────────────
-
+  // Table 3: Page View Ranking
   /** PV数 (Page view count) row */
   readonly pvCountRow: Locator = this.rankingTables.nth(2).getByRole('row', {
     name: /PV数/,
@@ -88,8 +80,7 @@ export class RankingPage extends BasePage {
     name: /ランキング/,
   });
 
-  // ─── Table 4: Upload / NICE / Fan Ranking ────────────────────────────────
-
+  // Table 4: Upload / NICE / Fan Ranking
   /** 写真総数 column header */
   readonly uploadCountHeader: Locator = this.rankingTables.nth(3).getByRole('columnheader', {
     name: '写真総数',
@@ -105,8 +96,7 @@ export class RankingPage extends BasePage {
     name: 'ファン人数',
   });
 
-  // ─── Daily Report Checkboxes ─────────────────────────────────────────────
-
+  // Daily Report Checkboxes
   /** H2 heading: 毎日レポートをお送りしましょうか？ */
   readonly dailyReportHeading: Locator = this.page.getByRole('heading', {
     name: '毎日レポートをお送りしましょうか？',
@@ -123,8 +113,7 @@ export class RankingPage extends BasePage {
     name: 'マンスリーレポートを受け取る（毎月1日配信）',
   });
 
-  // ─── Methods ──────────────────────────────────────────────────────────────
-
+  // Methods
   constructor(page: Page) {
     super(page);
   }
@@ -225,3 +214,4 @@ export class RankingPage extends BasePage {
     });
   }
 }
+

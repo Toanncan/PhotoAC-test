@@ -1,12 +1,10 @@
-import * as path from 'path';
+﻿import * as path from 'path';
 import { test, expect } from '../../fixtures/base.fixture';
 import { captureEvidenceWithUrl, enableAdBlocker } from '../../utils/helpers';
 import { GROUP_SITES } from '../../utils/test-data';
 
 /**
- * ============================================================================
  * TEST SUITE: SEARCH — FREE USER
- * ============================================================================
  */
 test.describe('Search — Free User', () => {
   // Session Free User được tự động inject bởi project cấu hình (chromium-free-user / firefox-free-user)
@@ -47,10 +45,7 @@ test.describe('Search — Free User', () => {
     }
   });
 
-  // ============================================================================
   // NHÓM 1: TÌM KIẾM CƠ BẢN
-  // ============================================================================
-
   /**
    * TC-SEARCH-FREE-001: Tìm kiếm với từ khóa hợp lệ
    * @tags @free-user
@@ -198,10 +193,7 @@ test.describe('Search — Free User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 2: FILTER TOOLBAR - SINGLE FILTERS
-  // ============================================================================
-
   /**
    * TC-SEARCH-FREE-007: Lọc ảnh theo Chiều dọc (縦長) và chuyển đổi sang Chiều ngang (横長) qua Toolbar
    * @tags @free-user @filter
@@ -634,10 +626,7 @@ test.describe('Search — Free User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 3: BỘ LỌC KẾT HỢP ĐA ĐIỀU KIỆN TRÊN UI
-  // ============================================================================
-
   /**
    * TC-SEARCH-FREE-022: Kết hợp Từ khóa + 2 người mẫu + Model Release qua UI Toolbar
    * @tags @free-user @filter
@@ -718,10 +707,7 @@ test.describe('Search — Free User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 4: TÌM KIẾM CHUYÊN SÂU & ĐẶC BIỆT 
-  // ============================================================================
-
   /**
    * TC-SEARCH-FREE-024: Tải ảnh lên tìm kiếm tương đồng (Image Upload Search)
    * @tags @free-user
@@ -884,10 +870,7 @@ test.describe('Search — Free User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 5: SẮP XẾP & PHÂN TRANG
-  // ============================================================================
-
   /**
    * TC-SEARCH-FREE-029: Sắp xếp kết quả theo "新着順" (Mới nhất) và giữ nguyên sắp xếp khi sang Trang 2
    * @tags @free-user
@@ -999,10 +982,7 @@ test.describe('Search — Free User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 6: PHÂN QUYỀN & HẠN MỨC FREE USER
-  // ============================================================================
-
   /**
    * TC-SEARCH-FREE-032: Chạm hạn mức tìm kiếm (1 ngày 4 lần) -> Hiển thị Modal kèm nút Dùng vé coupon và xác nhận hoạt động của 2 nút
    * @tags @free-user
@@ -1096,10 +1076,7 @@ test.describe('Search — Free User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 7: THANH TÌM KIẾM CỐ ĐỊNH TRÊN HEADER
-  // ============================================================================
-
   /**
    * TC-SEARCH-FREE-034: Thanh tìm kiếm cố định (Sticky Header Search) tự động hiển thị khi cuộn trang xuống và ẩn đi khi cuộn lên đầu trang
    * @tags @free-user
@@ -1162,10 +1139,7 @@ test.describe('Search — Free User', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 12: TƯƠNG TÁC ẢNH KẾT QUẢ & CÁC TRANG NHÓM (GROUP SITES)
-  // ============================================================================
-
   /**
    * TC-SEARCH-FREE-036: Click ảnh bất kỳ trong kết quả tìm kiếm chuyển hướng trực tiếp tới trang chi tiết (Details page)
    * @tags @free-user @regression

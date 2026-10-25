@@ -1,4 +1,4 @@
-import * as path from 'path';
+﻿import * as path from 'path';
 import { test, expect } from '../../fixtures/base.fixture';
 import { captureEvidenceWithUrl, enableAdBlocker } from '../../utils/helpers';
 import { GROUP_SITES } from '../../utils/test-data';
@@ -197,10 +197,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 2: FILTER TOOLBAR - SINGLE FILTERS
-  // ============================================================================
-
   /**
    * TC-SEARCH-GUEST-007: Lọc ảnh theo Chiều dọc (縦長) và chuyển đổi sang Chiều ngang (横長) qua Toolbar
    * @tags @guest @filter
@@ -624,10 +621,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 3: BỘ LỌC KẾT HỢP ĐA ĐIỀU KIỆN TRÊN UI
-  // ============================================================================
-
   /**
    * TC-SEARCH-GUEST-022: Kết hợp Từ khóa + 2 người mẫu + Model Release qua UI Toolbar
    * @tags @guest @filter
@@ -706,10 +700,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 4: TÌM KIẾM CHUYÊN SÂU & ĐẶC BIỆT
-  // ============================================================================
-
   /**
    * TC-SEARCH-GUEST-024: Tải ảnh lên tìm kiếm tương đồng
    * @tags @guest
@@ -875,10 +866,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 5: SẮP XẾP & PHÂN TRANG
-  // ============================================================================
-
   /**
    * TC-SEARCH-GUEST-029: Sắp xếp kết quả theo "新着順" (Mới nhất) và giữ nguyên sắp xếp khi sang Trang 2
    * @tags @guest
@@ -988,10 +976,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 6: PHÂN QUYỀN & HẠN MỨC GUEST USER
-  // ============================================================================
-
   /**
    * TC-SEARCH-GUEST-032: Chạm hạn mức tìm kiếm 
    * @tags @guest
@@ -1139,10 +1124,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 7: THANH TÌM KIẾM CỐ ĐỊNH TRÊN HEADER (STICKY HEADER SEARCH BAR)
-  // ============================================================================
-
   /**
    * TC-SEARCH-GUEST-035: Thanh tìm kiếm cố định (Sticky Header Search) tự động hiển thị khi cuộn trang xuống và ẩn đi khi cuộn lên đầu trang
    * @tags @guest
@@ -1205,10 +1187,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 12: TƯƠNG TÁC ẢNH KẾT QUẢ & CÁC TRANG NHÓM (GROUP SITES)
-  // ============================================================================
-
   /**
    * TC-SEARCH-GUEST-037: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập
    * @tags @guest @regression
@@ -1276,4 +1255,5 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     }
   });
 });
+
 

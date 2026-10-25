@@ -1,10 +1,8 @@
 import { test, expect } from '../../fixtures/mobile.fixture';
 
 /**
- * ============================================================================
- * TEST SUITE: SEARCH FEATURE — MOBILE (GUEST USER)
- * Device Emulation: iPhone 13 / Mobile Viewport (< 1024px)
- * ============================================================================
+ * Test Suite: Search Feature — Mobile (Guest User)
+ * Giả lập Mobile Viewport (< 1024px) / iPhone 13.
  */
 test.describe('Search Feature — Mobile (Guest User)', () => {
   // Ensure unauthenticated guest state on mobile
@@ -164,3 +162,4 @@ test.describe('Search Feature — Mobile (Guest User)', () => {
     });
   });
 });
+

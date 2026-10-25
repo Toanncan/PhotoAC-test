@@ -1,4 +1,4 @@
-import { type Page, test } from '@playwright/test';
+﻿import { type Page, test } from '@playwright/test';
 import { BasePage } from './base.page';
 
 /**
@@ -9,8 +9,7 @@ import { BasePage } from './base.page';
  * and update accordingly.
  */
 export class LoginPage extends BasePage {
-  // ─── Locators ─────────────────────────────────────────────────────────────
-
+  // Locators
   /** Login link/button in the header navigation */
   private readonly loginButton = this.page.getByRole('button', { name: /ログイン/ }).first();
 
@@ -117,3 +116,4 @@ export class LoginPage extends BasePage {
   }
 
 }
+

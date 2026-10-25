@@ -1,0 +1,21 @@
+{
+  "name": "video-ac-checker",
+  "version": "1.0.0",
+  "description": "Tool kiem tra HTTP Status 200 cho cac link Video-AC (co 2 option: Prod va Site Test)",
+  "main": "check-urls.js",
+  "scripts": {
+    "start": "node check-urls.js",
+    "prod": "node check-urls.js 1",
+    "test": "node check-urls.js 2"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.48.0"
+  },
+  "keywords": [
+    "video-ac",
+    "status-checker",
+    "playwright"
+  ],
+  "author": "",
+  "license": "ISC"
+}

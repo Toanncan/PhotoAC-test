@@ -1,4 +1,4 @@
-// import { test, expect } from '../../fixtures/base.fixture';
+﻿// import { test, expect } from '../../fixtures/base.fixture';
 // import { EmailVerificationHelper } from '../../utils/email-verification.helper';
 
 
@@ -12,12 +12,12 @@
 //     let membershipAmounts: string[] = [];
 //     let membershipText = '';
 
-//     // ─── Step 1: Navigate to /user/profile/edit ────────────────────────────
+//     // Step 1: Navigate to /user/profile/edit
 //     await test.step('Navigate to Profile Edit page (/user/profile/edit)', async () => {
 //         await profileEditPage.goToProfileEditPage();
 //     });
 
-//     // ─── Step 2: Extract ALL amounts from 会員種別 section ─────────────────
+//     // Step 2: Extract ALL amounts from 会員種別 section
 //     await test.step('Extract membership amounts from 会員種別', async () => {
 //         // Get full text of membership type section for debugging
 //         membershipText = await profileEditPage.getMembershipTypeText();
@@ -50,7 +50,7 @@
 //         }
 //     });
 
-//     // ─── Step 3: Verify amount in Gmail email using common helper ─────────
+//     // Step 3: Verify amount in Gmail email using common helper
 //     await test.step('Verify membership amount exists in Gmail receipt email', async () => {
 //         await EmailVerificationHelper.verifyAmountInEmail({
 //             subject: 'プレミアム会員サービス登録完了のご連絡',
