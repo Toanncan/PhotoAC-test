@@ -52,7 +52,7 @@ test.describe('Download — Free User', () => {
     await test.step('Xác minh popover thông báo mua bản quyền thương mại chỉ dành cho Premium', async () => {
       await expect(photoDetailPage.freeExtraLicensePopover).toBeVisible();
       await expect(photoDetailPage.freeExtraLicensePopover).toContainText(
-        '商品化ライセンスの購入は、プレミアム会員様限定です'
+        '商品化ライセンスの購入は、プレミアム会員様限定です。商品化ライセンス権を使用しますか。'
       );
     });
   });
@@ -105,7 +105,7 @@ test.describe('Download — Free User', () => {
     } finally {
       await test.step('Xóa ảnh khỏi Bookmarks và xác minh ảnh đã bị xóa sạch', async () => {
         if (!page.url().includes('/user/bookmarks/collection/')) {
-          await bookmarksPage.goToFirstCollectionFolder().catch(() => {});
+          await bookmarksPage.goToFirstCollectionFolder().catch(() => { });
         }
         const bookmarkedItem = page.locator(`.item:has(a[href*="${photoId}"])`).first();
         if (await bookmarkedItem.isVisible().catch(() => false)) {
