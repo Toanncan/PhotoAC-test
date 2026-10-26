@@ -396,17 +396,17 @@ export class PhotoDetailPage extends BasePage {
   }
 
   /**
-   * Execute full download flow for Free User (first download scenario):
+   * Execute full download flow for Free User:
    * 1. Dismiss initial interference overlays if any.
    * 2. Click main download button to launch timer modal.
-   * 3. Handle rewarded ad if triggered (including cross-origin safeframe close button).
-   * 4. Select smallest size (Size S) in timer modal.
+   * 3. Handle Google Rewarded Ad / Interstitial overlay if present (including cross-origin safeframe close button).
+   * 4. Select requested size (S, M, or L) in timer modal.
    * 5. Wait for countdown completion and trigger download.
    * @param size - 'S' | 'M' | 'L' (defaults to 'S')
    * @returns Playwright Download object
    */
-  async downloadAsFreeUserFirstDownload(size: 'S' | 'M' | 'L' = 'S'): Promise<import('@playwright/test').Download> {
-    return await test.step(`Download photo as Free User First Download (Size: ${size})`, async () => {
+  async downloadAsFreeUser(size: 'S' | 'M' | 'L' = 'S'): Promise<import('@playwright/test').Download> {
+    return await test.step(`Download photo as Free User (Size: ${size})`, async () => {
       await this.dismissInterferingModals();
       await this.freeDownloadButton.scrollIntoViewIfNeeded().catch(() => {});
       await this.dismissInterferingModals();
@@ -449,11 +449,9 @@ export class PhotoDetailPage extends BasePage {
       await this.timerModal.waitFor({ state: 'visible', timeout: 20_000 });
 
       // Select size if specified
-      if (size === 'S') {
-        const sRadio = this.page.locator('#timerModal input[value="s"], #timerModal input#s');
-        if (await sRadio.isVisible().catch(() => false)) {
-          await sRadio.check().catch(() => {});
-        }
+      const sizeRadio = this.page.locator(`#timerModal input[value="${size.toLowerCase()}"], #timerModal input#${size.toLowerCase()}`);
+      if (await sizeRadio.isVisible().catch(() => false)) {
+        await sizeRadio.check().catch(() => {});
       }
 
       // Wait for countdown to finish and download button to become active
@@ -468,6 +466,16 @@ export class PhotoDetailPage extends BasePage {
 
       return download;
     });
+  }
+
+  /**
+   * Execute full download flow for Free User (first download scenario):
+   * Tái sử dụng downloadAsFreeUser để đảm bảo tương thích ngược.
+   * @param size - 'S' | 'M' | 'L' (defaults to 'S')
+   * @returns Playwright Download object
+   */
+  async downloadAsFreeUserFirstDownload(size: 'S' | 'M' | 'L' = 'S'): Promise<import('@playwright/test').Download> {
+    return await this.downloadAsFreeUser(size);
   }
 
   /**

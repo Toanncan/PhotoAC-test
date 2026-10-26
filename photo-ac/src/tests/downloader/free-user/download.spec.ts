@@ -231,4 +231,30 @@ test.describe('Download — Free User', () => {
       await expect(photoDetailPage.copiedTooltip).toContainText('コピーしました');
     });
   });
+
+  // Nhóm 3: Tải ảnh (Download Image) cho Free User
+
+  /**
+   * TC-DOWNLOAD-FREE-011: Free User tải ảnh Size S thành công qua Timer Modal quảng cáo
+   */
+  test('TC-DOWNLOAD-FREE-011: Free User tải ảnh Size S thành công qua Timer Modal quảng cáo @free-user @download', async ({
+    photoDetailPage,
+  }) => {
+    test.setTimeout(90_000);
+
+    await test.step('Click download ảnh Size S và đợi hoàn thành đếm ngược quảng cáo', async () => {
+      await expect(photoDetailPage.freeDownloadButton).toBeVisible();
+      const download = await photoDetailPage.downloadAsFreeUser('S');
+
+      // Xác minh tên file tải về và định dạng ảnh hợp lệ
+      const suggestedFilename = download.suggestedFilename();
+      expect(suggestedFilename).toBeTruthy();
+      expect(suggestedFilename.toLowerCase()).toMatch(/\.(jpe?g|png|zip)$/);
+
+      // Xác minh tải về thành công, không gặp lỗi hệ thống
+      const failure = await download.failure();
+      expect(failure).toBeNull();
+    });
+  });
 });
+

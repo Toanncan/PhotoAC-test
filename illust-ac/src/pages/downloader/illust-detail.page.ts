@@ -193,6 +193,71 @@ export class IllustDetailPage extends BasePage {
   }
 
   /**
+   * Click Premium direct download link for a specific format and wait for download event.
+   * @param format - 'JPEG' | 'PNG' | 'AI' (defaults to 'JPEG')
+   * @returns Playwright Download object
+   */
+  async downloadAsPremium(format: 'JPEG' | 'PNG' | 'AI' = 'JPEG'): Promise<import('@playwright/test').Download> {
+    return await test.step(`Download illustration as Premium User (Format: ${format})`, async () => {
+      let downloadLink: Locator;
+      if (format === 'JPEG') {
+        downloadLink = this.premiumDownloadLinkJpeg;
+      } else if (format === 'PNG') {
+        downloadLink = this.premiumDownloadLinkPng;
+      } else {
+        downloadLink = this.premiumDownloadLinkAi;
+      }
+
+      await downloadLink.waitFor({ state: 'visible', timeout: 15_000 });
+      const [download] = await Promise.all([
+        this.page.waitForEvent('download', { timeout: 35_000 }),
+        downloadLink.click({ force: true }),
+      ]);
+
+      return download;
+    });
+  }
+
+  /**
+   * Execute full download flow for Free User on AC-Illust:
+   * 1. Select format (defaults to JPEG)
+   * 2. Click main download button
+   * 3. Capture download event and return Download object
+   * @param format - 'JPEG' (defaults to 'JPEG')
+   * @returns Playwright Download object
+   */
+  async downloadAsFreeUser(format: 'JPEG' = 'JPEG'): Promise<import('@playwright/test').Download> {
+    return await test.step(`Download illustration as Free User (Format: ${format})`, async () => {
+      await this.selectFormat(format);
+      await this.downloadButton.scrollIntoViewIfNeeded().catch(() => {});
+
+      const [download] = await Promise.all([
+        this.page.waitForEvent('download', { timeout: 45_000 }),
+        this.downloadButton.click({ force: true }),
+      ]);
+
+      return download;
+    });
+  }
+
+  /**
+   * Click Open with Design AC online editor link.
+   * @returns Newly opened Page if opened in new tab, or null if navigated in current tab
+   */
+  async clickOpenDesignTool(): Promise<Page | null> {
+    return await test.step('Click Open Design AC editor link', async () => {
+      await this.openDesignToolLink.waitFor({ state: 'visible', timeout: 15_000 });
+
+      const [newPage] = await Promise.all([
+        this.page.context().waitForEvent('page', { timeout: 15_000 }).catch(() => null),
+        this.clickElement(this.openDesignToolLink),
+      ]);
+
+      return newPage;
+    });
+  }
+
+  /**
    * Click bookmark button.
    */
   async clickBookmark(): Promise<void> {
@@ -219,3 +284,4 @@ export class IllustDetailPage extends BasePage {
     });
   }
 }
+

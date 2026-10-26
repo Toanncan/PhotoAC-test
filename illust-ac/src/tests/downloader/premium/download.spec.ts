@@ -18,40 +18,72 @@ test.describe('Download & Detail Interactions — Premium User @premium @downloa
   });
 
   /**
-   * TC-DOWNLOAD-PREM-001: Premium User chọn định dạng JPEG và kiểm tra liên kết tải trực tiếp
+   * TC-DOWNLOAD-PREM-001: Premium User chọn định dạng JPEG và tải ảnh thành công
    */
-  test('TC-DOWNLOAD-PREM-001: Premium User kiểm tra nút tải ảnh JPEG @premium @download', async ({
+  test('TC-DOWNLOAD-PREM-001: Premium User tải tranh định dạng JPEG thành công @premium @download', async ({
     illustDetailPage,
   }) => {
-    await test.step('Chọn định dạng JPEG và verify nút tải trực tiếp sẵn sàng', async () => {
+    await test.step('Chọn định dạng JPEG và xác minh nút tải trực tiếp sẵn sàng', async () => {
       await illustDetailPage.selectFormat('JPEG');
       await expect(illustDetailPage.premiumDownloadLinkJpeg).toBeVisible();
       await expect(illustDetailPage.premiumDownloadLinkJpeg).toHaveAttribute('href', /main\/dl\.php\?.*qu_t=jpg/);
     });
-  });
 
-  /**
-   * TC-DOWNLOAD-PREM-002: Premium User chọn định dạng Vector AI
-   */
-  test('TC-DOWNLOAD-PREM-002: Premium User kiểm tra quyền tải định dạng Vector AI @premium @download', async ({
-    illustDetailPage,
-  }) => {
-    await test.step('Chọn định dạng Vector AI và verify nút tải trực tiếp sẵn sàng', async () => {
-      await illustDetailPage.selectFormat('AI');
-      await expect(illustDetailPage.premiumDownloadLinkAi).toBeVisible();
-      await expect(illustDetailPage.premiumDownloadLinkAi).toHaveAttribute('href', /main\/dl\.php\?.*qu_t=ai/);
+    await test.step('Click tải tranh JPEG và xác minh file tải về thành công', async () => {
+      const download = await illustDetailPage.downloadAsPremium('JPEG');
+
+      const suggestedFilename = download.suggestedFilename();
+      expect(suggestedFilename).toBeTruthy();
+      expect(suggestedFilename.toLowerCase()).toMatch(/\.(jpe?g|png|zip)$/);
+
+      const failure = await download.failure();
+      expect(failure).toBeNull();
     });
   });
 
   /**
-   * TC-DOWNLOAD-PREM-003: Premium User kiểm tra công cụ chỉnh sửa trực tuyến (Design AC Editor)
+   * TC-DOWNLOAD-PREM-002: Premium User chọn định dạng Vector AI và tải file thành công
    */
-  test('TC-DOWNLOAD-PREM-003: Premium User kiểm tra công cụ chỉnh sửa trực tuyến Design AC @premium @editor', async ({
+  test('TC-DOWNLOAD-PREM-002: Premium User tải định dạng Vector AI thành công @premium @download', async ({
     illustDetailPage,
   }) => {
-    await test.step('Xác minh liên kết mở công cụ chỉnh sửa Design AC hiển thị', async () => {
+    await test.step('Chọn định dạng Vector AI và xác minh nút tải trực tiếp sẵn sàng', async () => {
+      await illustDetailPage.selectFormat('AI');
+      await expect(illustDetailPage.premiumDownloadLinkAi).toBeVisible();
+      await expect(illustDetailPage.premiumDownloadLinkAi).toHaveAttribute('href', /main\/dl\.php\?.*qu_t=ai/);
+    });
+
+    await test.step('Click tải file Vector AI và xác minh file tải về thành công', async () => {
+      const download = await illustDetailPage.downloadAsPremium('AI');
+
+      const suggestedFilename = download.suggestedFilename();
+      expect(suggestedFilename).toBeTruthy();
+      expect(suggestedFilename.toLowerCase()).toMatch(/\.(ai|eps|zip)$/);
+
+      const failure = await download.failure();
+      expect(failure).toBeNull();
+    });
+  });
+
+  /**
+   * TC-DOWNLOAD-PREM-003: Premium User mở tác phẩm bằng công cụ Design AC Editor
+   */
+  test('TC-DOWNLOAD-PREM-003: Premium User mở công cụ chỉnh sửa trực tuyến Design AC @premium @editor', async ({
+    page,
+    illustDetailPage,
+  }) => {
+    await test.step('Click mở công cụ chỉnh sửa Design AC và xác minh chuyển hướng/mở tab thành công', async () => {
       await expect(illustDetailPage.openDesignToolLink).toBeVisible();
       await expect(illustDetailPage.openDesignToolLink).toHaveAttribute('href', /editor=true/);
+
+      const newPage = await illustDetailPage.clickOpenDesignTool();
+      if (newPage) {
+        await newPage.waitForLoadState('domcontentloaded');
+        expect(newPage.url()).toMatch(/design-ac|editor/i);
+        await newPage.close();
+      } else {
+        await expect(page).toHaveURL(/design-ac|editor/i);
+      }
     });
   });
 

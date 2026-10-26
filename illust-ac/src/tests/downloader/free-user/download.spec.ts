@@ -1,4 +1,5 @@
 import { test, expect } from '../../../fixtures/base.fixture';
+import { enableAdBlocker } from '../../../utils/helpers';
 import { IllustDetailPage } from '../../../pages/downloader/illust-detail.page';
 
 /**
@@ -8,7 +9,8 @@ import { IllustDetailPage } from '../../../pages/downloader/illust-detail.page';
 test.describe('Download & Detail Interactions — Free User @free-user @download', () => {
   // Session Free User được inject tự động từ project cấu hình (chromium-free-user / firefox-free-user)
 
-  test.beforeEach(async ({ illustDetailPage }) => {
+  test.beforeEach(async ({ page, illustDetailPage }) => {
+    await enableAdBlocker(page);
     await illustDetailPage.goToDetailPage(IllustDetailPage.ACWORKS_DEFAULT_ILLUST_ID);
 
     await test.step('Xác minh tác phẩm thuộc creator Acworks', async () => {
@@ -132,6 +134,30 @@ test.describe('Download & Detail Interactions — Free User @free-user @download
 
       await expect(bulkDownloadLink).toBeAttached();
       await expect(historyLink).toBeAttached();
+    });
+  });
+
+  /**
+   * TC-DOWNLOAD-FREE-009: Free User tải tranh định dạng JPEG thành công
+   */
+  test('TC-DOWNLOAD-FREE-009: Free User tải tranh định dạng JPEG thành công @free-user @download', async ({
+    illustDetailPage,
+  }) => {
+    test.setTimeout(90_000);
+
+    await test.step('Chọn định dạng JPEG và thực hiện tải tranh', async () => {
+      await expect(illustDetailPage.formatRadioJpeg).toBeVisible();
+      await expect(illustDetailPage.downloadButton).toBeVisible();
+      const download = await illustDetailPage.downloadAsFreeUser('JPEG');
+
+      // Xác minh tên file tải về và định dạng tranh hợp lệ
+      const suggestedFilename = download.suggestedFilename();
+      expect(suggestedFilename).toBeTruthy();
+      expect(suggestedFilename.toLowerCase()).toMatch(/\.(jpe?g|png|zip)$/);
+
+      // Xác minh tải về thành công, không gặp lỗi hệ thống
+      const failure = await download.failure();
+      expect(failure).toBeNull();
     });
   });
 });
