@@ -1,4 +1,4 @@
-﻿import { type Page, type Locator, test, expect } from '@playwright/test';
+import { type Page, type Locator, test, expect } from '@playwright/test';
 import { BasePage } from './base.page';
 
 /**
@@ -66,13 +66,6 @@ export class SearchResultPage extends BasePage {
   /** Display count option: 210 items per page (Standard for Premium User) */
   readonly displayCount210Radio: Locator = this.page.locator('#pp-210');
   readonly displayCount210Label: Locator = this.page.locator('label[for="pp-210"]');
-
-  // Trends Page Locators (人気写真一覧 - /main/trends)
-  /** Sort select dropdown on Trends page (select#sort) */
-  readonly trendsSortSelect: Locator = this.page.locator('select#sort');
-
-  /** Display count select dropdown on Trends page (select#pagesize) */
-  readonly trendsPageSizeSelect: Locator = this.page.locator('select#pagesize');
 
   // Search Limit Modal Locators
   /** Modal displayed when user reaches the daily search limit (1日4回) */
@@ -225,16 +218,12 @@ export class SearchResultPage extends BasePage {
   /** Previous page button */
   readonly paginationPrevButton: Locator = this.page.locator('ul.ac-pagination a.prev, ul.ac-pagination a[rel="prev"]');
 
-  // Photo Detail AI Face Locators
-  /** AI Face thumbnail links displayed on the photo detail page (.face-list a.face-item) */
-  readonly faceItemLinks: Locator = this.page.locator('.face-list a.face-item');
-
   /** Introductory / promotional dialog popup (e.g. Premium feature tips dialog) */
   readonly introDialog: Locator = this.page.locator('dialog:has(a[href*="function_introduction"]), dialog[open], [role="dialog"]:has(.icon-close)');
   readonly introDialogCloseButton: Locator = this.page.locator('dialog .icon-close, dialog [aria-label="Close"], [role="region"][aria-label="Close"], dialog button.close');
 
   // QuickView & Detail Modal Locators
-  readonly resultFigures: Locator = this.page.locator('figure.ac-ig-item');
+  readonly resultFigures: Locator = this.page.locator('figure.ac-ig-item').filter({ has: this.page.locator('.link-to-detail') });
   readonly quickViewModal: Locator = this.page.locator('#quickViewBox');
   readonly quickViewCloseButton: Locator = this.page.locator('.modal-quickview button.close, .modal-quickview [aria-label="Close"]').first();
   readonly guestRegisterPromptTitle: Locator = this.page.locator('#quickViewBox h6:has-text("会員登録で今すぐダウンロード！")');
@@ -403,12 +392,10 @@ export class SearchResultPage extends BasePage {
 
   /**
    * Open QuickView modal for a specific thumbnail index.
+   * Delegates to `openQuickViewForItem` for proper hovering and visibility handling.
    */
   async openQuickView(index: number = 0): Promise<void> {
-    await test.step(`Open QuickView for item index ${index}`, async () => {
-      await this.quickViewOverlays.nth(index).click();
-      await this.page.getByRole('dialog').waitFor({ state: 'visible', timeout: 10_000 });
-    });
+    await this.openQuickViewForItem(index);
   }
 
   /**
@@ -992,69 +979,6 @@ export class SearchResultPage extends BasePage {
     });
   }
 
-  /**
-   * Navigate to Trends Page (人気写真一覧 - /main/trends).
-   */
-  async goToTrendsPage(): Promise<void> {
-    await test.step('Navigate to Trends Page (/main/trends)', async () => {
-      await this.navigate('/main/trends');
-      await this.waitForResultDisplay();
-    });
-  }
-
-  /**
-   * Select sort option on Trends page using native select#sort.
-   * @param sort - 'dlrank' (ダウンロード数順 - default) or '-releasedate' (新着順)
-   */
-  async selectTrendsSort(sort: 'dlrank' | '-releasedate'): Promise<void> {
-    await test.step(`Select sort option on Trends page: "${sort}"`, async () => {
-      await this.trendsSortSelect.selectOption(sort);
-      await this.page.waitForLoadState('domcontentloaded');
-      await this.waitForResultDisplay();
-    });
-  }
-
-  /**
-   * Select display count on Trends page using native select#pagesize.
-   * @param count - '70' | '140' | '210'
-   */
-  async selectTrendsDisplayCount(count: '70' | '140' | '210'): Promise<void> {
-    await test.step(`Select display count on Trends page: ${count} items`, async () => {
-      await this.trendsPageSizeSelect.selectOption(count);
-      await this.page.waitForLoadState('domcontentloaded');
-      await this.waitForResultDisplay();
-    });
-  }
-
-  /**
-   * Navigate directly to a specific photo detail page.
-   * @param photoId - Numeric photo ID (e.g. '35133353')
-   */
-  async goToPhotoDetail(photoId: string): Promise<void> {
-    await test.step(`Navigate to photo detail page: ${photoId}`, async () => {
-      await this.navigate(`/main/detail/${photoId}`);
-      await this.waitForPageLoad();
-    });
-  }
-
-  /**
-   * Click an AI Face thumbnail from the photo detail page to perform vector face search.
-   * Modifies link target to remain in the same tab.
-   * @param index - Index of the face thumbnail (defaults to 0)
-   */
-  async clickAiFaceThumbnail(index: number = 0): Promise<void> {
-    await test.step(`Click AI Face thumbnail index ${index}`, async () => {
-      const faceLink = this.faceItemLinks.nth(index);
-      await expect(faceLink).toBeVisible({ timeout: 15_000 });
-      await faceLink.evaluate((el: HTMLAnchorElement) => {
-        el.removeAttribute('target');
-        el.removeAttribute('rel');
-      });
-      await this.clickElement(faceLink);
-      await this.page.waitForLoadState('domcontentloaded').catch(() => { });
-      await this.waitForResultDisplay();
-    });
-  }
 
   /**
    * Open detail page for a specific search result thumbnail (Free user behavior).
@@ -1159,18 +1083,6 @@ export class SearchResultPage extends BasePage {
     });
   }
 
-  // Backward-compatible Assertions (Prefer asserting in test specs)
-  async assertHasResults(minCount: number = 1): Promise<void> {
-    const count = await this.getResultCount();
-    await test.step(`assert Has Results : ${count} records`, async () => {
-      expect(count, `Expect result count >= ${minCount}`).toBeGreaterThanOrEqual(minCount);
-    });
-  }
 
-  async assertNoResults(): Promise<void> {
-    await test.step('assert No Results', async () => {
-      await expect(this.noResultMessage).toHaveCount(2);
-    });
-  }
 }
 

@@ -9,14 +9,18 @@ trigger: model_decision
 
 ---
 
-## 4 Roles — Session Matrix
+## 4 Roles — Session Matrix & Test Directories
 
-| Vai trò | Biến `.env` | Setup Chromium | Setup Firefox | StorageState Chromium | StorageState Firefox | Project |
-|---|---|---|---|---|---|---|
-| **Guest** | *Không cần* | *Không cần* | *Không cần* | `cookies: []` | `cookies: []` | `chromium-guest` / `firefox-guest` |
-| **Free User** | `FREE_USER_EMAIL` / `FREE_USER_PASSWORD` | `free-user.setup.ts` | `free-user-firefox.setup.ts` | `.auth/free-user.json` | `.auth/free-user-firefox.json` | `chromium-free-user` / `firefox-free-user` |
-| **Premium User** | `PREMIUM_USER_EMAIL` / `PREMIUM_USER_PASSWORD` | `premium-user.setup.ts` | `premium-user-firefox.setup.ts` | `.auth/premium-user.json` | `.auth/premium-user-firefox.json` | `chromium-downloader` / `firefox-downloader` |
-| **Creator** | `CREATOR_EMAIL` / `CREATOR_PASSWORD` | `creator.setup.ts` | `creator-firefox.setup.ts` | `.auth/creator.json` | `.auth/creator-firefox.json` | `chromium-creator` / `firefox-creator` |
+| Vai trò | Biến `.env` | Setup Chromium | Setup Firefox | StorageState Chromium | StorageState Firefox | Project Playwright | Thư Mục Test Bắt Buộc |
+|---|---|---|---|---|---|---|---|
+| **Guest** | *Không cần* | *Không cần* | *Không cần* | `cookies: []` | `cookies: []` | `chromium-guest` / `firefox-guest` | `src/tests/downloader/guest/` |
+| **Free User** | `FREE_USER_EMAIL` / `FREE_USER_PASSWORD` | `free-user.setup.ts` | `free-user-firefox.setup.ts` | `.auth/free-user.json` | `.auth/free-user-firefox.json` | `chromium-free-user` / `firefox-free-user` | `src/tests/downloader/free-user/` |
+| **Premium User** | `PREMIUM_USER_EMAIL` / `PREMIUM_USER_PASSWORD` | `premium-user.setup.ts` | `premium-user-firefox.setup.ts` | `.auth/premium-user.json` | `.auth/premium-user-firefox.json` | `chromium-premium` / `firefox-premium` | `src/tests/downloader/premium/` |
+| **Creator** | `CREATOR_EMAIL` / `CREATOR_PASSWORD` | `creator.setup.ts` | `creator-firefox.setup.ts` | `.auth/creator.json` | `.auth/creator-firefox.json` | `chromium-creator` / `firefox-creator` | `src/tests/creator/` |
+
+> ⚠️ **LƯU Ý QUAN TRỌNG:**
+> - Các luồng kiểm thử Đăng nhập/Đăng xuất chung (Auth flows) bắt buộc lưu tại `src/tests/auth/login.spec.ts`.
+> - TUYỆT ĐỐI CẤM tạo file spec trực tiếp ở gốc `src/tests/downloader/`. Phải luôn đặt trong đúng subfolder role (`guest/`, `free-user/`, hoặc `premium/`).
 
 ---
 

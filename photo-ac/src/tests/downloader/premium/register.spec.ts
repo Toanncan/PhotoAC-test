@@ -1,4 +1,4 @@
-import { test, expect } from '../../fixtures/base.fixture';
+import { test, expect } from '../../../fixtures/base.fixture';
 
 /**
  * Test Suite: Premium Subscription (プレミアム会員登録)
@@ -11,7 +11,7 @@ test.describe('Premium Registration Flow', () => {
   test('TC-PREMIUM-001: Đăng ký Premium qua ưu đãi giảm 50% sau First Download @smoke @premium @downloader', async ({
     page,
     registerPage,
-    downloadImagePage,
+    photoDetailPage,
     premiumRegisterPage,
   }) => {
     test.setTimeout(240_000);
@@ -26,20 +26,20 @@ test.describe('Premium Registration Flow', () => {
     try {
       // Step 1: Navigate to Acworks photo detail page
       await test.step('Truy cập trang chi tiết ảnh Acworks (ID: 1651238)', async () => {
-        await downloadImagePage.goToAcworksPhotoDetail('1651238');
-        await expect(downloadImagePage.freeDownloadButton).toBeVisible();
+        await photoDetailPage.goToAcworksPhotoDetail('1651238');
+        await expect(photoDetailPage.freeDownloadButton).toBeVisible();
       });
 
       // Step 2: Download image with smallest size (Size S) after countdown
       let downloadFile: import('@playwright/test').Download;
       await test.step('Download ảnh với size nhỏ nhất (Size S) và đợi hết quảng cáo/countdown', async () => {
-        downloadFile = await downloadImagePage.downloadAsFreeUserFirstDownload('S');
+        downloadFile = await photoDetailPage.downloadAsFreeUserFirstDownload('S');
         expect(downloadFile.suggestedFilename()).toBeTruthy();
       });
 
       // Step 3: Click 50% Discount First Download Promotional Offer
       await test.step('Sau khi download xong, click vào banner ưu đãi Premium nửa giá', async () => {
-        await downloadImagePage.clickFirstDownloadPremiumOffer();
+        await photoDetailPage.clickFirstDownloadPremiumOffer();
       });
 
       // Step 4: Verify navigation to Premium Campaign Registration page

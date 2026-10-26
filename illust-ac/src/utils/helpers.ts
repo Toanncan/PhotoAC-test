@@ -92,11 +92,11 @@ export const retry = async <T>(
 };
 
 /**
- * Chụp ảnh bằng chứng có gắn thanh URL Watermark lên DOM và attach vào Allure Report.
- * An toàn tuyệt đối: Bọc try/catch, không bao giờ ném lỗi làm ảnh hưởng tới kết quả test.
+ * Captures screenshot evidence with a clean URL watermark banner and attaches to Allure report.
+ * Safe execution: wrapped in try/catch to avoid breaking test lifecycle.
  * @param page - Playwright Page instance
  * @param testInfo - Playwright TestInfo instance
- * @param attachmentName - Tên file đính kèm trong Allure Report (mặc định: 'filter-applied-evidence')
+ * @param attachmentName - Attachment name for Allure Report (default: 'filter-applied-evidence')
  */
 export const captureEvidenceWithUrl = async (
   page: Page,
@@ -107,7 +107,7 @@ export const captureEvidenceWithUrl = async (
     if (page.isClosed()) return;
     const currentUrl = page.url();
 
-    // 1. Gắn thanh URL Watermark màu xanh đen trên đỉnh màn hình (đồng bộ với fixture)
+    // 1. Attach URL watermark banner to DOM (synchronized with fixture style)
     await page.evaluate((url) => {
       let banner = document.getElementById('qa-screenshot-url-banner');
       if (!banner) {
@@ -132,34 +132,33 @@ export const captureEvidenceWithUrl = async (
       banner.textContent = 'URL: ' + url;
     }, currentUrl).catch(() => { });
 
-    // 2. Chụp ảnh Viewport hiển thị (1920x1080) lúc bộ lọc đang hiển thị đầy đủ
+    // 2. Capture viewport screenshot (1920x1080)
     const screenshot = await page.screenshot({ fullPage: false });
     await testInfo.attach(attachmentName, {
       body: screenshot,
       contentType: 'image/png',
     });
 
-    // 3. Đính kèm URL text vào Allure để copy 1-click
+    // 3. Attach current URL text for 1-click clipboard copy in report
     await testInfo.attach(`${attachmentName}-url`, {
       body: currentUrl,
       contentType: 'text/plain',
     });
   } catch {
-    // Nuốt lỗi an toàn nếu page bị đóng đột ngột
+    // Safely swallow error if page was closed
   }
 };
 
 /**
- * Danh sách regex domain quảng cáo và trackers bên thứ ba.
- * Tập trung vào mạng quảng cáo Nhật Bản (Photo-AC / Illust-AC) và quốc tế.
- * Không chặn nhầm domain hệ thống (*.photo-ac.com, *.ac-illust.com, cdn, api).
+ * Regex pattern for known third-party ad networks and tracking domains.
+ * Targets Japanese and international ad networks without blocking application domain APIs.
  */
 const AD_TRACKER_PATTERN =
   /googlesyndication|googleads|doubleclick|pagead|adservice\.google|yads\.c\.yimg\.jp|s\.yimg\.jp|microad\.(net|jp)|geniee\.jp|fluct\.jp|criteo\.(com|net)|taboola\.com|outbrain\.com|teads\.tv|amazon-adsystem\.com|gmossp\.jp|rtb-oveeo\.com|syncingbridge\.com|simpli\.fi|33across\.com|adnxs\.com|adpushup\.com|rubiconproject\.com/;
 
 /**
- * CSS Rule ẩn triệt để các khung chứa quảng cáo, banner, và vignette overlay
- * để chống Layout Shift và ngăn chặn overlay che khuất các phần tử UI.
+ * CSS rule to hide ad containers, banners, and vignette overlays
+ * preventing Cumulative Layout Shift (CLS) and UI element obstruction.
  */
 const AD_HIDE_STYLES = `
   iframe[id*="google_ads"],
@@ -190,11 +189,11 @@ const AD_HIDE_STYLES = `
 `;
 
 /**
- * Kích hoạt Ad Blocker 2 tầng tối ưu (Network Abort + CSS Hidden).
- * - Tầng 1: Abort ngay lập tức các network request tới máy chủ quảng cáo và trackers bên thứ 3.
- * - Tầng 2: Inject script tự động chèn CSS ẩn khung chứa quảng cáo trước khi trang render, triệt tiêu Layout Shift.
+ * Activate two-tier ad blocker (Network Abort + CSS Hidden).
+ * - Tier 1: Abort network requests to known ad & tracking servers.
+ * - Tier 2: Inject CSS stylesheet hiding ad containers before page render to eliminate layout shift.
  *
- * Lưu ý: Áp dụng có chọn lọc cho Free User / Guest User trong beforeEach.
+ * Applied conditionally for Free User / Guest User in beforeEach hooks.
  *
  * @param page - Playwright Page instance
  */
@@ -202,10 +201,10 @@ export const enableAdBlocker = async (page: Page): Promise<void> => {
   try {
     if (page.isClosed()) return;
 
-    // 1. Tầng Network: Abort request đến máy chủ quảng cáo & trackers
+    // 1. Network tier: Abort requests to ad & tracking servers
     await page.route(AD_TRACKER_PATTERN, (route) => route.abort('blockedbyclient').catch(() => {}));
 
-    // 2. Tầng CSS: Tự động ẩn container quảng cáo ngay khi DOM bắt đầu render
+    // 2. CSS tier: Automatically hide ad containers upon DOM render
     await page.addInitScript((css) => {
       const injectStyle = () => {
         const style = document.createElement('style');
@@ -222,8 +221,9 @@ export const enableAdBlocker = async (page: Page): Promise<void> => {
       injectStyle();
     }, AD_HIDE_STYLES).catch(() => {});
   } catch {
-    // Nuốt lỗi an toàn nếu page bị đóng sớm
+    // Safely swallow error if page was closed early
   }
 };
+
 
 

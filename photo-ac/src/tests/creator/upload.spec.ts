@@ -167,6 +167,7 @@ test.describe('Creator Photo Upload @creator @upload', () => {
 
   test('TC-UPLOAD-CREATOR-006: Kiểm tra trọn vẹn quy trình Upload ảnh và nhập Title, Tags, Category, Lưu thành công', async ({
     uploadPage,
+    creatorPhotoListPage,
     page,
   }) => {
     test.setTimeout(180_000);
@@ -230,7 +231,7 @@ test.describe('Creator Photo Upload @creator @upload', () => {
 
       await test.step('Verify đã điều hướng thành công đến trang danh sách tác phẩm「投稿写真一覧」', async () => {
         await expect(page).toHaveURL(/\/creator\/list/);
-        await expect(uploadPage.photoListHeading).toBeVisible();
+        await expect(creatorPhotoListPage.pageHeading).toBeVisible();
       });
     } finally {
       try {
@@ -244,30 +245,30 @@ test.describe('Creator Photo Upload @creator @upload', () => {
   });
 
   test('TC-UPLOAD-CREATOR-007: Tìm kiếm ảnh đã tải lên trên danh sách「投稿写真一覧」theo từ khóa hoặc ID @regression @creator', async ({
-    uploadPage,
+    creatorPhotoListPage,
     page,
   }) => {
     test.setTimeout(90_000);
 
     await test.step('Điều hướng đến trang danh sách ảnh của Creator「投稿写真一覧」', async () => {
-      await uploadPage.goToPhotoListPage();
-      await expect(uploadPage.photoListHeading).toBeVisible();
+      await creatorPhotoListPage.goToPhotoListPage();
+      await expect(creatorPhotoListPage.pageHeading).toBeVisible();
     });
 
     let photoId: string | null = null;
     await test.step('Lấy ID hoặc tiêu đề của bức ảnh đầu tiên trong danh sách', async () => {
-      await expect(uploadPage.photoListRows.first()).toBeVisible({ timeout: 15_000 });
-      photoId = await uploadPage.getFirstPhotoId();
+      await expect(creatorPhotoListPage.photoListRows.first()).toBeVisible({ timeout: 15_000 });
+      photoId = await creatorPhotoListPage.getFirstPhotoId();
       expect(photoId).not.toBeNull();
     });
 
     await test.step(`Thực hiện tìm kiếm theo ID ảnh: ${photoId}`, async () => {
-      await uploadPage.searchPhoto(photoId!);
+      await creatorPhotoListPage.searchPhoto(photoId!);
       await expect(page).toHaveURL(new RegExp(`pl_q=${photoId}`));
     });
 
     await test.step('Verify kết quả tìm kiếm hiển thị chính xác bức ảnh vừa tìm', async () => {
-      await expect(uploadPage.photoListRows.first()).toBeVisible();
+      await expect(creatorPhotoListPage.photoListRows.first()).toBeVisible();
       const targetRow = page.locator(`#data-list-${photoId}`);
       await expect(targetRow).toBeVisible();
     });
@@ -275,18 +276,19 @@ test.describe('Creator Photo Upload @creator @upload', () => {
 
   test('TC-UPLOAD-CREATOR-008: Chỉnh sửa thông tin ảnh (Edit) và xác nhận cập nhật thành công @regression @creator', async ({
     uploadPage,
+    creatorPhotoListPage,
     page,
   }) => {
     test.setTimeout(120_000);
 
     await test.step('Điều hướng đến trang danh sách ảnh của Creator「投稿写真一覧」', async () => {
-      await uploadPage.goToPhotoListPage();
-      await expect(uploadPage.photoListHeading).toBeVisible();
+      await creatorPhotoListPage.goToPhotoListPage();
+      await expect(creatorPhotoListPage.pageHeading).toBeVisible();
     });
 
     await test.step('Lấy thông tin ảnh đầu tiên và bấm「編集」để mở form chỉnh sửa', async () => {
-      await expect(uploadPage.photoListRows.first()).toBeVisible({ timeout: 15_000 });
-      await uploadPage.clickFirstPhotoEdit();
+      await expect(creatorPhotoListPage.photoListRows.first()).toBeVisible({ timeout: 15_000 });
+      await creatorPhotoListPage.clickFirstPhotoEdit();
       await expect(page).toHaveURL(/\/creator\/dataedit/);
       await expect(uploadPage.dataEditHeading).toBeVisible();
     });
@@ -307,14 +309,15 @@ test.describe('Creator Photo Upload @creator @upload', () => {
 
     await test.step('Verify tiêu đề mới đã được cập nhật thành công trên trang danh sách', async () => {
       await expect(page).toHaveURL(/\/creator\/list/);
-      await expect(uploadPage.photoListHeading).toBeVisible();
-      const firstTitle = await uploadPage.getFirstPhotoTitle();
+      await expect(creatorPhotoListPage.pageHeading).toBeVisible();
+      const firstTitle = await creatorPhotoListPage.getFirstPhotoTitle();
       expect(firstTitle).toBe(updatedTitle);
     });
   });
 
   test('TC-UPLOAD-CREATOR-009: Xóa ảnh đã tải lên (Delete) qua modal xác nhận và kiểm tra ảnh bị xóa khỏi danh sách @regression @creator', async ({
     uploadPage,
+    creatorPhotoListPage,
     page,
   }) => {
     test.setTimeout(180_000);
@@ -352,24 +355,24 @@ test.describe('Creator Photo Upload @creator @upload', () => {
 
       let targetPhotoId: string | null = null;
       await test.step('Lấy ID của ảnh vừa tạo và bấm nút「削除」', async () => {
-        await expect(uploadPage.photoListRows.first()).toBeVisible({ timeout: 15_000 });
-        targetPhotoId = await uploadPage.getFirstPhotoId();
+        await expect(creatorPhotoListPage.photoListRows.first()).toBeVisible({ timeout: 15_000 });
+        targetPhotoId = await creatorPhotoListPage.getFirstPhotoId();
         expect(targetPhotoId).not.toBeNull();
-        await uploadPage.clickFirstPhotoDelete();
+        await creatorPhotoListPage.clickFirstPhotoDelete();
       });
 
       await test.step('Verify modal cảnh báo xóa「#confirm-dialog」hiển thị đúng nội dung', async () => {
-        await expect(uploadPage.deleteModal).toBeVisible();
-        await expect(uploadPage.deleteModalConfirmText).toHaveText(
+        await expect(creatorPhotoListPage.deleteModal).toBeVisible();
+        await expect(creatorPhotoListPage.deleteModalConfirmText).toHaveText(
           'この操作は元に戻せません。本当に削除しますか。'
         );
-        await expect(uploadPage.deleteModalConfirmButton).toBeVisible();
-        await expect(uploadPage.deleteModalCancelButton).toBeVisible();
+        await expect(creatorPhotoListPage.deleteModalConfirmButton).toBeVisible();
+        await expect(creatorPhotoListPage.deleteModalCancelButton).toBeVisible();
       });
 
       await test.step('Bấm nút「OK」trên modal xác nhận xóa và đợi trang tải lại', async () => {
-        await uploadPage.confirmDeletePhoto();
-        await expect(uploadPage.deleteModal).toBeHidden();
+        await creatorPhotoListPage.confirmDeletePhoto();
+        await expect(creatorPhotoListPage.deleteModal).toBeHidden();
       });
 
       await test.step('Verify ảnh đã bị xóa hoàn toàn khỏi danh sách「投稿写真一覧」', async () => {

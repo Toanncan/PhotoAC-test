@@ -1,12 +1,12 @@
-﻿import { type Page, type Locator, test } from '@playwright/test';
+import { type Page, type Locator, test, expect } from '@playwright/test';
 import { BasePage } from '../common/base.page';
 
 /**
- * DownloadImagePage — Page Object for the photo download / material detail page.
- * Specifically interacts with Acworks materials to ensure strict compliance
- * with the requirement of downloading ONLY Acworks images.
+ * PhotoDetailPage — Page Object for the photo detail / download material page (/photo/:id).
+ * Handles material details, author information, social interactions (like, fan, bookmark),
+ * AI face search, and size-specific downloads (S, M, L).
  */
-export class DownloadImagePage extends BasePage {
+export class PhotoDetailPage extends BasePage {
   // Constants
   /** Standard Acworks sample photo ID */
   static readonly ACWORKS_DEFAULT_PHOTO_ID = '1651238';
@@ -27,7 +27,7 @@ export class DownloadImagePage extends BasePage {
   /** Author name element */
   readonly creatorName: Locator = this.page
     .locator('a[href*="/profile/43626"]')
-    .filter({ hasText: DownloadImagePage.ACWORKS_CREATOR_NAME })
+    .filter({ hasText: PhotoDetailPage.ACWORKS_CREATOR_NAME })
     .first();
 
   /** Safety confirmation badge confirming creator identity */
@@ -220,8 +220,10 @@ export class DownloadImagePage extends BasePage {
   /** "コピーしました" tooltip indicator after copying link */
   readonly copiedTooltip: Locator = this.page.locator('.popover.show .copiedWrapper');
 
-  /** Delete trash button inside Bookmarks collection item */
-  readonly bookmarkTrashButton: Locator = this.page.locator('.ac-mycollection-btn-trash');
+  // Photo Detail AI Face Locators
+  /** AI Face thumbnail links displayed on the photo detail page (.face-list a.face-item) */
+  readonly faceItemLinks: Locator = this.page.locator('.face-list a.face-item');
+
 
   constructor(page: Page) {
     super(page);
@@ -229,15 +231,23 @@ export class DownloadImagePage extends BasePage {
 
   // Navigation Methods
   /**
+   * Navigate directly to the detail page of any photo by its ID.
+   * @param photoId - Material ID of the photo
+   */
+  async goToPhotoDetail(photoId: string): Promise<void> {
+    await test.step(`Navigate to photo detail page (ID: ${photoId})`, async () => {
+      await this.navigate(`/main/detail/${photoId}`);
+      await this.waitForPageLoad();
+    });
+  }
+
+  /**
    * Navigate directly to the detail page of an Acworks photo.
    * Default points to Acworks verified image ID 1651238.
    * @param photoId - Material ID of Acworks (defaults to 1651238)
    */
-  async goToAcworksPhotoDetail(photoId: string = DownloadImagePage.ACWORKS_DEFAULT_PHOTO_ID): Promise<void> {
-    await test.step(`Navigate to Acworks photo detail page (ID: ${photoId})`, async () => {
-      await this.navigate(`/main/detail/${photoId}`);
-      await this.waitForPageLoad();
-    });
+  async goToAcworksPhotoDetail(photoId: string = PhotoDetailPage.ACWORKS_DEFAULT_PHOTO_ID): Promise<void> {
+    await this.goToPhotoDetail(photoId);
   }
 
   // Action Methods
@@ -581,51 +591,23 @@ export class DownloadImagePage extends BasePage {
   }
 
   /**
-   * Navigate directly to the user's bookmarks page.
+   * Click an AI Face thumbnail from the photo detail page to perform vector face search.
+   * Modifies link target to remain in the same tab.
+   * @param index - Index of the face thumbnail (defaults to 0)
    */
-  async goToBookmarksPage(): Promise<void> {
-    await test.step('Navigate to Bookmarks page', async () => {
-      await this.navigate('/user/bookmarks/');
-      await this.waitForPageLoad();
-    });
-  }
-
-  /**
-   * Navigate directly to the first collection folder in bookmarks.
-   */
-  async goToFirstCollectionFolder(): Promise<void> {
-    await test.step('Navigate to first collection folder in bookmarks', async () => {
-      await this.goToBookmarksPage();
-      const collectionLink = this.page.locator('a[href*="/user/bookmarks/collection/"]').first();
-      await collectionLink.waitFor({ state: 'attached', timeout: 15_000 });
-      const href = await collectionLink.getAttribute('href');
-      if (href) {
-        await this.navigate(href);
-        await this.waitForPageLoad();
-      }
-    });
-  }
-
-  /**
-   * Delete photo from collection by clicking trash icon and accepting confirmation dialog.
-   */
-  async deletePhotoFromCollection(photoId: string): Promise<void> {
-    await test.step(`Delete photo (ID: ${photoId}) from collection`, async () => {
-      const item = this.page.locator(`.item:has(a[href*="${photoId}"])`).first();
-      await item.scrollIntoViewIfNeeded();
-      await item.hover();
-
-      const trash = item.locator('.ac-mycollection-btn-trash');
-
-      this.page.once('dialog', async dialog => {
-        await dialog.accept();
+  async clickAiFaceThumbnail(index: number = 0): Promise<void> {
+    await test.step(`Click AI Face thumbnail index ${index}`, async () => {
+      const faceLink = this.faceItemLinks.nth(index);
+      await expect(faceLink).toBeVisible({ timeout: 15_000 });
+      await faceLink.evaluate((el: HTMLAnchorElement) => {
+        el.removeAttribute('target');
+        el.removeAttribute('rel');
       });
-
-      await trash.click();
-      await item.waitFor({ state: 'detached', timeout: 15_000 }).catch(() => {});
-      await this.waitForPageLoad();
+      await this.clickElement(faceLink);
+      await this.page.waitForLoadState('domcontentloaded').catch(() => {});
     });
   }
+
 
   // Premium Bulk Download Methods
   /**
@@ -682,7 +664,7 @@ export class DownloadImagePage extends BasePage {
    * Remove the photo item from Bulk Download modal.
    * @param photoId - ID of photo to remove (defaults to Acworks default ID)
    */
-  async removePhotoFromBulkModal(photoId: string = DownloadImagePage.ACWORKS_DEFAULT_PHOTO_ID): Promise<void> {
+  async removePhotoFromBulkModal(photoId: string = PhotoDetailPage.ACWORKS_DEFAULT_PHOTO_ID): Promise<void> {
     await test.step(`Remove photo (ID: ${photoId}) from Bulk Download modal`, async () => {
       const removeBtn = this.page.locator(`#bulkDownloadModal .img-remove[attrid="${photoId}"]`).first();
       const targetBtn = (await removeBtn.count()) > 0
@@ -739,5 +721,3 @@ export class DownloadImagePage extends BasePage {
     });
   }
 }
-
-

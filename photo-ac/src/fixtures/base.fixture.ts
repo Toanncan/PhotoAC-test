@@ -7,10 +7,13 @@ import { RankingPage } from '../pages/creator/ranking.page';
 import { UploadPage } from '../pages/creator/upload.page';
 import { ReceiptsPage } from '../pages/downloader/receipts.page';
 import { ProfileEditPage } from '../pages/downloader/profile-edit.page';
-import { SearchResultPage } from '@pages/common/search-results.page';
-import { DownloadImagePage } from '../pages/downloader/download-image.page';
+import { SearchResultPage } from '../pages/common/search-results.page';
+import { PhotoDetailPage } from '../pages/downloader/photo-detail.page';
 import { PremiumRegisterPage } from '../pages/downloader/premium-register.page';
 import { RegisterPage } from '../pages/common/register.page';
+import { TrendsPage } from '../pages/common/trends.page';
+import { BookmarksPage } from '../pages/downloader/bookmarks.page';
+import { CreatorPhotoListPage } from '../pages/creator/photo-list.page';
 import { envConfig } from '../utils/env.config';
 
 /**
@@ -26,8 +29,11 @@ type PageFixtures = {
   receiptsPage: ReceiptsPage;
   profileEditPage: ProfileEditPage;
   searchResultPage: SearchResultPage;
-  downloadImagePage: DownloadImagePage;
+  photoDetailPage: PhotoDetailPage;
   premiumRegisterPage: PremiumRegisterPage;
+  trendsPage: TrendsPage;
+  bookmarksPage: BookmarksPage;
+  creatorPhotoListPage: CreatorPhotoListPage;
   allureMetadata: void;
   screenshotOnPass: void;
   urlOverlayAndAttachment: void;
@@ -49,10 +55,10 @@ export const test = base.extend<PageFixtures>({
     let role = 'Common';
     if (filePath.includes('guest') || projectName.includes('guest')) {
       role = 'Guest';
-    } else if (filePath.includes('freeuser') || projectName.includes('free-user')) {
-      role = 'FreeUser';
+    } else if (filePath.includes('free-user') || filePath.includes('freeuser') || projectName.includes('free-user')) {
+      role = 'Free User';
     } else if (filePath.includes('premium') || projectName.includes('premium')) {
-      role = 'PremiumUser';
+      role = 'Premium User';
     } else if (filePath.includes('creator') || projectName.includes('creator')) {
       role = 'Creator';
     } else if (filePath.includes('admin') || projectName.includes('admin')) {
@@ -71,6 +77,7 @@ export const test = base.extend<PageFixtures>({
       browserName = testInfo.project.name;
     }
 
+    await allure.epic(role);
     await allure.parentSuite(`Photo AC - ${role}`);
     await allure.suite(path.basename(testInfo.file, path.extname(testInfo.file)));
     await allure.subSuite(browserName);
@@ -123,9 +130,10 @@ export const test = base.extend<PageFixtures>({
     const searchResultPage = new SearchResultPage(page);
     await use(searchResultPage);
   },
-  downloadImagePage: async ({ page }, use) => {
-    const downloadImagePage = new DownloadImagePage(page);
-    await use(downloadImagePage);
+  // Provides a PhotoDetailPage instance for photo detail tests
+  photoDetailPage: async ({ page }, use) => {
+    const photoDetailPage = new PhotoDetailPage(page);
+    await use(photoDetailPage);
   },
 
   // Provides a PremiumRegisterPage instance for premium registration tests
@@ -138,6 +146,24 @@ export const test = base.extend<PageFixtures>({
   registerPage: async ({ page }, use) => {
     const registerPage = new RegisterPage(page);
     await use(registerPage);
+  },
+
+  // Provides a TrendsPage instance for trends page tests
+  trendsPage: async ({ page }, use) => {
+    const trendsPage = new TrendsPage(page);
+    await use(trendsPage);
+  },
+
+  // Provides a BookmarksPage instance for bookmarks and collections tests
+  bookmarksPage: async ({ page }, use) => {
+    const bookmarksPage = new BookmarksPage(page);
+    await use(bookmarksPage);
+  },
+
+  // Provides a CreatorPhotoListPage instance for creator photo management tests
+  creatorPhotoListPage: async ({ page }, use) => {
+    const creatorPhotoListPage = new CreatorPhotoListPage(page);
+    await use(creatorPhotoListPage);
   },
 
   /**

@@ -1,11 +1,11 @@
 import * as path from 'path';
-import { test, expect } from '../../fixtures/base.fixture';
-import { captureEvidenceWithUrl } from '../../utils/helpers';
+import { test, expect } from '../../../fixtures/base.fixture';
+import { captureEvidenceWithUrl } from '../../../utils/helpers';
 
 /**
- * ============================================================================
+
  * TEST SUITE: SEARCH & FILTERS — PREMIUM USER
- * ============================================================================
+
  * Cấu trúc chuẩn hóa 7 Nhóm đồng bộ 100% với Photo-AC:
  * NHÓM 1: CƠ BẢN & ĐIỂM VÀO TÌM KIẾM (TC-001 ➔ TC-006)
  * NHÓM 2: BỘ LỌC ĐƠN LẺ TRÊN THANH CÔNG CỤ (TC-007 ➔ TC-015)
@@ -37,9 +37,7 @@ test.describe('Search & Filters — Premium User (Full Privileges)', () => {
     }
   });
 
-  // ============================================================================
   // NHÓM 1: TÌM KIẾM CƠ BẢN
-  // ============================================================================
 
   /**
    * TC-SEARCH-PREM-001: Tìm kiếm với từ khóa đơn hợp lệ
@@ -191,9 +189,7 @@ test.describe('Search & Filters — Premium User (Full Privileges)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 2: BỘ LỌC ĐƠN LẺ TRÊN THANH CÔNG CỤ (FILTER TOOLBAR)
-  // ============================================================================
 
   /**
    * TC-SEARCH-PREM-007: Lọc ảnh theo Chiều dọc (縦長) và chuyển đổi sang Chiều ngang (横長) qua toolbar
@@ -441,9 +437,7 @@ test.describe('Search & Filters — Premium User (Full Privileges)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 3: BỘ LỌC KẾT HỢP ĐA ĐIỀU KIỆN TRÊN UI
-  // ============================================================================
 
   /**
    * TC-SEARCH-PREM-016: Kết hợp Từ khóa + Chiều ngang + Định dạng Vector (EPS/AI) + Loại trừ AI qua UI Toolbar
@@ -527,9 +521,7 @@ test.describe('Search & Filters — Premium User (Full Privileges)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 4: TÌM KIẾM CHUYÊN SÂU & ĐẶC BIỆT
-  // ============================================================================
 
   /**
    * TC-SEARCH-PREM-018: Tải ảnh lên tìm kiếm tương đồng
@@ -585,14 +577,16 @@ test.describe('Search & Filters — Premium User (Full Privileges)', () => {
    * TC-SEARCH-PREM-020: Tìm kiếm đề xuất và phân trang (rcm=1)
    * @tags @regression @premium
    */
-  test.skip('TC-SEARCH-PREM-020: Truy cập Recommended Search và giữ tham số rcm=1 khi chuyển trang @regression @premium', async ({
+  test('TC-SEARCH-PREM-020: Truy cập Recommended Search và giữ tham số rcm=1 khi chuyển trang @regression @premium', async ({
     page,
     searchResultPage,
   }, testInfo) => {
     await searchResultPage.goToRecommendedSearch();
 
-    await test.step('Verify trang Recommended Search hiển thị tiêu đề chuẩn', async () => {
-      await expect(searchResultPage.resultHeading).toContainText('のイラスト素材');
+    await test.step('Xác minh trang Recommended Search hiển thị đúng tham số, tiêu đề và danh sách ảnh', async () => {
+      await expect(page).toHaveURL(/rcm=1/);
+      await expect(searchResultPage.resultHeading).toContainText(/(イラスト素材|フリーイラスト素材)/);
+      await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
       const count = await searchResultPage.getResultCount();
       expect(count, 'Trang phải có ít nhất 1 ảnh hiển thị').toBeGreaterThan(0);
       await captureEvidenceWithUrl(page, testInfo, 'Recommended-Search-Page-1');
@@ -600,7 +594,7 @@ test.describe('Search & Filters — Premium User (Full Privileges)', () => {
 
     await searchResultPage.goToNextPage();
 
-    await test.step('Verify URL giữ nguyên tham số rcm=1 và referer khi sang trang 2', async () => {
+    await test.step('Xác minh URL giữ nguyên tham số rcm=1 và referer khi sang trang 2', async () => {
       await expect(page).toHaveURL(/rcm=1/);
       await expect(page).toHaveURL(/referer=more_recommended/);
       await expect(page).toHaveURL(/(page|p)=2/);
@@ -639,9 +633,7 @@ test.describe('Search & Filters — Premium User (Full Privileges)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 5: ĐẶC QUYỀN SẮP XẾP & PHÂN TRANG CỦA PREMIUM USER
-  // ============================================================================
 
   /**
    * TC-SEARCH-PREM-022: Sắp xếp theo "人気順" (Phổ biến) thành công không bị chặn
@@ -747,9 +739,7 @@ test.describe('Search & Filters — Premium User (Full Privileges)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 6: PHÂN QUYỀN KHÔNG GIỚI HẠN (UNLIMITED SEARCH)
-  // ============================================================================
 
   /**
    * TC-SEARCH-PREM-025: Premium User tìm kiếm không giới hạn số lần
@@ -772,9 +762,7 @@ test.describe('Search & Filters — Premium User (Full Privileges)', () => {
     }
   });
 
-  // ============================================================================
   // NHÓM 7: THANH TÌM KIẾM CỐ ĐỊNH TRÊN HEADER (STICKY HEADER SEARCH BAR)
-  // ============================================================================
 
   /**
    * TC-SEARCH-PREM-026: Thanh tìm kiếm cố định tự động hiển thị khi cuộn trang xuống và ẩn đi khi cuộn lên đầu trang

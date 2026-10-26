@@ -95,7 +95,7 @@ export default defineConfig({
 
   // Configure projects for major browsers
   projects: [
-    // ── Setup Projects (Chromium) ─────────────────────────────────────────────
+    // Setup Projects (Chromium)
     // Setup project for Premium User session (Chromium)
     {
       name: 'setup-premium-user',
@@ -140,7 +140,7 @@ export default defineConfig({
       },
     },
 
-    // ── Setup Projects (Firefox) ──────────────────────────────────────────────
+    // Setup Projects (Firefox)
     // Setup project for Premium User session (Firefox)
     {
       name: 'setup-premium-user-firefox',
@@ -180,7 +180,7 @@ export default defineConfig({
       },
     },
 
-    // ── Execution Projects (Chromium) ─────────────────────────────────────────
+    // Execution Projects (Chromium)
     // Chromium Guest — Tests running without authentication (No login required)
     {
       name: 'chromium-guest',
@@ -193,7 +193,7 @@ export default defineConfig({
           ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
           : {}),
       },
-      testMatch: '**/downloader/*guest*.spec.ts',
+      testMatch: '**/downloader/guest/**/*.spec.ts',
     },
 
     // Chromium Premium — Tests running under Premium User session
@@ -209,11 +209,7 @@ export default defineConfig({
           : {}),
       },
       dependencies: ['setup-premium-user'],
-      testIgnore: [
-        '**/creator/**/*.spec.ts',
-        '**/downloader/*freeUser*.spec.ts',
-        '**/downloader/*guest*.spec.ts',
-      ],
+      testMatch: '**/downloader/premium/**/*.spec.ts',
     },
 
     // Chromium Free User — Tests running under Free User session
@@ -229,7 +225,7 @@ export default defineConfig({
           : {}),
       },
       dependencies: ['setup-free-user'],
-      testMatch: '**/downloader/*freeUser*.spec.ts',
+      testMatch: '**/downloader/free-user/**/*.spec.ts',
     },
 
     // Chromium Creator — Tests running under Creator session
@@ -245,7 +241,7 @@ export default defineConfig({
       testMatch: '**/creator/**/*.spec.ts',
     },
 
-    // ── Execution Projects (Firefox) ──────────────────────────────────────────
+    // Execution Projects (Firefox)
     // Firefox Guest — Tests running without authentication (No login required)
     {
       name: 'firefox-guest',
@@ -257,7 +253,7 @@ export default defineConfig({
           ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
           : {}),
       },
-      testMatch: '**/downloader/*guest*.spec.ts',
+      testMatch: '**/downloader/guest/**/*.spec.ts',
     },
 
     // Firefox Premium — Tests running under Premium User session
@@ -272,11 +268,7 @@ export default defineConfig({
           : {}),
       },
       dependencies: ['setup-premium-user-firefox'],
-      testIgnore: [
-        '**/creator/**/*.spec.ts',
-        '**/downloader/*freeUser*.spec.ts',
-        '**/downloader/*guest*.spec.ts',
-      ],
+      testMatch: '**/downloader/premium/**/*.spec.ts',
     },
 
     // Firefox Free User — Tests running under Free User session
@@ -291,7 +283,7 @@ export default defineConfig({
           : {}),
       },
       dependencies: ['setup-free-user-firefox'],
-      testMatch: '**/downloader/*freeUser*.spec.ts',
+      testMatch: '**/downloader/free-user/**/*.spec.ts',
     },
 
     // Firefox Creator — Tests running under Creator session
@@ -309,7 +301,7 @@ export default defineConfig({
       testMatch: '**/creator/**/*.spec.ts',
     },
 
-    // ── Execution Projects (WebKit) ───────────────────────────────────────────
+    // Execution Projects (WebKit)
     // WebKit Guest — Tests running on WebKit (Safari engine) without authentication
     {
       name: 'webkit-guest',
@@ -321,7 +313,7 @@ export default defineConfig({
           ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
           : {}),
       },
-      testMatch: '**/downloader/*guest*.spec.ts',
+      testMatch: '**/downloader/guest/**/*.spec.ts',
     },
   ],
 

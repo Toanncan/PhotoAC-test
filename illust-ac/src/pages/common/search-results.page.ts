@@ -6,8 +6,7 @@ import { BasePage } from './base.page';
  * Follows Playwright best practices with semantic locators and smart auto-waiting.
  */
 export class SearchResultPage extends BasePage {
-  // ─── Locators ─────────────────────────────────────────────────────────────
-
+  // Locators
   /** Image thumbnails displayed in search results (AC-Illust uses img.w-100.h-100 inside .inner container) */
   readonly resultItems: Locator = this.page.locator('.inner img.w-100.h-100');
 
@@ -21,13 +20,12 @@ export class SearchResultPage extends BasePage {
   readonly resultsOrNoResultLocator: Locator = this.resultItems.first().or(this.noResultMessage.first());
 
   /**
-   * Search results main heading (e.g. 「cat」のイラスト素材 212,012点 or アップロードした画像に似ているイラストのイラスト素材)
-   * AC-Illust keyword search uses <span class="d-inline-block">, while RIS image search uses <h1>.
+   * Search results main heading (e.g. 「cat」のイラスト素材 or アップロードした画像に似ているイラスト or 関連したフリーイラスト素材)
    */
-  readonly resultHeading: Locator = this.page.locator('span.d-inline-block, h1, .ac-section-title').filter({ hasText: 'のイラスト素材' }).first();
+  readonly resultHeading: Locator = this.page.locator('span.d-inline-block, h1, h2, .ac-section-title').first();
 
   /** Result count / total text */
-  readonly resultCount: Locator = this.page.locator('span.d-inline-block, h1, .ac-section-title').filter({ hasText: 'のイラスト素材' }).first();
+  readonly resultCount: Locator = this.page.locator('span.d-inline-block, h1, h2, .ac-section-title, [class*="result-count"], [class*="total"]').first();
 
   /**
    * Search keyword input box on results page.
@@ -41,8 +39,7 @@ export class SearchResultPage extends BasePage {
   /** Submit search button */
   readonly searchSubmitButton: Locator = this.page.locator('#search_frm button.execloginbtn:visible, #search_frm #search_btn:visible, #search_frm button[type="submit"]:visible, button.execloginbtn:visible').first();
 
-  // ─── Sort Dropdown Locators ────────────────────────────────────────────────
-
+  // Sort Dropdown Locators
   /**
    * Sort & Display Count combined dropdown toggle button.
    * AC-Illust shows combined text e.g. "関連性の高い順／70件表示".
@@ -66,8 +63,7 @@ export class SearchResultPage extends BasePage {
   readonly popularSortPopover: Locator = this.page.locator('.popover.show');
   readonly popularSortPopoverBody: Locator = this.page.locator('.popover.show .popover-body');
 
-  // ─── Display Count Locators (表示件数) ──────────────────────────────────────
-
+  // Display Count Locators (表示件数)
   /** Display count option: 70 items per page (Default for Guest / Free) */
   readonly displayCount70Radio: Locator = this.page.locator('#pp-70');
   readonly displayCount70Label: Locator = this.page.locator('label[for="pp-70"]');
@@ -80,8 +76,7 @@ export class SearchResultPage extends BasePage {
   readonly displayCount210Radio: Locator = this.page.locator('#pp-210');
   readonly displayCount210Label: Locator = this.page.locator('label[for="pp-210"]');
 
-  // ─── Search Limit Modal Locators ──────────────────────────────────────────
-
+  // Search Limit Modal Locators
   /** Modal displayed when user reaches the daily search limit (1日4回) */
   readonly searchLimitModal: Locator = this.page.locator('#searchLimitModal');
 
@@ -100,8 +95,7 @@ export class SearchResultPage extends BasePage {
   /** Close button for search limit modal */
   readonly searchLimitCloseButton: Locator = this.page.locator('#searchLimitModal button.close');
 
-  // ─── Filter Toolbar Locators ───────────────────────────────────────────────
-
+  // Filter Toolbar Locators
   /** Filter button: Category (カテゴリー) */
   readonly categoryFilterButton: Locator = this.page.locator('#filter-dropdown-categories > button');
 
@@ -131,7 +125,7 @@ export class SearchResultPage extends BasePage {
   /** Active filter badges/chips displayed directly under the filter toolbar (Illust-AC uses button.btn-light with <a class="ml-2"> SVG remove icon) */
   readonly activeFilterBadges: Locator = this.page.locator('button.btn-light:has(a.ml-2), button:has(a[aria-label="削除"])');
 
-  // ─── Filter Option Locators: 1. Category (カテゴリー) ──────────────────────
+  // Filter Option Locators: 1. Category (カテゴリー)
   // NOTE: AC-Illust uses ddcl-c_names_mf-i* (NOT ddcl-c_names1-i* like photo-ac)
   // Category order: 花・植物(0), ビジネス(1), チラシ(2), 名刺(3), 医療・福祉(4), 人物(5), 動物・生き物(6)
   readonly categoryFloraLabel: Locator = this.page.locator('#filter-dropdown-categories label[for="ddcl-c_names_mf-i0"], #filter-dropdown-categories label:has-text("花・植物")').first();
@@ -139,7 +133,7 @@ export class SearchResultPage extends BasePage {
   readonly categoryPeopleLabel: Locator = this.page.locator('#filter-dropdown-categories label[for="ddcl-c_names_mf-i5"], #filter-dropdown-categories label:has-text("人物")').first();
   readonly categoryAnimalLabel: Locator = this.page.locator('#filter-dropdown-categories label[for="ddcl-c_names_mf-i6"], #filter-dropdown-categories label:has-text("動物・生き物")').first();
 
-  // ─── Filter Option Locators: 2. File & Format (ファイル・向き) ───────────────
+  // Filter Option Locators: 2. File & Format (ファイル・向き)
   // NOTE: AC-Illust uses #filter-dropdown-format (NOT sizesec like photo-ac).
   // Format options: All, Vector (EPS/AI), PNG — NO PSD/M/L size filters.
   readonly orientationAllLabel: Locator = this.page.locator('#filter-dropdown-format label[for="orientation-all"]').first();
@@ -152,7 +146,7 @@ export class SearchResultPage extends BasePage {
   /** Format filter: PNG */
   readonly formatPngLabel: Locator = this.page.locator('#filter-dropdown-format label[for="format-png"]').first();
 
-  // ─── Filter Option Locators: 3. Color (色) ──────────────────────────────────
+  // Filter Option Locators: 3. Color (色)
   readonly colorAllOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-all"], #filter-dropdown-color .bg-all, label[for="color-all"]').first();
   readonly colorRedOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-ed1d25"], #filter-dropdown-color .bg-ed1d25').first();
   readonly colorPinkOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-ffc7f0"], #filter-dropdown-color .bg-ffc7f0').first();
@@ -164,13 +158,13 @@ export class SearchResultPage extends BasePage {
   readonly colorBlueOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-0000d6"], #filter-dropdown-color .bg-0000d6').first();
   readonly colorWhiteOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-ffffff"], #filter-dropdown-color .bg-ffffff').first();
 
-  // ─── Filter Option Locators: 4. Exclude Keyword (除外キーワード) ──────────────
+  // Filter Option Locators: 4. Exclude Keyword (除外キーワード)
   // NOTE: AC-Illust does NOT have 人物指定 (person spec) or Model/Property Release filters.
   // NOTE: AC-Illust uses name="nq" with no fixed ID for the exclude keyword input.
 
   readonly excludeKeywordInput: Locator = this.page.locator('#filter-dropdown-exclude-kw input[name="nq"]');
 
-  // ─── Filter Option Locators: 5. Detailed Search (詳細検索) ──────────────────
+  // Filter Option Locators: 5. Detailed Search (詳細検索)
   // NOTE: AC-Illust uses id="creator_mf" (NOT #form_creator like photo-ac)
   // NOTE: jQuery tagEditor plugin dynamically converts/inserts hidden inputs; explicitly exclude type="hidden" and support dynamic typing input
   readonly detailedCreatorInput: Locator = this.page.locator(
@@ -185,14 +179,14 @@ export class SearchResultPage extends BasePage {
   readonly detailedNgCreatorInput: Locator = this.page.locator('#filter-dropdown-detail input[type="text"][name="ngcreator"], #filter-dropdown-detail input[placeholder="除外イラストレーター名を入力"]:visible, #filter-dropdown-detail input[name="ngcreator"]:not([type="hidden"])').first();
   readonly detailedPhotoIdInput: Locator = this.page.locator('#filter-dropdown-detail input[type="text"][name="qid"], #filter-dropdown-detail input[placeholder="素材のIDを入力"]:visible, #filter-dropdown-detail input[name="qid"]:not([type="hidden"])').first();
 
-  // ─── Filter Option Locators: 6. Display Conditions (表示条件) ───────────────
+  // Filter Option Locators: 6. Display Conditions (表示条件)
   readonly exactMatchCheckbox: Locator = this.page.locator('#filter-dropdown-display #type_search, #type_search');
   readonly exactMatchLabel: Locator = this.page.locator('#filter-dropdown-display label[for="type_search"]').first();
   readonly excludeAiCheckbox: Locator = this.page.locator('#filter-dropdown-display #exclude_ai, #exclude_ai');
   readonly excludeAiLabel: Locator = this.page.locator('#filter-dropdown-display label[for="exclude_ai"]').first();
   // NOTE: Model Release (mdlrlrsec) & Property Release (prprlrsec) do NOT exist on AC-Illust.
 
-  // ─── Pagination Locators ───────────────────────────────────────────────────
+  // Pagination Locators
   // NOTE: AC-Illust uses div.pagination_bottom with .paginator_p links (NOT ul.ac-pagination like photo-ac)
 
   /** Pagination container */
@@ -212,15 +206,16 @@ export class SearchResultPage extends BasePage {
   readonly introDialog: Locator = this.page.locator('dialog:has(a[href*="function_introduction"]), dialog[open], [role="dialog"]:has(.icon-close)');
   readonly introDialogCloseButton: Locator = this.page.locator('dialog .icon-close, dialog [aria-label="Close"], [role="region"][aria-label="Close"], dialog button.close');
 
-  // ─── QuickView Locators (verified on test-lien.ac-illust.com) ──────────────
+  // QuickView Locators (verified on test-lien.ac-illust.com)
   readonly resultFigures: Locator = this.page.locator('figure.figure-item');
   readonly quickViewModal: Locator = this.page.locator('#quickviewModal');
   readonly quickViewCloseButton: Locator = this.page.locator('#quickviewModal button.close');
   readonly guestRegisterPromptTitle: Locator = this.page.locator('#quickviewModal #quickViewBox h6').filter({ hasText: '会員登録で今すぐダウンロード！' });
   readonly guestRegisterCtaButton: Locator = this.page.locator('#quickviewModal #quickViewBox a').filter({ hasText: '無料ダウンロード' });
   readonly guestLoginLink: Locator = this.page.locator('#quickviewModal #quickViewBox a').filter({ hasText: 'ログイン' });
+  readonly premiumDownloadButtons: Locator = this.page.locator('#quickviewModal a.btn-download');
 
-  // ─── Group Sites Locators (イラストACグループサイト) ─────────────────────────
+  // Group Sites Locators (イラストACグループサイト)
   // NOTE: Photo AC (#photo-search) and Silhouette AC (#slh-search) lists exist on the DOM but
   // cannot render on the test environment (test-yano.photo-ac.com API returns 404).
   readonly designListContainer: Locator = this.page.locator('#design-search');
@@ -232,20 +227,29 @@ export class SearchResultPage extends BasePage {
   readonly relatedModalDownloadButton: Locator = this.page.locator('#relatedSearchModal a.ac-btn').filter({ hasText: 'ダウンロードページ' });
   readonly relatedModalCloseButton: Locator = this.page.locator('#relatedSearchModal button.close');
 
-  // ─── Constructor ──────────────────────────────────────────────────────────
-
+  // Constructor
   constructor(page: Page) {
     super(page);
   }
 
-  // ─── Actions ──────────────────────────────────────────────────────────────
-
+  // Actions
   /**
-   * Dismiss introductory/promotional dialog if visible on the page (e.g. Premium feature tips dialog).
+   * Dismiss introductory/promotional dialog if visible on the page (e.g. Premium feature tips dialog, PR DesignAC banner modal).
    * Checks immediately without stalling test execution when no dialog is present.
    */
   async dismissIntroDialogIfPresent(): Promise<void> {
     try {
+      const prModal = this.page.locator('#pr-designac-modal');
+      if (await prModal.isVisible().catch(() => false)) {
+        const prClose = prModal.locator('.pr-designac-modal-close, [aria-label="Close"]');
+        if (await prClose.first().isVisible().catch(() => false)) {
+          await prClose.first().click({ force: true }).catch(() => { });
+        } else {
+          await this.page.keyboard.press('Escape').catch(() => { });
+        }
+        await prModal.waitFor({ state: 'hidden', timeout: 2_000 }).catch(() => { });
+      }
+
       if (await this.introDialog.first().isVisible().catch(() => false)) {
         if (await this.introDialogCloseButton.first().isVisible().catch(() => false)) {
           await this.introDialogCloseButton.first().click({ force: true }).catch(() => { });
@@ -423,8 +427,7 @@ export class SearchResultPage extends BasePage {
     });
   }
 
-  // ─── Pagination Actions ───────────────────────────────────────────────────
-
+  // Pagination Actions
   /**
    * Click the Next page button in pagination with progressive 3-tier fallback to ensure reliable navigation cross-browser.
    */
@@ -596,8 +599,7 @@ export class SearchResultPage extends BasePage {
     return this.getText(this.paginationActivePage);
   }
 
-  // ─── Category Search Actions ──────────────────────────────────────────────
-
+  // Category Search Actions
   /**
    * Select a category directly from the Filter Toolbar dropdown menu (UI interaction).
    * @param categoryName - Display name (e.g. '人物', 'ビジネス', '動物・生き物', '自然・風景')
@@ -626,8 +628,7 @@ export class SearchResultPage extends BasePage {
     });
   }
 
-  // ─── Filter Toolbar Actions ───────────────────────────────────────────────
-
+  // Filter Toolbar Actions
   /**
    * Safely opens a toolbar dropdown menu and ensures the target option is visible.
    * Handles hydration delays, layout shifts, and CSS animations across all browsers.
@@ -966,6 +967,26 @@ export class SearchResultPage extends BasePage {
   }
 
   /**
+   * Open detail page for a specific search result thumbnail (Free user behavior).
+   * Hovers over figure, strips target="_blank" to ensure same-tab navigation, and clicks the detail link.
+   * @param index - Index of figure item (default 0)
+   */
+  async openDetailPageForItem(index: number = 0): Promise<void> {
+    await test.step(`Open detail page for item index ${index}`, async () => {
+      const figure = this.resultFigures.nth(index);
+      await expect(figure).toBeVisible({ timeout: 10_000 });
+      await figure.hover();
+      const detailLink = figure.locator('a.link-to-detail');
+      await expect(detailLink).toBeAttached({ timeout: 10_000 });
+      await detailLink.evaluate((el: HTMLAnchorElement) => {
+        el.removeAttribute('target');
+        el.removeAttribute('rel');
+      });
+      await this.clickElement(detailLink, { force: true });
+    });
+  }
+
+  /**
    * Open QuickView modal for a specific search result figure by hovering then clicking its overlay.
    * @param index - Index of figure item (default 0)
    */
@@ -982,11 +1003,24 @@ export class SearchResultPage extends BasePage {
   }
 
   /**
-   * Close QuickView modal via the close button.
+   * Get direct download button in QuickView modal by format (e.g. 'AI' | 'JPEG' | 'PNG' | 'EPS').
+   * Matches format prefix (e.g. "AI", "JPEG", "PNG", "EPS") to prevent strict-mode conflicts.
+   */
+  getQuickViewDownloadButton(format: 'AI' | 'JPEG' | 'PNG' | 'EPS'): Locator {
+    return this.quickViewModal.locator('a.btn-download').filter({ hasText: new RegExp(`^\\s*${format}`, 'i') });
+  }
+
+  /**
+   * Close QuickView modal via close button or Escape key.
    */
   async closeQuickViewModal(): Promise<void> {
     await test.step('Close QuickView modal', async () => {
-      await this.clickElement(this.quickViewCloseButton);
+      const isCloseBtnVisible = await this.quickViewCloseButton.isVisible().catch(() => false);
+      if (isCloseBtnVisible) {
+        await this.clickElement(this.quickViewCloseButton);
+      } else {
+        await this.page.keyboard.press('Escape');
+      }
       await expect(this.quickViewModal).toBeHidden({ timeout: 5_000 });
     });
   }
@@ -1005,7 +1039,8 @@ export class SearchResultPage extends BasePage {
       await container.evaluate((el) => el.scrollIntoView({ block: 'center' }));
       const targetItem = items.nth(index);
       await expect(targetItem).toBeVisible({ timeout: 20_000 });
-      await this.clickElement(targetItem);
+      await targetItem.scrollIntoViewIfNeeded();
+      await this.clickElement(targetItem, { force: true });
       await expect(this.relatedSearchModal).toBeVisible({ timeout: 10_000 });
     });
   }
@@ -1019,22 +1054,5 @@ export class SearchResultPage extends BasePage {
       await expect(this.relatedSearchModal).toBeHidden({ timeout: 5_000 });
     });
   }
-
-  // ─── Backward-compatible Assertions (@deprecated — move assertions to test specs) ────────
-
-  /** @deprecated Move business assertions to test spec files. */
-  async assertHasResults(minCount: number = 1): Promise<void> {
-    const count = await this.getResultCount();
-    await test.step(`assert Has Results : ${count} records`, async () => {
-      expect(count, `Expect result count >= ${minCount}`).toBeGreaterThanOrEqual(minCount);
-    });
-  }
-
-  /** @deprecated Move business assertions to test spec files. */
-  async assertNoResults(): Promise<void> {
-    await test.step('assert No Results', async () => {
-      // AC-Illust shows a single no-result message instance; use first() to avoid count mismatch
-      await expect(this.noResultMessage.first()).toBeVisible({ timeout: 5_000 });
-    });
-  }
 }
+

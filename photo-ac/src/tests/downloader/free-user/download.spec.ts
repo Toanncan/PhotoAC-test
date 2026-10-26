@@ -1,6 +1,6 @@
-import { test, expect } from '../../fixtures/base.fixture';
-import { enableAdBlocker } from '../../utils/helpers';
-import { DownloadImagePage } from '../../pages/downloader/download-image.page';
+import { test, expect } from '../../../fixtures/base.fixture';
+import { enableAdBlocker } from '../../../utils/helpers';
+import { PhotoDetailPage } from '../../../pages/downloader/photo-detail.page';
 
 /**
  * Test Suite: Download — Free User
@@ -9,13 +9,13 @@ import { DownloadImagePage } from '../../pages/downloader/download-image.page';
 test.describe('Download — Free User', () => {
   // Session Free User được inject tự động từ project cấu hình (chromium-free-user / firefox-free-user)
 
-  test.beforeEach(async ({ page, downloadImagePage }) => {
+  test.beforeEach(async ({ page, photoDetailPage }) => {
     await enableAdBlocker(page);
-    await downloadImagePage.goToAcworksPhotoDetail(DownloadImagePage.ACWORKS_DEFAULT_PHOTO_ID);
+    await photoDetailPage.goToAcworksPhotoDetail(PhotoDetailPage.ACWORKS_DEFAULT_PHOTO_ID);
 
     await test.step('Xác minh tác phẩm thuộc creator Acworks', async () => {
-      await expect(downloadImagePage.creatorName).toBeVisible();
-      await expect(downloadImagePage.creatorLink).toHaveAttribute('href', /profile\/43626/);
+      await expect(photoDetailPage.creatorName).toBeVisible();
+      await expect(photoDetailPage.creatorLink).toHaveAttribute('href', /profile\/43626/);
     });
   });
 
@@ -25,16 +25,16 @@ test.describe('Download — Free User', () => {
    * TC-DOWNLOAD-FREE-001: Free User click icon folder (Bulk download) -> Hiển thị tooltip hạn chế Premium
    */
   test('TC-DOWNLOAD-FREE-001: Free User click Bulk Download hiển thị tooltip hạn chế Premium @free-user @download', async ({
-    downloadImagePage,
+    photoDetailPage,
   }) => {
     await test.step('Click icon folder まとめてダウンロード', async () => {
-      await expect(downloadImagePage.freeBulkDownloadButton).toBeVisible();
-      await downloadImagePage.clickFreeBulkDownload();
+      await expect(photoDetailPage.freeBulkDownloadButton).toBeVisible();
+      await photoDetailPage.clickFreeBulkDownload();
     });
 
     await test.step('Xác minh tooltip hiển thị thông báo giới hạn Premium', async () => {
-      await expect(downloadImagePage.activeTooltip).toBeVisible();
-      await expect(downloadImagePage.activeTooltip).toContainText(/プレミアム/);
+      await expect(photoDetailPage.activeTooltip).toBeVisible();
+      await expect(photoDetailPage.activeTooltip).toContainText(/プレミアム/);
     });
   });
 
@@ -42,16 +42,16 @@ test.describe('Download — Free User', () => {
    * TC-DOWNLOAD-FREE-002: Free User click button 今すぐ購入 (Extra license) -> Hiển thị popover giới hạn Premium
    */
   test('TC-DOWNLOAD-FREE-002: Free User click Buy Extra License hiển thị thông báo giới hạn Premium @free-user @download', async ({
-    downloadImagePage,
+    photoDetailPage,
   }) => {
     await test.step('Click button 今すぐ購入', async () => {
-      await expect(downloadImagePage.freeBuyExtraLicenseButton).toBeVisible();
-      await downloadImagePage.clickFreeBuyExtraLicense();
+      await expect(photoDetailPage.freeBuyExtraLicenseButton).toBeVisible();
+      await photoDetailPage.clickFreeBuyExtraLicense();
     });
 
     await test.step('Xác minh popover thông báo mua bản quyền thương mại chỉ dành cho Premium', async () => {
-      await expect(downloadImagePage.freeExtraLicensePopover).toBeVisible();
-      await expect(downloadImagePage.freeExtraLicensePopover).toContainText(
+      await expect(photoDetailPage.freeExtraLicensePopover).toBeVisible();
+      await expect(photoDetailPage.freeExtraLicensePopover).toContainText(
         '商品化ライセンスの購入は、プレミアム会員様限定です'
       );
     });
@@ -61,16 +61,16 @@ test.describe('Download — Free User', () => {
    * TC-DOWNLOAD-FREE-003: Free User click icon Cart (Bulk Extra license) -> Hiển thị tooltip giới hạn Premium
    */
   test('TC-DOWNLOAD-FREE-003: Free User click Cart icon hiển thị tooltip giới hạn Premium @free-user @download', async ({
-    downloadImagePage,
+    photoDetailPage,
   }) => {
     await test.step('Click icon Cart (ライセンスまとめて購入)', async () => {
-      await expect(downloadImagePage.freeCartButton).toBeVisible();
-      await downloadImagePage.clickFreeCart();
+      await expect(photoDetailPage.freeCartButton).toBeVisible();
+      await photoDetailPage.clickFreeCart();
     });
 
     await test.step('Xác minh tooltip hiển thị thông báo giới hạn Premium', async () => {
-      await expect(downloadImagePage.activeTooltip).toBeVisible();
-      await expect(downloadImagePage.activeTooltip).toContainText(/プレミアム/);
+      await expect(photoDetailPage.activeTooltip).toBeVisible();
+      await expect(photoDetailPage.activeTooltip).toContainText(/プレミアム/);
     });
   });
 
@@ -81,34 +81,35 @@ test.describe('Download — Free User', () => {
    */
   test('TC-DOWNLOAD-FREE-004: Free User thêm ảnh vào Bookmarks, kiểm tra trong Collection và xóa ảnh @free-user @bookmark', async ({
     page,
-    downloadImagePage,
+    photoDetailPage,
+    bookmarksPage,
   }) => {
-    const photoId = DownloadImagePage.ACWORKS_DEFAULT_PHOTO_ID;
+    const photoId = PhotoDetailPage.ACWORKS_DEFAULT_PHOTO_ID;
 
     try {
       await test.step('Click nút Bookmark trên trang chi tiết ảnh', async () => {
-        await expect(downloadImagePage.bookmarkButton).toBeVisible();
-        await downloadImagePage.clickBookmark();
+        await expect(photoDetailPage.bookmarkButton).toBeVisible();
+        await photoDetailPage.clickBookmark();
       });
 
       await test.step('Xác minh modal thông báo thêm vào collection hiển thị', async () => {
-        await expect(downloadImagePage.collectionAddedModal).toBeVisible({ timeout: 10_000 });
-        await expect(downloadImagePage.collectionAddedModal).toContainText(/コレクションに追加/);
+        await expect(photoDetailPage.collectionAddedModal).toBeVisible({ timeout: 10_000 });
+        await expect(photoDetailPage.collectionAddedModal).toContainText(/コレクションに追加/);
       });
 
       await test.step('Đi tới thư mục Collection và kiểm tra ảnh có ID tương ứng', async () => {
-        await downloadImagePage.goToFirstCollectionFolder();
+        await bookmarksPage.goToFirstCollectionFolder();
         const bookmarkedItem = page.locator(`.item:has(a[href*="${photoId}"])`).first();
         await expect(bookmarkedItem).toBeVisible({ timeout: 15_000 });
       });
     } finally {
       await test.step('Xóa ảnh khỏi Bookmarks và xác minh ảnh đã bị xóa sạch', async () => {
         if (!page.url().includes('/user/bookmarks/collection/')) {
-          await downloadImagePage.goToFirstCollectionFolder().catch(() => {});
+          await bookmarksPage.goToFirstCollectionFolder().catch(() => {});
         }
         const bookmarkedItem = page.locator(`.item:has(a[href*="${photoId}"])`).first();
         if (await bookmarkedItem.isVisible().catch(() => false)) {
-          await downloadImagePage.deletePhotoFromCollection(photoId);
+          await bookmarksPage.deletePhotoFromCollection(photoId);
         }
         const remainingItem = page.locator(`.item:has(a[href*="${photoId}"])`);
         await expect(remainingItem).toHaveCount(0);
@@ -121,19 +122,19 @@ test.describe('Download — Free User', () => {
    */
   test('TC-DOWNLOAD-FREE-005: Free User tương tác click Like ảnh Acworks @free-user @like', async ({
     page,
-    downloadImagePage,
+    photoDetailPage,
   }) => {
     await test.step('Click nút Like và xác minh tương tác thành công', async () => {
-      await expect(downloadImagePage.likeButton).toBeVisible();
+      await expect(photoDetailPage.likeButton).toBeVisible();
 
       // Đăng ký dialog listener phòng trường hợp đã đánh giá trước đó
       page.once('dialog', async dialog => {
         await dialog.accept();
       });
 
-      await downloadImagePage.clickLike();
-      await expect(downloadImagePage.likeCount).toBeVisible();
-      const count = await downloadImagePage.likeCount.innerText();
+      await photoDetailPage.clickLike();
+      await expect(photoDetailPage.likeCount).toBeVisible();
+      const count = await photoDetailPage.likeCount.innerText();
       expect(Number(count.replace(/,/g, ''))).toBeGreaterThan(0);
     });
   });
@@ -143,18 +144,18 @@ test.describe('Download — Free User', () => {
    */
   test('TC-DOWNLOAD-FREE-006: Free User tương tác thả tim Fan đăng ký tác giả Acworks @free-user @heart', async ({
     page,
-    downloadImagePage,
+    photoDetailPage,
   }) => {
     await test.step('Click nút Fan (Thả tim) và xác minh alert cùng số lượng fan', async () => {
-      await expect(downloadImagePage.heartFanButton).toBeVisible();
+      await expect(photoDetailPage.heartFanButton).toBeVisible();
 
       page.once('dialog', async dialog => {
         await dialog.accept();
       });
 
-      await downloadImagePage.clickHeartFan();
-      await expect(downloadImagePage.fanCount).toBeVisible();
-      const fanText = await downloadImagePage.fanCount.innerText();
+      await photoDetailPage.clickHeartFan();
+      await expect(photoDetailPage.fanCount).toBeVisible();
+      const fanText = await photoDetailPage.fanCount.innerText();
       expect(Number(fanText.replace(/,/g, ''))).toBeGreaterThan(0);
     });
   });
@@ -163,15 +164,15 @@ test.describe('Download — Free User', () => {
    * TC-DOWNLOAD-FREE-007: Free User click option Facebook và xác minh mở cửa sổ chia sẻ Facebook
    */
   test('TC-DOWNLOAD-FREE-007: Free User click option Facebook và xác minh mở cửa sổ chia sẻ Facebook @free-user @share', async ({
-    downloadImagePage,
+    photoDetailPage,
   }) => {
     await test.step('Mở popover chia sẻ và xác minh link Facebook có sẵn', async () => {
-      await downloadImagePage.ensureSharePopoverVisible();
-      await expect(downloadImagePage.shareFacebookLink.first()).toHaveAttribute('href', /facebook\.com/);
+      await photoDetailPage.ensureSharePopoverVisible();
+      await expect(photoDetailPage.shareFacebookLink.first()).toHaveAttribute('href', /facebook\.com/);
     });
 
     await test.step('Click option Facebook và xác minh mở popup Facebook Share thành công', async () => {
-      const popup = await downloadImagePage.clickShareFacebook();
+      const popup = await photoDetailPage.clickShareFacebook();
       expect(popup.url()).toContain('facebook.com');
       await popup.close();
     });
@@ -181,15 +182,15 @@ test.describe('Download — Free User', () => {
    * TC-DOWNLOAD-FREE-008: Free User click option X (Twitter) và xác minh mở cửa sổ chia sẻ X
    */
   test('TC-DOWNLOAD-FREE-008: Free User click option X (Twitter) và xác minh mở cửa sổ chia sẻ X @free-user @share', async ({
-    downloadImagePage,
+    photoDetailPage,
   }) => {
     await test.step('Mở popover chia sẻ và xác minh link X (Twitter) có sẵn', async () => {
-      await downloadImagePage.ensureSharePopoverVisible();
-      await expect(downloadImagePage.shareXLink.first()).toHaveAttribute('href', /(x\.com|twitter\.com)/);
+      await photoDetailPage.ensureSharePopoverVisible();
+      await expect(photoDetailPage.shareXLink.first()).toHaveAttribute('href', /(x\.com|twitter\.com)/);
     });
 
     await test.step('Click option X và xác minh mở popup Tweet thành công', async () => {
-      const popup = await downloadImagePage.clickShareX();
+      const popup = await photoDetailPage.clickShareX();
       expect(popup.url()).toMatch(/(x\.com|twitter\.com)/);
       await popup.close();
     });
@@ -199,15 +200,15 @@ test.describe('Download — Free User', () => {
    * TC-DOWNLOAD-FREE-009: Free User click option Pinterest và xác minh mở cửa sổ chia sẻ Pinterest
    */
   test('TC-DOWNLOAD-FREE-009: Free User click option Pinterest và xác minh mở cửa sổ chia sẻ Pinterest @free-user @share', async ({
-    downloadImagePage,
+    photoDetailPage,
   }) => {
     await test.step('Mở popover chia sẻ và xác minh link Pinterest có sẵn', async () => {
-      await downloadImagePage.ensureSharePopoverVisible();
-      await expect(downloadImagePage.sharePinterestLink.first()).toHaveAttribute('href', /pinterest\.com/);
+      await photoDetailPage.ensureSharePopoverVisible();
+      await expect(photoDetailPage.sharePinterestLink.first()).toHaveAttribute('href', /pinterest\.com/);
     });
 
     await test.step('Click option Pinterest và xác minh mở popup Pinterest Pin thành công', async () => {
-      const popup = await downloadImagePage.clickSharePinterest();
+      const popup = await photoDetailPage.clickSharePinterest();
       expect(popup.url()).toContain('pinterest.com');
       await popup.close();
     });
@@ -217,17 +218,17 @@ test.describe('Download — Free User', () => {
    * TC-DOWNLOAD-FREE-010: Free User click Copy URL và xác minh thông báo sao chép hiển thị
    */
   test('TC-DOWNLOAD-FREE-010: Free User click Copy URL và xác minh thông báo sao chép hiển thị @free-user @share', async ({
-    downloadImagePage,
+    photoDetailPage,
   }) => {
     await test.step('Mở popover chia sẻ và click nút Copy URL', async () => {
-      await downloadImagePage.ensureSharePopoverVisible();
-      await expect(downloadImagePage.shareCopyUrlButton.first()).toBeVisible();
-      await downloadImagePage.clickShareCopyUrl();
+      await photoDetailPage.ensureSharePopoverVisible();
+      await expect(photoDetailPage.shareCopyUrlButton.first()).toBeVisible();
+      await photoDetailPage.clickShareCopyUrl();
     });
 
     await test.step('Xác minh tooltip thông báo コピーしました hiển thị', async () => {
-      await expect(downloadImagePage.copiedTooltip).toBeVisible();
-      await expect(downloadImagePage.copiedTooltip).toContainText('コピーしました');
+      await expect(photoDetailPage.copiedTooltip).toBeVisible();
+      await expect(photoDetailPage.copiedTooltip).toContainText('コピーしました');
     });
   });
 });

@@ -1,6 +1,6 @@
-import { test, expect } from '../../fixtures/base.fixture';
-import { enableAdBlocker } from '../../utils/helpers';
-import { DownloadImagePage } from '../../pages/downloader/download-image.page';
+import { test, expect } from '../../../fixtures/base.fixture';
+import { enableAdBlocker } from '../../../utils/helpers';
+import { PhotoDetailPage } from '../../../pages/downloader/photo-detail.page';
 
 /**
  * Test Suite: Download — Guest User (No login)
@@ -10,13 +10,13 @@ test.describe('Download — Guest User (No login)', () => {
   // Session rỗng cho Guest User
   test.use({ storageState: { cookies: [], origins: [] } });
 
-  test.beforeEach(async ({ page, downloadImagePage }) => {
+  test.beforeEach(async ({ page, photoDetailPage }) => {
     await enableAdBlocker(page);
-    await downloadImagePage.goToAcworksPhotoDetail(DownloadImagePage.ACWORKS_DEFAULT_PHOTO_ID);
+    await photoDetailPage.goToAcworksPhotoDetail(PhotoDetailPage.ACWORKS_DEFAULT_PHOTO_ID);
 
     await test.step('Xác minh tác phẩm thuộc creator Acworks', async () => {
-      await expect(downloadImagePage.creatorName).toBeVisible();
-      await expect(downloadImagePage.creatorLink).toHaveAttribute('href', /profile\/43626/);
+      await expect(photoDetailPage.creatorName).toBeVisible();
+      await expect(photoDetailPage.creatorLink).toHaveAttribute('href', /profile\/43626/);
     });
   });
 
@@ -25,18 +25,18 @@ test.describe('Download — Guest User (No login)', () => {
    */
   test('TC-DOWNLOAD-GUEST-001: Guest click Download yêu cầu đăng nhập @guest @download', async ({
     page,
-    downloadImagePage,
+    photoDetailPage,
   }) => {
     await test.step('Chọn kích thước ảnh Size S', async () => {
-      await downloadImagePage.selectSize('S');
+      await photoDetailPage.selectSize('S');
     });
 
     await test.step('Click button Download và xác minh yêu cầu đăng nhập', async () => {
-      await expect(downloadImagePage.guestDownloadButton).toBeVisible();
-      const href = await downloadImagePage.guestDownloadButton.getAttribute('href');
+      await expect(photoDetailPage.guestDownloadButton).toBeVisible();
+      const href = await photoDetailPage.guestDownloadButton.getAttribute('href');
       expect(href).toMatch(/login|signup/);
 
-      await downloadImagePage.clickGuestDownload();
+      await photoDetailPage.clickGuestDownload();
       await expect(page).toHaveURL(/login|signup/);
     });
   });
@@ -46,14 +46,14 @@ test.describe('Download — Guest User (No login)', () => {
    */
   test('TC-DOWNLOAD-GUEST-002: Guest click Bulk Download yêu cầu đăng nhập @guest @download', async ({
     page,
-    downloadImagePage,
+    photoDetailPage,
   }) => {
     await test.step('Click button まとめてダウンロード và xác minh yêu cầu đăng nhập', async () => {
-      await expect(downloadImagePage.guestBulkDownloadButton).toBeVisible();
-      const href = await downloadImagePage.guestBulkDownloadButton.getAttribute('href');
+      await expect(photoDetailPage.guestBulkDownloadButton).toBeVisible();
+      const href = await photoDetailPage.guestBulkDownloadButton.getAttribute('href');
       expect(href).toMatch(/login|signup/);
 
-      await downloadImagePage.clickGuestBulkDownload();
+      await photoDetailPage.clickGuestBulkDownload();
       await expect(page).toHaveURL(/login|signup/);
     });
   });
@@ -62,17 +62,17 @@ test.describe('Download — Guest User (No login)', () => {
    * TC-DOWNLOAD-GUEST-003: Guest click button 今すぐ購入 (Extra license) -> Hiển thị popover yêu cầu đăng nhập
    */
   test('TC-DOWNLOAD-GUEST-003: Guest click Buy Extra License hiển thị popover yêu cầu login @guest @download', async ({
-    downloadImagePage,
+    photoDetailPage,
   }) => {
     await test.step('Click button 今すぐ購入 (Extra license)', async () => {
-      await expect(downloadImagePage.guestBuyExtraLicenseButton).toBeVisible();
-      await downloadImagePage.clickGuestBuyExtraLicense();
+      await expect(photoDetailPage.guestBuyExtraLicenseButton).toBeVisible();
+      await photoDetailPage.clickGuestBuyExtraLicense();
     });
 
     await test.step('Xác minh popover yêu cầu đăng nhập hiển thị chính xác', async () => {
-      await expect(downloadImagePage.guestPopover).toBeVisible();
-      await expect(downloadImagePage.guestPopover).toContainText('先にログインをお願いします');
-      await expect(downloadImagePage.guestPopover).toContainText('無料会員登録');
+      await expect(photoDetailPage.guestPopover).toBeVisible();
+      await expect(photoDetailPage.guestPopover).toContainText('先にログインをお願いします');
+      await expect(photoDetailPage.guestPopover).toContainText('無料会員登録');
     });
   });
 });

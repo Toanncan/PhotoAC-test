@@ -3,22 +3,19 @@ import { BasePage } from '../common/base.page';
 
 
 export class ProfileEditPage extends BasePage {
-  // ─── Locators ─────────────────────────────────────────────────────────────
-
+  // Locators
   /** Page heading — プロフィール編集 or similar */
   readonly pageHeading = this.page.getByRole('heading', { name: /プロフィール/ });
 
   /** 会員種別 (Membership type) section — contains plan name + amount */
   readonly membershipTypeSection = this.page.locator('text=会員種別').first();
 
-  // ─── Constructor ──────────────────────────────────────────────────────────
-
+  // Constructor
   constructor(page: Page) {
     super(page);
   }
 
-  // ─── Methods ──────────────────────────────────────────────────────────────
-
+  // Methods
   /**
    * Navigate directly to the profile edit page.
    */

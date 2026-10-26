@@ -1,12 +1,12 @@
 import * as path from 'path';
-import { test, expect } from '../../fixtures/base.fixture';
-import { captureEvidenceWithUrl, enableAdBlocker } from '../../utils/helpers';
-import { GROUP_SITES } from '../../utils/test-data';
+import { test, expect } from '../../../fixtures/base.fixture';
+import { captureEvidenceWithUrl, enableAdBlocker } from '../../../utils/helpers';
+import { GROUP_SITES } from '../../../utils/test-data';
 
 /**
- * ============================================================================
+
  * TEST SUITE: SEARCH & FILTERS — GUEST USER
- * ============================================================================
+
  */
 test.describe('Search & Filters — Guest (No-Login User)', () => {
   // Bắt buộc cô lập context không mang thông tin đăng nhập
@@ -48,9 +48,7 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
     }
   });
 
-  // ============================================================================
   // NHÓM 1: TÌM KIẾM CƠ BẢN
-  // ============================================================================
 
   /**
    * TC-SEARCH-GUEST-001: Tìm kiếm với từ khóa hợp lệ
@@ -202,9 +200,7 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 2: FILTER TOOLBAR - SINGLE FILTERS
-  // ============================================================================
 
   /**
    * TC-SEARCH-GUEST-007: Lọc ảnh theo Chiều dọc (縦長) và chuyển đổi sang Chiều ngang (横長) qua toolbar
@@ -465,9 +461,7 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 3: BỘ LỌC KẾT HỢP ĐA ĐIỀU KIỆN TRÊN UI
-  // ============================================================================
 
   /**
    * TC-SEARCH-GUEST-016: Kết hợp Từ khóa + Chiều ngang + Định dạng Vector (EPS/AI) + Loại trừ AI qua UI Toolbar
@@ -553,9 +547,7 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 4: TÌM KIẾM CHUYÊN SÂU & ĐẶC BIỆT
-  // ============================================================================
 
   /**
    * TC-SEARCH-GUEST-018: Tải ảnh lên tìm kiếm tương đồng
@@ -610,40 +602,10 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-020: Tìm kiếm đề xuất và phân trang (rcm=1)
+   * TC-SEARCH-GUEST-020: Lọc định dạng ảnh Vector chuyên biệt và bảo toàn tham số khi phân trang
    * @tags @regression @guest
    */
-  test.skip('TC-SEARCH-GUEST-020: Recommended Search và phân trang @regression @guest', async ({
-    page,
-    searchResultPage,
-  }, testInfo) => {
-    await searchResultPage.goToRecommendedSearch();
-
-    await test.step('Verify trang Recommended Search hiển thị tiêu đề chuẩn', async () => {
-      await expect(searchResultPage.resultHeading).toContainText('のイラスト素材');
-      const count = await searchResultPage.getResultCount();
-      expect(count, 'Trang phải có ít nhất 1 ảnh hiển thị').toBeGreaterThan(0);
-      expect(count, 'Số lượng ảnh không được vượt quá 70 ảnh/trang').toBeLessThanOrEqual(70);
-
-      await captureEvidenceWithUrl(page, testInfo, 'Recommended-Search-Page-1');
-    });
-
-    await searchResultPage.goToNextPage();
-
-    await test.step('Verify URL giữ nguyên tham số rcm=1 và referer khi sang trang 2', async () => {
-      await expect(page).toHaveURL(/rcm=1/);
-      await expect(page).toHaveURL(/referer=more_recommended/);
-      await expect(page).toHaveURL(/(page|p)=2/);
-
-      await captureEvidenceWithUrl(page, testInfo, 'Recommended-Search-Page-2');
-    });
-  });
-
-  /**
-   * TC-SEARCH-GUEST-021: Lọc định dạng ảnh Vector chuyên biệt và bảo toàn tham số khi phân trang
-   * @tags @regression @guest
-   */
-  test('TC-SEARCH-GUEST-021: Vector Format Search và phân trang @regression @guest', async ({
+  test('TC-SEARCH-GUEST-020: Vector Format Search và phân trang @regression @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -672,15 +634,13 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 5: SẮP XẾP & PHÂN TRANG
-  // ============================================================================
 
   /**
-   * TC-SEARCH-GUEST-022: Sắp xếp theo "新着順" (Mới nhất) và giữ nguyên khi sang Trang 2
+   * TC-SEARCH-GUEST-021: Sắp xếp theo "新着順" (Mới nhất) và giữ nguyên khi sang Trang 2
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-022: Sắp xếp kết quả theo "新着順" (Mới nhất) và giữ nguyên sắp xếp khi sang Trang 2 @regression @guest', async ({
+  test('TC-SEARCH-GUEST-021: Sắp xếp kết quả theo "新着順" (Mới nhất) và giữ nguyên sắp xếp khi sang Trang 2 @regression @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -712,10 +672,10 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-023: Sắp xếp "人気順" (Phổ biến) bị chặn đối với Guest
+   * TC-SEARCH-GUEST-022: Sắp xếp "人気順" (Phổ biến) bị chặn đối với Guest
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-023: Chặn sắp xếp "人気順" và hiển thị popover nâng cấp Premium @regression @guest', async ({
+  test('TC-SEARCH-GUEST-022: Chặn sắp xếp "人気順" và hiển thị popover nâng cấp Premium @regression @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -739,10 +699,10 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-024: Kiểm tra phân trang (Next / Prev) và hiển thị mặc định 70 ảnh/trang
+   * TC-SEARCH-GUEST-023: Kiểm tra phân trang (Next / Prev) và hiển thị mặc định 70 ảnh/trang
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-024: Kiểm tra phân trang (Next / Prev) và hiển thị mặc định 70 ảnh/trang @regression @guest', async ({
+  test('TC-SEARCH-GUEST-023: Kiểm tra phân trang (Next / Prev) và hiển thị mặc định 70 ảnh/trang @regression @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -786,15 +746,13 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 6: PHÂN QUYỀN & HẠN MỨC GUEST USER
-  // ============================================================================
 
   /**
-   * TC-SEARCH-GUEST-025: Chạm hạn mức tìm kiếm (4 lần/ngày)
+   * TC-SEARCH-GUEST-024: Chạm hạn mức tìm kiếm (4 lần/ngày)
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-025: Hiển thị Modal giới hạn khi chạm hạn mức tìm kiếm @regression @guest', async ({
+  test('TC-SEARCH-GUEST-024: Hiển thị Modal giới hạn khi chạm hạn mức tìm kiếm @regression @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -828,15 +786,13 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 7: THANH TÌM KIẾM CỐ ĐỊNH TRÊN HEADER
-  // ============================================================================
 
   /**
-   * TC-SEARCH-GUEST-026: Thanh tìm kiếm cố định tự động hiển thị khi cuộn trang xuống và ẩn đi khi cuộn lên đầu trang
+   * TC-SEARCH-GUEST-025: Thanh tìm kiếm cố định tự động hiển thị khi cuộn trang xuống và ẩn đi khi cuộn lên đầu trang
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-026: Thanh tìm kiếm cố định (Sticky Header Search) tự động hiển thị khi cuộn trang xuống và ẩn đi khi cuộn lên đầu trang @regression @guest', async ({
+  test('TC-SEARCH-GUEST-025: Thanh tìm kiếm cố định (Sticky Header Search) tự động hiển thị khi cuộn trang xuống và ẩn đi khi cuộn lên đầu trang @regression @guest', async ({
     page,
     homePage,
   }, testInfo) => {
@@ -861,10 +817,10 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-027: Kiểm tra thực hiện tìm kiếm từ khóa thành công từ Sticky Header Search Bar
+   * TC-SEARCH-GUEST-026: Kiểm tra thực hiện tìm kiếm từ khóa thành công từ Sticky Header Search Bar
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-027: Thực hiện tìm kiếm từ khóa thành công từ Sticky Header Search Bar @regression @guest', async ({
+  test('TC-SEARCH-GUEST-026: Thực hiện tìm kiếm từ khóa thành công từ Sticky Header Search Bar @regression @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -896,24 +852,22 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 8: RECOMMENDED SEARCH, QUICKVIEW & CÁC TRANG NHÓM (GROUP SITES)
-  // ============================================================================
 
   /**
-   * TC-SEARCH-GUEST-028: Tìm kiếm đề xuất (Recommended Search) và phân trang
+   * TC-SEARCH-GUEST-027: Tìm kiếm đề xuất (Recommended Search) và phân trang
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-028: Recommended Search và phân trang @regression @guest', async ({
+  test('TC-SEARCH-GUEST-027: Recommended Search và phân trang @regression @guest', async ({
     page,
     searchResultPage,
   }) => {
     // Note: Deep-link được dùng có chủ đích vì test này kiểm tra routing & bảo toàn tham số rcm/referer khi phân trang
     await searchResultPage.goToRecommendedSearch();
 
-    await test.step('Verify trang Recommended Search hiển thị đúng tham số, tiêu đề và danh sách ảnh', async () => {
+    await test.step('Xác minh trang Recommended Search hiển thị đúng tham số, tiêu đề và danh sách ảnh', async () => {
       await expect(page).toHaveURL(/rcm=1/);
-      await expect(searchResultPage.resultHeading).toContainText('のイラスト素材');
+      await expect(searchResultPage.resultHeading).toContainText(/(イラスト素材|フリーイラスト素材)/);
       await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
       const count = await searchResultPage.getResultCount();
       expect(count, 'Trang phải có ít nhất 1 ảnh hiển thị').toBeGreaterThan(0);
@@ -930,10 +884,10 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-029: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập
+   * TC-SEARCH-GUEST-028: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-029: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập @regression @guest', async ({
+  test('TC-SEARCH-GUEST-028: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập @regression @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -970,11 +924,11 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-030: Click tác phẩm của các trang nhóm (Design AC, Video AC) ở cuối trang hiển thị popup tương ứng
+   * TC-SEARCH-GUEST-029: Click tác phẩm của các trang nhóm (Design AC, Video AC) ở cuối trang hiển thị popup tương ứng
    * Note: Photo AC / Silhouette AC không được verify do API test-yano.photo-ac.com trả 404 trên môi trường test.
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-030: Click tác phẩm của các trang nhóm (Design, Video) hiển thị popup tương ứng @regression @guest', async ({
+  test('TC-SEARCH-GUEST-029: Click tác phẩm của các trang nhóm (Design, Video) hiển thị popup tương ứng @regression @guest', async ({
     page,
     homePage,
     searchResultPage,

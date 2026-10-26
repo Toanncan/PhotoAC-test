@@ -6,7 +6,11 @@ import { HomePage } from '../pages/common/home.page';
 import { RankingPage } from '../pages/creator/ranking.page';
 import { ReceiptsPage } from '../pages/downloader/receipts.page';
 import { ProfileEditPage } from '../pages/downloader/profile-edit.page';
-import { SearchResultPage } from '@pages/common/search-results.page';
+import { SearchResultPage } from '../pages/common/search-results.page';
+import { UploadPage } from '../pages/creator/upload.page';
+import { CreatorIllustListPage } from '../pages/creator/illust-list.page';
+import { IllustDetailPage } from '../pages/downloader/illust-detail.page';
+import { BookmarksPage } from '../pages/downloader/bookmarks.page';
 import { envConfig } from '../utils/env.config';
 
 /**
@@ -20,6 +24,10 @@ type PageFixtures = {
   receiptsPage: ReceiptsPage;
   profileEditPage: ProfileEditPage;
   searchResultPage: SearchResultPage;
+  uploadPage: UploadPage;
+  creatorIllustListPage: CreatorIllustListPage;
+  illustDetailPage: IllustDetailPage;
+  bookmarksPage: BookmarksPage;
   allureMetadata: void;
   screenshotOnPass: void;
   urlOverlayAndAttachment: void;
@@ -34,24 +42,24 @@ type PageFixtures = {
 export const test = base.extend<PageFixtures>({
 
   allureMetadata: [async ({ }, use, testInfo) => {
-    // ── Determine Role ───────────────────────────────────────────────────────
+    // Determine Role
     const filePath = testInfo.file.toLowerCase();
     const projectName = testInfo.project.name.toLowerCase();
 
     let role = 'Common';
     if (filePath.includes('guest') || projectName.includes('guest')) {
       role = 'Guest';
-    } else if (filePath.includes('freeuser') || projectName.includes('free-user')) {
-      role = 'FreeUser';
+    } else if (filePath.includes('free-user') || filePath.includes('freeuser') || projectName.includes('free-user')) {
+      role = 'Free User';
     } else if (filePath.includes('premium') || projectName.includes('premium')) {
-      role = 'PremiumUser';
+      role = 'Premium User';
     } else if (filePath.includes('creator') || projectName.includes('creator')) {
       role = 'Creator';
     } else if (filePath.includes('admin') || projectName.includes('admin')) {
       role = 'Admin';
     }
 
-    // ── Determine Browser Name ───────────────────────────────────────────────
+    // Determine Browser Name
     let browserName = 'Other';
     if (projectName.includes('chromium')) {
       browserName = 'Chromium';
@@ -63,15 +71,16 @@ export const test = base.extend<PageFixtures>({
       browserName = testInfo.project.name;
     }
 
+    await allure.epic(role);
     await allure.parentSuite(`Illust AC - ${role}`);
     await allure.suite(path.basename(testInfo.file, path.extname(testInfo.file)));
     await allure.subSuite(browserName);
 
-    // ── Categorization ───────────────────────────────────────────────────────
+    // Categorization
     await allure.layer('e2e');
     await allure.tag('ui');
 
-    // ── Environment parameters (visible in Allure report sidebar) ────────────
+    // Environment parameters (visible in Allure report sidebar)
     await allure.parameter('Environment', envConfig.env);
     await allure.parameter('Base URL', envConfig.baseUrl);
 
@@ -110,6 +119,30 @@ export const test = base.extend<PageFixtures>({
   searchResultPage: async ({ page }, use) => {
     const searchResultPage = new SearchResultPage(page);
     await use(searchResultPage);
+  },
+
+  // Provides an UploadPage instance for creator upload tests
+  uploadPage: async ({ page }, use) => {
+    const uploadPage = new UploadPage(page);
+    await use(uploadPage);
+  },
+
+  // Provides a CreatorIllustListPage instance for creator illustration management tests
+  creatorIllustListPage: async ({ page }, use) => {
+    const creatorIllustListPage = new CreatorIllustListPage(page);
+    await use(creatorIllustListPage);
+  },
+
+  // Provides an IllustDetailPage instance for illustration detail/download tests
+  illustDetailPage: async ({ page }, use) => {
+    const illustDetailPage = new IllustDetailPage(page);
+    await use(illustDetailPage);
+  },
+
+  // Provides a BookmarksPage instance for bookmarks/collection management tests
+  bookmarksPage: async ({ page }, use) => {
+    const bookmarksPage = new BookmarksPage(page);
+    await use(bookmarksPage);
   },
 
   /**

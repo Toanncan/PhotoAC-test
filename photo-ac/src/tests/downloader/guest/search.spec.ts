@@ -1,19 +1,19 @@
-﻿import * as path from 'path';
-import { test, expect } from '../../fixtures/base.fixture';
-import { captureEvidenceWithUrl, enableAdBlocker } from '../../utils/helpers';
-import { GROUP_SITES } from '../../utils/test-data';
+import * as path from 'path';
+import { test, expect } from '../../../fixtures/base.fixture';
+import { captureEvidenceWithUrl, enableAdBlocker } from '../../../utils/helpers';
+import { GROUP_SITES } from '../../../utils/test-data';
 
 /**
- * TEST SUITE: SEARCH — FREE USER
+ * TEST SUITE: SEARCH FEATURE — GUEST USER
  */
-test.describe('Search — Free User', () => {
-  // Session Free User được tự động inject bởi project cấu hình (chromium-free-user / firefox-free-user)
+test.describe('Search Feature — Guest (No-Login User)', () => {
+  // cô lập context không mang thông tin đăng nhập
+  test.use({ storageState: { cookies: [], origins: [] } });
 
   const sampleImagePath = path.resolve(__dirname, '../../../test-data/sample-search.jpg');
 
   test.beforeEach(async ({ page, homePage }) => {
     // Targeted Network Mocking: Luôn duy trì hạn mức tìm kiếm (search_zancnt: 4)
-    // nhằm bảo vệ các test case bộ lọc/tìm kiếm thông thường không bị modal #searchLimitModal chặn ngang khi chạy cả suite.
     await page.route('**/ajax/public/is_enable_search', async (route) => {
       await route.fulfill({
         status: 200,
@@ -26,7 +26,7 @@ test.describe('Search — Free User', () => {
       });
     });
 
-    // Kích hoạt Ad Blocker 2 tầng (Network Abort + CSS Hidden) chống nghẽn mạng & Layout Shift
+    // Kích hoạt Ad Blocker 2 tầng (Network Abort + CSS Hidden)
     await enableAdBlocker(page);
 
     await homePage.goToHomePage();
@@ -45,12 +45,13 @@ test.describe('Search — Free User', () => {
     }
   });
 
+
   // NHÓM 1: TÌM KIẾM CƠ BẢN
   /**
-   * TC-SEARCH-FREE-001: Tìm kiếm với từ khóa hợp lệ
-   * @tags @free-user
+   * TC-SEARCH-GUEST-001: Tìm kiếm với từ khóa hợp lệ
+   * @tags @guest
    */
-  test('TC-SEARCH-FREE-001: Tìm kiếm từ khóa hợp lệ hiển thị kết quả @free-user', async ({
+  test('TC-SEARCH-GUEST-001: Tìm kiếm từ khóa hợp lệ hiển thị kết quả @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -60,7 +61,7 @@ test.describe('Search — Free User', () => {
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
 
-    await test.step('Verify URL và heading kết quả tìm kiếm cho Free User', async () => {
+    await test.step('Verify URL và heading kết quả tìm kiếm', async () => {
       await expect(page).toHaveURL(new RegExp(`/main/search\\?.*q=${encodeURIComponent(keyword)}`));
       await expect(searchResultPage.resultHeading).toContainText(`「${keyword}」の写真素材`);
     });
@@ -73,10 +74,10 @@ test.describe('Search — Free User', () => {
   });
 
   /**
-   * TC-SEARCH-FREE-002: Tìm kiếm với nhiều từ khóa kết hợp (Multi-keyword AND search)
-   * @tags @free-user
+   * TC-SEARCH-GUEST-002: Tìm kiếm với nhiều từ khóa kết hợp (Multi-keyword AND search)
+   * @tags @guest
    */
-  test('TC-SEARCH-FREE-002: Tìm kiếm nhiều từ khóa kết hợp (AND Search) @free-user', async ({
+  test('TC-SEARCH-GUEST-002: Tìm kiếm nhiều từ khóa kết hợp hiển thị kết quả @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -95,10 +96,10 @@ test.describe('Search — Free User', () => {
   });
 
   /**
-   * TC-SEARCH-FREE-003: Tìm kiếm với từ khóa không tồn tại (Zero Results)
-   * @tags @free-user
+   * TC-SEARCH-GUEST-003: Tìm kiếm với từ khóa không tồn tại (Zero Results)
+   * @tags @guest
    */
-  test('TC-SEARCH-FREE-003: Hiển thị thông báo khi không tìm thấy ảnh nào khớp từ khóa @free-user', async ({
+  test('TC-SEARCH-GUEST-003: Hiển thị thông báo khi không tìm thấy ảnh nào khớp từ khóa @guest', async ({
     homePage,
     searchResultPage,
   }) => {
@@ -107,22 +108,22 @@ test.describe('Search — Free User', () => {
     await homePage.search(nonexistentKeyword);
     await searchResultPage.waitForResultDisplay();
 
-    await test.step('Verify thông báo không có kết quả hiển thị trên màn hình người dùng', async () => {
+    await test.step('Verify thông báo không có kết quả chuẩn của Photo-AC', async () => {
       await expect(searchResultPage.noResultMessage.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
-      expect(count, 'Số lượng ảnh hiển thị phải bằng 0').toBe(0);
+      expect(count, 'Số lượng ảnh phải bằng 0').toBe(0);
     });
   });
 
   /**
-   * TC-SEARCH-FREE-004: Xóa nhanh từ khóa bằng nút Reset và tìm kiếm từ khóa mới trực tiếp trên trang kết quả (Search Again)
-   * @tags @free-user
+   * TC-SEARCH-GUEST-004: Xóa nhanh từ khóa bằng nút Reset và tìm kiếm từ khóa mới trực tiếp trên trang kết quả (Search Again)
+   * @tags @guest
    */
-  test('TC-SEARCH-FREE-004: Xóa nhanh từ khóa bằng nút Reset và tìm kiếm từ khóa mới trực tiếp từ trang kết quả @free-user', async ({
+  test('TC-SEARCH-GUEST-004: Xóa từ khóa bằng nút Reset và tìm kiếm từ khóa mới trực tiếp từ trang kết quả @guest', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     const initialKeyword = 'cat';
     const newKeyword = 'dog';
 
@@ -145,10 +146,10 @@ test.describe('Search — Free User', () => {
   });
 
   /**
-   * TC-SEARCH-FREE-005: Tìm kiếm bằng Top Keyword dưới Search Bar
-   * @tags @free-user
+   * TC-SEARCH-GUEST-005: Tìm kiếm nhanh bằng Top Keyword dưới Search Bar
+   * @tags @guest
    */
-  test('TC-SEARCH-FREE-005: Tìm kiếm bằng Top Keyword @free-user', async ({
+  test('TC-SEARCH-GUEST-005: Tìm kiếm bằng top keyword @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -161,9 +162,12 @@ test.describe('Search — Free User', () => {
     await homePage.clickTopKeyword(targetKeyword);
     await searchResultPage.waitForResultDisplay();
 
-    await test.step('Verify URL và heading kết quả từ Top Keyword cho Free User', async () => {
+    await test.step('Verify URL chứa từ khóa và tham số utm_source=top_keyword', async () => {
       await expect(page).toHaveURL(new RegExp(`/main/search\\?.*q=${encodeURIComponent(targetKeyword)}`));
       await expect(page).toHaveURL(/utm_source=top_keyword/);
+    });
+
+    await test.step('Verify heading và danh sách ảnh hiển thị đúng', async () => {
       await expect(searchResultPage.resultHeading).toContainText(`「${targetKeyword}」の写真素材`);
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
@@ -171,10 +175,10 @@ test.describe('Search — Free User', () => {
   });
 
   /**
-   * TC-SEARCH-FREE-006: Tìm kiếm bằng Popular Tag
-   * @tags @free-user
+   * TC-SEARCH-GUEST-006: Tìm kiếm bằng Popular Tag
+   * @tags @guest
    */
-  test('TC-SEARCH-FREE-006: Tìm kiếm bằng Popular Tag keyword @free-user', async ({
+  test('TC-SEARCH-GUEST-006: Tìm kiếm bằng popular tag keyword @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -195,10 +199,10 @@ test.describe('Search — Free User', () => {
 
   // NHÓM 2: FILTER TOOLBAR - SINGLE FILTERS
   /**
-   * TC-SEARCH-FREE-007: Lọc ảnh theo Chiều dọc (縦長) và chuyển đổi sang Chiều ngang (横長) qua Toolbar
-   * @tags @free-user @filter
+   * TC-SEARCH-GUEST-007: Lọc ảnh theo Chiều dọc (縦長) và chuyển đổi sang Chiều ngang (横長) qua Toolbar
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-FREE-007: Filter và chuyển đổi Chiều ảnh (Dọc 縦長 / Ngang 横長) qua Toolbar @free-user @filter', async ({
+  test('TC-SEARCH-GUEST-007: Filter và chuyển đổi Chiều ảnh (Dọc 縦長 / Ngang 横長) qua Toolbar @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -236,14 +240,14 @@ test.describe('Search — Free User', () => {
   });
 
   /**
-   * TC-SEARCH-FREE-008: Filter định dạng ảnh PSD qua Toolbar "ファイル・向き"
-   * @tags @free-user @filter
+   * TC-SEARCH-GUEST-008: Filter định dạng ảnh PSD qua Toolbar "ファイル・向き"
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-FREE-008: Filter định dạng ảnh PSD @free-user @filter', async ({
+  test('TC-SEARCH-GUEST-008: Filter định dạng ảnh PSD @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     await homePage.search('frame');
     await searchResultPage.waitForResultDisplay();
 
@@ -259,10 +263,10 @@ test.describe('Search — Free User', () => {
   });
 
   /**
-   * TC-SEARCH-FREE-009: Filter và chuyển đổi Kích thước ảnh (M / L) qua Toolbar "ファイル・向き"
-   * @tags @free-user @filter
+   * TC-SEARCH-GUEST-009: Filter và chuyển đổi Kích thước ảnh (M / L) qua Toolbar "ファイル・向き"
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-FREE-009: Filter và chuyển đổi Kích thước ảnh (M / L) @free-user @filter', async ({
+  test('TC-SEARCH-GUEST-009: Filter và chuyển đổi Kích thước ảnh (M / L) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -299,14 +303,14 @@ test.describe('Search — Free User', () => {
   });
 
   /**
-   * TC-SEARCH-FREE-010: Lọc ảnh theo Danh mục qua Toolbar dropdown (人物 / c_id=1)
-   * @tags @free-user @filter
+   * TC-SEARCH-GUEST-010: Filter ảnh theo Danh mục qua Toolbar dropdown (人物 / c_id=1)
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-FREE-010: Filter ảnh theo Danh mục (人物) @free-user @filter', async ({
+  test('TC-SEARCH-GUEST-010: Filter ảnh theo Danh mục (人物) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     await homePage.search('学生');
     await searchResultPage.waitForResultDisplay();
 
@@ -322,14 +326,14 @@ test.describe('Search — Free User', () => {
   });
 
   /**
-   * TC-SEARCH-FREE-011: Filter ảnh theo Màu sắc (青 / Blue) qua Toolbar
-   * @tags @free-user @filter
+   * TC-SEARCH-GUEST-011: Filter ảnh theo Màu sắc (青 / Blue) qua Toolbar
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-FREE-011: Filter ảnh theo Màu sắc (青 / Blue) @free-user @filter', async ({
+  test('TC-SEARCH-GUEST-011: Filter ảnh theo Màu sắc (青 / Blue) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     const keyword = 'flower';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
@@ -343,15 +347,14 @@ test.describe('Search — Free User', () => {
       await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
-
     });
   });
 
   /**
-   * TC-SEARCH-FREE-012: Filter và chuyển đổi số lượng người mẫu (0 người ➔ 1 người ➔ 3+ người)
-   * @tags @free-user @filter
+   * TC-SEARCH-GUEST-012: Filter và chuyển đổi số lượng người mẫu (0 người 無人 ➔ 1 người 1人 ➔ 3+ người 3人以上) qua Toolbar "人数"
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-FREE-012: Filter và chuyển đổi số lượng người mẫu (0 người ➔ 1 người ➔ 3+ người) @free-user @filter', async ({
+  test('TC-SEARCH-GUEST-012: Filter và chuyển đổi số lượng người mẫu (0 người ➔ 1 người ➔ 3+ người) qua Toolbar @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
@@ -396,14 +399,14 @@ test.describe('Search — Free User', () => {
   });
 
   /**
-   * TC-SEARCH-FREE-013: Filter người mẫu theo Độ tuổi (若者 / age=W)
-   * @tags @free-user @filter
+   * TC-SEARCH-GUEST-013: Filter người mẫu theo Độ tuổi (若者 / age=W) qua Toolbar "人物指定"
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-FREE-013: Filter người mẫu theo Độ tuổi (若者) @free-user @filter', async ({
+  test('TC-SEARCH-GUEST-013: Filter người mẫu theo Độ tuổi (若者) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     const keyword = '学生';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
@@ -416,19 +419,18 @@ test.describe('Search — Free User', () => {
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
-
     });
   });
 
   /**
-   * TC-SEARCH-FREE-014: Filter ảnh có Giấy phép người mẫu (取得済のみ / mdlrlrsec=on)
-   * @tags @free-user @filter
+   * TC-SEARCH-GUEST-014: Filter ảnh có Giấy phép người mẫu (取得済のみ / mdlrlrsec=on)
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-FREE-014: Filter ảnh có Giấy phép người mẫu (取得済のみ) @free-user @filter', async ({
+  test('TC-SEARCH-GUEST-014: Filter ảnh có Giấy phép người mẫu (取得済のみ) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     const keyword = '女性';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
@@ -441,19 +443,18 @@ test.describe('Search — Free User', () => {
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
-
     });
   });
 
   /**
-   * TC-SEARCH-FREE-015: Filter ảnh có Giấy phép tài sản (プロパティリリース取得済のみ / prprlrsec=on)
-   * @tags @free-user @filter
+   * TC-SEARCH-GUEST-015: Filter ảnh có Giấy phép tài sản (プロパティリリース取得済のみ / prprlrsec=on)
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-FREE-015: Filter ảnh có Giấy phép tài sản (取得済のみ) @free-user @filter', async ({
+  test('TC-SEARCH-GUEST-015: Filter ảnh có Giấy phép tài sản (取得済のみ) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     const keyword = '建物';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
@@ -466,19 +467,18 @@ test.describe('Search — Free User', () => {
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
-
     });
   });
 
   /**
-   * TC-SEARCH-FREE-016: Filter Loại trừ ảnh AI (AI生成ツール使用素材を除く / exclude_ai=on)
-   * @tags @free-user @filter
+   * TC-SEARCH-GUEST-016: Filter Loại trừ ảnh AI (AI生成ツール使用素材を除く / exclude_ai=on)
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-FREE-016: Filter Loại trừ ảnh do AI tạo @free-user @filter', async ({
+  test('TC-SEARCH-GUEST-016: Filter Loại trừ ảnh do AI tạo @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     await homePage.search('landscape');
     await searchResultPage.waitForResultDisplay();
 
@@ -488,19 +488,18 @@ test.describe('Search — Free User', () => {
       await expect(page).toHaveURL(/exclude_ai=on/);
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
-
     });
   });
 
   /**
-   * TC-SEARCH-FREE-017: Filter Bật bộ lọc Tìm kiếm khớp chính xác (完全一致 / type_search=phrase)
-   * @tags @free-user @filter
+   * TC-SEARCH-GUEST-017: Filter bật bộ lọc Tìm kiếm khớp chính xác (完全一致)
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-FREE-017: Filter bật bộ lọc Tìm kiếm khớp chính xác (完全一致) @free-user @filter', async ({
+  test('TC-SEARCH-GUEST-017: Filter bật bộ lọc Tìm kiếm khớp chính xác (完全一致) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     await homePage.search('東京 タワー');
     await searchResultPage.waitForResultDisplay();
 
@@ -512,19 +511,18 @@ test.describe('Search — Free User', () => {
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
-
     });
   });
 
   /**
-   * TC-SEARCH-FREE-018: Lọc theo Từ khóa loại trừ (除外キーワード / nq=)
-   * @tags @free-user @filter
+   * TC-SEARCH-GUEST-018: Lọc theo Từ khóa loại trừ (除外キーワード)
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-FREE-018: Filter theo Từ khóa loại trừ (除外キーワード) @free-user @filter', async ({
+  test('TC-SEARCH-GUEST-018: Filter theo Từ khóa loại trừ (除外キーワード) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     const keyword = 'cat';
     const excludeKeyword = 'dog';
 
@@ -539,19 +537,18 @@ test.describe('Search — Free User', () => {
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
-
     });
   });
 
   /**
-   * TC-SEARCH-FREE-019: Lọc theo Tên tác giả qua menu Tìm kiếm chi tiết (詳細検索 / creator=)
-   * @tags @free-user @filter
+   * TC-SEARCH-GUEST-019: Lọc theo Tên tác giả qua menu Tìm kiếm chi tiết (詳細検索)
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-FREE-019: Filter ảnh theo Tác giả (Acworks) qua menu (詳細検索) Toolbar @free-user @filter', async ({
+  test('TC-SEARCH-GUEST-019: Filter ảnh theo Tên tác giả (Acworks) qua menu (詳細検索) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     const keyword = 'flower';
     const creatorName = 'Acworks';
     await homePage.search(keyword);
@@ -566,19 +563,18 @@ test.describe('Search — Free User', () => {
       await expect(searchResultPage.resultHeading).toContainText(`「${keyword}」の写真素材`);
       const count = await searchResultPage.getResultCount();
       expect(count, 'Tìm theo tác giả phải trả về danh sách ảnh').toBeGreaterThan(0);
-
     });
   });
 
   /**
-   * TC-SEARCH-FREE-020: Lọc Loại trừ Tác giả qua menu Tìm kiếm chi tiết (詳細検索 / ngcreator=)
-   * @tags @free-user @filter
+   * TC-SEARCH-GUEST-020: Lọc Loại trừ Tác giả qua menu Tìm kiếm chi tiết (詳細検索)
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-FREE-020: Filter ảnh loại trừ Tác giả (Acworks) qua menu (詳細検索) Toolbar @free-user @filter', async ({
+  test('TC-SEARCH-GUEST-020: Filter ảnh loại trừ Tác giả (Acworks) qua menu (詳細検索) @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     const keyword = 'flower';
     const ngCreatorName = 'Acworks';
     await homePage.search(keyword);
@@ -596,19 +592,18 @@ test.describe('Search — Free User', () => {
       } else {
         await expect(searchResultPage.noResultMessage.first()).toBeVisible();
       }
-
     });
   });
 
   /**
-   * TC-SEARCH-FREE-021: Lọc theo Mã素材ID chính xác (qid=)
-   * @tags @free-user @filter
+   * TC-SEARCH-GUEST-021: Filter theo Mã 素材ID chính xác
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-FREE-021: Filter ảnh theo mã 素材ID @free-user @filter', async ({
+  test('TC-SEARCH-GUEST-021: Filter ảnh theo mã 素材ID @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     const photoId = '1597634';
     await homePage.search('flower');
     await searchResultPage.waitForResultDisplay();
@@ -628,15 +623,14 @@ test.describe('Search — Free User', () => {
 
   // NHÓM 3: BỘ LỌC KẾT HỢP ĐA ĐIỀU KIỆN TRÊN UI
   /**
-   * TC-SEARCH-FREE-022: Kết hợp Từ khóa + 2 người mẫu + Model Release qua UI Toolbar
-   * @tags @free-user @filter
+   * TC-SEARCH-GUEST-022: Kết hợp Từ khóa + 2 người mẫu + Model Release qua UI Toolbar
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-FREE-022: Kết hợp Từ khóa + 2 người mẫu + Model Release qua UI Toolbar @free-user @filter', async ({
+  test('TC-SEARCH-GUEST-022: Kết hợp Từ khóa + 2 người mẫu + Model Release qua UI Toolbar @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
   }, testInfo) => {
-    test.setTimeout(120_000);
     await homePage.search('学生');
     await searchResultPage.waitForResultDisplay();
 
@@ -663,15 +657,14 @@ test.describe('Search — Free User', () => {
   });
 
   /**
-   * TC-SEARCH-FREE-023: Kết hợp Từ khóa + Chiều ngang + Không có người (無人) + Loại trừ AI
-   * @tags @free-user @filter
+   * TC-SEARCH-GUEST-023: Kết hợp Từ khóa + Chiều ngang + Không có người (無人) + Loại trừ AI
+   * @tags @guest @filter
    */
-  test('TC-SEARCH-FREE-023: Kết hợp Đa bộ lọc (Chiều ngang + Không có người + Loại trừ AI) qua UI Toolbar @free-user @filter', async ({
+  test('TC-SEARCH-GUEST-023: Kết hợp Đa bộ lọc (Chiều ngang + Không có người + Loại trừ AI) qua UI Toolbar @guest @filter', async ({
     page,
     homePage,
     searchResultPage,
   }, testInfo) => {
-    test.setTimeout(120_000);
     const keyword = 'office';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
@@ -707,12 +700,13 @@ test.describe('Search — Free User', () => {
     });
   });
 
-  // NHÓM 4: TÌM KIẾM CHUYÊN SÂU & ĐẶC BIỆT 
+  // NHÓM 4: TÌM KIẾM CHUYÊN SÂU & ĐẶC BIỆT
   /**
-   * TC-SEARCH-FREE-024: Tải ảnh lên tìm kiếm tương đồng (Image Upload Search)
-   * @tags @free-user
+   * TC-SEARCH-GUEST-024: Tải ảnh lên tìm kiếm tương đồng
+   * @tags @guest
    */
-  test('TC-SEARCH-FREE-024: Tải ảnh lên tìm kiếm tương đồng @free-user', async ({
+  test('TC-SEARCH-GUEST-024: Tải ảnh lên tìm kiếm hình ảnh tương đồng @guest', async ({
+    page,
     homePage,
     searchResultPage,
   }) => {
@@ -731,10 +725,10 @@ test.describe('Search — Free User', () => {
   });
 
   /**
-   * TC-SEARCH-FREE-025: Tìm kiếm đề xuất và phân trang (Recommended Search)
-   * @tags @free-user
+   * TC-SEARCH-GUEST-025: Tìm kiếm đề xuất và phân trang
+   * @tags @guest
    */
-  test('TC-SEARCH-FREE-025: Recommended Search và phân trang @free-user', async ({
+  test('TC-SEARCH-GUEST-025: Recommended Search và phân trang @guest', async ({
     page,
     searchResultPage,
   }) => {
@@ -757,10 +751,10 @@ test.describe('Search — Free User', () => {
   });
 
   /**
-   * TC-SEARCH-FREE-026: Tìm kiếm ảnh định dạng PSD và phân trang (PSD Format Search)
-   * @tags @free-user
+   * TC-SEARCH-GUEST-026: Tìm kiếm ảnh định dạng PSD và phân trang
+   * @tags @guest
    */
-  test('TC-SEARCH-FREE-026: PSD Format Search và phân trang @free-user', async ({
+  test('TC-SEARCH-GUEST-026: PSD Format Search và phân trang @guest', async ({
     page,
     searchResultPage,
   }) => {
@@ -783,20 +777,23 @@ test.describe('Search — Free User', () => {
   });
 
   /**
-   * TC-SEARCH-FREE-027: Tìm kiếm bằng AI Face từ trang Detail
-   * @tags @free-user
+   * TC-SEARCH-GUEST-027: Tìm kiếm bằng AI Face từ trang Detail
+   * @tags @guest
    */
-  test('TC-SEARCH-FREE-027: Tìm kiếm bằng AI Face từ trang Detail @free-user', async ({
+  test('TC-SEARCH-GUEST-027: Tìm kiếm bằng AI Face từ trang Detail @guest', async ({
     page,
     searchResultPage,
+    photoDetailPage,
   }) => {
+    // Tăng timeout vì server staging phản hồi chậm
     test.setTimeout(90_000);
+
     const photoId = '35133353';
 
-    await searchResultPage.goToPhotoDetail(photoId);
+    await photoDetailPage.goToPhotoDetail(photoId);
 
     await test.step('Click vào thumbnail khuôn mặt AI tại mục "AIで同じモデルの写真を探す"', async () => {
-      await searchResultPage.clickAiFaceThumbnail(0);
+      await photoDetailPage.clickAiFaceThumbnail(0);
     });
 
     await test.step('Verify URL chứa tham số vector_face và danh sách ảnh kết quả hiển thị', async () => {
@@ -817,49 +814,50 @@ test.describe('Search — Free User', () => {
   });
 
   /**
-   * TC-SEARCH-FREE-028: Kiểm tra trang Trends hiển thị danh sách ảnh, sắp xếp và bảo toàn tham số khi phân trang
-   * @tags @free-user
+   * TC-SEARCH-GUEST-028: Kiểm tra trang Trends hiển thị danh sách ảnh, sắp xếp và bảo toàn tham số khi phân trang
+   * @tags @regression @guest
    */
-  test('TC-SEARCH-FREE-028: Kiểm tra trang Trends hiển thị danh sách ảnh, sắp xếp và bảo toàn tham số khi phân trang @free-user', async ({
+  test('TC-SEARCH-GUEST-028: Kiểm tra trang Trends hiển thị danh sách ảnh, sắp xếp và bảo toàn tham số khi phân trang @regression @guest', async ({
     page,
+    trendsPage,
     searchResultPage,
   }) => {
     test.setTimeout(90_000);
-    await searchResultPage.goToTrendsPage();
+    await trendsPage.goToTrendsPage();
 
     await test.step('1. Verify tiêu đề H1 và danh sách ảnh mặc định của trang Trends', async () => {
-      await expect(searchResultPage.resultHeading).toBeVisible();
-      await expect(searchResultPage.resultHeading).toHaveText('人気の写真素材');
+      await expect(trendsPage.pageHeading).toBeVisible();
+      await expect(trendsPage.pageHeading).toHaveText('人気の写真素材');
 
       // Web-first auto-wait theo quy chuẩn Cross-browser
-      await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
-      const count = await searchResultPage.getResultCount();
+      await expect(trendsPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
+      const count = await trendsPage.getResultCount();
       expect(count, 'Trang Trends mặc định phải có ảnh hiển thị').toBeGreaterThan(0);
       expect(count, 'Trang Trends không vượt quá 70 ảnh').toBeLessThanOrEqual(70);
     });
 
     await test.step('2. Thay đổi sắp xếp sang "新着順" (Newest) và verify URL cập nhật', async () => {
-      await searchResultPage.selectTrendsSort('-releasedate');
+      await trendsPage.selectSort('-releasedate');
       await expect(page).toHaveURL(/srt=-releasedate/);
-      await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
+      await expect(trendsPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
     });
 
     await test.step('3. Chuyển sang Trang 2 và verify bảo toàn tham số srt, referer, p=2', async () => {
-      await expect(searchResultPage.paginationContainer).toBeVisible();
-      await searchResultPage.goToNextPage();
+      await expect(trendsPage.paginationContainer).toBeVisible();
+      await trendsPage.goToNextPage();
 
       await expect(page).toHaveURL(/p=2/);
       await expect(page).toHaveURL(/srt=-releasedate/);
       await expect(page).toHaveURL(/referer=more_ranking/);
-      expect(await searchResultPage.getActivePageNumber()).toBe('2');
+      expect(await trendsPage.getActivePageNumber()).toBe('2');
 
-      const countPage2 = await searchResultPage.getResultCount();
+      const countPage2 = await trendsPage.getResultCount();
       expect(countPage2, 'Trang 2 của Trends phải tiếp tục có ảnh hiển thị').toBeGreaterThan(0);
     });
 
     await test.step('4. Verify search tại trendsPage hoạt động bình thường', async () => {
       const searchKeyword = 'ビジネス';
-      await searchResultPage.searchAgain(searchKeyword);
+      await trendsPage.searchAgain(searchKeyword);
 
       await expect(page).toHaveURL(/\/main\/search/);
       await expect(page).toHaveURL(new RegExp(`q=${encodeURIComponent(searchKeyword)}`));
@@ -872,10 +870,10 @@ test.describe('Search — Free User', () => {
 
   // NHÓM 5: SẮP XẾP & PHÂN TRANG
   /**
-   * TC-SEARCH-FREE-029: Sắp xếp kết quả theo "新着順" (Mới nhất) và giữ nguyên sắp xếp khi sang Trang 2
-   * @tags @free-user
+   * TC-SEARCH-GUEST-029: Sắp xếp kết quả theo "新着順" (Mới nhất) và giữ nguyên sắp xếp khi sang Trang 2
+   * @tags @guest
    */
-  test('TC-SEARCH-FREE-029: Sắp xếp kết quả theo "新着順" (Mới nhất) và giữ nguyên sắp xếp khi sang Trang 2 @free-user', async ({
+  test('TC-SEARCH-GUEST-029: Sắp xếp kết quả theo "新着順" (Mới nhất) và giữ nguyên sắp xếp khi sang Trang 2 @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -906,25 +904,23 @@ test.describe('Search — Free User', () => {
   });
 
   /**
-   * TC-SEARCH-FREE-030: Chặn sắp xếp "人気順" và hiển thị popover nâng cấp Premium
-   * @tags @free-user
+   * TC-SEARCH-GUEST-030: Chặn sắp xếp "人気順" và hiển thị popover nâng cấp Premium
+   * @tags @guest
    */
-  test('TC-SEARCH-FREE-030: Chặn sắp xếp "人気順" và hiển thị popover nâng cấp Premium @free-user', async ({
+  test('TC-SEARCH-GUEST-030: Chặn sắp xếp "人気順" và hiển thị popover nâng cấp Premium @guest', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     await homePage.search('cat');
     await searchResultPage.waitForResultDisplay();
 
     await searchResultPage.clickPopularSort();
 
-    await test.step('Verify popover nâng cấp Premium hiển thị cho Free User', async () => {
+    await test.step('Verify popover nâng cấp Premium hiển thị', async () => {
       await expect(searchResultPage.popularSortPopover).toBeVisible();
       const popoverText = await searchResultPage.getPopularSortPopoverText();
       expect(popoverText).toContain('プレミアム会員になると、人気順での並び替えができます。');
-
-      await captureEvidenceWithUrl(page, testInfo, 'Sort-Popular-Popover-Blocked');
     });
 
     await test.step('Verify URL không bị đổi sang srt=recent_popular', async () => {
@@ -933,10 +929,10 @@ test.describe('Search — Free User', () => {
   });
 
   /**
-   * TC-SEARCH-FREE-031: Kiểm tra phân trang (Next / Prev) và hiển thị mặc định 70 ảnh/trang
-   * @tags @free-user
+   * TC-SEARCH-GUEST-031: Kiểm tra phân trang (Next / Prev) và hiển thị mặc định 70 ảnh/trang
+   * @tags @guest
    */
-  test('TC-SEARCH-FREE-031: Kiểm tra phân trang (Next / Prev) và hiển thị mặc định 70 ảnh/trang @free-user', async ({
+  test('TC-SEARCH-GUEST-031: Kiểm tra phân trang (Next / Prev) và hiển thị mặc định 70 ảnh/trang @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -982,16 +978,17 @@ test.describe('Search — Free User', () => {
     });
   });
 
-  // NHÓM 6: PHÂN QUYỀN & HẠN MỨC FREE USER
+  // NHÓM 6: PHÂN QUYỀN & HẠN MỨC GUEST USER
   /**
-   * TC-SEARCH-FREE-032: Chạm hạn mức tìm kiếm (1 ngày 4 lần) -> Hiển thị Modal kèm nút Dùng vé coupon và xác nhận hoạt động của 2 nút
-   * @tags @free-user
+   * TC-SEARCH-GUEST-032: Chạm hạn mức tìm kiếm 
+   * @tags @guest
    */
-  test('TC-SEARCH-FREE-032: Hiển thị Modal giới hạn khi chạm hạn mức tìm kiếm @free-user', async ({
+  test('TC-SEARCH-GUEST-032: Hiển thị Modal giới hạn khi chạm hạn mức tìm kiếm @guest', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
+
     await page.route('**/ajax/public/is_enable_search', async (route) => {
       await route.fulfill({
         status: 200,
@@ -1004,84 +1001,137 @@ test.describe('Search — Free User', () => {
       });
     });
 
-    const url = new URL(page.url());
-    await page.context().addCookies([
-      {
-        name: 'search_zancnt',
-        value: '0',
-        domain: url.hostname,
-        path: '/',
-      },
-    ]);
-    await page.reload({ waitUntil: 'domcontentloaded' });
-    await homePage.isHomePageLoaded();
+    await homePage.search('山');
 
-    await homePage.search('cat');
-
-    await test.step('Verify Modal giới hạn tìm kiếm hiển thị nội dung phân quyền cho Free User', async () => {
+    await test.step('Verify Modal giới hạn tìm kiếm hiển thị', async () => {
       await searchResultPage.waitForSearchLimitModal();
       await expect(searchResultPage.searchLimitTitle).toContainText('無料のキーワード検索は「1日4回」までです。');
+    });
 
-      // Free User ĐÃ CÓ tài khoản nên KHÔNG còn nút CTA "無料会員登録してACポイント" (Ẩn)
-      await expect(searchResultPage.searchLimitRegisterCta).toBeHidden();
-
-      // Free User có tùy chọn dùng vé tìm kiếm trong ngày (一日検索し放題チケット) (Hiện)
-      await expect(searchResultPage.searchLimitCouponButton).toBeVisible();
-
-      // Có link nâng cấp Premium
+    await test.step('Verify hiển thị mục đăng ký tài khoản nhận 15pt và link Premium', async () => {
+      await expect(searchResultPage.searchLimitRegisterCta).toBeVisible();
+      await expect(searchResultPage.searchLimitRegisterCta).toContainText('無料会員登録してACポイント');
       await expect(searchResultPage.searchLimitPremiumLink).toBeVisible();
-
-      await captureEvidenceWithUrl(page, testInfo, 'FreeUser-Search-Limit-Modal');
     });
 
-    await test.step('Verify click nút Premium mở tab mới điều hướng tới trang Premium', async () => {
-      const [newPage] = await Promise.all([
-        page.context().waitForEvent('page'),
-        searchResultPage.clickSearchLimitPremiumLink(),
-      ]);
-
-      await expect(newPage).toHaveURL(/\/premium/);
-      await captureEvidenceWithUrl(newPage, testInfo, 'FreeUser-Search-Limit-Premium-Page');
-      await newPage.close();
-    });
-
-    await test.step('Verify click nút "一日検索し放題券を使う" mở dialog coupon và có thể quay lại', async () => {
-      await searchResultPage.openSearchLimitCouponDialog();
-      await expect(searchResultPage.searchLimitCouponBackButton).toBeVisible();
-
-      await captureEvidenceWithUrl(page, testInfo, 'FreeUser-Search-Limit-Coupon-Dialog');
-
-      // Click nút "戻る" để hoàn tất luồng và khôi phục trạng thái modal ban đầu
-      await searchResultPage.backFromCouponDialog();
-      await expect(searchResultPage.searchLimitCouponButton).toBeVisible();
+    await test.step('Verify khi click vào link Premium hiển thị tooltip yêu cầu đăng nhập', async () => {
+      await searchResultPage.clickSearchLimitPremiumLink();
+      await expect(searchResultPage.searchLimitTooltip.first()).toBeVisible({ timeout: 5_000 });
+      await expect(searchResultPage.searchLimitTooltip.first()).toContainText('先にログインしてください。初めての方は無料会員登録');
     });
   });
 
   /**
-   * TC-SEARCH-FREE-033: Verify Toggle AI Search (.search-by-ai) KHÔNG hiển thị trên giao diện của Free User
-   * @tags @free-user
+   * TC-SEARCH-GUEST-033: AI Toggle tắt khi chưa chạm hạn mức tìm kiếm
+   * @tags @guest
    */
-  test('TC-SEARCH-FREE-033: Verify Toggle AI Search KHÔNG hiển thị trên giao diện của Free User @free-user', async ({
+  test('TC-SEARCH-GUEST-033: AI Toggle ở trạng thái OFF khi chưa chạm hạn mức tìm kiếm @guest', async ({
+    homePage,
+  }) => {
+    await test.step('Verify nút AI Search hiển thị trên Top Page', async () => {
+      await expect(homePage.searchByAiButton).toBeVisible();
+    });
+
+    await test.step('Verify AI Toggle ở trạng thái OFF', async () => {
+      await expect(homePage.aiSearchOffIcon).toBeVisible();
+      await expect(homePage.aiSearchOnIcon).toBeHidden();
+      await expect(homePage.byAiInput).toHaveValue('0');
+      await expect(homePage.searchByAiButton).toBeDisabled();
+    });
+  });
+
+  /**
+   * TC-SEARCH-GUEST-034: AI Toggle bật màu vàng và cho phép nhập tìm kiếm bằng AI khi limit search
+   * @tags @guest
+   */
+  test('TC-SEARCH-GUEST-034: AI Toggle bật màu vàng và cho phép nhập tìm kiếm bằng AI khi limit search @guest', async ({
+    page,
     homePage,
     searchResultPage,
   }) => {
-    await test.step('Verify nút Toggle AI Search không hiển thị trên thanh tìm kiếm Top Page của Free User', async () => {
-      await expect(homePage.searchByAiButton).toBeHidden();
+    test.setTimeout(90_000);
+    const naturalQuery = 'オフィスでパソコンを開くビジネスマン';
+
+    await test.step('Giả lập khách vãng lai đạt hạn mức tìm kiếm thông thường (search_zancnt = 0)', async () => {
+      // Override route giả lập hết hạn mức tìm kiếm đồng bộ với cookie
+      await page.route('**/ajax/public/is_enable_search', async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            status: 'error',
+            message: 'Daily search limit reached',
+            data: { search_zancnt: 0 },
+          }),
+        });
+      });
+
+      const url = new URL(page.url());
+      await page.context().addCookies([
+        {
+          name: 'search_zancnt',
+          value: '0',
+          domain: url.hostname,
+          path: '/',
+        },
+      ]);
+      await page.reload({ waitUntil: 'domcontentloaded' });
+      await homePage.isHomePageLoaded();
     });
 
-    await test.step('Tìm kiếm từ khóa và verify nút Toggle AI Search cũng không xuất hiện trên Search Result Page', async () => {
-      await homePage.search('女性');
+    await test.step('Verify Popup "AI検索" xuất hiện khi đạt hạn mức', async () => {
+      await expect(homePage.semanticSearchModal).toBeVisible();
+    });
+
+    await test.step('Verify AI Toggle tự động bật (hiển thị icon ON màu vàng, tooltip ON) khi popup xuất hiện', async () => {
+      await expect(homePage.searchByAiButton).toBeVisible();
+      await expect(homePage.aiSearchOnIcon).toBeVisible();
+      await expect(homePage.aiSearchOffIcon).toBeHidden();
+      await expect(homePage.byAiInput).toHaveValue('1');
+      await expect(homePage.searchByAiButton).toHaveAttribute('data-original-title', /AI検索はオンの状態です/);
+    });
+
+    await test.step('Đóng popup Semantic Search', async () => {
+      await homePage.dismissSemanticSearchModal();
+    });
+
+    await test.step('Nhập từ khóa tìm kiếm và submit tìm kiếm bằng AI', async () => {
+      // Mở lại route cho phép submit tìm kiếm bằng AI lên server Photo-AC
+      await page.route('**/ajax/public/is_enable_search', async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            status: 'success',
+            message: 'Allowed',
+            data: { search_zancnt: 4 },
+          }),
+        });
+      });
+
+      await homePage.searchWithAi(naturalQuery);
       await searchResultPage.waitForResultDisplay();
-      await expect(searchResultPage.searchByAiButton).toBeHidden();
+    });
+
+    await test.step('Verify URL chứa tham số by_ai=1 và tiêu đề chứa từ khóa tìm kiếm', async () => {
+      await expect(page).toHaveURL(/by_ai=1/);
+      await expect(searchResultPage.resultHeading).toContainText(`「${naturalQuery}」の写真素材`);
+
+      const count = await searchResultPage.getResultCount();
+      if (count > 0) {
+        await expect(searchResultPage.resultItems.first()).toBeVisible();
+      } else {
+        await expect(searchResultPage.noResultMessage.first()).toBeVisible();
+      }
     });
   });
 
-  // NHÓM 7: THANH TÌM KIẾM CỐ ĐỊNH TRÊN HEADER
+  // NHÓM 7: THANH TÌM KIẾM CỐ ĐỊNH TRÊN HEADER (STICKY HEADER SEARCH BAR)
   /**
-   * TC-SEARCH-FREE-034: Thanh tìm kiếm cố định (Sticky Header Search) tự động hiển thị khi cuộn trang xuống và ẩn đi khi cuộn lên đầu trang
-   * @tags @free-user
+   * TC-SEARCH-GUEST-035: Thanh tìm kiếm cố định (Sticky Header Search) tự động hiển thị khi cuộn trang xuống và ẩn đi khi cuộn lên đầu trang
+   * @tags @guest
    */
-  test('TC-SEARCH-FREE-034: Thanh tìm kiếm cố định (Sticky Header Search) tự động hiển thị khi cuộn trang xuống và ẩn đi khi cuộn lên đầu trang @free-user', async ({
+  test('TC-SEARCH-GUEST-035: Thanh tìm kiếm cố định (Sticky Header Search) tự động hiển thị khi cuộn trang xuống và ẩn đi khi cuộn lên đầu trang @guest', async ({
     page,
     homePage,
   }, testInfo) => {
@@ -1106,10 +1156,10 @@ test.describe('Search — Free User', () => {
   });
 
   /**
-   * TC-SEARCH-FREE-035: Kiểm tra thực hiện tìm kiếm từ khóa thành công từ Sticky Header Search Bar
-   * @tags @free-user
+   * TC-SEARCH-GUEST-036: Kiểm tra thực hiện tìm kiếm từ khóa thành công từ Sticky Header Search Bar
+   * @tags @guest
    */
-  test('TC-SEARCH-FREE-035: Thực hiện tìm kiếm từ khóa thành công từ Sticky Header Search Bar @free-user', async ({
+  test('TC-SEARCH-GUEST-036: Kiểm tra thực hiện tìm kiếm từ khóa thành công từ Sticky Header Search Bar @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -1141,10 +1191,10 @@ test.describe('Search — Free User', () => {
 
   // NHÓM 12: TƯƠNG TÁC ẢNH KẾT QUẢ & CÁC TRANG NHÓM (GROUP SITES)
   /**
-   * TC-SEARCH-FREE-036: Click ảnh bất kỳ trong kết quả tìm kiếm chuyển hướng trực tiếp tới trang chi tiết (Details page)
-   * @tags @free-user @regression
+   * TC-SEARCH-GUEST-037: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập
+   * @tags @guest @regression
    */
-  test('TC-SEARCH-FREE-036: Click ảnh bất kỳ trong kết quả tìm kiếm chuyển hướng trực tiếp tới trang chi tiết @free-user @regression', async ({
+  test('TC-SEARCH-GUEST-037: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập @guest @regression', async ({
     page,
     searchResultPage,
   }, testInfo) => {
@@ -1154,25 +1204,35 @@ test.describe('Search — Free User', () => {
       await searchResultPage.waitForResultDisplay();
     });
 
-    await test.step('Click vào link chi tiết của ảnh đầu tiên qua Page Object method', async () => {
-      await searchResultPage.openDetailPageForItem(0);
+    await test.step('Click vào hình ảnh đầu tiên trong danh sách kết quả', async () => {
+      await searchResultPage.openQuickViewForItem(0);
     });
 
-    await test.step('Verify chuyển hướng tới trang chi tiết (Details page) thành công', async () => {
-      await page.waitForURL(/\/main\/detail\/\d+/, { timeout: 15_000 });
-      await expect(page).toHaveURL(/\/main\/detail\/\d+/);
-      await expect(page).toHaveTitle(/- No: \d+｜写真素材なら「写真AC」/);
-      await expect(page.getByRole('heading', { level: 1 })).toBeVisible({ timeout: 10_000 });
+    await test.step('Verify hiển thị popup QuickView với tiêu đề yêu cầu đăng ký tài khoản', async () => {
+      await expect(searchResultPage.quickViewModal).toBeVisible({ timeout: 10_000 });
+      await expect(searchResultPage.guestRegisterPromptTitle).toBeVisible();
+      await expect(searchResultPage.guestRegisterPromptTitle).toHaveText('会員登録で今すぐダウンロード！');
     });
 
-    await captureEvidenceWithUrl(page, testInfo, 'FreeUser-Navigated-To-Details-Page');
+    await test.step('Verify hiển thị nút Đăng ký miễn phí (無料ダウンロード) và Đăng nhập (ログイン)', async () => {
+      await expect(searchResultPage.guestRegisterCtaButton).toBeVisible();
+      await expect(searchResultPage.guestLoginLink).toBeVisible();
+      await expect(searchResultPage.guestRegisterCtaButton).toHaveAttribute('href', /signup/);
+      await expect(searchResultPage.guestLoginLink).toHaveAttribute('href', /login/);
+    });
+
+    await captureEvidenceWithUrl(page, testInfo, 'Guest-QuickView-Register-Popup');
+
+    await test.step('Đóng popup QuickView', async () => {
+      await searchResultPage.closeQuickViewModal();
+    });
   });
 
   /**
-   * TC-SEARCH-FREE-037: Click vào tác phẩm của các trang nhóm (Design AC, Illust AC, Silhouette AC, Video AC) ở cuối trang hiển thị popup tương ứng
-   * @tags @free-user @regression
+   * TC-SEARCH-GUEST-038: Click vào tác phẩm của các trang nhóm (Design AC, Illust AC, Silhouette AC, Video AC) ở cuối trang hiển thị popup tương ứng
+   * @tags @guest @regression
    */
-  test('TC-SEARCH-FREE-037: Click tác phẩm của các trang nhóm (Design, Illust, Silhouette, Video) hiển thị popup tương ứng @free-user @regression', async ({
+  test('TC-SEARCH-GUEST-038: Click tác phẩm của các trang nhóm (Design, Illust, Silhouette, Video) hiển thị popup tương ứng @guest @regression', async ({
     page,
     searchResultPage,
   }, testInfo) => {
@@ -1190,10 +1250,12 @@ test.describe('Search — Free User', () => {
         await expect(searchResultPage.relatedModalDownloadButton).toBeVisible();
         await expect(searchResultPage.relatedModalDownloadButton).toHaveAttribute('href', new RegExp(site.expectedDomain));
 
-        await captureEvidenceWithUrl(page, testInfo, `FreeUser-GroupSite-${site.service}-Modal`);
+        await captureEvidenceWithUrl(page, testInfo, `Guest-GroupSite-${site.service}-Modal`);
 
         await searchResultPage.closeRelatedSearchModal();
       });
     }
   });
 });
+
+

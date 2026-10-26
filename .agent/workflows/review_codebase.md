@@ -26,8 +26,8 @@ Workflow này kích hoạt quy trình thanh tra mã nguồn tự động của *
    - Nếu User yêu cầu "review code vừa sửa": Xác định các file đã được thêm/sửa đổi gần nhất.
 2. Phân loại từng file theo ma trận 3 Tiers:
    - **Tier 1 (Core):** `playwright.config.ts`, `base.fixture.ts`, `base.page.ts`, `auth.fixture.ts`, `env.config.ts`...
-   - **Tier 2 (Shared Module):** `src/pages/common/*.page.ts`, `src/utils/*.ts`...
-   - **Tier 3 (Domain Specs/Pages):** `src/pages/downloader/**`, `src/tests/downloader/**`...
+    - **Tier 2 (Shared Module):** `src/pages/common/*.page.ts`, `src/utils/*.ts`...
+    - **Tier 3 (Domain Specs/Pages):** `src/pages/downloader/**`, `src/pages/creator/**`, `src/tests/downloader/{guest,free-user,premium}/**`, `src/tests/creator/**`, `src/tests/auth/**`...
 
 ### Bước 2: Kiểm Soát File Dùng Chung & Vùng Ảnh Hưởng (Blast Radius Audit)
 1. Nếu có file **Tier 1** hoặc **Tier 2** bị sửa đổi:
@@ -36,17 +36,30 @@ Workflow này kích hoạt quy trình thanh tra mã nguồn tự động của *
    - Đảm bảo tuân thủ nguyên tắc **Tương thích ngược (Backward Compatibility)**.
 2. Nếu không có file Tier 1/2 bị sửa: Chuyển thẳng sang Bước 3.
 
-### Bước 3: Đánh Giá Tính Đồng Bộ Kiến Trúc (Consistency Audit)
+### Bước 3: Đánh Giá Tính Đồng Bộ Kiến Trúc & Ranh Giới Page Object (Consistency & POM Audit)
 Đối chiếu mã nguồn với chuẩn mực dự án:
-1. **Import Check:** Spec có import đúng `{ test, expect }` từ `base.fixture.ts` không? (Tuyệt đối cấm import trực tiếp từ `@playwright/test`).
-2. **POM Separation:** Page Object có chứa `expect()` nghiệp vụ không? (Nếu có -> Vi phạm POM).
-3. **Locator Semantics:** Có dùng đúng thứ tự ưu tiên `getByRole` > `getByLabel` > `getByPlaceholder` > `getByText` không? Có dính dynamic CSS / raw XPath không?
-4. **Allure Steps:** Các hành động và verify quan trọng có được bọc trong `test.step()` không?
-5. **Test Data:** Có dùng `src/utils/test-data.ts` với tiền tố `auto_...` thay vì hardcode không?
-6. **Multi-Role Matrix:** Có tôn trọng quy tắc session giữa Chromium và Firefox không?
+1. **Spec Directory Partitioning Check (Phân vùng thư mục Test theo Role - BẮT BUỘC):**
+   - File spec của Downloader có nằm đúng trong subfolder vai trò: `guest/`, `free-user/`, hoặc `premium/` không?
+   - **CẢNH BÁO / BLOCK NGAY** nếu phát hiện file `.spec.ts` nằm trực tiếp ngoài gốc `src/tests/downloader/` (gây rủi ro Playwright gom nhầm file vào session khác hoặc bỏ sót test).
+   - Test đăng nhập/đăng xuất chung có nằm đúng trong `src/tests/auth/login.spec.ts` không?
+   - Tên file spec có ngắn gọn, tinh gọn theo tính năng (vd: `search.spec.ts`, `download.spec.ts`) thay vì lặp lại tên role (`search-guest.spec.ts`) không?
+2. **Import Check:** Spec có import đúng `{ test, expect }` từ `base.fixture.ts` không? (Tuyệt đối cấm import trực tiếp từ `@playwright/test`).
+3. **Page Object Boundaries (Single Responsibility per Route):** Mỗi Page Object có map 1-1 với 1 URL Route độc lập không? Có tình trạng gom nhầm locator của trang này vào trang khác (vd: nhét trends vào search, nhét bookmarks vào detail) không?
+4. **Entity-Based Page Naming:** Tên Page Class và File có phản ánh đúng thực thể toàn diện của trang không? (Cấm đặt tên theo một action đơn lẻ, ví dụ: cấm `DownloadImagePage` thay vì `PhotoDetailPage`).
+5. **Refactor Completeness (Zero Residual Leak):** Nếu có đổi tên Page Class hoặc File, đã đổi đồng bộ 100% trong `base.fixture.ts` và toàn bộ các test specs chưa? Có bị sót lại fixture cũ hoặc alias thừa không?
+6. **POM Separation:** Page Object có chứa `expect()` nghiệp vụ không? (Nếu có -> Vi phạm POM).
+7. **Locator Semantics & No-Guessed-Locators:**
+   - Locator có được verify trên DOM thực tế chưa? (Cấm đoán mò).
+   - Có bịa ra các message giả định (vd: `noResultMessage` trên trang luôn có dữ liệu) không?
+   - Có kiểm tra kỹ ký tự tiếng Nhật (Kanji `口` vs Katakana `ロ`) không?
+   - Có dùng đúng thứ tự ưu tiên `getByRole` > `getByLabel` > `getByPlaceholder` > `getByText` không? Có dính dynamic CSS / raw XPath không?
+8. **Allure Steps:** Các hành động và verify quan trọng có được bọc trong `test.step()` không?
+9. **Test Data:** Có dùng `src/utils/test-data.ts` với tiền tố `auto_...` thay vì hardcode không?
+10. **Multi-Role Matrix:** Có tôn trọng quy tắc session giữa Chromium và Firefox không?
 
 ### Bước 4: Quét Vi Phạm & Flaky Smells
 Rà soát toàn bộ code thay đổi để tìm các vi phạm cấm tuyệt đối:
+- Tìm kiếm locator đoán mò (ghost locators) không có trên DOM thực tế.
 - Tìm kiếm sự tồn tại của: `test.only`, `describe.only`, `fit(`, `fdescribe(`.
 - Tìm kiếm `waitForTimeout`, `sleep(`, `delay`.
 - Tìm kiếm `console.log`, `debugger`.
