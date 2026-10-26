@@ -1,4 +1,4 @@
-﻿import { type Page, test } from '@playwright/test';
+import { type Page, test } from '@playwright/test';
 import { BasePage } from './base.page';
 
 /**
@@ -15,7 +15,11 @@ export class LoginPage extends BasePage {
 
   private readonly downloaderLoginButton = this.page.locator('text=ダウンロードユーザー').nth(1);
 
-  private readonly creatorLoginButton = this.page.getByRole('button', { name: /クリエイター/ });
+  private readonly creatorLoginButton = this.page
+    .getByRole('link', { name: /クリエイターログイン/ })
+    .or(this.page.locator('a:has-text("クリエイターログイン")'))
+    .or(this.page.getByRole('button', { name: /クリエイター/ }))
+    .first();
 
   /** Email / username input field on the login form */
   private readonly emailInput = this.page.getByPlaceholder('メールアドレス');
@@ -23,11 +27,10 @@ export class LoginPage extends BasePage {
   /** Password input field */
   private readonly passwordInput = this.page.getByPlaceholder('パスワード');
 
-
   /** Submit / Login button */
   private readonly submitDowloaderButton = this.page.getByRole('button', { name: /ログイン/ });
 
-  private readonly submitCreatorButton = this.page.getByRole('button', { name: /口グイン/ });
+  private readonly submitCreatorButton = this.page.getByRole('button', { name: /ログイン/ });
 
   /** Error message container shown after failed login */
   private readonly errorMessage = this.page.locator('[class*="error"], [class*="alert"], [class*="message"]')
@@ -77,10 +80,9 @@ export class LoginPage extends BasePage {
       // Wait for redirect to complete after login — ensures session cookies are fully established
       await this.page.waitForURL(/\/(user|$)/, { waitUntil: 'domcontentloaded', timeout: 30_000 });
       await this.closePhotoAiModelContent();
-      // Wait for user avatar to be visible, ensuring session cookies are fully established in the context
-      // await this.page.locator('#user-info-dropdown img').nth(1).waitFor({ state: 'visible', timeout: 15_000 });
-      await this.page.waitForTimeout(3000);
-    })
+      // Wait for user dropdown container to ensure session cookies and UI are fully ready
+      await this.page.locator('#user-info-dropdown').waitFor({ state: 'attached', timeout: 15_000 }).catch(() => {});
+    });
   }
 
   /**

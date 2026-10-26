@@ -1,4 +1,4 @@
-import { test, expect } from '../../fixtures/base.fixture';
+import { test, expect } from '../../../fixtures/base.fixture';
 
 /**
  * Test Suite: Free User Registration (会員登録)

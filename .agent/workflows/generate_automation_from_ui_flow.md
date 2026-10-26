@@ -141,18 +141,26 @@ Nếu user chưa cung cấp đủ — hỏi:
    }
    ```
 
-2. **Sinh Test class:**
+2. **Sinh Test class & Chọn đúng thư mục theo Role:**
+   - **Xác định đúng thư mục lưu trữ bắt buộc:**
+     - Guest (No login): `src/tests/downloader/guest/<feature>.spec.ts`
+     - Free User: `src/tests/downloader/free-user/<feature>.spec.ts`
+     - Premium User: `src/tests/downloader/premium/<feature>.spec.ts`
+     - Creator: `src/tests/creator/<feature>.spec.ts`
+     - Auth chung (Login/Logout): `src/tests/auth/login.spec.ts`
+     - ⛔ **CẤM** tạo file spec trực tiếp ở gốc `src/tests/downloader/`.
    - Import Page Objects
    - Structure: **Arrange — Act — Assert**
    - Assertions rõ ràng với message mô tả
    - Test data unique + traceable (dùng timestamp/random)
-   - Import `test` từ `src/fixtures/base.fixture.ts`
+   - Import `test` từ `src/fixtures/base.fixture.ts` (dùng `../../../fixtures/base.fixture` hoặc alias `@fixtures/base.fixture`)
 
 3. **Nguyên tắc sinh code:**
    - Locator PHẢI lấy từ Bước 2 (đã xác minh trên DOM) — KHÔNG ĐOÁN
    - Không hardcode test data (credentials đọc từ env/config)
    - Không dùng `waitForTimeout()` — chỉ smart waits
    - Method names mô tả hành vi user, không mô tả thao tác DOM
+   - Tên file ngắn gọn theo tính năng (vd: `search.spec.ts`), không lặp lại tên role trong file name
    - Mỗi page — 1 file, mỗi test — 1 file
 
 ### Bước 4: Chạy Test và Tự Sửa Lỗi (Execution and Auto-Heal)

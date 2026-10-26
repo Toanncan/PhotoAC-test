@@ -102,8 +102,9 @@ Nếu user chưa cung cấp đủ — hỏi trước khi bắt đầu.
 ### Bước 3: Thiết Kế POM (Page Object Model Architecture)
 
 1. **Xác định danh sách Page classes** cần tạo:
-   - Mỗi page/screen trong test flow — 1 Page class
-   - Xem xét tạo `BasePage` nếu chưa có trong project
+   - **Ranh giới 1 Route = 1 Page Class**: Mỗi màn hình có URL / Route độc lập trên web (vd: `/main/trends`, `/user/bookmarks`, `/photo/:id`) BẮT BUỘC có 1 Page Class riêng. TUYỆT ĐỐI CẤM gom nhặt locator của trang này vào class của trang khác.
+   - **Đặt tên theo Thực thể Trang (Entity-Based)**: Tên file và class phải phản ánh đúng thực thể nghiệp vụ toàn diện của trang (vd: `PhotoDetailPage` thay vì `DownloadImagePage`).
+   - Xem xét tạo `BasePage` nếu chưa có trong project.
 
 2. **Sinh Page Object classes** bằng `write_to_file`:
 
@@ -166,14 +167,27 @@ Nếu user chưa cung cấp đủ — hỏi trước khi bắt đầu.
 
 ### Bước 5: Sinh Automation Scripts (Test Classes)
 
-1. **Tạo test classes** — mỗi test case hoặc nhóm test case liên quan — 1 test file:
+1. **Xác định Thư mục Đích BẮT BUỘC theo Role (Target Directory Mapping):**
+   Trước khi tạo file `.spec.ts`, BẮT BUỘC xác định đúng vai trò để lưu vào đúng thư mục:
+
+   | Vai trò (Role) | Thư mục Test Bắt Buộc | Ví dụ file | Cấu hình Session tương ứng |
+   |---|---|---|---|
+   | **Guest** (Không login) | `src/tests/downloader/guest/` | `search.spec.ts`, `download.spec.ts` | `test.use({ storageState: { cookies: [], origins: [] } })` |
+   | **Free User** | `src/tests/downloader/free-user/` | `search.spec.ts`, `download.spec.ts`, `register.spec.ts` | Playwright project tự inject Free State |
+   | **Premium User** | `src/tests/downloader/premium/` | `search.spec.ts`, `download.spec.ts`, `receipts.spec.ts` | Playwright project tự inject Premium State |
+   | **Creator** | `src/tests/creator/` | `upload.spec.ts`, `ranking.spec.ts` | Playwright project tự inject Creator State |
+   | **Auth chung** | `src/tests/auth/` | `login.spec.ts` | Chạy unauthenticated |
+
+   > ⛔ **CẢNH BÁO BẮT BUỘC:** TUYỆT ĐỐI CẤM tạo file spec trực tiếp ở gốc `src/tests/downloader/`. Tên file đặt ngắn gọn theo tính năng (vd: `search.spec.ts`), KHÔNG gắn thêm suffix role vào tên file.
+
+2. **Tạo test classes** — mỗi test case hoặc nhóm test case liên quan — 1 test file:
 
    **Cấu trúc mỗi test:**
    ```typescript
-   // src/tests/auth/login.spec.ts
-   import { test, expect } from '../../fixtures/base.fixture';
-   import { LoginPage } from '../../pages/login.page';
-   import { generateEmail } from '../../utils/test-data';
+   // src/tests/downloader/guest/search.spec.ts
+   import { test, expect } from '../../../fixtures/base.fixture';
+   import { SearchResultPage } from '../../../pages/common/search-results.page';
+   import { generateSearchKeyword } from '../../../utils/test-data';
 
    test.describe('Dang Nhap', () => {
      test('dang nhap thanh cong voi tai khoan hop le', async ({ page }) => {

@@ -5,8 +5,7 @@ import { BasePage } from './base.page';
  * HomePage — Page Object for the main home page after login.
  */
 export class HomePage extends BasePage {
-  // ─── Locators ─────────────────────────────────────────────────────────────
-
+  // Locators
   /** Page heading / main title of the dashboard */
   private readonly pageHeading = this.page.getByRole('heading', { level: 1 }).first();
 
@@ -21,8 +20,7 @@ export class HomePage extends BasePage {
   private readonly logoutButton = this.page.getByRole('button', { name: /logout|sign out|ログアウト/i })
     .or(this.page.getByRole('link', { name: /logout|sign out|ログアウト/i }));
 
-  // ─── Search Entrypoint Locators ───────────────────────────────────────────
-
+  // Search Entrypoint Locators
   /** Top keyword chips displayed directly under the main search bar (e.g. 女性, ビジネス, 秋, 和紙, 犬) */
   readonly topKeywords = this.page.locator('a.top-search');
 
@@ -47,8 +45,7 @@ export class HomePage extends BasePage {
   /** Main search submit button */
   readonly searchSubmitButton = this.page.locator('#search_frm button.execloginbtn:visible, #search_frm #search_btn:visible, #search_frm button[type="submit"]:visible, form:not(#search_frm_fixed) button.execloginbtn:visible').first();
 
-  // ─── Sticky Header Search Bar Locators ──────────────────────────────────────
-
+  // Sticky Header Search Bar Locators
   /** Sticky search bar container (.search-box-top-fixed-area) displayed upon scrolling */
   readonly stickySearchArea = this.page.locator('.search-box-top-fixed-area');
 
@@ -58,8 +55,7 @@ export class HomePage extends BasePage {
   /** Sticky search submit button (form#search_frm_fixed button[type="submit"]) */
   readonly stickySearchSubmitButton = this.page.locator('form#search_frm_fixed button.execloginbtn:visible, form#search_frm_fixed button[type="submit"]:visible, form#search_frm_fixed #search_btn:visible').first();
 
-  // ─── Methods ──────────────────────────────────────────────────────────────
-
+  // Methods
   constructor(page: Page) {
     super(page);
   }

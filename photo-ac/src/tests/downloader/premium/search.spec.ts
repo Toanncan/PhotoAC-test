@@ -1,7 +1,7 @@
-﻿import * as path from 'path';
-import { test, expect } from '../../fixtures/base.fixture';
-import { captureEvidenceWithUrl } from '../../utils/helpers';
-import { GROUP_SITES } from '../../utils/test-data';
+import * as path from 'path';
+import { test, expect } from '../../../fixtures/base.fixture';
+import { captureEvidenceWithUrl } from '../../../utils/helpers';
+import { GROUP_SITES } from '../../../utils/test-data';
 
 /**
  * TEST SUITE: SEARCH — PREMIUM USER
@@ -743,14 +743,15 @@ test.describe('Search — Premium User', () => {
   test('TC-SEARCH-PREM-027: Tìm kiếm bằng AI Face từ trang Detail @premium', async ({
     page,
     searchResultPage,
+    photoDetailPage,
   }) => {
     test.setTimeout(90_000);
 
     const photoId = '35133353';
-    await searchResultPage.goToPhotoDetail(photoId);
+    await photoDetailPage.goToPhotoDetail(photoId);
 
     await test.step('Click vào thumbnail khuôn mặt AI tại mục "AIで同じモデルの写真を探す"', async () => {
-      await searchResultPage.clickAiFaceThumbnail(0);
+      await photoDetailPage.clickAiFaceThumbnail(0);
     });
 
     await test.step('Verify URL chứa tham số vector_face và danh sách ảnh kết quả hiển thị', async () => {
@@ -777,42 +778,43 @@ test.describe('Search — Premium User', () => {
   test('TC-SEARCH-PREM-028: Kiểm tra trang Trends hiển thị danh sách ảnh, sắp xếp và bảo toàn tham số khi phân trang @premium', async ({
     page,
     searchResultPage,
+    trendsPage,
   }) => {
     test.setTimeout(90_000);
-    await searchResultPage.goToTrendsPage();
+    await trendsPage.goToTrendsPage();
 
     await test.step('1. Verify tiêu đề H1 và danh sách ảnh mặc định của trang Trends', async () => {
-      await expect(searchResultPage.resultHeading).toBeVisible();
-      await expect(searchResultPage.resultHeading).toHaveText('人気の写真素材');
+      await expect(trendsPage.resultHeading).toBeVisible();
+      await expect(trendsPage.resultHeading).toHaveText('人気の写真素材');
 
-      await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
-      const count = await searchResultPage.getResultCount();
+      await expect(trendsPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
+      const count = await trendsPage.getResultCount();
       expect(count, 'Trang Trends mặc định phải có ảnh hiển thị').toBeGreaterThan(0);
       expect(count, 'Trang Trends không vượt quá 70 ảnh').toBeLessThanOrEqual(70);
     });
 
     await test.step('2. Thay đổi sắp xếp sang "新着順" (Newest) và verify URL cập nhật', async () => {
-      await searchResultPage.selectTrendsSort('-releasedate');
+      await trendsPage.selectSort('-releasedate');
       await expect(page).toHaveURL(/srt=-releasedate/);
-      await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
+      await expect(trendsPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
     });
 
     await test.step('3. Chuyển sang Trang 2 và verify bảo toàn tham số srt, referer, p=2', async () => {
-      await expect(searchResultPage.paginationContainer).toBeVisible();
-      await searchResultPage.goToNextPage();
+      await expect(trendsPage.paginationContainer).toBeVisible();
+      await trendsPage.goToNextPage();
 
       await expect(page).toHaveURL(/p=2/);
       await expect(page).toHaveURL(/srt=-releasedate/);
       await expect(page).toHaveURL(/referer=more_ranking/);
-      expect(await searchResultPage.getActivePageNumber()).toBe('2');
+      expect(await trendsPage.getActivePageNumber()).toBe('2');
 
-      const countPage2 = await searchResultPage.getResultCount();
+      const countPage2 = await trendsPage.getResultCount();
       expect(countPage2, 'Trang 2 của Trends phải tiếp tục có ảnh hiển thị').toBeGreaterThan(0);
     });
 
     await test.step('4. Verify search tại trendsPage hoạt động bình thường', async () => {
       const searchKeyword = 'ビジネス';
-      await searchResultPage.searchAgain(searchKeyword);
+      await trendsPage.searchAgain(searchKeyword);
 
       await expect(page).toHaveURL(/\/main\/search/);
       await expect(page).toHaveURL(new RegExp(`q=${encodeURIComponent(searchKeyword)}`));

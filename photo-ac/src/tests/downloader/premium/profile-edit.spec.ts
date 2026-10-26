@@ -1,5 +1,5 @@
-﻿// import { test, expect } from '../../fixtures/base.fixture';
-// import { EmailVerificationHelper } from '../../utils/email-verification.helper';
+﻿// import { test, expect } from '../../../fixtures/base.fixture';
+// import { EmailVerificationHelper } from '../../../utils/email-verification.helper';
 
 
 // test('TC001 - Verify số tiền 会員種別 trên trang profile/edit khớp với email Gmail', async ({

@@ -1,4 +1,4 @@
-import { type Page, test } from '@playwright/test';
+import { type Page, test, expect } from '@playwright/test';
 import { BasePage } from './base.page';
 
 /**
@@ -9,26 +9,33 @@ import { BasePage } from './base.page';
  * and update accordingly.
  */
 export class LoginPage extends BasePage {
-  // ─── Locators ─────────────────────────────────────────────────────────────
+  // Locators
 
   /** Login link/button in the header navigation */
   private readonly loginButton = this.page.getByRole('button', { name: /ログイン/ }).first();
 
   private readonly downloaderLoginButton = this.page.locator('text=ダウンロードユーザー').nth(1);
 
-  private readonly creatorLoginButton = this.page.getByRole('button', { name: /クリエイター/ });
+  private readonly creatorLoginButton = this.page
+    .locator('.dropdown-menu.show button:has-text("イラストレーター"), button#login_anchor:has-text("イラストレーター"):visible')
+    .first();
 
-  /** Email / username input field on the login form */
+  /** Downloader login inputs */
   private readonly emailInput = this.page.getByPlaceholder('メールアドレス');
-
-  /** Password input field */
   private readonly passwordInput = this.page.getByPlaceholder('パスワード');
+  private readonly submitDownloaderButton = this.page.getByRole('button', { name: /ログイン/ });
 
+  /** Creator login dialog modal */
+  private readonly creatorDialog = this.page.getByRole('dialog');
 
-  /** Submit / Login button */
-  private readonly submitDowloaderButton = this.page.getByRole('button', { name: /ログイン/ });
+  /** Email input inside creator login modal */
+  private readonly creatorEmailInput = this.creatorDialog.getByPlaceholder('メールアドレス');
 
-  private readonly submitCreatorButton = this.page.getByRole('button', { name: /口グイン/ });
+  /** Password input inside creator login modal */
+  private readonly creatorPasswordInput = this.creatorDialog.getByPlaceholder('パスワード');
+
+  /** Submit / Login button inside creator login modal */
+  private readonly submitCreatorButton = this.creatorDialog.locator('button[type="submit"]').or(this.creatorDialog.getByRole('button', { name: '口グイン' }));
 
   /** Error message container shown after failed login */
   private readonly errorMessage = this.page.locator('[class*="error"], [class*="alert"], [class*="message"]')
@@ -57,6 +64,8 @@ export class LoginPage extends BasePage {
       await this.waitForPageLoad();
       await this.clickElement(this.loginButton);
       await this.clickElement(this.creatorLoginButton);
+      await expect(this.creatorDialog).toBeVisible({ timeout: 15_000 });
+      await expect(this.creatorEmailInput).toBeVisible({ timeout: 15_000 });
     });
   }
 
@@ -72,7 +81,7 @@ export class LoginPage extends BasePage {
       await test.step('Fill login credentials', async () => {
         await this.fillInput(this.emailInput, email);
         await this.fillInput(this.passwordInput, password);
-        await this.clickElement(this.submitDowloaderButton);
+        await this.clickElement(this.submitDownloaderButton);
       })
 
       // Wait for redirect and user menu to be visible — ensures session cookies are fully established
@@ -93,8 +102,8 @@ export class LoginPage extends BasePage {
       await this.goToCreatorLoginPage();
 
       await test.step('Fill login credentials', async () => {
-        await this.fillInput(this.emailInput, email);
-        await this.fillInput(this.passwordInput, password);
+        await this.fillInput(this.creatorEmailInput, email);
+        await this.fillInput(this.creatorPasswordInput, password);
       });
 
       await test.step('Submit login form', async () => {
@@ -102,7 +111,7 @@ export class LoginPage extends BasePage {
       });
 
       await test.step('Wait for redirect to Creator Dashboard', async () => {
-        await this.page.waitForURL(/\/creator\/dashboard/, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+        await this.page.waitForURL(/\/creator/, { waitUntil: 'domcontentloaded', timeout: 30_000 });
       });
     });
   }

@@ -21,8 +21,7 @@ export abstract class BasePage {
     this.pageLoadingIcon = page.locator('#full_page_loading').first();
   }
 
-  // ─── Navigation ──────────────────────────────────────────────────────────
-
+  // Navigation
   /**
    * Navigate to a URL path relative to baseURL with resilient retry on transient network timeouts.
    * @param path - Relative path (e.g., '/login') or absolute URL
@@ -45,8 +44,7 @@ export abstract class BasePage {
     await this.page.waitForLoadState('domcontentloaded', { timeout: 15_000 });
   }
 
-  // ─── Element Interaction ─────────────────────────────────────────────────
-
+  // Element Interaction
   /**
    * Click an element after ensuring it is visible and enabled.
    * @param locator - Playwright Locator object
@@ -160,8 +158,7 @@ export abstract class BasePage {
     }
   }
 
-  // ─── URL and Title ───────────────────────────────────────────────────────
-
+  // URL and Title
   /**
    * Get current page URL.
    */
@@ -176,8 +173,7 @@ export abstract class BasePage {
     return this.page.title();
   }
 
-  // ─── Screenshot ──────────────────────────────────────────────────────────
-
+  // Screenshot
   /**
    * Take a screenshot and return the Buffer.
    * @param name - Optional file name (without extension)

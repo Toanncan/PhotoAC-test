@@ -71,12 +71,16 @@ Từ khóa kích hoạt: "create framework", "design framework", "scaffold proje
 │   │   ├── env.config.ts           # Doc bien moi truong tu .env, export typed config object
 │   │   └── helpers.ts              # Cac ham tien ich dung chung (format date, random string...)
 │   │
-│   └── tests/                      # File spec chua cac test cases — to chuc theo module
+│   └── tests/                      # File spec chua cac test cases — to chuc theo module & role
 │       ├── auth/
-│       │   └── login.spec.ts       # Test cases cho chuc nang dang nhap
-│       ├── dashboard/
-│       │   └── dashboard.spec.ts   # Test cases cho dashboard
-│       └── ...                     # Them thu muc theo module
+│       │   └── login.spec.ts       # Test cases cho chuc nang dang nhap chung
+│       ├── creator/                # Test cases cho Creator (upload, ranking...)
+│       │   └── upload.spec.ts
+│       ├── downloader/             # Test cases cho Downloader — phan 3 subfolder theo Role:
+│       │   ├── guest/              # Guest (No login: search, download...)
+│       │   ├── free-user/          # Free User (search, download, register...)
+│       │   └── premium/            # Premium User (search, download, receipts, profile-edit...)
+│       └── mobile/                 # Test cases cho Mobile interface
 │
 ├── test-data/                      # Du lieu test ngoai (data-driven tests)
 │   └── users.json                  # Du lieu mau nguoi dung (JSON)
@@ -116,10 +120,14 @@ Base Page chua cac method tai su dung:
 
 ### `src/pages/*.page.ts`
 Moi Page Object:
-- Khai bao tat ca locators o dau class (readonly)
-- Constructor nhan `page: Page` tu Playwright
-- Cac method mo ta hanh vi nguoi dung (khong phai thao tac DOM)
-- Khong co assertion — assertion chi o test class
+- **Ranh giới 1 Route = 1 Page Class**: Mỗi màn hình có URL/Route độc lập BẮT BUỘC có file Page Object riêng (vd: `/main/trends` -> `TrendsPage`, `/user/bookmarks` -> `BookmarksPage`, `/photo/:id` -> `PhotoDetailPage`). TUYỆT ĐỐI CẤM gom gộp locator của trang này vào trang khác.
+- **Đặt tên theo Thực thể Trang (Entity-Based)**: Tên file và class phải phản ánh đúng bản chất toàn diện của màn hình UI (vd: `PhotoDetailPage` thay vì `DownloadImagePage`).
+- **Nghiêm cấm đoán mò Locator**: Mọi locator BẮT BUỘC phải được inspect và verify trực tiếp trên DOM thực tế. Cấm bịa ra các message giả định (`noResultMessage` khi trang luôn có data) và cẩn trọng lỗi chính tả ký tự tiếng Nhật (Kanji `口` vs Katakana `ロ`).
+- **Refactor đồng bộ toàn diện**: Khi đổi tên class/file, phải đổi đồng bộ trong file, trong `base.fixture.ts` và trong toàn bộ các test specs (Zero Residual Leak).
+- Khai bao tat ca locators o dau class (readonly).
+- Constructor nhan `page: Page` tu Playwright.
+- Cac method mo ta hanh vi nguoi dung (khong phai thao tac DOM).
+- Khong co assertion — assertion chi o test class.
 
 ### `src/fixtures/auth.fixture.ts`
 Fixture quan ly dang nhap & Multi-Role Architecture:
@@ -148,13 +156,21 @@ Quan ly cau hinh moi truong:
 - Export typed config object (BASE_URL, USERNAME, PASSWORD...)
 - Khong commit file `.env` that — chi commit `.env.example`
 
-### `src/tests/**/*.spec.ts`
+### `src/tests/**/*.spec.ts` — Quy Tắc Phân Vùng Thư Mục Test Theo Role (BẮT BUỘC)
 Cac test spec:
-- Moi file test mot tinh nang/module cu the
-- Import `test` va `expect` tu `base.fixture.ts`
-- Su dung Page Objects — khong goi truc tiep tren `page`
-- Moi test doc lap — khong phu thuoc test khac
-- Test data unique moi lan chay
+- **Phân vùng bắt buộc theo Role đối với Multi-Role modules**:
+  - Với module có nhiều vai trò như Downloader, BẮT BUỘC đặt trong subfolder role:
+    - Guest: `src/tests/downloader/guest/<feature>.spec.ts`
+    - Free User: `src/tests/downloader/free-user/<feature>.spec.ts`
+    - Premium User: `src/tests/downloader/premium/<feature>.spec.ts`
+  - Authentication flows (login/logout chung): `src/tests/auth/login.spec.ts`.
+  - Creator flows: `src/tests/creator/<feature>.spec.ts`.
+  - **TUYỆT ĐỐI CẤM** tạo file `.spec.ts` trực tiếp ở thư mục cha `src/tests/downloader/` (tránh phá vỡ cơ chế project routing của Playwright).
+- **Tên file spec tinh gọn**: Đặt theo tính năng (`search.spec.ts`, `download.spec.ts`), không lặp lại tên role trong file name.
+- Import `test` va `expect` tu `base.fixture.ts` (dùng `../../../fixtures/base.fixture` hoặc alias `@fixtures/base.fixture`).
+- Su dung Page Objects — khong goi truc tiep tren `page`.
+- Moi test doc lap — khong phu thuoc test khac.
+- Test data unique moi lan chay.
 
 ### `test-data/*.json`
 Du lieu test ngoai:

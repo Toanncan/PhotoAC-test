@@ -1,6 +1,6 @@
-﻿// import { test, expect } from '../../fixtures/base.fixture';
-// import { PdfUtils } from '../../utils/pdf.utils';
-// import { EmailVerificationHelper } from '../../utils/email-verification.helper';
+﻿// import { test, expect } from '../../../fixtures/base.fixture';
+// import { PdfUtils } from '../../../utils/pdf.utils';
+// import { EmailVerificationHelper } from '../../../utils/email-verification.helper';
 
 
 // test.describe('領収書発行 — Receipt Issuance', () => {

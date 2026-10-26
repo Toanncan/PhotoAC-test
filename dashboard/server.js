@@ -797,25 +797,64 @@ const server = http.createServer(async (req, res) => {
   if (pathname === '/api/suites' && req.method === 'GET') {
     const projectParam = parsedUrl.searchParams.get('projectSite') || parsedUrl.searchParams.get('project') || activeProjectId;
     const proj = getActiveProject(projectParam);
-    const files = getTestFiles(proj.id);
+    const rawFiles = getTestFiles(proj.id);
+    // Loại bỏ hoàn toàn authen
+    const files = rawFiles.filter(f => !f.startsWith('auth/') && !f.includes('/auth/'));
 
-    const testsRoot = proj.testsDir;
-    const detectedFolders = fs.existsSync(testsRoot)
-      ? fs.readdirSync(testsRoot).filter(f => fs.statSync(path.join(testsRoot, f)).isDirectory() && f !== 'auth')
-      : [];
+    const getModuleLabel = (modId) => {
+      switch (modId) {
+        case 'downloader/guest': return 'Guest';
+        case 'downloader/free-user': return 'Free User';
+        case 'downloader/premium': return 'Premium User';
+        case 'creator': return 'Creator';
+        default: return modId.charAt(0).toUpperCase() + modId.slice(1);
+      }
+    };
+
+    const moduleOrder = [
+      'downloader/guest',
+      'downloader/free-user',
+      'downloader/premium',
+      'creator'
+    ];
+
+    const detectedFolderSet = new Set();
+    const filesByModule = {
+      'all': files
+    };
+
+    for (const f of files) {
+      const parts = f.split('/');
+      if (parts.length > 2 && parts[0] === 'downloader') {
+        const sub = `downloader/${parts[1]}`;
+        if (moduleOrder.includes(sub)) {
+          detectedFolderSet.add(sub);
+          if (!filesByModule[sub]) filesByModule[sub] = [];
+          filesByModule[sub].push(f);
+        }
+      } else if (parts.length > 1) {
+        const rootMod = parts[0];
+        if (moduleOrder.includes(rootMod)) {
+          detectedFolderSet.add(rootMod);
+          if (!filesByModule[rootMod]) filesByModule[rootMod] = [];
+          filesByModule[rootMod].push(f);
+        }
+      }
+    }
+
+    const sortedFolders = Array.from(detectedFolderSet).sort((a, b) => {
+      const idxA = moduleOrder.indexOf(a);
+      const idxB = moduleOrder.indexOf(b);
+      return idxA - idxB;
+    });
 
     const modules = [
       { id: 'all', name: 'Tất cả Thư mục (All Modules)' },
-      ...detectedFolders.map(folder => ({
+      ...sortedFolders.map(folder => ({
         id: folder,
-        name: folder === 'downloader' ? 'Downloader' : folder === 'creator' ? 'Creator' : folder.charAt(0).toUpperCase() + folder.slice(1)
+        name: getModuleLabel(folder)
       }))
     ];
-
-    const filesByModule = {};
-    for (const mod of detectedFolders) {
-      filesByModule[mod] = files.filter(f => f.startsWith(mod + '/'));
-    }
 
     const projects = [
       { id: 'all', name: 'Tất cả Projects (Chromium & Firefox)' },

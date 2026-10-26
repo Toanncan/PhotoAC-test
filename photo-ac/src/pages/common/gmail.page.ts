@@ -1,4 +1,4 @@
-﻿import { type Page, type Locator, test } from '@playwright/test';
+import { type Page, type Locator, test } from '@playwright/test';
 
 /**
  * GmailPage — Page Object for Gmail web UI.
@@ -109,8 +109,7 @@ export class GmailPage {
 
       // Wait for search results to load
       await this.page.waitForLoadState('domcontentloaded', { timeout: 15_000 });
-      // Small delay for Gmail to render search results
-      await this.page.waitForTimeout(2000);
+      await this.page.locator('tr.zA').first().waitFor({ state: 'attached', timeout: 15_000 }).catch(() => {});
     });
   }
 

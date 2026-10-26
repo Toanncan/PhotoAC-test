@@ -1,11 +1,11 @@
 import * as path from 'path';
-import { test, expect } from '../../fixtures/base.fixture';
-import { captureEvidenceWithUrl, enableAdBlocker } from '../../utils/helpers';
+import { test, expect } from '../../../fixtures/base.fixture';
+import { captureEvidenceWithUrl, enableAdBlocker } from '../../../utils/helpers';
 
 /**
- * ============================================================================
+
  * TEST SUITE: SEARCH & FILTERS — FREE USER
- * ============================================================================
+
  */
 test.describe('Search & Filters — Free User (Logged In Account)', () => {
   // Session Free User được tự động inject bởi project cấu hình (chromium-free-user / firefox-free-user)
@@ -46,9 +46,7 @@ test.describe('Search & Filters — Free User (Logged In Account)', () => {
     }
   });
 
-  // ============================================================================
   // NHÓM 1: TÌM KIẾM CƠ BẢN
-  // ============================================================================
 
   /**
    * TC-SEARCH-FREE-001: Tìm kiếm với từ khóa đơn hợp lệ
@@ -200,9 +198,7 @@ test.describe('Search & Filters — Free User (Logged In Account)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 2: FILTER TOOLBAR - SINGLE FILTERS
-  // ============================================================================
 
   /**
    * TC-SEARCH-FREE-007: Lọc ảnh theo Chiều dọc (縦長) và chuyển đổi sang Chiều ngang (横長) qua toolbar
@@ -463,9 +459,7 @@ test.describe('Search & Filters — Free User (Logged In Account)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 3: BỘ LỌC KẾT HỢP ĐA ĐIỀU KIỆN TRÊN UI
-  // ============================================================================
 
   /**
    * TC-SEARCH-FREE-016: Kết hợp Từ khóa + Chiều ngang + Định dạng Vector (EPS/AI) + Loại trừ AI qua UI Toolbar
@@ -551,9 +545,7 @@ test.describe('Search & Filters — Free User (Logged In Account)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 4: TÌM KIẾM CHUYÊN SÂU & ĐẶC BIỆT
-  // ============================================================================
 
   /**
    * TC-SEARCH-FREE-018: Tải ảnh lên tìm kiếm tương đồng
@@ -611,14 +603,16 @@ test.describe('Search & Filters — Free User (Logged In Account)', () => {
    * TC-SEARCH-FREE-020: Tìm kiếm đề xuất và phân trang (rcm=1)
    * @tags @regression @free-user
    */
-  test.skip('TC-SEARCH-FREE-020: Recommended Search và phân trang @regression @free-user', async ({
+  test('TC-SEARCH-FREE-020: Recommended Search và phân trang @regression @free-user', async ({
     page,
     searchResultPage,
   }, testInfo) => {
     await searchResultPage.goToRecommendedSearch();
 
-    await test.step('Verify trang Recommended Search hiển thị tiêu đề chuẩn', async () => {
-      await expect(searchResultPage.resultHeading).toContainText('のイラスト素材');
+    await test.step('Xác minh trang Recommended Search hiển thị đúng tham số, tiêu đề và danh sách ảnh', async () => {
+      await expect(page).toHaveURL(/rcm=1/);
+      await expect(searchResultPage.resultHeading).toContainText(/(イラスト素材|フリーイラスト素材)/);
+      await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
       const count = await searchResultPage.getResultCount();
       expect(count, 'Trang phải có ít nhất 1 ảnh hiển thị').toBeGreaterThan(0);
       expect(count, 'Số lượng ảnh không được vượt quá 70 ảnh/trang').toBeLessThanOrEqual(70);
@@ -628,7 +622,7 @@ test.describe('Search & Filters — Free User (Logged In Account)', () => {
 
     await searchResultPage.goToNextPage();
 
-    await test.step('Verify URL giữ nguyên tham số rcm=1 và referer khi sang trang 2', async () => {
+    await test.step('Xác minh URL giữ nguyên tham số rcm=1 và referer khi sang trang 2', async () => {
       await expect(page).toHaveURL(/rcm=1/);
       await expect(page).toHaveURL(/referer=more_recommended/);
       await expect(page).toHaveURL(/(page|p)=2/);
@@ -670,9 +664,7 @@ test.describe('Search & Filters — Free User (Logged In Account)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 5: SẮP XẾP & PHÂN TRANG
-  // ============================================================================
 
   /**
    * TC-SEARCH-FREE-022: Sắp xếp theo "新着順" (Mới nhất) và giữ nguyên khi sang Trang 2
@@ -784,9 +776,7 @@ test.describe('Search & Filters — Free User (Logged In Account)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 6: PHÂN QUYỀN & HẠN MỨC FREE USER
-  // ============================================================================
 
   /**
    * TC-SEARCH-FREE-025: Chạm hạn mức tìm kiếm (1 ngày 4 lần) -> Hiển thị Modal kèm tùy chọn Dùng vé coupon
@@ -828,9 +818,7 @@ test.describe('Search & Filters — Free User (Logged In Account)', () => {
     });
   });
 
-  // ============================================================================
   // NHÓM 7: THANH TÌM KIẾM CỐ ĐỊNH TRÊN HEADER
-  // ============================================================================
 
   /**
    * TC-SEARCH-FREE-026: Thanh tìm kiếm cố định tự động hiển thị khi cuộn trang xuống và ẩn đi khi cuộn lên đầu trang

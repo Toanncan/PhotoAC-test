@@ -1,4 +1,4 @@
-﻿// import { test, expect } from '../../fixtures/base.fixture';
+// import { test, expect } from '../../fixtures/base.fixture';
 
 // /**
 //  * Ranking Page Tests — Creator Portal
@@ -12,7 +12,7 @@
 //  * 3. Verify no font rendering errors (tofu/garbled characters)
 //  */
 // test.describe('Creator Ranking Page', () => {
-//   // ─── TC01: Page Navigation & Heading ─────────────────────────────────────
+//   // TC01: Page Navigation & Heading
 
 //   test('TC01 - Trang ranking hiển thị đúng heading và URL', async ({ rankingPage, page }) => {
 //     // Act
@@ -29,7 +29,7 @@
 //     });
 //   });
 
-//   // ─── TC02: All 4 Ranking Sections Present ────────────────────────────────
+//   // TC02: All 4 Ranking Sections Present
 
 //   // test('TC02 - Bốn section ranking đều hiển thị đầy đủ', async ({ rankingPage }) => {
 //   //   // Act
@@ -42,7 +42,7 @@
 //   //   await expect(rankingPage.uploadNiceFanRankingSection).toBeVisible();
 //   // });
 
-//   // ─── TC03: Table Count Correct ────────────────────────────────────────────
+//   // TC03: Table Count Correct
 
 //   // test('TC03 - Trang có đúng 4 bảng ranking', async ({ rankingPage }) => {
 //   //   // Act
@@ -53,7 +53,7 @@
 //   //   expect(tableCount).toBe(4);
 //   // });
 
-//   // // ─── TC04: Column Headers Not Empty ──────────────────────────────────────
+//   // TC04: Column Headers Not Empty
 
 //   // test('TC04 - Column headers của tất cả bảng không trống và không bị lỗi font', async ({
 //   //   rankingPage,
@@ -75,7 +75,7 @@
 //   //   }
 //   // });
 
-//   // // ─── TC05: Table 4 Headers (写真総数/NICE!/ファン) ────────────────────────
+//   // TC05: Table 4 Headers (写真総数/NICE!/ファン)
 
 //   // test('TC05 - Bảng 4 (写真掲載数・NICE!数・ファン数) có đúng các cột', async ({
 //   //   rankingPage,
@@ -89,7 +89,7 @@
 //   //   await expect(rankingPage.fanCountHeader).toBeVisible();
 //   // });
 
-//   // // ─── TC06: Download Ranking Table Structure ───────────────────────────────
+//   // TC06: Download Ranking Table Structure
 
 //   // test('TC06 - Bảng Download Ranking có đầy đủ row ダウンロード数 và ランキング', async ({
 //   //   rankingPage,
@@ -102,7 +102,7 @@
 //   //   await expect(rankingPage.downloadRankingRow).toBeVisible();
 //   // });
 
-//   // // ─── TC07: Font Rendering — No Tofu Characters ───────────────────────────
+//   // TC07: Font Rendering — No Tofu Characters
 
 //   // test('TC07 - Không có lỗi font (không có ký tự tofu/garbled trên trang)', async ({
 //   //   rankingPage,
@@ -118,7 +118,7 @@
 //   //   ).toHaveLength(0);
 //   // });
 
-//   // // ─── TC08: Font Family Applied Correctly ─────────────────────────────────
+//   // TC08: Font Family Applied Correctly
 
 //   // test('TC08 - Font family được áp dụng đúng (Meiryo/Japanese fonts)', async ({
 //   //   rankingPage,
@@ -138,7 +138,7 @@
 //   //   ).toBe(true);
 //   // });
 
-//   // // ─── TC09: Row Labels Rendered Correctly ─────────────────────────────────
+//   // TC09: Row Labels Rendered Correctly
 
 //   // test('TC09 - Row labels của tất cả bảng render đúng (không trống)', async ({
 //   //   rankingPage,
@@ -167,7 +167,7 @@
 //   //   expect(table4Labels).toContain('ランキング');
 //   // });
 
-//   // // ─── TC10: Daily Report Section Present ──────────────────────────────────
+//   // TC10: Daily Report Section Present
 
 //   // test('TC10 - Section "毎日レポート" hiển thị và các checkbox hoạt động', async ({
 //   //   rankingPage,
@@ -183,7 +183,7 @@
 //   //   await expect(rankingPage.monthlyReportCheckbox).toBeVisible();
 //   // });
 
-//   // // ─── TC11: Font Bug on Login Page — "口グイン" instead of "ログイン" ────────
+//   // TC11: Font Bug on Login Page — "口グイン" instead of "ログイン"
 //   // // BUG DETECTED: On /auth/login, the "ログイン" button text is rendered as "口グイン"
 //   // // in the DOM (katakana ロ → kanji 口 font fallback). This test verifies the fix.
 

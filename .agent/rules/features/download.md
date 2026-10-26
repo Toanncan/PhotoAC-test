@@ -137,13 +137,15 @@ BƯỚC 2: AD BLOCKER & MODAL DEFENSE
    - Gọi `await enableAdBlocker(page);` trong beforeEach cho Guest và Free User để chặn Google Vignette Ads.
 
 BƯỚC 3: SỬ DỤNG PAGE OBJECT DÙNG CHUNG
-   - Sử dụng `DownloadImagePage` (`src/pages/downloader/download-image.page.ts`).
+   - Photo-AC: Sử dụng `PhotoDetailPage` (`src/pages/downloader/photo-detail.page.ts`).
+   - Illust-AC: Sử dụng `IllustDetailPage` (`src/pages/downloader/illust-detail.page.ts`).
    - Import `{ test, expect }` từ `src/fixtures/base.fixture`.
 
-BƯỚC 4: SESSION ISOLATION THEO ROLE MATRIX
-   - Guest: `test.use({ storageState: { cookies: [], origins: [] } })` trong spec `download-guest.spec.ts`.
-   - Free User: đặt tên spec `download-freeUser.spec.ts` để project `chromium-free-user` tự inject auth state.
-   - Premium User: đặt tên spec `download-premium.spec.ts` để project `chromium-premium` tự inject auth state.
+BƯỚC 4: SESSION ISOLATION & LƯU ĐÚNG THƯ MỤC THEO ROLE MATRIX
+   - Guest: Lưu tại `src/tests/downloader/guest/download.spec.ts`. Dùng `test.use({ storageState: { cookies: [], origins: [] } })`.
+   - Free User: Lưu tại `src/tests/downloader/free-user/download.spec.ts` (project `chromium-free-user` tự inject auth state).
+   - Premium User: Lưu tại `src/tests/downloader/premium/download.spec.ts` (project `chromium-premium` tự inject auth state).
+   - ⚠️ TUYỆT ĐỐI CẤM tạo file `download*.spec.ts` trực tiếp ở thư mục gốc `src/tests/downloader/`.
 ```
 
 ---

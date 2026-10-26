@@ -221,20 +221,23 @@
                 title="Xóa từ khóa tìm kiếm">✕</button>
             </div>
             <div class="flex items-center justify-between text-xs text-slate-400 px-1">
-              <div class="space-x-2">
+              <div class="space-x-1.5">
                 <button type="button" id="btnSelectAllFiles"
                   class="hover:text-indigo-300 transition-colors font-medium">Chọn tất cả</button>
                 <span>•</span>
                 <button type="button" id="btnDeselectAllFiles"
                   class="hover:text-rose-300 transition-colors font-medium">Bỏ chọn</button>
+                <span>•</span>
+                <button type="button" id="btnToggleAllFolders"
+                  class="hover:text-amber-300 transition-colors font-medium">Thu gọn</button>
               </div>
               <span id="fileMatchCount" class="text-[11px] text-slate-500 hidden"></span>
             </div>
           </div>
 
-          <!-- File Checkbox List -->
+          <!-- File Checkbox List (Grouped by Folder) -->
           <div id="fileChecklistContainer"
-            class="max-h-48 overflow-y-auto custom-scroll space-y-1 p-1.5 bg-slate-950/70 rounded-xl border border-slate-800/80">
+            class="max-h-64 overflow-y-auto custom-scroll space-y-2 p-1.5 bg-slate-950/70 rounded-xl border border-slate-800/80">
             <div class="text-xs text-slate-500 text-center py-4">Đang tải danh sách file...</div>
           </div>
         </div>
@@ -570,6 +573,7 @@
       skipped: 0,
       tests: new Map(),
       fileSelection: new Set(),
+      folderCollapsed: new Set(),
       selectedBrowsers: new Set(['chromium']),
       selectedRoles: new Set(['premium']),
       currentProjectSite: 'photo-ac',
@@ -593,6 +597,7 @@
     const fileSelectionBadge = document.getElementById('fileSelectionBadge');
     const btnSelectAllFiles = document.getElementById('btnSelectAllFiles');
     const btnDeselectAllFiles = document.getElementById('btnDeselectAllFiles');
+    const btnToggleAllFolders = document.getElementById('btnToggleAllFolders');
     const btnModeHeaded = document.getElementById('btnModeHeaded');
     const btnModeHeadless = document.getElementById('btnModeHeadless');
     const btnRunTest = document.getElementById('btnRunTest');
@@ -632,14 +637,59 @@
     let suitesData = { files: [], modules: [], filesByModule: {}, projects: [] };
 
     // ==========================================
-    // 1. FILE SELECTION & MULTI-SELECT MANAGER
+    // 1. FILE SELECTION & FOLDER TREE MANAGER
     // ==========================================
+    const FOLDER_CONFIGS = {
+      'downloader/guest': {
+        title: 'Guest',
+        role: 'guest',
+        badge: 'Guest'
+      },
+      'downloader/free-user': {
+        title: 'Free User',
+        role: 'free-user',
+        badge: 'Free User'
+      },
+      'downloader/premium': {
+        title: 'Premium User',
+        role: 'premium',
+        badge: 'Premium User'
+      },
+      'creator': {
+        title: 'Creator',
+        role: 'creator',
+        badge: 'Creator'
+      }
+    };
+
+    const FOLDER_ORDER = [
+      'downloader/guest',
+      'downloader/free-user',
+      'downloader/premium',
+      'creator'
+    ];
+
+    function getFolderKeyFromFile(file) {
+      const parts = (file || '').split('/');
+      if (parts.length > 2 && parts[0] === 'downloader') {
+        return `downloader/${parts[1]}`;
+      }
+      if (parts.length > 1) {
+        return parts[0];
+      }
+      return '';
+    }
+
+    function getFolderConfig(folderKey) {
+      return FOLDER_CONFIGS[folderKey] || null;
+    }
+
     function getAvailableFiles() {
       const selectedModule = moduleSelect.value;
       if (selectedModule === 'all') {
-        return suitesData.files || [];
+        return (suitesData.files || []).filter(f => !f.startsWith('auth/') && !f.includes('/auth/'));
       }
-      return suitesData.filesByModule[selectedModule] || [];
+      return (suitesData.filesByModule[selectedModule] || []).filter(f => !f.startsWith('auth/') && !f.includes('/auth/'));
     }
 
     function renderFileChecklist() {
@@ -661,38 +711,132 @@
       fileChecklistContainer.innerHTML = '';
 
       if (filteredFiles.length === 0) {
-        fileChecklistContainer.innerHTML = '<div class="text-xs text-slate-500 text-center py-3">Không tìm thấy file phù hợp</div>';
+        fileChecklistContainer.innerHTML = '<div class="text-xs text-slate-500 text-center py-4">Không tìm thấy file phù hợp</div>';
         updateFileBadge();
         return;
       }
 
+      // Group files by folder (chỉ lấy 4 nhóm: Guest, Free User, Premium User, Creator)
+      const folderGroups = {};
       for (const file of filteredFiles) {
-        const fileName = file.split('/').pop() || file;
-        const isChecked = state.fileSelection.has(file);
+        const folderKey = getFolderKeyFromFile(file);
+        if (FOLDER_CONFIGS[folderKey]) {
+          if (!folderGroups[folderKey]) folderGroups[folderKey] = [];
+          folderGroups[folderKey].push(file);
+        }
+      }
 
-        const label = document.createElement('label');
-        label.className = `flex items-center p-2 rounded-lg cursor-pointer transition-all border ${isChecked ? 'bg-indigo-950/40 border-indigo-500/40 text-white' : 'hover:bg-slate-800/60 border-transparent text-slate-300'
-          }`;
+      // Sort folders according to defined order
+      const sortedFolderKeys = Object.keys(folderGroups).sort((a, b) => {
+        const idxA = FOLDER_ORDER.indexOf(a);
+        const idxB = FOLDER_ORDER.indexOf(b);
+        return idxA - idxB;
+      });
 
-        label.innerHTML = `
-          <div class="flex items-center space-x-2.5 truncate flex-1">
-            <input type="checkbox" value="${escapeHtml(file)}" ${isChecked ? 'checked' : ''} class="file-item-checkbox w-4 h-4 rounded text-indigo-600 bg-slate-900 border-slate-700 focus:ring-indigo-500">
-            <span class="text-xs font-mono truncate select-none">${escapeHtml(fileName)}</span>
+      for (const folderKey of sortedFolderKeys) {
+        const groupFiles = folderGroups[folderKey];
+        const cfg = getFolderConfig(folderKey);
+        if (!cfg) continue;
+
+        const checkedFilesInGroup = groupFiles.filter(f => state.fileSelection.has(f));
+        const isAllGroupChecked = checkedFilesInGroup.length === groupFiles.length;
+
+        // Auto-expand folder if searching, otherwise check state
+        const isCollapsed = searchQuery.length > 0 ? false : state.folderCollapsed.has(folderKey);
+
+        const groupEl = document.createElement('div');
+        groupEl.className = 'folder-group rounded-xl border border-slate-800 bg-slate-950/60 overflow-hidden transition-all shadow-sm';
+
+        // Folder Header (Đồng nhất màu sắc & font chữ, không icon)
+        const headerEl = document.createElement('div');
+        headerEl.className = 'folder-header px-2.5 py-1.5 bg-slate-900/90 border-b border-slate-800/80 flex items-center justify-between cursor-pointer select-none hover:bg-slate-850 transition-colors';
+
+        headerEl.innerHTML = `
+          <div class="flex items-center space-x-2 truncate flex-1 mr-2">
+            <svg class="folder-arrow w-3.5 h-3.5 text-slate-400 transition-transform duration-200 flex-shrink-0" style="transform: ${isCollapsed ? 'rotate(0deg)' : 'rotate(90deg)'}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <span class="text-xs font-semibold text-slate-200 font-sans truncate">${escapeHtml(cfg.title)}</span>
+            <span class="text-[10px] font-mono text-slate-400 flex-shrink-0 font-medium">(${checkedFilesInGroup.length}/${groupFiles.length})</span>
+          </div>
+          <div class="flex items-center space-x-1.5 flex-shrink-0">
+            <button type="button" class="btn-group-toggle-select text-[11px] font-semibold px-2 py-0.5 rounded-md transition-colors ${
+              isAllGroupChecked 
+                ? 'text-rose-400 hover:text-rose-300 hover:bg-rose-950/40' 
+                : 'text-indigo-400 hover:text-indigo-300 hover:bg-indigo-950/40'
+            }">
+              ${isAllGroupChecked ? 'Bỏ chọn' : 'Chọn hết'}
+            </button>
           </div>
         `;
 
-        const checkbox = label.querySelector('input[type="checkbox"]');
-        checkbox.addEventListener('change', (e) => {
-          if (e.target.checked) {
-            state.fileSelection.add(file);
+        // Toggle Folder Expand / Collapse
+        headerEl.addEventListener('click', (e) => {
+          if (e.target.closest('.btn-group-toggle-select')) return;
+          if (state.folderCollapsed.has(folderKey)) {
+            state.folderCollapsed.delete(folderKey);
           } else {
-            state.fileSelection.delete(file);
+            state.folderCollapsed.add(folderKey);
+          }
+          renderFileChecklist();
+        });
+
+        // Quick Select/Deselect All in Folder
+        const btnToggleSelect = headerEl.querySelector('.btn-group-toggle-select');
+        btnToggleSelect.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (isAllGroupChecked) {
+            for (const f of groupFiles) state.fileSelection.delete(f);
+          } else {
+            for (const f of groupFiles) state.fileSelection.add(f);
           }
           renderFileChecklist();
           updateFileBadge();
         });
 
-        fileChecklistContainer.appendChild(label);
+        groupEl.appendChild(headerEl);
+
+        // Files container
+        if (!isCollapsed) {
+          const filesContainer = document.createElement('div');
+          filesContainer.className = 'p-1.5 space-y-1 bg-slate-950/40';
+
+          for (const file of groupFiles) {
+            const fileName = file.split('/').pop() || file;
+            const isChecked = state.fileSelection.has(file);
+
+            const label = document.createElement('label');
+            label.className = `flex items-center justify-between p-2 rounded-lg cursor-pointer transition-all border ${
+              isChecked
+                ? 'bg-indigo-950/50 border-indigo-500/50 text-white shadow-sm'
+                : 'hover:bg-slate-850/70 border-transparent text-slate-300'
+            }`;
+            label.title = file;
+
+            label.innerHTML = `
+              <div class="flex items-center space-x-2.5 truncate flex-1">
+                <input type="checkbox" value="${escapeHtml(file)}" ${isChecked ? 'checked' : ''} class="file-item-checkbox w-4 h-4 rounded text-indigo-600 bg-slate-900 border-slate-700 focus:ring-indigo-500">
+                <span class="text-xs font-mono truncate select-none text-slate-200">${escapeHtml(fileName)}</span>
+              </div>
+            `;
+
+            const checkbox = label.querySelector('input[type="checkbox"]');
+            checkbox.addEventListener('change', (e) => {
+              if (e.target.checked) {
+                state.fileSelection.add(file);
+              } else {
+                state.fileSelection.delete(file);
+              }
+              renderFileChecklist();
+              updateFileBadge();
+            });
+
+            filesContainer.appendChild(label);
+          }
+          groupEl.appendChild(filesContainer);
+        }
+
+        fileChecklistContainer.appendChild(groupEl);
       }
 
       updateFileBadge();
@@ -733,6 +877,22 @@
       }
       renderFileChecklist();
     });
+
+    // Toggle All Folders Collapse / Expand
+    if (btnToggleAllFolders) {
+      btnToggleAllFolders.addEventListener('click', () => {
+        const allFiles = getAvailableFiles();
+        const folderKeys = Array.from(new Set(allFiles.map(getFolderKeyFromFile)));
+        if (state.folderCollapsed.size >= folderKeys.length) {
+          state.folderCollapsed.clear();
+          btnToggleAllFolders.textContent = 'Thu gọn';
+        } else {
+          for (const k of folderKeys) state.folderCollapsed.add(k);
+          btnToggleAllFolders.textContent = 'Mở rộng';
+        }
+        renderFileChecklist();
+      });
+    }
 
     // Search File
     fileSearchInput.addEventListener('input', () => {
@@ -776,16 +936,7 @@
           for (const mod of suitesRes.modules) {
             const opt = document.createElement('option');
             opt.value = mod.id;
-            let cleanName = (mod.name || '')
-              .replace(/[\u{1F300}-\u{1FAD6}\u{2000}-\u{27BF}\u{FE00}-\u{FE0F}]/gu, '')
-              .replace(/[⚡📥🎨📁🔥📦💻📊🧹🔁✓✕]/g, '')
-              .replace(/\s*\([^)]*\)/g, '')
-              .trim();
-            if (mod.id === 'all') cleanName = 'Tất cả Thư mục (All Modules)';
-            else if (mod.id === 'downloader') cleanName = 'Downloader';
-            else if (mod.id === 'creator') cleanName = 'Creator';
-            else cleanName = mod.id.charAt(0).toUpperCase() + mod.id.slice(1);
-            opt.textContent = cleanName;
+            opt.textContent = mod.name || mod.id;
             moduleSelect.appendChild(opt);
           }
           moduleSelect.value = 'all';
@@ -833,7 +984,7 @@
       if (lower.startsWith('creator/') || lower.includes('/creator/')) {
         return 'creator';
       }
-      if (lower.includes('guest')) {
+      if (lower.includes('guest') || lower.startsWith('auth/') || lower.includes('/auth/')) {
         return 'guest';
       }
       if (lower.includes('freeuser') || lower.includes('free-user')) {
@@ -1807,22 +1958,13 @@
         // Store suites data
         suitesData = suitesRes;
 
-        // Populate modules dropdown (Defensively sanitize all icons & paths)
+        // Populate modules dropdown
         if (suitesRes.modules && suitesRes.modules.length > 0) {
           moduleSelect.innerHTML = '';
           for (const mod of suitesRes.modules) {
             const opt = document.createElement('option');
             opt.value = mod.id;
-            let cleanName = (mod.name || '')
-              .replace(/[\u{1F300}-\u{1FAD6}\u{2000}-\u{27BF}\u{FE00}-\u{FE0F}]/gu, '')
-              .replace(/[⚡📥🎨📁🔥📦💻📊🧹🔁✓✕]/g, '')
-              .replace(/\s*\([^)]*\)/g, '')
-              .trim();
-            if (mod.id === 'all') cleanName = 'Tất cả Thư mục (All Modules)';
-            else if (mod.id === 'downloader') cleanName = 'Downloader';
-            else if (mod.id === 'creator') cleanName = 'Creator';
-            else cleanName = mod.id.charAt(0).toUpperCase() + mod.id.slice(1);
-            opt.textContent = cleanName;
+            opt.textContent = mod.name || mod.id;
             moduleSelect.appendChild(opt);
           }
         }

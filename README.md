@@ -185,7 +185,14 @@ photo-ac-test/
 │       │   ├── creator/        # Page objects cho Creator (Ranking...)
 │       │   └── mobile/         # Page objects cho giao diện Mobile
 │       ├── fixtures/           # [Custom Fixtures] Khởi tạo Page Objects & Auth Session
-│       ├── tests/              # [Test Specifications] Test scripts (auth, downloader, creator, mobile)
+│       ├── tests/              # [Test Specifications] Test scripts phân cấp theo vai trò:
+│       │   ├── auth/           # Login flow & session setup files
+│       │   ├── creator/        # Test scripts cho Creator (upload, ranking...)
+│       │   ├── downloader/     # Test scripts cho Downloader phân theo 3 Role:
+│       │   │   ├── guest/      # Role Guest (search, download...)
+│       │   │   ├── free-user/  # Role Free User (search, download, register...)
+│       │   │   └── premium/    # Role Premium User (search, download, receipts, profile-edit...)
+│       │   └── mobile/         # Test scripts cho giao diện Mobile
 │       └── utils/              # [Utilities] Tiện ích (Email, PDF, helpers, test-data...)
 │
 ├── illust-ac/                  # Workspace kiểm thử cho website AC-Illust (ac-illust.com)
@@ -196,7 +203,7 @@ photo-ac-test/
 │   └── src/
 │       ├── pages/              # Page objects cho AC-Illust
 │       ├── fixtures/           # Fixtures cho AC-Illust
-│       ├── tests/              # Test specs cho AC-Illust
+│       ├── tests/              # Test specs cho AC-Illust (auth, creator, downloader/{guest,free-user,premium})
 │       └── utils/              # Tiện ích bổ trợ cho AC-Illust
 │
 ├── dashboard/                  # Server & Web Test Portal UI cho team QA (Chạy test 1-click)

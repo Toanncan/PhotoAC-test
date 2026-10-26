@@ -14,8 +14,7 @@ import { type Page, type Locator, test } from '@playwright/test';
 export class GmailPage {
   readonly page: Page;
 
-  // ─── Locators: Login Flow ─────────────────────────────────────────────────
-
+  // Locators: Login Flow
   /** Email input on Google Sign-in page */
   readonly emailInput: Locator;
 
@@ -25,16 +24,14 @@ export class GmailPage {
   /** "Next" button on Google Sign-in (after email) */
   readonly nextButton: Locator;
 
-  // ─── Locators: Gmail Inbox ────────────────────────────────────────────────
-
+  // Locators: Gmail Inbox
   /** Gmail search input box */
   readonly searchInput: Locator;
 
   /** Search button (magnifying glass) */
   readonly searchButton: Locator;
 
-  // ─── Constructor ──────────────────────────────────────────────────────────
-
+  // Constructor
   constructor(page: Page) {
     this.page = page;
 
@@ -48,8 +45,7 @@ export class GmailPage {
     this.searchButton = page.getByRole('button', { name: /search mail|メールを検索/i });
   }
 
-  // ─── Methods: Navigation ──────────────────────────────────────────────────
-
+  // Methods: Navigation
   /**
    * Navigate to Gmail inbox.
    * Gmail is a heavy SPA — 'domcontentloaded' often times out.
@@ -67,8 +63,7 @@ export class GmailPage {
     });
   }
 
-  // ─── Methods: Login ───────────────────────────────────────────────────────
-
+  // Methods: Login
   /**
    * Login to Gmail with email and password.
    * Handles Google's multi-step login flow.
@@ -100,8 +95,7 @@ export class GmailPage {
     });
   }
 
-  // ─── Methods: Search & Read Email ─────────────────────────────────────────
-
+  // Methods: Search & Read Email
   /**
    * Search for emails matching a query string.
    * @param query - Gmail search query (e.g., "subject:領収書 from:photo-ac")
@@ -114,9 +108,7 @@ export class GmailPage {
       await this.page.keyboard.press('Enter');
 
       // Wait for search results to load
-      await this.page.waitForLoadState('domcontentloaded', { timeout: 15_000 });
-      // Small delay for Gmail to render search results
-      await this.page.waitForTimeout(2000);
+      await this.page.locator('tr.zA').first().waitFor({ state: 'attached', timeout: 15_000 }).catch(() => {});
     });
   }
 

@@ -1,4 +1,4 @@
-﻿import { type Page, test } from '@playwright/test';
+import { type Page, test } from '@playwright/test';
 import { BasePage } from './base.page';
 
 /**
@@ -7,14 +7,18 @@ import { BasePage } from './base.page';
 export class HomePage extends BasePage {
   // Locators
 
-  /** Page heading / main title of the dashboard */
-  private readonly pageHeading = this.page.getByRole('heading', { level: 1 });
+  /** Page heading / main identifier of the home page (falls back to main search form / logo if H1 is not present) */
+  private readonly pageHeading = this.page
+    .getByRole('heading', { level: 1 })
+    .or(this.page.locator('form#search_frm'))
+    .or(this.page.locator('a.navbar-brand img'))
+    .first();
 
   /** Search input on the dashboard */
   readonly searchInput = this.page.locator('form#search_frm input#sw, form#search_frm input[name="q"]').first();
 
   /** User menu / account dropdown */
-  private readonly userMenu = this.page.locator('[class*="user-menu"], [class*="user-nav"]').first();
+  private readonly userMenu = this.page.locator('#user-info-dropdown, [class*="user-menu"], [class*="user-nav"]').first();
 
   /** Logout button or link */
   private readonly logoutButton = this.page.getByRole('button', { name: /logout|sign out|ログアウト/i })
