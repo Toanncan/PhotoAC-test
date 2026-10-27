@@ -934,6 +934,25 @@ const server = http.createServer(async (req, res) => {
   res.end('Route Not Found');
 });
 
+// Handle server errors (e.g. port already in use)
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`\n❌ [LỖI] Cổng ${PORT} hiện đang bị chiếm dụng bởi một tiến trình khác!`);
+    console.error(`👉 Có thể Test Portal đã được khởi chạy trước đó và đang chạy tại: http://localhost:${PORT}`);
+    console.error(`👉 Hướng dẫn giải phóng cổng:`);
+    if (process.platform === 'win32') {
+      console.error(`   - Windows: Chạy lệnh: for /f "tokens=5" %a in ('netstat -aon ^| findstr :${PORT}') do taskkill /f /pid %a`);
+    } else {
+      console.error(`   - macOS/Linux: Chạy lệnh: lsof -ti :${PORT} | xargs kill -9`);
+    }
+    console.error(`   - Hoặc chỉ định cổng khác: PORT=4001 node dashboard/server.js\n`);
+    process.exit(1);
+  } else {
+    console.error('Server error:', err);
+    process.exit(1);
+  }
+});
+
 // Start listening
 server.listen(PORT, async () => {
   await checkJava();
@@ -950,3 +969,4 @@ server.listen(PORT, async () => {
     openBrowser(url);
   }
 });
+

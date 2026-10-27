@@ -12,7 +12,7 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
   // Bắt buộc cô lập context không mang thông tin đăng nhập
   test.use({ storageState: { cookies: [], origins: [] } });
 
-  const sampleImagePath = path.resolve(__dirname, '../../../test-data/sample-search.jpg');
+  const sampleImagePath = path.resolve(__dirname, '../../../../test-data/sample-search.jpg');
 
   test.beforeEach(async ({ page, homePage }) => {
     // Kích hoạt Ad Blocker 2 tầng (Network Abort + CSS Hidden)

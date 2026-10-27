@@ -39,7 +39,15 @@ if ! command -v java &> /dev/null; then
     echo ""
 fi
 
-# 4. Khoi dong Test Portal Server
+# 4. Kiem tra va giai phong cong 4000 neu dang bi chiem dung
+PORT_PID=$(lsof -ti :4000 2>/dev/null)
+if [ -n "$PORT_PID" ]; then
+    echo "[INFO] Phat hien cong 4000 dang duoc su dung (PID: $PORT_PID). Dang giai phong de khoi dong lai..."
+    kill -9 $PORT_PID 2>/dev/null
+    sleep 1
+fi
+
+# 5. Khoi dong Test Portal Server
 echo "[INFO] Dang khoi dong Test Portal tai http://localhost:4000 ..."
 echo "Trinh duyet se tu dong mo len trong giay lat."
 echo ""
@@ -47,3 +55,4 @@ echo "(De dung server, hay dong cua so terminal nay hoac nhan Ctrl + C)"
 echo ""
 
 node dashboard/server.js
+

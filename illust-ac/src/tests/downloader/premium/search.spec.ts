@@ -18,7 +18,7 @@ import { captureEvidenceWithUrl } from '../../../utils/helpers';
 test.describe('Search & Filters — Premium User (Full Privileges)', () => {
   // Session Premium User được tự động inject bởi project cấu hình (chromium-premium / firefox-premium)
 
-  const sampleImagePath = path.resolve(__dirname, '../../../test-data/sample-search.jpg');
+  const sampleImagePath = path.resolve(__dirname, '../../../../test-data/sample-search.jpg');
 
   test.beforeEach(async ({ homePage }) => {
     await homePage.goToHomePage();
