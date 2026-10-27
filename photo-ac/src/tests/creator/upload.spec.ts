@@ -22,8 +22,7 @@ test.describe('Creator Photo Upload @creator @upload', () => {
 
   const createUniqueTestPhoto = (): string => {
     const uniquePath = path.resolve(__dirname, `../../../test-data/temp_upload_${Date.now()}.jpg`);
-    const src = fs.readFileSync(samplePhotoPath);
-    fs.writeFileSync(uniquePath, Buffer.concat([src, Buffer.from(`_test_${Date.now()}`)]));
+    fs.copyFileSync(samplePhotoPath, uniquePath);
     return uniquePath;
   };
 

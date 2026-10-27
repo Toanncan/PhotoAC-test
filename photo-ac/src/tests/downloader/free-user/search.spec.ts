@@ -9,7 +9,7 @@ import { GROUP_SITES } from '../../../utils/test-data';
 test.describe('Search — Free User', () => {
   // Session Free User được tự động inject bởi project cấu hình (chromium-free-user / firefox-free-user)
 
-  const sampleImagePath = path.resolve(__dirname, '../../../test-data/sample-search.jpg');
+  const sampleImagePath = path.resolve(__dirname, '../../../../test-data/sample-search.jpg');
 
   test.beforeEach(async ({ page, homePage }) => {
     // Targeted Network Mocking: Luôn duy trì hạn mức tìm kiếm (search_zancnt: 4)

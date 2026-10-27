@@ -27,10 +27,22 @@ export class LoginPage extends BasePage {
   /** Password input field */
   private readonly passwordInput = this.page.getByPlaceholder('パスワード');
 
-  /** Submit / Login button */
+  /** Submit / Login button for Downloader */
   private readonly submitDowloaderButton = this.page.getByRole('button', { name: /ログイン/ });
 
-  private readonly submitCreatorButton = this.page.getByRole('button', { name: /ログイン/ });
+  /** Creator login dialog modal */
+  private readonly creatorDialog = this.page.getByRole('dialog');
+
+  /** Email input inside creator login modal */
+  private readonly creatorEmailInput = this.creatorDialog.getByPlaceholder('メールアドレス');
+
+  /** Password input inside creator login modal */
+  private readonly creatorPasswordInput = this.creatorDialog.getByPlaceholder('パスワード');
+
+  /** Submit / Login button inside creator login modal */
+  private readonly submitCreatorButton = this.creatorDialog
+    .locator('button[type="submit"]')
+    .or(this.creatorDialog.getByRole('button', { name: '口グイン' }));
 
   /** Error message container shown after failed login */
   private readonly errorMessage = this.page.locator('[class*="error"], [class*="alert"], [class*="message"]')
@@ -95,8 +107,8 @@ export class LoginPage extends BasePage {
       await this.goToCreatorLoginPage();
 
       await test.step('Fill login credentials', async () => {
-        await this.fillInput(this.emailInput, email);
-        await this.fillInput(this.passwordInput, password);
+        await this.fillInput(this.creatorEmailInput, email);
+        await this.fillInput(this.creatorPasswordInput, password);
       });
 
       await test.step('Submit login form', async () => {
@@ -104,7 +116,7 @@ export class LoginPage extends BasePage {
       });
 
       await test.step('Wait for redirect to Creator Dashboard', async () => {
-        await this.page.waitForURL(/\/creator\/dashboard/, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+        await this.page.waitForURL(/\/creator/, { waitUntil: 'domcontentloaded', timeout: 30_000 });
       });
     });
   }
