@@ -236,6 +236,9 @@ export default defineConfig({
         viewport: { width: 1920, height: 1080 },
         storageState: CREATOR_AUTH_STATE_PATH,
         launchOptions: { args: ['--disable-blink-features=AutomationControlled'] },
+        ...(HTTP_USER && HTTP_PASS
+          ? { httpCredentials: { username: HTTP_USER, password: HTTP_PASS } }
+          : {}),
       },
       dependencies: ['setup-creator'],
       testMatch: '**/creator/**/*.spec.ts',

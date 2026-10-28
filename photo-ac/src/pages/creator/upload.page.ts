@@ -127,7 +127,6 @@ export class UploadPage extends BasePage {
   async setUploadFile(filePath: string): Promise<void> {
     await test.step(`Upload photo file: ${filePath}`, async () => {
       await this.fileInput.setInputFiles(filePath);
-      await this.fileInput.dispatchEvent('change').catch(() => {});
     });
   }
 
