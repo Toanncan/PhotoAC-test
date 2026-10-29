@@ -1,0 +1,1506 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: downloader/premium/register.spec.ts >> Premium Registration, Receipt & Profile Flow >> TC-[Register-Premium]-[FreeUser]-[001]: Đăng ký Free User mới, Nâng cấp Premium qua thẻ tín dụng, Verify Hóa đơn PDF và Profile @smoke @premium
+- Location: photo-ac/src/tests/downloader/premium/register.spec.ts:19:7
+
+# Error details
+
+```
+TimeoutError: page.waitForURL: Timeout 30000ms exceeded.
+=========================== logs ===========================
+waiting for navigation until "load"
+============================================================
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic: "📍 URL: https://test-lien.photo-ac.com/premium/campaign"
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img "写真ACプレミアム会員サービス" [ref=e7]
+        - generic [ref=e8]: 1サイト登録で全サイトでプレミアム会員に！
+      - generic [ref=e9]:
+        - link "写真ACプレミアム会員サービス" [ref=e10] [cursor=pointer]:
+          - /url: https://www.ac-illust.com
+          - img "写真ACプレミアム会員サービス" [ref=e11]
+        - link "写真ACプレミアム会員サービス" [ref=e12] [cursor=pointer]:
+          - /url: https://www.silhouette-ac.com
+          - img "写真ACプレミアム会員サービス" [ref=e13]
+        - link "写真ACプレミアム会員サービス" [ref=e14] [cursor=pointer]:
+          - /url: https://www.freebie-ac.jp
+          - img "写真ACプレミアム会員サービス" [ref=e15]
+        - link "写真ACプレミアム会員サービス" [ref=e16] [cursor=pointer]:
+          - /url: https://video-ac.com
+          - img "写真ACプレミアム会員サービス" [ref=e17]
+        - link "写真ACプレミアム会員サービス" [ref=e18] [cursor=pointer]:
+          - /url: https://ac-data.info
+          - img "写真ACプレミアム会員サービス" [ref=e19]
+    - generic "ページTopへ" [ref=e20] [cursor=pointer]: ▲ ページTOPへ
+    - generic [ref=e21]:
+      - heading "【タイムセール】 12分03秒91以内なら、更に20%OFF" [level=3] [ref=e22]:
+        - paragraph [ref=e23]: 【タイムセール】
+        - generic [ref=e24]: 12分03秒91
+        - text: 以内なら、更に20%OFF
+      - paragraph [ref=e25]:
+        - text: 毎月更新プランに比べて割安な「毎年更新プラン」「２年更新プラン」「３年更新プラン」が、現在タイムセールで20%OFFとなっております。
+        - text: このタイムセールは不定期で開催されます。このチャンスをお見逃しなく！
+    - banner [ref=e26]:
+      - generic [ref=e30]:
+        - generic [ref=e32]:
+          - img [ref=e33]
+          - text: プレミアム会員なら検索・ダウンロードし放題！
+        - generic [ref=e34]:
+          - generic [ref=e35]: プレミアム会員の対象サイトに「デザインAC」も新登場！
+          - generic [ref=e36]: 素材だけでなくデザインツールも利用できて、もっと便利に
+        - generic [ref=e38]:
+          - button "法人プラン（2名以上でお得！）はコチラ" [ref=e39] [cursor=pointer]:
+            - generic [ref=e40]:
+              - img [ref=e41]
+              - img [ref=e42]
+            - generic [ref=e43]: 法人プラン（2名以上でお得！）はコチラ
+          - generic [ref=e45]:
+            - generic [ref=e46]:
+              - generic [ref=e47]:
+                - img [ref=e49]
+                - text: 参加者
+                - img [ref=e52]
+              - generic [ref=e54]: 14万人
+              - generic [ref=e55]: 突破!
+            - generic [ref=e56]:
+              - generic [ref=e57]:
+                - img [ref=e59]
+                - text: 導入企業
+                - img [ref=e62]
+              - generic [ref=e64]: 200社
+              - generic [ref=e65]: 突破!
+    - generic [ref=e66]:
+      - generic [ref=e67]:
+        - generic [ref=e69]:
+          - img [ref=e71]
+          - generic [ref=e72]:
+            - paragraph [ref=e73]: プレミアム会員に登録すると全てのACサイトがお得に使える！
+            - paragraph [ref=e74]: プレミアム会員 個人プラン
+        - generic [ref=e75]:
+          - paragraph [ref=e77]: プレミアム会員でご利用いただけるサイト
+          - generic [ref=e78]:
+            - generic [ref=e79]:
+              - link "写真AC" [ref=e81] [cursor=pointer]:
+                - /url: /
+                - img [ref=e82]
+                - paragraph [ref=e83]: 写真AC
+              - link "イラストAC" [ref=e85] [cursor=pointer]:
+                - /url: https://www.ac-illust.com/
+                - img [ref=e86]
+                - paragraph [ref=e87]: イラストAC
+              - link "シルエットAC" [ref=e89] [cursor=pointer]:
+                - /url: https://www.silhouette-ac.com/
+                - img [ref=e90]
+                - paragraph [ref=e91]: シルエットAC
+              - link "動画AC" [ref=e93] [cursor=pointer]:
+                - /url: https://video-ac.com/
+                - img [ref=e94]
+                - paragraph [ref=e95]: 動画AC
+              - link "フリービーAC" [ref=e97] [cursor=pointer]:
+                - /url: https://www.freebie-ac.jp/
+                - img [ref=e98]
+                - paragraph [ref=e99]: フリービーAC
+            - generic [ref=e100]:
+              - link "ACデータ" [ref=e102] [cursor=pointer]:
+                - /url: https://ac-data.info/
+                - img [ref=e103]
+                - paragraph [ref=e104]: ACデータ
+              - link "赤ちゃんAC" [ref=e106] [cursor=pointer]:
+                - /url: https://baby-ac.com/jp/
+                - img [ref=e107]
+                - paragraph [ref=e108]: 赤ちゃんAC
+              - link "背景切り抜き" [ref=e110] [cursor=pointer]:
+                - /url: https://clipping-ac.com/
+                - img [ref=e111]
+                - paragraph [ref=e112]: 背景切り抜き
+              - link "デザインAC NEW" [ref=e114] [cursor=pointer]:
+                - /url: https://www.design-ac.net/
+                - img [ref=e115]
+                - generic [ref=e116]:
+                  - paragraph [ref=e117]: デザインAC
+                  - text: NEW
+          - paragraph [ref=e124]:
+            - generic [ref=e125]:
+              - text: プレミアムプランで利用できるサイトに
+              - text: 「デザインAC」が追加されました！
+          - heading "ステップ1：ご利用になりたいプランを選択してください。" [level=3] [ref=e127]
+          - generic [ref=e128]:
+            - generic [ref=e130]:
+              - generic [ref=e131]: 毎月更新プラン
+              - generic [ref=e132]:
+                - generic [ref=e133]: 月額
+                - generic [ref=e134]: ¥ 1,980
+              - link "参加する" [ref=e136] [cursor=pointer]:
+                - /url: javascript:void(0);
+              - separator [ref=e137]
+              - generic [ref=e138]:
+                - img [ref=e139]
+                - generic [ref=e141]: プレゼント点数：1点
+            - generic [ref=e143]:
+              - generic [ref=e144]: 一番人気です！
+              - generic [ref=e145] [cursor=pointer]:
+                - img "check mark sale 20%" [ref=e146]
+                - generic [ref=e147]: 毎年更新プラン
+                - generic [ref=e148]:
+                  - generic [ref=e149]:
+                    - generic [ref=e150]: 月額
+                    - generic [ref=e151]: 換算
+                  - generic [ref=e152]:
+                    - text: ¥ 1,260
+                    - generic [ref=e153]: ※
+                - generic [ref=e155]:
+                  - deletion [ref=e157]: ¥18,900／年
+                  - generic [ref=e158]: ¥15,121／年
+                - link "参加する" [ref=e160]:
+                  - /url: javascript:void(0);
+                - separator [ref=e161]
+                - generic [ref=e162]: 年間 ¥8,639 お得！
+                - generic [ref=e163]:
+                  - img [ref=e164]
+                  - text: プレゼント点数：5点
+            - generic [ref=e168]:
+              - img "check mark sale 20%" [ref=e169]
+              - generic [ref=e170]: 2年更新プラン
+              - generic [ref=e171]:
+                - generic [ref=e172]:
+                  - generic [ref=e173]: 月額
+                  - generic [ref=e174]: 換算
+                - generic [ref=e175]:
+                  - text: ¥ 1,187
+                  - generic [ref=e176]: ※
+              - generic [ref=e178]:
+                - deletion [ref=e180]: ¥35,616／2年
+                - generic [ref=e181]: ¥28,493／2年
+              - link "参加する" [ref=e183] [cursor=pointer]:
+                - /url: javascript:void(0);
+              - separator [ref=e184]
+              - generic [ref=e185]: 2年間で ¥19,027 お得！
+              - generic [ref=e186]:
+                - img [ref=e187]
+                - text: プレゼント点数：10点
+            - generic [ref=e191]:
+              - img "check mark sale 20%" [ref=e192]
+              - generic [ref=e193]: 3年更新プラン
+              - generic [ref=e194]:
+                - generic [ref=e195]:
+                  - generic [ref=e196]: 月額
+                  - generic [ref=e197]: 換算
+                - generic [ref=e198]:
+                  - text: ¥ 1,039
+                  - generic [ref=e199]: ※
+              - generic [ref=e201]:
+                - deletion [ref=e203]: ¥46,746／3年
+                - generic [ref=e204]: ¥37,398／3年
+              - link "参加する" [ref=e206] [cursor=pointer]:
+                - /url: javascript:void(0);
+              - separator [ref=e207]
+              - generic [ref=e208]: 3年間で ¥33,882 お得！
+              - generic [ref=e209]:
+                - img [ref=e210]
+                - text: プレゼント点数：15点
+          - paragraph [ref=e213]: ※毎年・2年・3年更新プランの割引後、さらにセール価格（税込）を表示しています。
+          - separator [ref=e214]
+          - generic [ref=e216]:
+            - heading "ステップ2 ：お支払い方法の選択をしてください。" [level=3] [ref=e218]
+            - separator [ref=e219]
+            - generic [ref=e221]:
+              - generic [ref=e223]:
+                - radio "クレジットカード支払い" [checked] [ref=e224] [cursor=pointer]
+                - generic [ref=e225] [cursor=pointer]: クレジットカード支払い
+              - generic [ref=e227]:
+                - generic [ref=e228]: ご利用可能カード
+                - img "creditcard" [ref=e229]
+            - generic [ref=e230]:
+              - separator [ref=e231]
+              - generic [ref=e232]:
+                - generic [ref=e233]:
+                  - generic [ref=e234]: クレジットカード番号 ※必須
+                  - generic [ref=e235]:
+                    - textbox "0000111122223333" [ref=e236]: "4111111111111111"
+                    - generic [ref=e237]:
+                      - text: ※プリペイド式カードのご登録はご遠慮ください。
+                      - text: ※ハイフンなしで入力してください。
+                      - text: ※領収書は、写真AC のマイページ内「領収書発行」からダウンロードしていただくことができます。
+                      - text: ※カード番号は、当社で保管・閲覧することなく、東証一部・ISO27001 適合認証取得の GMO ペイメントゲートウェイ株式会社の PCIDSS 準拠のシステムで受理、決済が行われます。ご安心ください。
+                - separator [ref=e238]
+                - generic [ref=e239]:
+                  - generic [ref=e240]: 有効期限（月／年） ※必須
+                  - generic [ref=e241]:
+                    - generic [ref=e242]:
+                      - combobox [ref=e243]:
+                        - option "01" [selected]
+                        - option "02"
+                        - option "03"
+                        - option "04"
+                        - option "05"
+                        - option "06"
+                        - option "07"
+                        - option "08"
+                        - option "09"
+                        - option "10"
+                        - option "11"
+                        - option "12"
+                      - generic [ref=e244]: /
+                      - combobox [ref=e245]:
+                        - option "2026"
+                        - option "2027"
+                        - option "2028"
+                        - option "2029"
+                        - option "2030"
+                        - option "2031"
+                        - option "2032" [selected]
+                        - option "2033"
+                        - option "2034"
+                        - option "2035"
+                        - option "2036"
+                    - textbox [ref=e246]: 01/2032
+                - separator [ref=e247]
+                - generic [ref=e248]:
+                  - generic [ref=e249]: セキュリティコード ※必須
+                  - textbox "123" [ref=e253]
+                - separator [ref=e254]
+                - generic [ref=e255]:
+                  - generic [ref=e256]: メールアドレス
+                  - generic [ref=e257]: acfreemvtn8b5eakju@maxxspace.com
+                - separator [ref=e258]
+                - generic [ref=e259]:
+                  - generic [ref=e260]: 確認事項
+                  - generic [ref=e261]:
+                    - generic [ref=e262]:
+                      - checkbox "利用規約及び個人情報の取扱について同意する" [checked] [ref=e263]
+                      - generic [ref=e264] [cursor=pointer]: 利用規約及び個人情報の取扱について同意する
+                    - generic [ref=e265]:
+                      - paragraph [ref=e266]:
+                        - link "写真ACプレミアム会員サービス利用規約" [ref=e267] [cursor=pointer]:
+                          - /url: /main/terms_premium
+                      - paragraph [ref=e268]:
+                        - link "個人情報の取扱について" [ref=e269] [cursor=pointer]:
+                          - /url: /main/privacy
+                - button "プレミアム会員サービスに参加する" [ref=e273] [cursor=pointer]
+                - paragraph [ref=e274]: このページでは、お客様の個人情報を安全に送受信するために SSL 暗号化通信を利用し、第三者によるデータの改ざんや盗用を防いでいます。
+              - dialog [active] [ref=e275]:
+                - document [ref=e276]:
+                  - generic [ref=e277]:
+                    - button "Close" [ref=e279] [cursor=pointer]: ×
+                    - iframe [ref=e284]:
+                      - generic [ref=f87e2]:
+                        - generic [ref=f87e3]: Verification challenge expired. Check the checkbox again.
+                        - generic [ref=f87e4]:
+                          - checkbox "I'm not a robot" [ref=f87e8]
+                          - generic [ref=f87e11]: I'm not a robot
+                        - generic [ref=f87e15]: reCAPTCHA
+            - generic [ref=e285]:
+              - separator [ref=e286]
+              - generic [ref=e288]:
+                - generic [ref=e290]:
+                  - radio "銀行振込/口座振替登録/コンビニ支払い" [ref=e291] [cursor=pointer]
+                  - generic [ref=e292] [cursor=pointer]: 銀行振込/口座振替登録/コンビニ支払い
+                - generic [ref=e293]:
+                  - text: Paidによる請求書払いが可能です。
+                  - generic [ref=e294]: ※ 個人事業主様もしくは法人に所属している会員様のみご利用可能です。
+            - text: 
+            - separator [ref=e295]
+            - generic [ref=e297]:
+              - generic [ref=e299]:
+                - generic [ref=e300] [cursor=pointer]:
+                  - generic [ref=e301]:
+                    - img "amazon" [ref=e302]
+                    - generic [ref=e303]: Amazonアカウントでお支払い
+                  - generic [ref=e304]: 
+                - text: 
+                - button "Amazon Pay - Amazon Payテストアカウントをお使いください" [ref=e305] [cursor=pointer]:
+                  - generic [ref=e306]:
+                    - img "Amazon Pay" [ref=e309]
+                    - img "Amazon Payテストアカウントをお使いください" [ref=e315]
+              - generic [ref=e316]: Amazonアカウントにご登録のお支払い方を利用して、簡単にご決済頂けます。
+              - link [ref=e318] [cursor=pointer]:
+                - /url: https://apay-up-banner.com?merchantId=A3IGKFTALTFIGR&banner=14_Amazon_Pay_BBP_1000x120.png&locale=ja_JP&utm_source=A3IGKFTALTFIGR
+                - img [ref=e319]
+            - separator [ref=e320]
+      - paragraph [ref=e322]: 今なら、このページの最下部にある素材集の中から最大15種類の素材集をプレゼント中です。さらにページ途中にございます特典素材も50種類以上ついていますよ。あなたはプレミアム会員サービスに参加するだけで元が取れてしまいます!その証拠に、14万人以上の方が既に参加しています。
+      - generic [ref=e323]:
+        - paragraph [ref=e325]: プレミアム会員でできること
+        - generic [ref=e327]:
+          - generic [ref=e328] [cursor=pointer]:
+            - generic [ref=e329]:
+              - img [ref=e330]
+              - paragraph [ref=e331]: 写真AC
+            - button [ref=e333]:
+              - img [ref=e334]
+          - table [ref=e336]:
+            - rowgroup [ref=e337]:
+              - row "無料ダウンロード会員 プレミアム会員（個人プラン） プレミアム会員（法人プラン）" [ref=e338]:
+                - cell [ref=e339]
+                - cell "無料ダウンロード会員" [ref=e340]
+                - cell "プレミアム会員（個人プラン）" [ref=e341]
+                - cell "プレミアム会員（法人プラン）" [ref=e342]
+            - rowgroup [ref=e343]:
+              - row "検索制限 1日4回 無制限 無制限" [ref=e344]:
+                - cell "検索制限" [ref=e345]
+                - cell "1日4回" [ref=e346]
+                - cell "無制限" [ref=e347]
+                - cell "無制限" [ref=e348]
+            - rowgroup [ref=e349]:
+              - row "ダウンロード制限 1日9点まで ※M・Lサイズ/PSD は1日1点 無制限 無制限" [ref=e350]:
+                - cell "ダウンロード制限" [ref=e351]
+                - cell "1日9点まで ※M・Lサイズ/PSD は1日1点" [ref=e352]:
+                  - generic [ref=e353]:
+                    - text: 1日9点まで
+                    - text: ※M・Lサイズ/PSD は1日1点
+                - cell "無制限" [ref=e354]
+                - cell "無制限" [ref=e355]
+            - rowgroup [ref=e356]:
+              - row "プレミアム素材（有料素材） 単品購入のみ 無制限でダウンロード可能 無制限でダウンロード可能" [ref=e357]:
+                - cell "プレミアム素材（有料素材）" [ref=e358]
+                - cell "単品購入のみ" [ref=e359]
+                - cell "無制限でダウンロード可能" [ref=e360]
+                - cell "無制限でダウンロード可能" [ref=e361]
+            - rowgroup [ref=e362]:
+              - row "コレクション 5点まで 100点まで 100点まで" [ref=e363]:
+                - cell "コレクション" [ref=e364]
+                - cell "5点まで" [ref=e365]
+                - cell "100点まで" [ref=e366]
+                - cell "100点まで" [ref=e367]
+            - rowgroup [ref=e368]:
+              - row "コレクションの共有 ー ー ✔️️️️" [ref=e369]:
+                - cell "コレクションの共有" [ref=e370]
+                - cell "ー" [ref=e371]
+                - cell "ー" [ref=e372]
+                - cell "✔️️️️" [ref=e373]
+            - rowgroup [ref=e374]:
+              - row "待たずにダウンロード ー ✔️️️️ ✔️️️️" [ref=e375]:
+                - cell "待たずにダウンロード" [ref=e376]
+                - cell "ー" [ref=e377]
+                - cell "✔️️️️" [ref=e378]
+                - cell "✔️️️️" [ref=e379]
+            - rowgroup [ref=e380]:
+              - row "ダウンロード履歴の確認 ー ✔️️️️ ✔️️️️" [ref=e381]:
+                - cell "ダウンロード履歴の確認" [ref=e382]
+                - cell "ー" [ref=e383]
+                - cell "✔️️️️" [ref=e384]
+                - cell "✔️️️️" [ref=e385]
+            - rowgroup [ref=e386]:
+              - row "まとめてダウンロード機能 ー ✔️️️️ ✔️️️️" [ref=e387]:
+                - cell "まとめてダウンロード機能" [ref=e388]
+                - cell "ー" [ref=e389]
+                - cell "✔️️️️" [ref=e390]
+                - cell "✔️️️️" [ref=e391]
+            - rowgroup [ref=e392]:
+              - row "あんしんサポート ー ✔️️️️ ✔️️️️" [ref=e393]:
+                - cell "あんしんサポート" [ref=e394]:
+                  - link "あんしんサポート" [ref=e396] [cursor=pointer]:
+                    - /url: /indemnity/
+                - cell "ー" [ref=e397]
+                - cell "✔️️️️" [ref=e398]
+                - cell "✔️️️️" [ref=e399]
+            - rowgroup [ref=e400]:
+              - row "商品化ライセンス購入 ー ✔️️️ ※購入権︎︎を付与 ✔️️️ ※購入権︎︎を付与" [ref=e401]:
+                - cell "商品化ライセンス購入" [ref=e402]:
+                  - link "商品化ライセンス購入" [ref=e404] [cursor=pointer]:
+                    - /url: /main/extra_license_terms/
+                - cell "ー" [ref=e405]
+                - cell "✔️️️ ※購入権︎︎を付与" [ref=e406]:
+                  - generic [ref=e407]:
+                    - text: ✔️️️
+                    - text: ※購入権︎︎を付与
+                - cell "✔️️️ ※購入権︎︎を付与" [ref=e408]:
+                  - generic [ref=e409]:
+                    - text: ✔️️️
+                    - text: ※購入権︎︎を付与
+            - rowgroup [ref=e410]:
+              - row "広告非表示サービス ー ✔️️️ ※別途オプションとなります。 ✔️️️️" [ref=e411]:
+                - cell "広告非表示サービス" [ref=e412]
+                - cell "ー" [ref=e413]
+                - cell "✔️️️ ※別途オプションとなります。" [ref=e414]:
+                  - generic [ref=e415]:
+                    - text: ✔️️️
+                    - text: ※別途オプションとなります。
+                - cell "✔️️️️" [ref=e416]
+            - rowgroup [ref=e417]:
+              - row "メンバー招待 ー ー ✔️️️️" [ref=e418]:
+                - cell "メンバー招待" [ref=e419]
+                - cell "ー" [ref=e420]
+                - cell "ー" [ref=e421]
+                - cell "✔️️️️" [ref=e422]
+          - generic [ref=e424] [cursor=pointer]:
+            - generic [ref=e425]:
+              - img [ref=e426]
+              - paragraph [ref=e427]: イラストAC
+            - button [ref=e429]:
+              - img [ref=e430]
+          - generic [ref=e432] [cursor=pointer]:
+            - generic [ref=e433]:
+              - img [ref=e434]
+              - paragraph [ref=e435]: シルエットAC
+            - button [ref=e437]:
+              - img [ref=e438]
+          - generic [ref=e440] [cursor=pointer]:
+            - generic [ref=e441]:
+              - img [ref=e442]
+              - paragraph [ref=e443]: 動画AC
+            - button [ref=e445]:
+              - img [ref=e446]
+          - generic [ref=e448] [cursor=pointer]:
+            - generic [ref=e449]:
+              - img [ref=e450]
+              - paragraph [ref=e451]: フリービーAC
+            - button [ref=e453]:
+              - img [ref=e454]
+          - generic [ref=e456] [cursor=pointer]:
+            - generic [ref=e457]:
+              - img [ref=e458]
+              - paragraph [ref=e459]: デザインAC NEW
+            - button [ref=e461]:
+              - img [ref=e462]
+          - generic [ref=e464] [cursor=pointer]:
+            - generic [ref=e465]:
+              - img [ref=e466]
+              - paragraph [ref=e467]: ACデータ
+            - button [ref=e469]:
+              - img [ref=e470]
+          - generic [ref=e472] [cursor=pointer]:
+            - paragraph [ref=e474]: メールマガジン
+            - button [ref=e476]:
+              - img [ref=e477]
+          - generic [ref=e479] [cursor=pointer]:
+            - generic [ref=e480]:
+              - img [ref=e481]
+              - paragraph [ref=e482]: 赤ちゃんAC
+            - button [ref=e484]:
+              - img [ref=e485]
+          - generic [ref=e487] [cursor=pointer]:
+            - generic [ref=e488]:
+              - img [ref=e489]
+              - paragraph [ref=e490]: 切り抜きAC
+            - button [ref=e492]:
+              - img [ref=e493]
+          - generic [ref=e495] [cursor=pointer]:
+            - paragraph [ref=e497]: その他
+            - button [ref=e499]:
+              - img [ref=e500]
+      - button "プレミアム会員に参加する" [ref=e504] [cursor=pointer]
+      - generic [ref=e506]:
+        - heading "NEW プレミアム会員が新しくなりました" [level=3] [ref=e508]:
+          - generic [ref=e509]: NEW
+          - text: プレミアム会員が新しくなりました
+        - heading "「デザインAC」のプレミアム機能も使える！" [level=2] [ref=e510]
+        - paragraph [ref=e511]: ACワークスが運営する素材サイト、イラストAC、写真AC、動画AC、シルエットACの素材が無制限でダウンロードできる「プレミアム会員」にデザインツールの「デザインAC」が追加され、新しいプレミアムサービスにリニューアルいたしました。
+        - paragraph [ref=e512]: 今なら、このページの最下部にある素材集の中から最大15種類の素材集をプレゼント中！さらに特典素材も50種類以上ついているのでプレミアム会員に参加するだけで、すぐに元が取れてしまいます。その証拠に14万人以上の方がすでに参加しています。
+        - generic [ref=e513]:
+          - generic [ref=e514]:
+            - img [ref=e516]
+            - paragraph [ref=e517]: 素材サイトのプレミアム会員内容
+          - generic [ref=e519]:
+            - generic [ref=e520]:
+              - generic [ref=e522]:
+                - generic [ref=e523]:
+                  - link "イラストAC" [ref=e525] [cursor=pointer]:
+                    - /url: https://www.ac-illust.com/
+                    - img [ref=e526]
+                    - paragraph [ref=e527]: イラストAC
+                  - link "写真AC" [ref=e529] [cursor=pointer]:
+                    - /url: https://www.photo-ac.com/
+                    - img [ref=e530]
+                    - paragraph [ref=e531]: 写真AC
+                - generic [ref=e532]:
+                  - link "動画AC" [ref=e534] [cursor=pointer]:
+                    - /url: https://video-ac.com/
+                    - img [ref=e535]
+                    - paragraph [ref=e536]: 動画AC
+                  - link "シルエットAC" [ref=e538] [cursor=pointer]:
+                    - /url: https://www.silhouette-ac.com/
+                    - img [ref=e539]
+                    - paragraph [ref=e540]: シルエットAC
+                - generic [ref=e541]:
+                  - link "フリービーAC" [ref=e543] [cursor=pointer]:
+                    - /url: https://www.freebie-ac.jp/
+                    - img [ref=e544]
+                  - link "ACデータ" [ref=e546] [cursor=pointer]:
+                    - /url: https://ac-data.info/
+                    - img [ref=e547]
+                  - link "顔予想" [ref=e549] [cursor=pointer]:
+                    - /url: https://baby-ac.com/jp/
+                    - img [ref=e550]
+                  - link "背景切り抜き" [ref=e552] [cursor=pointer]:
+                    - /url: https://clipping-ac.com/
+                    - img [ref=e553]
+              - separator [ref=e554]
+              - generic [ref=e555]:
+                - generic [ref=e556]:
+                  - img [ref=e557]
+                  - text: 検索回数の制限なし
+                - generic [ref=e558]:
+                  - img [ref=e559]
+                  - text: 素材のダウンロード回数の制限なし
+                - generic [ref=e560]:
+                  - img [ref=e561]
+                  - text: ダウンロード中の待ち時間なし
+                - generic [ref=e562]:
+                  - img [ref=e563]
+                  - text: プレミアム素材(有料素材)が使い放題
+                - generic [ref=e564]:
+                  - img [ref=e565]
+                  - text: ACワークスの全サイトがプレミアム
+            - generic [ref=e566]:
+              - link "デザインAC" [ref=e568] [cursor=pointer]:
+                - /url: https://design-ac.net/
+                - img [ref=e569]
+                - paragraph [ref=e570]: デザインAC
+              - separator [ref=e571]
+              - generic [ref=e572]:
+                - generic [ref=e573]:
+                  - img [ref=e574]
+                  - text: VIP素材(有料素材)が使い放題
+                - generic [ref=e575]:
+                  - img [ref=e576]
+                  - text: テーマ登録の作成数が無制限
+                - generic [ref=e577]:
+                  - img [ref=e578]
+                  - text: テンプレート登録の作成数が無制限
+                - generic [ref=e579]:
+                  - img [ref=e580]
+                  - text: アップロードの容量が無制限
+      - generic [ref=e582]:
+        - heading "3つの自治体と連携協定を締結しています。" [level=2] [ref=e583]
+        - generic [ref=e584]:
+          - generic [ref=e585]:
+            - paragraph [ref=e586]: 大阪市港区
+            - img "ACworks vs Osaka Minato" [ref=e587]
+            - paragraph [ref=e588]: 2023年4月11日 事業連携協定締結
+            - link "[詳細]" [ref=e589] [cursor=pointer]:
+              - /url: https://acworks.co.jp/20230411_osaka_minato_ward_agreement/
+          - generic [ref=e590]:
+            - paragraph [ref=e591]: 東京都港区
+            - img "ACworks vs Tokyo Minato" [ref=e592]
+            - paragraph [ref=e593]: 2024年6月12日 連携協定締結
+            - link "[詳細]" [ref=e594] [cursor=pointer]:
+              - /url: https://acworks.co.jp/2024_tokyo_minato_ward_agreement/
+          - generic [ref=e595]:
+            - paragraph [ref=e596]: 埼玉県久喜市
+            - img "ACworks vs Kuki" [ref=e597]
+            - paragraph [ref=e598]: 2024年7月25日 連携協定締結
+            - link "[詳細]" [ref=e599] [cursor=pointer]:
+              - /url: https://acworks.co.jp/2024_saitama_kuki_city_agreement/
+        - paragraph [ref=e601]: ACワークス株式会社は、2023年に大阪市港区と事業連携協定、2024年に東京都港区、埼玉県久喜市と連携協定を締結をいたしました。 デザインAC、イラストAC、写真AC等のサービスを活用したチラシ・ポスター等の作成や、行政や地域活動で必要とされるチラシ・ポスター等のデザイン提供、在留外国人に届く情報発信の支援などを中心に取り組んで参ります。また今回の提携を通して、より一層のサービス向上に努めて参ります。
+      - generic [ref=e602]:
+        - heading "テレビでご紹介いただきました！" [level=2] [ref=e603]
+        - iframe [ref=e606]:
+          - generic [active] [ref=f84e1]:
+            - generic "YouTube Video Player" [ref=f84e3]:
+              - alert [ref=f84e5]:
+                - generic [ref=f84e6]:
+                  - generic [ref=f84e7]:
+                    - img
+                  - generic [ref=f84e9]: Sign in to confirm you’re not a bot
+                - link "Visit YouTube to search for more videos" [ref=f84e10] [cursor=pointer]:
+                  - /url: https://www.youtube.com
+                  - img
+            - dialog "Sign in to confirm you’re not a bot" [ref=f84e12]:
+              - generic [ref=f84e15]:
+                - img "YouTube Logo" [ref=f84e16]
+                - generic [ref=f84e17]: Sign in to confirm you’re not a bot
+                - generic [ref=f84e18]: This helps protect our community
+                - generic [ref=f84e19]:
+                  - link "Sign in" [ref=f84e21] [cursor=pointer]:
+                    - /url: https://accounts.google.com/ServiceLogin?service=youtube&uilel=3&passive=true&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26hl%3Den&hl=en
+                    - generic [ref=f84e22]: Sign in
+                  - link "Learn more" [ref=f84e27] [cursor=pointer]:
+                    - /url: https://support.google.com/youtube/answer/3037019#zippy=%2Ccheck-that-youre-signed-into-youtube
+                    - generic [ref=f84e28]: Learn more
+        - paragraph [ref=e607]: かんさい情報ネット ten. | 読売テレビ
+      - generic [ref=e609]:
+        - heading "どのくらいお得？他社と比べるとこんなに違います！" [level=2] [ref=e610]
+        - paragraph [ref=e611]: あなたは、他社素材サイトと私たちが運営する素材サイトの価格差をご存知でしょうか？実は大きな差があります。また、他社素材サイトにはダウンロード数に厳しい制限が設けられていますが、当サイトのプレミアムプランは無制限で何点でも好きな時にダウンロードができ、何回でも同じ素材をお使いいただけます。これだけ差があると、品質が低いのでは？と感じるかもしれません。でもご安心ください。実際に非常に多くの個人ユーザー様、法人会員様にご加入いただいております。
+        - paragraph [ref=e612]: 価格が安い理由は、そもそものビジネスモデルが違うことが理由です。素材点数や品質に関しても、他社素材サイトに負けないよう常に成長を続けています。 自信を持っておすすめできる他社に負けないクオリティの素材が揃っていますので、ぜひ価格を比較してみてください。
+        - paragraph [ref=e613]: また、素材の充実に応じてこれまで何度も価格を改定させていただいておりますが、この先もしまた値上げがあったとしてもあなたが加入した価格はずっと据え置きですので大変お得です。ぜひ、今すぐご参加ください。
+        - paragraph [ref=e614]: ※誕生日や期間限定セール等のキャンペーン時の加入価格に関しては永続的な金額をお約束するものではございません。
+        - generic [ref=e615]:
+          - generic [ref=e617]:
+            - generic [ref=e619]: 料金・制限
+            - generic [ref=e621]: A社
+            - generic [ref=e623]: B社
+            - generic [ref=e625]: 当社
+          - generic [ref=e627]:
+            - generic [ref=e629]: 料金（月額プラン）
+            - generic [ref=e631]: ¥69,000
+            - generic [ref=e633]: ¥32,000
+            - generic [ref=e635]: ¥1,980（税込）
+          - generic [ref=e637]:
+            - generic [ref=e639]: ダウンロード制限
+            - generic [ref=e641]: 750点
+            - generic [ref=e643]: 750点
+            - generic [ref=e645]: 無制限
+        - heading "ご利用料金シミュレーション" [level=2] [ref=e647]
+        - generic [ref=e648]:
+          - heading "【タイムセール】12分03秒91以内なら、更に20%OFF" [level=3] [ref=e649]:
+            - text: 【タイムセール】
+            - generic [ref=e650]: 12分03秒91
+            - text: 以内なら、更に20%OFF
+          - paragraph [ref=e651]:
+            - text: 毎月更新プランに比べて割安な「毎年更新プラン」「2年更新プラン」「3年更新プラン」が、現在タイムセールで20%OFFとなっております。
+            - text: このタイムセールは不定期で開催されます。このチャンスをお見逃しなく！
+        - generic [ref=e652]:
+          - heading "あなたのご希望のプランを教えてください。" [level=3] [ref=e653]
+          - generic [ref=e654]:
+            - generic [ref=e655]:
+              - separator [ref=e656]
+              - generic [ref=e657]:
+                - generic [ref=e658]: ご利用人数
+                - generic [ref=e660]:
+                  - generic [ref=e662]:
+                    - radio "1名" [checked] [ref=e663] [cursor=pointer]
+                    - generic [ref=e664] [cursor=pointer]: 1名
+                  - generic [ref=e666]:
+                    - generic [ref=e667]:
+                      - radio "2 名" [ref=e668] [cursor=pointer]
+                      - generic [ref=e669] [cursor=pointer]:
+                        - spinbutton [ref=e670]: "2"
+                        - generic [ref=e671]: 名
+                    - paragraph [ref=e672]:
+                      - generic [ref=e673]:
+                        - text: 代表アカウント1名分を
+                        - text: 含む合計人数を入力
+              - separator [ref=e674]
+              - generic [ref=e675]:
+                - generic [ref=e676]: 個人・法人
+                - generic [ref=e678]:
+                  - generic [ref=e680]:
+                    - radio "個人プラン" [checked] [ref=e681] [cursor=pointer]
+                    - generic [ref=e682] [cursor=pointer]: 個人プラン
+                  - generic [ref=e684]:
+                    - radio "法人プラン" [disabled] [ref=e685]
+                    - generic [ref=e686]: 法人プラン
+              - separator [ref=e687]
+              - generic [ref=e688]:
+                - generic [ref=e689]: プランを選択
+                - generic [ref=e691]:
+                  - button "毎月更新" [ref=e692] [cursor=pointer]
+                  - generic [ref=e693]:
+                    - generic [ref=e694]: 一番人気のプラン！
+                    - button "毎年更新" [ref=e695] [cursor=pointer]
+                  - button "2年更新" [ref=e696] [cursor=pointer]
+                  - button "3年更新" [ref=e697] [cursor=pointer]
+              - separator [ref=e698]
+              - generic [ref=e699]:
+                - generic [ref=e700]:
+                  - generic [ref=e701]: お支払い方法
+                  - generic [ref=e703]:
+                    - paragraph [ref=e704]: ・クレジットカード
+                    - paragraph [ref=e705]: ・Amazon pay
+                    - paragraph [ref=e706]: ・Paid（口座振替、銀行振込、コンビニ決済）
+                    - paragraph [ref=e707]:
+                      - generic [ref=e708]: ※
+                      - text: Paidでのお支払いは、個人事業主様もしくは法人に所属している会員様のみご利用可能です。
+                - separator [ref=e709]
+              - paragraph [ref=e710]:
+                - link "すべてクリア" [ref=e711] [cursor=pointer]:
+                  - /url: javascript:void(0);
+            - generic [ref=e713]:
+              - generic [ref=e714]: あなたにおすすめのプラン
+              - generic [ref=e715]:
+                - generic [ref=e716]:
+                  - generic [ref=e718]: 毎年更新プラン
+                  - generic [ref=e719]:
+                    - generic [ref=e720]:
+                      - paragraph [ref=e721]: 月額
+                      - paragraph [ref=e722]: 換算
+                    - generic [ref=e723]: ¥ 1,260
+                  - generic [ref=e724]:
+                    - img "check mark sale 20%" [ref=e725]
+                    - generic [ref=e726]:
+                      - generic [ref=e728]: 割引価格
+                      - generic [ref=e730]:
+                        - text: ¥15,121／年（税込）
+                        - generic [ref=e731]: 割引適用は初回お支払い分のみ。
+                    - separator [ref=e732]
+                    - generic [ref=e733]:
+                      - generic [ref=e735]: 通常価格
+                      - deletion [ref=e738]:
+                        - generic [ref=e739]: ¥18,900／年（税込）
+                  - separator [ref=e740]
+                  - generic [ref=e741]:
+                    - generic [ref=e743]: 契約更新日
+                    - generic [ref=e745]: ご加入日から1年ごとの契約更新
+                  - separator [ref=e746]
+                  - generic [ref=e747]:
+                    - generic [ref=e748]:
+                      - generic [ref=e750]: 特典内容
+                      - generic [ref=e752]: 素材を5点プレゼント
+                    - separator [ref=e753]
+                  - link "お申し込みはこちら" [ref=e755] [cursor=pointer]:
+                    - /url: javascript:void(0);
+                - paragraph [ref=e758]: ※このプランの月額換算の料金と個人の毎月更新プランの料金を比較した場合の割引率を表示しています。
+      - generic [ref=e759]:
+        - heading "2名以上でお得に利用！法人向けの複数人利用プラン" [level=2] [ref=e760]
+        - paragraph [ref=e762]:
+          - text: すでに14万人以上にご利用いただいているプレミアム会員ですが、さらに便利な法人向けの複数人利用プランもご用意しております。
+          - text: 法人プランでは2名以上でご利用の場合、プレミアム会員のご利用料金が通常よりかなりお得になるだけでなく、一括で全てのアカウントのご利用料金をお支払いいただけます。
+          - text: また、利用途中で利用人数の変更も可能なメンバー管理機能もございますので、デザインチームでのご利用が大変お得です。
+        - button [ref=e764] [cursor=pointer]
+      - generic [ref=e765]:
+        - heading "当サービスの巷の噂です" [level=2] [ref=e766]
+        - generic [ref=e768]:
+          - generic [ref=e769]:
+            - iframe [ref=e772]:
+              - generic [ref=f88e4]:
+                - img [ref=f88e5]
+                - generic [ref=f88e8]: Not found
+            - iframe [ref=e775]:
+              - generic [active] [ref=f89e1]:
+                - article [ref=f89e4] [cursor=pointer]:
+                  - link "Visit this post on X":
+                    - /url: https://x.com/itm_nlab/status/1131075738679963651?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1131075738679963651%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                  - generic [ref=f89e5]:
+                    - link [ref=f89e14]:
+                      - /url: https://twitter.com/itm_nlab
+                    - generic [ref=f89e20]:
+                      - link "ねとらぼ Verified account" [ref=f89e21]:
+                        - /url: https://twitter.com/itm_nlab
+                        - generic [ref=f89e22]:
+                          - generic [ref=f89e24]: ねとらぼ
+                          - generic [ref=f89e26]:
+                            - img "Verified account" [ref=f89e27]
+                            - link [ref=f89e33]
+                      - generic [ref=f89e40]:
+                        - link "@itm_nlab" [ref=f89e41]:
+                          - /url: https://twitter.com/itm_nlab
+                          - generic [ref=f89e43]: "@itm_nlab"
+                        - generic [ref=f89e44]:
+                          - generic [ref=f89e45]: ·
+                          - link "Follow" [ref=f89e46]:
+                            - /url: https://x.com/intent/follow?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1131075738679963651%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign&screen_name=itm_nlab
+                    - link "View on X" [ref=f89e47]:
+                      - /url: https://x.com/itm_nlab/status/1131075738679963651?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1131075738679963651%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                      - img [ref=f89e48]
+                  - generic [ref=f89e52]:
+                    - text: いそう…… AIによる顔写真生成、写真素材サイト「写真AC」が導入 架空の人物をフリー素材として配信 - ねとらぼ
+                    - link "nlab.itmedia.co.jp/nl/articles/19" [ref=f89e53]:
+                      - /url: https://t.co/Wwn53MT90g
+                      - text: nlab.itmedia.co.jp/nl/articles/19…
+                    - link "@itm_nlab" [ref=f89e55]:
+                      - /url: https://x.com/itm_nlab?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1131075738679963651%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                    - text: から
+                    - link "pic.x.com/JFUf046sPr" [ref=f89e56]:
+                      - /url: https://t.co/JFUf046sPr
+                  - generic [ref=f89e57]:
+                    - link "5:54 AM · May 22, 2019" [ref=f89e62]:
+                      - /url: https://x.com/itm_nlab/status/1131075738679963651?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1131075738679963651%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                      - time [ref=f89e63]: 5:54 AM · May 22, 2019
+                    - link "X Ads info and privacy" [ref=f89e64]:
+                      - /url: https://help.x.com/x-for-websites-ads-info-and-privacy
+                      - img [ref=f89e65]
+                  - generic [ref=f89e68]:
+                    - link "Like. This post has 104 likes" [ref=f89e69]:
+                      - /url: https://x.com/intent/like?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1131075738679963651%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign&tweet_id=1131075738679963651
+                      - img [ref=f89e71]
+                      - generic [ref=f89e74]: "104"
+                    - link "Reply to this post on X" [ref=f89e75]:
+                      - /url: https://x.com/intent/tweet?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1131075738679963651%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign&in_reply_to=1131075738679963651
+                      - img [ref=f89e77]
+                      - generic [ref=f89e80]: Reply
+                    - button "Copy link" [ref=f89e81]:
+                      - img [ref=f89e83]
+                      - generic [ref=f89e86]: Copy link
+                  - link "Read 1 reply" [ref=f89e88]:
+                    - /url: https://x.com/itm_nlab/status/1131075738679963651?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1131075738679963651%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                    - generic [ref=f89e90]: Read 1 reply
+                - generic:
+                  - img
+                - generic:
+                  - img
+            - iframe [ref=e778]:
+              - article [ref=f90e4] [cursor=pointer]:
+                - link "Visit this post on X":
+                  - /url: https://x.com/misaprog/status/1273253220211548165?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1273253220211548165%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                - generic [ref=f90e5]:
+                  - link [ref=f90e14]:
+                    - /url: https://twitter.com/misaprog
+                  - generic [ref=f90e20]:
+                    - link "みさ＠埼玉Web系フリーランス" [ref=f90e21]:
+                      - /url: https://twitter.com/misaprog
+                      - generic [ref=f90e24]: みさ＠埼玉Web系フリーランス
+                    - generic [ref=f90e25]:
+                      - link "@misaprog" [ref=f90e26]:
+                        - /url: https://twitter.com/misaprog
+                        - generic [ref=f90e28]: "@misaprog"
+                      - generic [ref=f90e29]:
+                        - generic [ref=f90e30]: ·
+                        - link "Follow" [ref=f90e31]:
+                          - /url: https://x.com/intent/follow?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1273253220211548165%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign&screen_name=misaprog
+                  - link "View on X" [ref=f90e32]:
+                    - /url: https://x.com/misaprog/status/1273253220211548165?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1273253220211548165%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                    - img [ref=f90e33]
+                - generic [ref=f90e37]:
+                  - text: ＼写真ACプレミアム会員登録／ 今までO-DANを利用してましたが、ついに有料サービス契約してみました
+                  - img "📷" [ref=f90e38]
+                  - img "💓" [ref=f90e39]
+                  - text: ・年契約で月額750円程度 ・写真もイラストも利用可能 ・写真サイズが統一されてる ・ダウンロード履歴が辿れる ・お気に入り登録機能 課金する価値あり
+                  - img "🙆" [ref=f90e40]
+                  - img "✨" [ref=f90e41]
+                  - link "photo-ac.com" [ref=f90e42]:
+                    - /url: https://t.co/DuKdaHuULy
+                - generic [ref=f90e43]:
+                  - link "1:56 PM · Jun 17, 2020" [ref=f90e48]:
+                    - /url: https://x.com/misaprog/status/1273253220211548165?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1273253220211548165%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                    - time [ref=f90e49]: 1:56 PM · Jun 17, 2020
+                  - link "X Ads info and privacy" [ref=f90e50]:
+                    - /url: https://help.x.com/x-for-websites-ads-info-and-privacy
+                    - img [ref=f90e51]
+                - generic [ref=f90e54]:
+                  - link "Like. This post has 9 likes" [ref=f90e55]:
+                    - /url: https://x.com/intent/like?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1273253220211548165%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign&tweet_id=1273253220211548165
+                    - img [ref=f90e57]
+                    - generic [ref=f90e60]: "9"
+                  - link "Reply to this post on X" [ref=f90e61]:
+                    - /url: https://x.com/intent/tweet?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1273253220211548165%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign&in_reply_to=1273253220211548165
+                    - img [ref=f90e63]
+                    - generic [ref=f90e66]: Reply
+                  - button "Copy link" [ref=f90e67]:
+                    - img [ref=f90e69]
+                    - generic [ref=f90e72]: Copy link
+                - link "Read more on X" [ref=f90e74]:
+                  - /url: https://x.com/explore?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1273253220211548165%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                  - generic [ref=f90e76]: Read more on X
+          - generic [ref=e779]:
+            - iframe [ref=e782]:
+              - article [ref=f91e4] [cursor=pointer]:
+                - link "Visit this post on X":
+                  - /url: https://x.com/yanack1225/status/1291685496876199937?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1291685496876199937%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                - generic [ref=f91e5]:
+                  - link [ref=f91e14]:
+                    - /url: https://twitter.com/yanack1225
+                  - generic [ref=f91e20]:
+                    - link "やながわ@やなっく" [ref=f91e21]:
+                      - /url: https://twitter.com/yanack1225
+                      - generic [ref=f91e24]: やながわ@やなっく
+                    - generic [ref=f91e25]:
+                      - link "@yanack1225" [ref=f91e26]:
+                        - /url: https://twitter.com/yanack1225
+                        - generic [ref=f91e28]: "@yanack1225"
+                      - generic [ref=f91e29]:
+                        - generic [ref=f91e30]: ·
+                        - link "Follow" [ref=f91e31]:
+                          - /url: https://x.com/intent/follow?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1291685496876199937%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign&screen_name=yanack1225
+                  - link "View on X" [ref=f91e32]:
+                    - /url: https://x.com/yanack1225/status/1291685496876199937?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1291685496876199937%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                    - img [ref=f91e33]
+                - generic [ref=f91e37]: 写真ACの人工知能で、それっぽい人の顔写真作ってくれる機能めっちゃ便利すぎません？
+                - generic [ref=f91e38]:
+                  - link "10:39 AM · Aug 7, 2020" [ref=f91e43]:
+                    - /url: https://x.com/yanack1225/status/1291685496876199937?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1291685496876199937%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                    - time [ref=f91e44]: 10:39 AM · Aug 7, 2020
+                  - link "X Ads info and privacy" [ref=f91e45]:
+                    - /url: https://help.x.com/x-for-websites-ads-info-and-privacy
+                    - img [ref=f91e46]
+                - generic [ref=f91e49]:
+                  - link "Like. This post has 4 likes" [ref=f91e50]:
+                    - /url: https://x.com/intent/like?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1291685496876199937%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign&tweet_id=1291685496876199937
+                    - img [ref=f91e52]
+                    - generic [ref=f91e55]: "4"
+                  - link "Reply to this post on X" [ref=f91e56]:
+                    - /url: https://x.com/intent/tweet?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1291685496876199937%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign&in_reply_to=1291685496876199937
+                    - img [ref=f91e58]
+                    - generic [ref=f91e61]: Reply
+                  - button "Copy link" [ref=f91e62]:
+                    - img [ref=f91e64]
+                    - generic [ref=f91e67]: Copy link
+                - link "Read more on X" [ref=f91e69]:
+                  - /url: https://x.com/explore?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1291685496876199937%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                  - generic [ref=f91e71]: Read more on X
+            - iframe [ref=e785]:
+              - article [ref=f92e4] [cursor=pointer]:
+                - link "Visit this post on X":
+                  - /url: https://x.com/RRice_com/status/1141137041138208769?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1141137041138208769%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                - generic [ref=f92e5]:
+                  - link [ref=f92e14]:
+                    - /url: https://twitter.com/RRice_com
+                  - generic [ref=f92e20]:
+                    - link "RRice(ライス)ストックフォト・イラスト作者" [ref=f92e21]:
+                      - /url: https://twitter.com/RRice_com
+                      - generic [ref=f92e24]: RRice(ライス)ストックフォト・イラスト作者
+                    - generic [ref=f92e25]:
+                      - link "@RRice_com" [ref=f92e26]:
+                        - /url: https://twitter.com/RRice_com
+                        - generic [ref=f92e28]: "@RRice_com"
+                      - generic [ref=f92e29]:
+                        - generic [ref=f92e30]: ·
+                        - link "Follow" [ref=f92e31]:
+                          - /url: https://x.com/intent/follow?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1141137041138208769%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign&screen_name=RRice_com
+                  - link "View on X" [ref=f92e32]:
+                    - /url: https://x.com/RRice_com/status/1141137041138208769?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1141137041138208769%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                    - img [ref=f92e33]
+                - generic [ref=f92e37]:
+                  - link "#写真ac" [ref=f92e39]:
+                    - /url: https://x.com/hashtag/%E5%86%99%E7%9C%9Fac?src=hashtag_click
+                  - text: 来てる!?メルマガ登録してるのですが下記の内容が来ました!! 顔をすげ替えてストックフォトできるって画期的!! ■AIが、あなたの撮影した人物写真を別人の顔に！あなたが撮影した人物写真の(顔)をAIが作った実在しない人の顔に自動で差し替える機能を開発中。モデル探しのハードル低くします
+                - generic [ref=f92e40]:
+                  - link "12:14 AM · Jun 19, 2019" [ref=f92e45]:
+                    - /url: https://x.com/RRice_com/status/1141137041138208769?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1141137041138208769%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                    - time [ref=f92e46]: 12:14 AM · Jun 19, 2019
+                  - link "X Ads info and privacy" [ref=f92e47]:
+                    - /url: https://help.x.com/x-for-websites-ads-info-and-privacy
+                    - img [ref=f92e48]
+                - generic [ref=f92e51]:
+                  - link "Like. This post has 10 likes" [ref=f92e52]:
+                    - /url: https://x.com/intent/like?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1141137041138208769%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign&tweet_id=1141137041138208769
+                    - img [ref=f92e54]
+                    - generic [ref=f92e57]: "10"
+                  - link "Reply to this post on X" [ref=f92e58]:
+                    - /url: https://x.com/intent/tweet?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1141137041138208769%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign&in_reply_to=1141137041138208769
+                    - img [ref=f92e60]
+                    - generic [ref=f92e63]: Reply
+                  - button "Copy link" [ref=f92e64]:
+                    - img [ref=f92e66]
+                    - generic [ref=f92e69]: Copy link
+                - link "Read 2 replies" [ref=f92e71]:
+                  - /url: https://x.com/RRice_com/status/1141137041138208769?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1141137041138208769%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                  - generic [ref=f92e73]: Read 2 replies
+            - iframe [ref=e788]:
+              - generic [active] [ref=f93e1]:
+                - article [ref=f93e4] [cursor=pointer]:
+                  - link "Visit this post on X":
+                    - /url: https://x.com/livedoornews/status/1131157087080161280?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1131157087080161280%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                  - generic [ref=f93e5]:
+                    - link [ref=f93e14]:
+                      - /url: https://twitter.com/livedoornews
+                    - generic [ref=f93e20]:
+                      - link "ライブドアニュース Verified account" [ref=f93e21]:
+                        - /url: https://twitter.com/livedoornews
+                        - generic [ref=f93e22]:
+                          - generic [ref=f93e24]: ライブドアニュース
+                          - img "Verified account" [ref=f93e27]
+                      - generic [ref=f93e33]:
+                        - link "@livedoornews" [ref=f93e34]:
+                          - /url: https://twitter.com/livedoornews
+                          - generic [ref=f93e36]: "@livedoornews"
+                        - generic [ref=f93e37]:
+                          - generic [ref=f93e38]: ·
+                          - link "Follow" [ref=f93e39]:
+                            - /url: https://x.com/intent/follow?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1131157087080161280%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign&screen_name=livedoornews
+                    - link "View on X" [ref=f93e40]:
+                      - /url: https://x.com/livedoornews/status/1131157087080161280?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1131157087080161280%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                      - img [ref=f93e41]
+                  - generic [ref=f93e45]:
+                    - text: 【違和感ない】写真素材サイト、AIが生成した架空の人物の顔写真を提供開始
+                    - link "news.livedoor.com/article/detail" [ref=f93e46]:
+                      - /url: https://t.co/3JduneFrBd
+                      - text: news.livedoor.com/article/detail…
+                    - text: 許可を得て集めた写真を元に架空の人物の顔を生成。じっくり見ないと違和感を感じないレベルに仕上がっている。
+                    - link "pic.x.com/6pFsqnaMm6" [ref=f93e47]:
+                      - /url: https://t.co/6pFsqnaMm6
+                  - generic [ref=f93e48]:
+                    - link "11:17 AM · May 22, 2019" [ref=f93e53]:
+                      - /url: https://x.com/livedoornews/status/1131157087080161280?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1131157087080161280%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                      - time [ref=f93e54]: 11:17 AM · May 22, 2019
+                    - link "X Ads info and privacy" [ref=f93e55]:
+                      - /url: https://help.x.com/x-for-websites-ads-info-and-privacy
+                      - img [ref=f93e56]
+                  - generic [ref=f93e59]:
+                    - link "Like. This post has 424 likes" [ref=f93e60]:
+                      - /url: https://x.com/intent/like?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1131157087080161280%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign&tweet_id=1131157087080161280
+                      - img [ref=f93e62]
+                      - generic [ref=f93e65]: "424"
+                    - link "Reply to this post on X" [ref=f93e66]:
+                      - /url: https://x.com/intent/tweet?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1131157087080161280%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign&in_reply_to=1131157087080161280
+                      - img [ref=f93e68]
+                      - generic [ref=f93e71]: Reply
+                    - button "Copy link" [ref=f93e72]:
+                      - img [ref=f93e74]
+                      - generic [ref=f93e77]: Copy link
+                  - link "Read 7 replies" [ref=f93e79]:
+                    - /url: https://x.com/livedoornews/status/1131157087080161280?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1131157087080161280%7Ctwgr%5E303b230b0bac89d752bb3e34b8f9eca025bf46e1%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Ftest-lien.photo-ac.com%2Fpremium%2Fcampaign
+                    - generic [ref=f93e81]: Read 7 replies
+                - generic:
+                  - img
+                - generic:
+                  - img
+      - generic [ref=e790]:
+        - heading "合計50種類以上のプレゼントをご用意!" [level=2] [ref=e791]
+        - heading "下記はほんの一部!このような素材が毎月追加されます。" [level=2] [ref=e792]
+        - paragraph [ref=e793]: プレミアム会員サービスにご参加いただいた時点で、たくさんの背景パターン素材集やテンプレート素材集をマイページよりいつでもダウンロードすることができます。この無料特典素材集の価値をお金に換算すると結構な金額になりますよ!更に特典素材は、毎月毎月追加されますのでご期待ください。※素材集には JPG と EPS データが入っております。商用利用 OK でクレジットも不要です。再配布は不可。
+        - generic [ref=e794]:
+          - generic [ref=e795]:
+            - img "ethic" [ref=e798] [cursor=pointer]
+            - text: エスニック装飾
+          - generic [ref=e799]:
+            - img "sparkle" [ref=e802] [cursor=pointer]
+            - text: きらめきパターン
+          - generic [ref=e803]:
+            - img "wa_frame" [ref=e806] [cursor=pointer]
+            - text: 和のあしらいフレーム
+          - generic [ref=e807]:
+            - img "wood_frame" [ref=e810] [cursor=pointer]
+            - text: 木のフレーム
+          - generic [ref=e811]:
+            - img "party_item" [ref=e814] [cursor=pointer]
+            - text: パーティーアイテム
+          - generic [ref=e815]:
+            - img "businesscard" [ref=e818] [cursor=pointer]
+            - text: 名刺テンプレート
+          - generic [ref=e819]:
+            - img "organic" [ref=e822] [cursor=pointer]
+            - text: オーガニックパターン
+          - generic [ref=e823]:
+            - img "warm_pattern" [ref=e826] [cursor=pointer]
+            - text: 暖色パターン
+          - button "プレミアム会員に参加する" [ref=e829] [cursor=pointer]
+      - generic [ref=e830]:
+        - heading "クリエイター・ユーザー両方のメリットに繋がる。" [level=2] [ref=e831]
+        - generic [ref=e832]:
+          - paragraph [ref=e833]: 写真ACの写真は、誰が撮影しているかご存じですか？当社で制作した写真も多いですが、実はプロ・アマ問わず日本中のクリエイター様から投稿されているんです。投稿された写真素材がダウンロードされる度に、当社から投稿者様へ3円〜11円をお支払いしています。この3円〜11円の出処は、サイトのあちこちに掲載している広告の収入から支払っています。残念ながら広告収入から支払える金額は、サイトの運営費を考えると3円〜11円が限界です。ですので、せっかく素晴らしい写真素材をご投稿くださるクリエイター様がたくさんいるのに、クリエイター様のメリットが小さいため、私たちはもどかしく感じています。
+          - paragraph [ref=e834]: そこで「もっとクリエイター様に還元をしたい！」という思いのもとプレミアム会員サービスを立ち上げました。有料サービスを作り、お金を集めて還元したいのです。写真ACだけで生活ができるレベルのクリエイター様をたくさん輩出したいのです。 これらの取り組みをすることで、クリエイター様のメリットは大きくなり、投稿される写真素材のクオリティは上がり続けます。素敵な写真素材が今以上に投稿されるようになります。結果としてその素材をあなたにお届けできると信じています。
+      - generic [ref=e835]:
+        - heading "ダウンロードするだけで" [level=2] [ref=e836]
+        - heading "社会貢献ができます。" [level=2] [ref=e837]
+        - generic [ref=e838]:
+          - paragraph [ref=e839]:
+            - text: あなたが写真素材を1つダウンロードする度に、0.1円を写真AC（ACワークス株式会社）より
+            - link "日本赤十字社" [ref=e840] [cursor=pointer]:
+              - /url: http://www.jrc.or.jp/contribute/
+            - text: を通し、東日本大震災・熊本地震の復興に、また2020年1月からは
+            - link "国立美術館" [ref=e841] [cursor=pointer]:
+              - /url: https://kifu.artmuseums.go.jp/
+            - text: へ寄付させていただいております。（あなたにご負担はございませんのでご安心ください）
+          - paragraph [ref=e842]: この取組は、2013年の1月より始めて14年目に入っております。既に71,452,004円以上をお届けすることができました。
+          - paragraph [ref=e843]: あなたには無料会員のままでもプレミアム会員になっていただいてもどちらでも結構です。しかし写真素材が必要な際に写真ACを利用して欲しいです。あなたの代わりに責任をもって私たちが寄付を行いますので、ぜひこの活動を応援いただければ嬉しく思います。
+          - paragraph [ref=e844]: これまでの寄付実績
+          - paragraph [ref=e845]: 累計：¥71,452,004 先月：¥410,503 昨日：¥17,038
+          - button "プレミアム会員に参加する" [ref=e847] [cursor=pointer]
+      - generic [ref=e848]:
+        - heading "よくある質問" [level=2] [ref=e849]
+        - generic [ref=e850]:
+          - generic [ref=e851]:
+            - generic [ref=e852]:
+              - generic [ref=e854]: Q1
+              - heading "領収書の発行はしてくれますか？" [level=5] [ref=e855]
+            - separator [ref=e856]
+            - generic [ref=e857]:
+              - generic [ref=e859]: Q1
+              - paragraph [ref=e861]:
+                - text: 領収書は、イラストAC・写真ACマイページ内の「領収書発行」からダウンロードしていただけます。
+                - text: 口座振替・銀行振込・コンビニ支払い（Paid）をご利用の場合は、お支払い完了後に領収書が発行されます。
+          - generic [ref=e862]:
+            - generic [ref=e863]:
+              - generic [ref=e865]: Q2
+              - heading "クレジットカード決済以外でも支払えますか？" [level=5] [ref=e866]
+            - separator [ref=e867]
+            - generic [ref=e868]:
+              - generic [ref=e870]: Q2
+              - paragraph [ref=e872]:
+                - text: こちらPaid社経由で「銀行振込」「口座振替登録」「コンビニ支払い」にてお支払い頂けます。
+                - text: Paid様経由でのお支払いをご選択いただいた場合、初回のお支払い方法は、ご変更いただかない場合はデフォルトで末日締めの「銀行振込」となります。
+                - text: ご変更はPaid様側の管理画面で「銀行振込」「口座振替」「コンビニ支払い」へお手続き可能です。
+                - text: 口座振替を選択したお客様には、後日口座振替依頼書を郵送させていただき、返送いただいてから、口座引落開始となります。
+                - text: ※引き落としの手続きが完了するまでは、口座振替希望であっても請求書払いとなります。
+                - text: Paidについての詳しいご説明は、
+                - link "こちら" [ref=e873] [cursor=pointer]:
+                  - /url: https://test-lien.photo-ac.com//user/paid/
+                - text: のページをご参照くださいませ。
+                - text: また、
+                - link "Paid様公式ホームページ" [ref=e874] [cursor=pointer]:
+                  - /url: https://paid.jp/v/contents/pre/buyer
+                - text: もご参照ください。
+          - generic [ref=e875]:
+            - generic [ref=e876]:
+              - generic [ref=e878]: Q3
+              - heading "クレジットカードでの支払いが何だか怖いのですが？" [level=5] [ref=e879]
+            - separator [ref=e880]
+            - generic [ref=e881]:
+              - generic [ref=e883]: Q3
+              - paragraph [ref=e885]: ご入力いただくクレジットカード番号は、当社で保管、閲覧することは一切なく、東証一部、ISO27001適合認証取得のGMOペイメントゲートウェイ株式会社の PCIDSS 準拠のシステムで受理、決済が行われますのでご安心ください。
+          - generic [ref=e886]:
+            - generic [ref=e887]:
+              - generic [ref=e889]: Q4
+              - heading "月末に入会するともったいないですか？" [level=5] [ref=e890]
+            - separator [ref=e891]
+            - generic [ref=e892]:
+              - generic [ref=e894]: Q4
+              - paragraph [ref=e896]: いいえ。どのタイミングでお申し込みいただいても大丈夫です。プレミアム会員期間は、月単位ではなく、あなたにお申し込みいただいた日からの換算となります。
+          - generic [ref=e897]:
+            - generic [ref=e898]:
+              - generic [ref=e900]: Q5
+              - heading "返金はしてもらえますか？" [level=5] [ref=e901]
+            - separator [ref=e902]
+            - generic [ref=e903]:
+              - generic [ref=e905]: Q5
+              - paragraph [ref=e907]: 決済完了後のキャンセル及び返金はできませんのでご了承ください。
+          - generic [ref=e908]:
+            - generic [ref=e909]:
+              - generic [ref=e911]: Q6
+              - heading "サイトごとに契約が必要ですか？" [level=5] [ref=e912]
+            - separator [ref=e913]
+            - generic [ref=e914]:
+              - generic [ref=e916]: Q6
+              - paragraph [ref=e918]:
+                - text: 現在、私どもが運営しております「イラストAC」「写真AC」「シルエットAC」「動画AC」のいずれかのサイトからプレミアム会員サービスにお申し込みいただければ、全サイトでプレミアム会員に認定させていただきます。
+                - text: 各サイトごとにプレミアム会員登録を行う必要はございません。
+        - button "プレミアム会員に参加する" [ref=e920] [cursor=pointer]
+      - generic [ref=e921]:
+        - heading "どんな些細なことでもお尋ねください。" [level=2] [ref=e922]
+        - generic [ref=e923]:
+          - paragraph [ref=e924]: ご不明点やご不安など、どんな些細なことでも結構ですのでこちらよりご相談ください。可能な限り早くお返事をさせていただいておりますが、お問い合わせの内容によっては、ご返答にお時間をいただく場合がございます。また当社の営業日以外（土日・祝日、及び年末年始等の休日）のお問い合わせにつきましては、翌営業日以降の対応とさせていただきますので予めご了承ください。
+          - generic [ref=e925]:
+            - generic [ref=e926]:
+              - generic [ref=e928]: お名前
+              - textbox "お名前" [ref=e930]
+            - generic [ref=e931]:
+              - generic [ref=e933]:
+                - text: メールアドレス
+                - text: （PC のみ）
+              - textbox "メールアドレス （PC のみ）" [ref=e935]:
+                - /placeholder: メールアドレス
+            - generic [ref=e936]:
+              - generic [ref=e938]: お問い合わせ
+              - textbox "お問い合わせ" [ref=e940]:
+                - /placeholder: ""
+            - button "内容を確認する" [ref=e944] [cursor=pointer]
+          - link "特定商取引法に基づく表記" [ref=e946] [cursor=pointer]:
+            - /url: https://www.photo-ac.com/main/commercial_transactions
+      - generic [ref=e947]:
+        - contentinfo [ref=e948]:
+          - generic [ref=e951]:
+            - generic [ref=e952]: 昨日のダウンロード数：45,073
+            - generic [ref=e953]: 先月のダウンロード数：1,124,624
+            - generic [ref=e954]: 総会員数：1600万人を突破しました
+          - generic [ref=e956]:
+            - generic [ref=e957]:
+              - generic [ref=e958]:
+                - generic [ref=e959]: 写真ACについて 
+                - list [ref=e960]:
+                  - listitem [ref=e961]:
+                    - link "写真ACとは" [ref=e962] [cursor=pointer]:
+                      - /url: /main/guide/
+                  - listitem [ref=e963]:
+                    - link "運営会社" [ref=e964] [cursor=pointer]:
+                      - /url: /main/about/
+                  - listitem [ref=e965]:
+                    - link "個人情報保護方針" [ref=e966] [cursor=pointer]:
+                      - /url: /main/privacy/
+                  - listitem [ref=e967]:
+                    - link "特定個人情報基本方針" [ref=e968] [cursor=pointer]:
+                      - /url: /main/policy_personal_info/
+                  - listitem [ref=e969]:
+                    - link "特定商取引法に基づく表記" [ref=e970] [cursor=pointer]:
+                      - /url: /main/commercial_transactions/
+                  - listitem [ref=e971]:
+                    - link "サイトマップ" [ref=e972] [cursor=pointer]:
+                      - /url: /main/sitemap
+                  - listitem [ref=e973]:
+                    - link "セキュリティポリシー" [ref=e974] [cursor=pointer]:
+                      - /url: https://acworks.co.jp/security-policy/
+              - generic [ref=e975]:
+                - generic [ref=e976]: 会員登録 
+                - list [ref=e977]:
+                  - listitem [ref=e978]:
+                    - link "無料会員登録" [ref=e979] [cursor=pointer]:
+                      - /url: https://test-accounts.ac-illust.com/signup?serviceURL=https%3A%2F%2Ftest-lien.photo-ac.com%2Fauth%2Fsso_login%3Fredirect_to%3Dhttps%253A%252F%252Ftest-lien.photo-ac.com%252Fpremium%252Fcampaign&lang=jp
+                  - listitem [ref=e980]:
+                    - link "プレミアム会員登録" [ref=e981] [cursor=pointer]:
+                      - /url: https://test-lien.photo-ac.com/premium/campaign?target=premium_sozai
+                  - listitem [ref=e982]:
+                    - link "無料クリエイター会員登録" [ref=e983] [cursor=pointer]:
+                      - /url: /creator/auth/register
+              - generic [ref=e984]:
+                - generic [ref=e985]: プレミアム会員サービス 
+                - list [ref=e986]:
+                  - listitem [ref=e987]:
+                    - link "プレミアム会員登録" [ref=e988] [cursor=pointer]:
+                      - /url: https://test-lien.photo-ac.com/premium/campaign?target=premium_sozai
+                  - listitem [ref=e989]:
+                    - link "法人・複数名向けプラン" [ref=e990] [cursor=pointer]:
+                      - /url: https://test-lien.photo-ac.com/premium/business
+                  - listitem [ref=e991]:
+                    - link "商品化ライセンス" [ref=e992] [cursor=pointer]:
+                      - /url: /main/extra_license_terms/
+                  - listitem [ref=e993]:
+                    - link "あんしんサポート" [ref=e994] [cursor=pointer]:
+                      - /url: /indemnity/
+              - generic [ref=e995]:
+                - generic [ref=e996]: ヘルプ＆ガイド 
+                - list [ref=e997]:
+                  - listitem [ref=e998]:
+                    - link "ヘルプ" [ref=e999] [cursor=pointer]:
+                      - /url: https://help.freebie-ac.jp/
+                  - listitem [ref=e1000]:
+                    - link "利用規約" [ref=e1001] [cursor=pointer]:
+                      - /url: /main/terms/
+                  - listitem [ref=e1002]:
+                    - link "プレミアム会員利用規約" [ref=e1003] [cursor=pointer]:
+                      - /url: /main/terms_premium/
+                  - listitem [ref=e1004]:
+                    - link "AC写真AIラボ利用規約" [ref=e1005] [cursor=pointer]:
+                      - /url: /image-generator/terms
+              - generic [ref=e1006]:
+                - generic [ref=e1007]: グループサイト 
+                - list [ref=e1008]:
+                  - listitem [ref=e1009]:
+                    - link "イラストAC" [ref=e1010] [cursor=pointer]:
+                      - /url: https://www.ac-illust.com/
+                  - listitem [ref=e1011]:
+                    - link "シルエットAC" [ref=e1012] [cursor=pointer]:
+                      - /url: https://www.silhouette-ac.com/
+                  - listitem [ref=e1013]:
+                    - link "フリービーAC" [ref=e1014] [cursor=pointer]:
+                      - /url: https://www.freebie-ac.jp/
+                  - listitem [ref=e1015]:
+                    - link "年賀状AC" [ref=e1016] [cursor=pointer]:
+                      - /url: https://www.new-year.bz/
+                  - listitem [ref=e1017]:
+                    - link "動画AC" [ref=e1018] [cursor=pointer]:
+                      - /url: https://video-ac.com
+                  - listitem [ref=e1019]:
+                    - link "デザインAC" [ref=e1020] [cursor=pointer]:
+                      - /url: https://www.design-ac.net/
+                  - listitem [ref=e1021]:
+                    - link "ACデータ" [ref=e1022] [cursor=pointer]:
+                      - /url: https://ac-data.info/
+                  - listitem [ref=e1023]:
+                    - link "明細AC" [ref=e1024] [cursor=pointer]:
+                      - /url: https://meisai-ac.com/
+            - generic [ref=e1025]:
+              - link "twitter_btn" [ref=e1026] [cursor=pointer]:
+                - /url: https://x.com/ACworks2011
+                - button "twitter_btn" [ref=e1027]:
+                  - img [ref=e1028]
+              - link "facebook_btn" [ref=e1030] [cursor=pointer]:
+                - /url: https://www.facebook.com/ACworks2011/
+                - button "facebook_btn" [ref=e1031]:
+                  - generic [ref=e1032]: 
+              - link "pinterest_btn" [ref=e1033] [cursor=pointer]:
+                - /url: https://www.pinterest.jp/acworks/
+                - button "pinterest_btn" [ref=e1034]:
+                  - generic [ref=e1035]: 
+              - link "blog_btn" [ref=e1036] [cursor=pointer]:
+                - /url: http://blog.acworks.co.jp/
+                - button "blog_btn" [ref=e1037]:
+                  - generic [ref=e1038]: 
+              - text: 
+            - generic [ref=e1040]:
+              - text: © 2011-2026
+              - link "写真AC" [ref=e1041] [cursor=pointer]:
+                - /url: https://test-lien.photo-ac.com/
+        - button [ref=e1044] [cursor=pointer]:
+          - img [ref=e1045]
+        - text:  
+  - text: Q. A. Q. A. Q. A. Q. A. Q. A.
+```
+
+# Test source
+
+```ts
+  15  | test.describe('Premium Registration, Receipt & Profile Flow', () => {
+  16  |   // Isolate session: Always begin with clean guest cookies so fresh Free User account is generated
+  17  |   test.use({ storageState: { cookies: [], origins: [] } });
+  18  | 
+  19  |   test('TC-[Register-Premium]-[FreeUser]-[001]: Đăng ký Free User mới, Nâng cấp Premium qua thẻ tín dụng, Verify Hóa đơn PDF và Profile @smoke @premium', async ({
+  20  |     page,
+  21  |     registerPage,
+  22  |     premiumRegisterPage,
+  23  |     receiptsPage,
+  24  |     profileEditPage,
+  25  |   }) => {
+  26  |     test.setTimeout(240_000);
+  27  | 
+  28  |     // Tự động vô hiệu hóa modal cảnh báo timezone quốc tế (#alertModalGlobal)
+  29  |     await page.addInitScript(() => {
+  30  |       try {
+  31  |         localStorage.setItem('hideModalGlobal', 'true');
+  32  |       } catch (_) {}
+  33  |     });
+  34  | 
+  35  |     // ── GIAI ĐOẠN 1: KHỞI TẠO TÀI KHOẢN FREE USER MỚI QUA MAIL.TM ───────────
+  36  |     const newUser = await registerPage.registerNewFreeUserAccount({
+  37  |       password: 'FreeUser@2026!',
+  38  |       usernamePrefix: 'acfree',
+  39  |       navigateToTopPage: false,
+  40  |     });
+  41  | 
+  42  |     try {
+  43  |       expect(newUser.email).toContain('@');
+  44  | 
+  45  |       // Đăng nhập tài khoản Free User mới qua SSO Login và xác nhận phiên làm việc
+  46  |       await test.step('Đồng bộ phiên đăng nhập Free User sang Photo-AC qua SSO Login', async () => {
+  47  |         const baseUrl = envConfig.baseUrl || 'https://test-lien.photo-ac.com';
+  48  |         const loginUrl = `https://test-accounts.ac-illust.com/login?serviceURL=${encodeURIComponent(
+  49  |           `${baseUrl}/auth/sso_login?redirect_to=${encodeURIComponent(`${baseUrl}/`)}`
+  50  |         )}&lang=jp`;
+  51  | 
+  52  |         await page.goto(loginUrl, { waitUntil: 'domcontentloaded' });
+  53  | 
+  54  |         // Nếu dừng lại ở trang đăng nhập của Accounts, điền thông tin để đăng nhập
+  55  |         if (page.url().includes('test-accounts.ac-illust.com/login')) {
+  56  |           await page.getByPlaceholder('メールアドレス').fill(newUser.email);
+  57  |           await page.getByPlaceholder('パスワード').fill(newUser.password);
+  58  |           await page.getByRole('button', { name: 'ログイン' }).click();
+  59  |         }
+  60  | 
+  61  |         await page.waitForURL(new RegExp(baseUrl.replace(/https?:\/\//, '')), { timeout: 30_000 });
+  62  |         const freeUserAvatar = page
+  63  |           .locator(
+  64  |             '#user-info-dropdown:visible, header button:has-text("無料会員"):visible, header button:has-text("Avatar"):visible'
+  65  |           )
+  66  |           .first();
+  67  |         await expect(freeUserAvatar).toBeVisible({ timeout: 20_000 });
+  68  |       });
+  69  | 
+  70  |       // ── GIAI ĐOẠN 2: NÂNG CẤP PREMIUM BẰNG THẺ TÍN DỤNG TẠI /premium/campaign ─
+  71  |       await test.step('Điều hướng đến trang đăng ký Premium (/premium/campaign)', async () => {
+  72  |         await page.goto('/premium/campaign', { waitUntil: 'domcontentloaded' });
+  73  |         await expect(page.getByRole('heading', { name: /ステップ1/ })).toBeVisible({
+  74  |           timeout: 15_000,
+  75  |         });
+  76  |       });
+  77  | 
+  78  |       await test.step('Chọn phương thức thanh toán bằng Thẻ tín dụng (クレジットカード支払い)', async () => {
+  79  |         await premiumRegisterPage.selectCreditCardPayment();
+  80  |         await expect(premiumRegisterPage.creditCardRadio).toBeChecked();
+  81  |       });
+  82  | 
+  83  |       await test.step('Điền thông tin thẻ tín dụng kiểm thử (4111 1111 1111 1111, 01/32, CVV 123)', async () => {
+  84  |         await expect(premiumRegisterPage.cardNumberInput).toBeVisible();
+  85  |         await premiumRegisterPage.fillCreditCardInfo({
+  86  |           cardNo: '4111111111111111',
+  87  |           expireMonth: '01',
+  88  |           expireYear: '2032',
+  89  |           securityCode: '123',
+  90  |         });
+  91  |         await premiumRegisterPage.ensureTermsAgreed();
+  92  |       });
+  93  | 
+  94  |       await test.step('Gửi thông tin thẻ và vượt qua bảo mật Google reCAPTCHA v2', async () => {
+  95  |         await premiumRegisterPage.clickSubmitRegistration();
+  96  | 
+  97  |         // Handle reCAPTCHA modal if it pops up after clicking submit
+  98  |         await premiumRegisterPage.handleRecaptchaIfPresent(15_000);
+  99  | 
+  100 |         // Wait for redirect to /premium/confirm
+  101 |         const isConfirmUrl = await page
+  102 |           .waitForURL(/premium\/confirm/, { timeout: 20_000 })
+  103 |           .then(() => true)
+  104 |           .catch(() => false);
+  105 | 
+  106 |         // Fallback retry if navigation hasn't completed yet
+  107 |         if (!isConfirmUrl) {
+  108 |           if (await premiumRegisterPage.recaptchaModal.isVisible().catch(() => false)) {
+  109 |             await premiumRegisterPage.handleRecaptchaIfPresent(5_000);
+  110 |           }
+  111 |           const isSubmitVisible = await premiumRegisterPage.submitButton.isVisible().catch(() => false);
+  112 |           if (isSubmitVisible) {
+  113 |             await premiumRegisterPage.clickSubmitRegistration().catch(() => {});
+  114 |           }
+> 115 |           await page.waitForURL(/premium\/confirm/, { timeout: 30_000 });
+      |                      ^ TimeoutError: page.waitForURL: Timeout 30000ms exceeded.
+  116 |         }
+  117 |       });
+  118 | 
+  119 |       // ── GIAI ĐOẠN 3: ĐỐI SOÁT TẠI MÀN HÌNH CONFIRM & HOÀN TẤT ĐĂNG KÝ ────────
+  120 |       let confirmDetails: {
+  121 |         serviceName: string;
+  122 |         priceText: string;
+  123 |         paymentMethodText: string;
+  124 |         registeredEmail: string;
+  125 |         contractPeriodText: string;
+  126 |       };
+  127 |       let confirmedTotalAmount = '';
+  128 | 
+  129 |       await test.step('Trích xuất thông tin đối soát tại màn hình xác nhận (/premium/confirm)', async () => {
+  130 |         await expect(premiumRegisterPage.confirmHeading).toBeVisible({ timeout: 15_000 });
+  131 |         confirmDetails = await premiumRegisterPage.getConfirmBillingDetails();
+  132 | 
+  133 |         expect(confirmDetails.serviceName).toContain('プレミアム会員');
+  134 |         expect(confirmDetails.paymentMethodText).toContain('1111');
+  135 | 
+  136 |         // Trích xuất số tiền thanh toán thực tế hiển thị trên màn hình xác nhận (vd: 18,900 hoặc 15,121)
+  137 |         const amountMatch = confirmDetails.priceText.match(/([\d,]+)\s*円/);
+  138 |         expect(amountMatch).toBeTruthy();
+  139 |         confirmedTotalAmount = amountMatch![1];
+  140 |       });
+  141 | 
+  142 |       await test.step('Hoàn tất khảo sát và bấm xác nhận đăng ký Premium', async () => {
+  143 |         await premiumRegisterPage.confirmAndFinalizeSubscription();
+  144 |         await page.waitForURL(/premium\/complete/, { timeout: 20_000 });
+  145 |         await expect(premiumRegisterPage.completionHeading).toBeVisible({ timeout: 10_000 });
+  146 |       });
+  147 | 
+  148 |       await test.step('Xác nhận trạng thái Header đã chuyển sang Premium Member', async () => {
+  149 |         await page.goto('/', { waitUntil: 'domcontentloaded' });
+  150 |         const avatarBtn = page
+  151 |           .locator('header button:has-text("プレミアム"):visible, #user-info-dropdown:visible')
+  152 |           .first();
+  153 |         await expect(avatarBtn).toBeVisible({ timeout: 15_000 });
+  154 |       });
+  155 | 
+  156 |       // ── GIAI ĐOẠN 4: KIỂM TRA HÓA ĐƠN PDF TẠI /user/receipts ─────────────────
+  157 |       const testCompanyName = 'AC Testing Corp';
+  158 |       const testPersonName = 'Tuan QA';
+  159 | 
+  160 |       await test.step('Truy cập trang Quản lý Hóa đơn (/user/receipts)', async () => {
+  161 |         await receiptsPage.goToReceiptsPage();
+  162 |         await expect(receiptsPage.pageHeading).toBeVisible({ timeout: 15_000 });
+  163 |         await expect(receiptsPage.firstRadioButton).toBeVisible({ timeout: 15_000 });
+  164 |       });
+  165 | 
+  166 |       await test.step('Cập nhật tên công ty và người nhận hóa đơn (宛名保存)', async () => {
+  167 |         await receiptsPage.fillRecipientInfo(testCompanyName, testPersonName);
+  168 |         await receiptsPage.saveRecipientInfo();
+  169 |         expect(await receiptsPage.getCompanyNameValue()).toBe(testCompanyName);
+  170 |         expect(await receiptsPage.getPersonNameValue()).toBe(testPersonName);
+  171 |       });
+  172 | 
+  173 |       await test.step('Chọn hóa đơn của giao dịch vừa thanh toán', async () => {
+  174 |         await receiptsPage.selectBillingItemByIndex(0);
+  175 |         await expect(receiptsPage.firstRadioButton).toBeChecked();
+  176 |       });
+  177 | 
+  178 |       let downloadPath = '';
+  179 |       await test.step('Tải file Hóa đơn PDF về máy', async () => {
+  180 |         const download = await receiptsPage.downloadReceiptPdf();
+  181 |         expect(download.suggestedFilename()).toContain('.pdf');
+  182 |         downloadPath = await PdfUtils.saveAndAttach(download, test.info(), 'ac-receipt');
+  183 |       });
+  184 | 
+  185 |       await test.step('Kiểm tra tính hợp lệ và bóc tách nội dung PDF hóa đơn', async () => {
+  186 |         PdfUtils.validatePdfStructure(downloadPath, 5_000);
+  187 | 
+  188 |         const pdfText = await PdfUtils.extractText(downloadPath);
+  189 | 
+  190 |         // Verify core invoice indicators
+  191 |         expect(pdfText).toContain('領収書');
+  192 |         expect(pdfText).toContain('ACワークス株式会社');
+  193 |         expect(pdfText).toContain(testCompanyName);
+  194 |         expect(pdfText).toContain(testPersonName);
+  195 | 
+  196 |         // Verify amounts matching the confirm screen dynamically
+  197 |         expect(pdfText).toContain(confirmedTotalAmount);
+  198 | 
+  199 |         // Verify service name
+  200 |         expect(pdfText).toContain('ACプレミアム会員サービス');
+  201 |       });
+  202 | 
+  203 |       // ── GIAI ĐOẠN 5: KIỂM TRA HỒ SƠ PROFILE VÀ EMAIL XÁC NHẬN ────────────────
+  204 |       await test.step('Truy cập trang Hồ sơ Hội viên (/user/profile/edit)', async () => {
+  205 |         await profileEditPage.goToProfileEditPage();
+  206 |         await expect(profileEditPage.pageHeading).toBeVisible({ timeout: 15_000 });
+  207 |       });
+  208 | 
+  209 |       await test.step('Kiểm tra thông tin chi tiết tại mục 会員種別 trên trang Profile', async () => {
+  210 |         const membershipText = await profileEditPage.getMembershipTypeText();
+  211 | 
+  212 |         expect(membershipText).toContain('プレミアム会員');
+  213 |         expect(membershipText).toContain('毎年更新プラン');
+  214 |         expect(membershipText).toContain('決済完了');
+  215 |         expect(membershipText).toContain('自動更新');
+```
