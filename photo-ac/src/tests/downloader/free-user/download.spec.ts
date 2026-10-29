@@ -1,10 +1,9 @@
 import { test, expect } from '../../../fixtures/base.fixture';
-import { enableAdBlocker } from '../../../utils/helpers';
+import { captureEvidenceWithUrl, enableAdBlocker } from '../../../utils/helpers';
 import { PhotoDetailPage } from '../../../pages/downloader/photo-detail.page';
 
 /**
  * Test Suite: Download — Free User
- * 100% tương tác UI thật, kiểm thử trên tác phẩm creator Acworks (ID: 1651238).
  */
 test.describe('Download — Free User', () => {
   // Session Free User được inject tự động từ project cấu hình (chromium-free-user / firefox-free-user)
@@ -24,7 +23,7 @@ test.describe('Download — Free User', () => {
   /**
    * TC-DOWNLOAD-FREE-001: Free User click icon folder (Bulk download) -> Hiển thị tooltip hạn chế Premium
    */
-  test('TC-DOWNLOAD-FREE-001: Free User click Bulk Download hiển thị tooltip hạn chế Premium @free-user @download', async ({
+  test('TC-DOWNLOAD-FREE-001: Free User click Bulk Download hiển thị tooltip hạn chế Premium @free-user', async ({
     photoDetailPage,
   }) => {
     await test.step('Click icon folder まとめてダウンロード', async () => {
@@ -41,7 +40,7 @@ test.describe('Download — Free User', () => {
   /**
    * TC-DOWNLOAD-FREE-002: Free User click button 今すぐ購入 (Extra license) -> Hiển thị popover giới hạn Premium
    */
-  test('TC-DOWNLOAD-FREE-002: Free User click Buy Extra License hiển thị thông báo giới hạn Premium @free-user @download', async ({
+  test('TC-DOWNLOAD-FREE-002: Free User click Buy Extra License hiển thị thông báo giới hạn Premium @free-user', async ({
     photoDetailPage,
   }) => {
     await test.step('Click button 今すぐ購入', async () => {
@@ -60,7 +59,7 @@ test.describe('Download — Free User', () => {
   /**
    * TC-DOWNLOAD-FREE-003: Free User click icon Cart (Bulk Extra license) -> Hiển thị tooltip giới hạn Premium
    */
-  test('TC-DOWNLOAD-FREE-003: Free User click Cart icon hiển thị tooltip giới hạn Premium @free-user @download', async ({
+  test('TC-DOWNLOAD-FREE-003: Free User click Cart icon hiển thị tooltip giới hạn Premium @free-user', async ({
     photoDetailPage,
   }) => {
     await test.step('Click icon Cart (ライセンスまとめて購入)', async () => {
@@ -70,7 +69,7 @@ test.describe('Download — Free User', () => {
 
     await test.step('Xác minh tooltip hiển thị thông báo giới hạn Premium', async () => {
       await expect(photoDetailPage.activeTooltip).toBeVisible();
-      await expect(photoDetailPage.activeTooltip).toContainText(/プレミアム/);
+      await expect(photoDetailPage.activeTooltip).toContainText('商品化ライセンスの購入は、プレミアム会員様限定です。');
     });
   });
 
@@ -83,7 +82,7 @@ test.describe('Download — Free User', () => {
     page,
     photoDetailPage,
     bookmarksPage,
-  }) => {
+  }, testInfo) => {
     const photoId = PhotoDetailPage.ACWORKS_DEFAULT_PHOTO_ID;
 
     try {
@@ -93,8 +92,15 @@ test.describe('Download — Free User', () => {
       });
 
       await test.step('Xác minh modal thông báo thêm vào collection hiển thị', async () => {
-        await expect(photoDetailPage.collectionAddedModal).toBeVisible({ timeout: 10_000 });
-        await expect(photoDetailPage.collectionAddedModal).toContainText(/コレクションに追加/);
+        await expect(photoDetailPage.collectionAddedModalTitle).toBeVisible({ timeout: 10_000 });
+        await expect(photoDetailPage.collectionAddedModalTitle).toContainText('コレクションに追加');
+        await expect(photoDetailPage.collectionAddModalContent).toContainText('コレクションに追加しました。保存先：お気に入り');
+        await captureEvidenceWithUrl(page, testInfo, 'collectionAddModal');
+
+      });
+
+      await test.step('Click nút Bookmark lần 2 : Hiển thị thông báo đã add collection', async () => {
+
       });
 
       await test.step('Đi tới thư mục Collection và kiểm tra ảnh có ID tương ứng', async () => {
@@ -237,7 +243,7 @@ test.describe('Download — Free User', () => {
   /**
    * TC-DOWNLOAD-FREE-011: Free User tải ảnh Size S thành công qua Timer Modal quảng cáo
    */
-  test('TC-DOWNLOAD-FREE-011: Free User tải ảnh Size S thành công qua Timer Modal quảng cáo @free-user @download', async ({
+  test('TC-DOWNLOAD-FREE-011: Free User tải ảnh Size S thành công qua Timer Modal quảng cáo @free-user', async ({
     photoDetailPage,
   }) => {
     test.setTimeout(90_000);

@@ -185,7 +185,9 @@ export class PhotoDetailPage extends BasePage {
   readonly bookmarkButton: Locator = this.page.locator('a.btn-add-to-bookmark, a[aria-label="ボタンブックマーク"]');
 
   /** Modal shown after adding photo to collection */
-  readonly collectionAddedModal: Locator = this.page.locator('#modal-mycollection-added');
+  readonly collectionAddedModalTitle: Locator = this.page.locator('#modal-mycollection-added .modal-title');
+  readonly collectionAddModalContent: Locator = this.page.locator('#modal-mycollection-added .modal-body');
+  readonly closeCollectionAddModalButton: Locator = this.page.locator('#modal-mycollection-added .modal-header button.close').first();
 
   /** Like button */
   readonly likeButton: Locator = this.page.locator('a[aria-label="ボタンのような"]');
@@ -326,8 +328,8 @@ export class PhotoDetailPage extends BasePage {
         size === 'S'
           ? this.premiumDownloadButtonS
           : size === 'M'
-          ? this.premiumDownloadButtonM
-          : this.premiumDownloadButtonL;
+            ? this.premiumDownloadButtonM
+            : this.premiumDownloadButtonL;
 
       const [download] = await Promise.all([
         this.page.waitForEvent('download', { timeout: 30_000 }),
@@ -349,8 +351,8 @@ export class PhotoDetailPage extends BasePage {
         size === 'S'
           ? this.premiumOpenDesignToolS
           : size === 'M'
-          ? this.premiumOpenDesignToolM
-          : this.premiumOpenDesignToolL;
+            ? this.premiumOpenDesignToolM
+            : this.premiumOpenDesignToolL;
 
       // May open in new tab or navigate current page
       const [newPage] = await Promise.all([
@@ -372,7 +374,7 @@ export class PhotoDetailPage extends BasePage {
       '#btn-close-photo-ai-lab, .photo-ai-lab-modal-close, #photo-ai-lab-modal button:has-text("閉じる"), #photo-ai-lab-modal .close, #photo-ai-lab-modal [aria-label="Close"], [role="region"][aria-label="Close"]'
     );
     if (await promoClose.first().isVisible().catch(() => false)) {
-      await promoClose.first().click({ force: true }).catch(() => {});
+      await promoClose.first().click({ force: true }).catch(() => { });
     }
 
     // 2. Survey modal
@@ -380,7 +382,7 @@ export class PhotoDetailPage extends BasePage {
       '#surveyGroup button.close, #surveyGroup .close, #surveyGroup button:has-text("Close"), #surveyGroup button:has-text("×")'
     );
     if (await surveyClose.first().isVisible().catch(() => false)) {
-      await surveyClose.first().click({ force: true }).catch(() => {});
+      await surveyClose.first().click({ force: true }).catch(() => { });
     }
 
     // 3. Any interfering modal currently shown (except timerModal and firstDownloadedModal)
@@ -388,11 +390,11 @@ export class PhotoDetailPage extends BasePage {
       'div.modal.show:not(#timerModal):not(#firstDownloadedModal) button:has-text("閉じる"), div.modal.show:not(#timerModal):not(#firstDownloadedModal) .close, dialog [aria-label*="Close"], [role="region"][aria-label="Close"], [aria-label*="Close"] img, .icon-close'
     );
     if (await activeModalClose.first().isVisible().catch(() => false)) {
-      await activeModalClose.first().click({ force: true }).catch(() => {});
+      await activeModalClose.first().click({ force: true }).catch(() => { });
     }
 
     // 4. Fallback: Press Escape to close any open dialogs
-    await this.page.keyboard.press('Escape').catch(() => {});
+    await this.page.keyboard.press('Escape').catch(() => { });
   }
 
   /**
@@ -408,7 +410,7 @@ export class PhotoDetailPage extends BasePage {
   async downloadAsFreeUser(size: 'S' | 'M' | 'L' = 'S'): Promise<import('@playwright/test').Download> {
     return await test.step(`Download photo as Free User (Size: ${size})`, async () => {
       await this.dismissInterferingModals();
-      await this.freeDownloadButton.scrollIntoViewIfNeeded().catch(() => {});
+      await this.freeDownloadButton.scrollIntoViewIfNeeded().catch(() => { });
       await this.dismissInterferingModals();
 
       // Click main download button to trigger timer / rewarded ad modal
@@ -428,11 +430,11 @@ export class PhotoDetailPage extends BasePage {
           .first();
 
         if (await frameClose.isVisible({ timeout: 1500 }).catch(() => false)) {
-          await frameClose.click().catch(() => {});
+          await frameClose.click().catch(() => { });
         } else {
           // Fallback: Click top-right coordinates (1535, 110) for Rewarded Ad and (1251, 308) for banner dialogs
-          await this.page.mouse.click(1535, 110).catch(() => {});
-          await this.page.mouse.click(1251, 308).catch(() => {});
+          await this.page.mouse.click(1535, 110).catch(() => { });
+          await this.page.mouse.click(1251, 308).catch(() => { });
         }
 
         // Also dismiss any survey/banner popup appearing concurrently
@@ -441,7 +443,7 @@ export class PhotoDetailPage extends BasePage {
         // If timer modal is still hidden and download button is interactive, click again
         const isNowVisible = await this.timerModal.isVisible().catch(() => false);
         if (!isNowVisible && (await this.freeDownloadButton.isVisible().catch(() => false))) {
-          await this.clickElement(this.freeDownloadButton).catch(() => {});
+          await this.clickElement(this.freeDownloadButton).catch(() => { });
         }
       }
 
@@ -451,7 +453,7 @@ export class PhotoDetailPage extends BasePage {
       // Select size if specified
       const sizeRadio = this.page.locator(`#timerModal input[value="${size.toLowerCase()}"], #timerModal input#${size.toLowerCase()}`);
       if (await sizeRadio.isVisible().catch(() => false)) {
-        await sizeRadio.check().catch(() => {});
+        await sizeRadio.check().catch(() => { });
       }
 
       // Wait for countdown to finish and download button to become active
@@ -504,6 +506,16 @@ export class PhotoDetailPage extends BasePage {
       await this.clickElement(this.bookmarkButton);
     });
   }
+
+  /**
+   * Click close button on collectionModal
+   */
+  async closeCollectionAddModal(): Promise<void> {
+    await test.step('Click close button on Collection Add Modal', async () => {
+      await this.dismissInterferingModals();
+      await this.clickElement(this.closeCollectionAddModalButton);
+    });
+  };
 
   /**
    * Click Like button.
@@ -612,7 +624,7 @@ export class PhotoDetailPage extends BasePage {
         el.removeAttribute('rel');
       });
       await this.clickElement(faceLink);
-      await this.page.waitForLoadState('domcontentloaded').catch(() => {});
+      await this.page.waitForLoadState('domcontentloaded').catch(() => { });
     });
   }
 
@@ -628,8 +640,8 @@ export class PhotoDetailPage extends BasePage {
         size === 'S'
           ? this.premiumBulkDownloadAddButtonS
           : size === 'M'
-          ? this.premiumBulkDownloadAddButtonM
-          : this.premiumBulkDownloadAddButtonL;
+            ? this.premiumBulkDownloadAddButtonM
+            : this.premiumBulkDownloadAddButtonL;
 
       await this.dismissInterferingModals();
       await Promise.all([
@@ -661,9 +673,9 @@ export class PhotoDetailPage extends BasePage {
   async closeBulkDownloadModal(): Promise<void> {
     await test.step('Close Bulk Download modal', async () => {
       if (await this.bulkDownloadModal.isVisible().catch(() => false)) {
-        await this.bulkDownloadModalCloseButton.click({ force: true }).catch(() => {});
-        await this.page.keyboard.press('Escape').catch(() => {});
-        await this.bulkDownloadModal.waitFor({ state: 'hidden', timeout: 10_000 }).catch(() => {});
+        await this.bulkDownloadModalCloseButton.click({ force: true }).catch(() => { });
+        await this.page.keyboard.press('Escape').catch(() => { });
+        await this.bulkDownloadModal.waitFor({ state: 'hidden', timeout: 10_000 }).catch(() => { });
       }
     });
   }
@@ -681,7 +693,7 @@ export class PhotoDetailPage extends BasePage {
 
       await targetBtn.waitFor({ state: 'attached', timeout: 10_000 });
       await targetBtn.dispatchEvent('click');
-      await targetBtn.waitFor({ state: 'detached', timeout: 10_000 }).catch(() => {});
+      await targetBtn.waitFor({ state: 'detached', timeout: 10_000 }).catch(() => { });
     });
   }
 
@@ -709,8 +721,8 @@ export class PhotoDetailPage extends BasePage {
       if (!isModalVisible) {
         const hasToolbar = await this.toolbarBulkDownloadButton.first().isVisible().catch(() => false);
         if (hasToolbar) {
-          await this.toolbarBulkDownloadButton.first().click().catch(() => {});
-          await this.bulkDownloadModal.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {});
+          await this.toolbarBulkDownloadButton.first().click().catch(() => { });
+          await this.bulkDownloadModal.waitFor({ state: 'visible', timeout: 5000 }).catch(() => { });
         }
       }
 
@@ -718,14 +730,14 @@ export class PhotoDetailPage extends BasePage {
         const item = this.bulkDownloadModalItems.first();
         const removeBtn = item.locator('.img-remove');
         if (await removeBtn.count()) {
-          await removeBtn.dispatchEvent('click').catch(() => {});
-          await item.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+          await removeBtn.dispatchEvent('click').catch(() => { });
+          await item.waitFor({ state: 'detached', timeout: 5000 }).catch(() => { });
         } else {
           break;
         }
       }
 
-      await this.closeBulkDownloadModal().catch(() => {});
+      await this.closeBulkDownloadModal().catch(() => { });
     });
   }
 }
