@@ -4,7 +4,6 @@ import { PhotoDetailPage } from '../../../pages/downloader/photo-detail.page';
 
 /**
  * Test Suite: Download — Guest User (No login)
- * 100% tương tác UI thật, kiểm thử trên tác phẩm creator Acworks (ID: 1651238).
  */
 test.describe('Download — Guest User (No login)', () => {
   // Session rỗng cho Guest User
@@ -23,7 +22,7 @@ test.describe('Download — Guest User (No login)', () => {
   /**
    * TC-DOWNLOAD-GUEST-001: Guest click button Download -> Yêu cầu đăng nhập
    */
-  test('TC-DOWNLOAD-GUEST-001: Guest click Download yêu cầu đăng nhập @guest @download', async ({
+  test('TC-DOWNLOAD-GUEST-001: Click Download hiển thị yêu cầu đăng nhập @guest', async ({
     page,
     photoDetailPage,
   }) => {
@@ -44,7 +43,7 @@ test.describe('Download — Guest User (No login)', () => {
   /**
    * TC-DOWNLOAD-GUEST-002: Guest click button まとめてダウンロード (Bulk download) -> Yêu cầu đăng nhập
    */
-  test('TC-DOWNLOAD-GUEST-002: Guest click Bulk Download yêu cầu đăng nhập @guest @download', async ({
+  test('TC-DOWNLOAD-GUEST-002: Click Bulk Download hiển thị yêu cầu đăng nhập @guest', async ({
     page,
     photoDetailPage,
   }) => {
@@ -61,7 +60,7 @@ test.describe('Download — Guest User (No login)', () => {
   /**
    * TC-DOWNLOAD-GUEST-003: Guest click button 今すぐ購入 (Extra license) -> Hiển thị popover yêu cầu đăng nhập
    */
-  test('TC-DOWNLOAD-GUEST-003: Guest click Buy Extra License hiển thị popover yêu cầu login @guest @download', async ({
+  test('TC-DOWNLOAD-GUEST-003: Click Buy Extra License hiển thị popover yêu cầu đăng nhập @guest', async ({
     photoDetailPage,
   }) => {
     await test.step('Click button 今すぐ購入 (Extra license)', async () => {

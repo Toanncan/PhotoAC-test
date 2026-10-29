@@ -26,7 +26,13 @@ where java >nul 2>nul
 if errorlevel 1 goto :check_java_install
 
 :start_server
-:: 4. Khoi dong Test Portal Server
+:: 4. Kiem tra va giai phong cong 4000 neu dang bi chiem
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :4000 ^| findstr LISTENING 2^>nul') do (
+    echo [INFO] Dang giai phong cong 4000 tu tien trinh cu (PID: %%a)...
+    taskkill /f /pid %%a >nul 2>nul
+)
+
+:: 5. Khoi dong Test Portal Server
 echo [INFO] Dang khoi dong Test Portal tai http://localhost:4000 ...
 echo Trinh duyet se tu dong mo len trong giay lat.
 echo.
@@ -35,6 +41,7 @@ echo.
 
 node dashboard/server.js
 goto :end
+
 
 :check_java_install
 echo [CANH BAO] May chua co Java Runtime. Allure Report can Java de bien dich.

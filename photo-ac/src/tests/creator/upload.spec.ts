@@ -1,18 +1,8 @@
 import * as path from 'path';
-import * as fs from 'fs';
 import { test, expect } from '../../fixtures/base.fixture';
 
 /**
  * Creator Photo Upload Full End-to-End Test Suite
- *
- * Flow:
- * 1. Upload photo on /creator/upload
- * 2. Agree to 5 copyright terms & submit
- * 3. Confirm copyright warning modal & trigger upload processing
- * 4. Navigate to /creator/dataedit
- * 5. Input Title, input at least 5 Tags, select Category
- * 6. Click 保存 and confirm redirect to /creator/list
- *
  * Applicable Role: Creator
  */
 test.describe('Creator Photo Upload @creator @upload', () => {
@@ -20,17 +10,24 @@ test.describe('Creator Photo Upload @creator @upload', () => {
 
   const samplePhotoPath = path.resolve(__dirname, '../../../test-data/sample-search.jpg');
 
-  const createUniqueTestPhoto = (): string => {
-    const uniquePath = path.resolve(__dirname, `../../../test-data/temp_upload_${Date.now()}.jpg`);
-    const src = fs.readFileSync(samplePhotoPath);
-    fs.writeFileSync(uniquePath, Buffer.concat([src, Buffer.from(`_test_${Date.now()}`)]));
-    return uniquePath;
-  };
 
-  test.beforeEach(async ({ uploadPage }) => {
+  test.beforeEach(async ({ page, uploadPage }) => {
+    const httpUser = process.env.HTTP_USER;
+    const httpPass = process.env.HTTP_PASS;
+    if (httpUser && httpPass) {
+      const basicAuth = Buffer.from(`${httpUser}:${httpPass}`).toString('base64');
+      await page.route('**/*photo-ac.com/**', async (route) => {
+        const headers = {
+          ...route.request().headers(),
+          authorization: `Basic ${basicAuth}`,
+        };
+        await route.continue({ headers });
+      });
+    }
+
     await uploadPage.goToUploadPage();
     if (await uploadPage.removeFileButton.isVisible()) {
-      await uploadPage.removeUploadedFile().catch(() => {});
+      await uploadPage.removeUploadedFile().catch(() => { });
     }
   });
 
@@ -171,12 +168,11 @@ test.describe('Creator Photo Upload @creator @upload', () => {
     page,
   }) => {
     test.setTimeout(180_000);
-    const uniquePhotoPath = createUniqueTestPhoto();
 
     try {
       // Step 1: Upload photo on /creator/upload
       await test.step('Chọn file ảnh hợp lệ để tải lên', async () => {
-        await uploadPage.setUploadFile(uniquePhotoPath);
+        await uploadPage.setUploadFile(samplePhotoPath);
         await expect(uploadPage.selectedFilesNotice).toBeVisible();
       });
 
@@ -191,7 +187,7 @@ test.describe('Creator Photo Upload @creator @upload', () => {
 
       await test.step('Xác nhận「アップロード」trên modal, tự động chấp nhận alert hoàn thành và chuyển sang trang chỉnh sửa', async () => {
         page.on('dialog', async (dialog) => {
-          await dialog.accept().catch(() => {});
+          await dialog.accept().catch(() => { });
         });
 
         await uploadPage.confirmUploadInModal();
@@ -234,13 +230,7 @@ test.describe('Creator Photo Upload @creator @upload', () => {
         await expect(creatorPhotoListPage.pageHeading).toBeVisible();
       });
     } finally {
-      try {
-        if (fs.existsSync(uniquePhotoPath)) {
-          fs.unlinkSync(uniquePhotoPath);
-        }
-      } catch {
-        // Ignore file lock on Windows while browser process holds file handle
-      }
+      // Clean up queue if needed
     }
   });
 
@@ -321,20 +311,18 @@ test.describe('Creator Photo Upload @creator @upload', () => {
     page,
   }) => {
     test.setTimeout(180_000);
-    const uniquePhotoPath = createUniqueTestPhoto();
 
-    try {
-      // Step 1: Upload a dedicated test photo to ensure clean test state without affecting existing user photos
-      await test.step('Tải lên một ảnh mới để thực hiện kịch bản xóa độc lập', async () => {
-        await uploadPage.goToUploadPage();
-        await uploadPage.setUploadFile(uniquePhotoPath);
+    // Step 1: Upload a dedicated test photo to ensure clean test state without affecting existing user photos
+    await test.step('Tải lên một ảnh mới để thực hiện kịch bản xóa độc lập', async () => {
+      await uploadPage.goToUploadPage();
+      await uploadPage.setUploadFile(samplePhotoPath);
         await expect(uploadPage.selectedFilesNotice).toBeVisible();
         await uploadPage.checkAllChecklists();
         await uploadPage.clickSubmitUpload();
         await expect(uploadPage.confirmModal).toBeVisible();
 
         page.on('dialog', async (dialog) => {
-          await dialog.accept().catch(() => {});
+          await dialog.accept().catch(() => { });
         });
 
         await uploadPage.confirmUploadInModal();
@@ -379,14 +367,5 @@ test.describe('Creator Photo Upload @creator @upload', () => {
         const deletedRow = page.locator(`#data-list-${targetPhotoId}`);
         await expect(deletedRow).toBeHidden();
       });
-    } finally {
-      try {
-        if (fs.existsSync(uniquePhotoPath)) {
-          fs.unlinkSync(uniquePhotoPath);
-        }
-      } catch {
-        // Ignore file lock on Windows while browser process holds file handle
-      }
-    }
   });
 });

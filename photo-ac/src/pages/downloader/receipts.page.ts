@@ -1,4 +1,4 @@
-﻿import { type Page, test } from '@playwright/test';
+import { type Page, test } from '@playwright/test';
 import { BasePage } from '../common/base.page';
 
 
@@ -22,6 +22,9 @@ export class ReceiptsPage extends BasePage {
   /** Page heading (領収書発行) */
   readonly pageHeading = this.page.getByRole('heading', { name: '領収書発行' });
 
+  /** Empty state message when no receipts are available (例: 領収書はありません) */
+  readonly emptyStateMessage = this.page.locator('.alert, .no-data, p').filter({ hasText: /ありません|見つかりません/ });
+
   // Constructor
   constructor(page: Page) {
     super(page);
@@ -35,6 +38,7 @@ export class ReceiptsPage extends BasePage {
     await test.step('Navigate to Receipts page (/user/receipts)', async () => {
       await this.navigate('/user/receipts');
       await this.page.waitForURL(/\/user\/receipts/, { waitUntil: 'domcontentloaded', timeout: 30_000 });
+      await this.waitForPageLoad();
     });
   }
 
@@ -51,29 +55,43 @@ export class ReceiptsPage extends BasePage {
   }
 
   /**
-   * Click the Save Recipient button and handle the native JS alert dialog.
+   * Click the Save Recipient button and handle the native JS alert dialog safely.
    * The button triggers an AJAX save and shows a native alert: 宛名を保存しました。
    */
   async saveRecipientInfo(): Promise<void> {
     await test.step('Click 宛名保存 and handle JS alert', async () => {
-      // Set up dialog handler BEFORE clicking to catch the native alert
-      this.page.once('dialog', async (dialog) => {
-        await dialog.accept();
-      });
+      const dialogPromise = this.page
+        .waitForEvent('dialog', { timeout: 4_000 })
+        .then(async (dialog) => {
+          await dialog.accept().catch(() => {});
+        })
+        .catch(() => {});
+
       await this.clickElement(this.saveRecipientButton);
+      await dialogPromise;
+      // Allow brief moment for AJAX state to settle
+      await this.page.waitForLoadState('domcontentloaded').catch(() => {});
     });
   }
 
   /**
    * Select a radio button by its index (0-based).
    * Each radio corresponds to a billing item shown in 対象 section.
+   * Clicks corresponding label if available for cross-browser safety.
    * @param index - 0-based index of the radio button to select
    */
   async selectBillingItemByIndex(index: number): Promise<void> {
     await test.step(`Select billing item at index ${index}`, async () => {
       const radio = this.page.locator(`#outid_${index}`);
-      await radio.waitFor({ state: 'visible', timeout: 10_000 });
-      await radio.click();
+      const label = this.page.locator(`label[for="outid_${index}"]`);
+
+      await radio.or(label).first().waitFor({ state: 'visible', timeout: 10_000 });
+
+      if (await label.isVisible().catch(() => false)) {
+        await this.clickElement(label);
+      } else {
+        await this.clickElement(radio);
+      }
     });
   }
 
@@ -112,11 +130,19 @@ export class ReceiptsPage extends BasePage {
   }
 
   /**
+   * Check if any billing item exists on the page.
+   */
+  async hasBillingItems(): Promise<boolean> {
+    return this.firstRadioButton.isVisible({ timeout: 3_000 }).catch(() => false);
+  }
+
+  /**
    * Get the label text of a radio button by index.
    * @param index - 0-based index
    */
   async getRadioLabelText(index: number): Promise<string> {
     const label = this.page.locator(`label[for="outid_${index}"]`);
+    await label.waitFor({ state: 'visible', timeout: 10_000 }).catch(() => {});
     return this.getText(label);
   }
 
@@ -180,11 +206,12 @@ export class ReceiptsPage extends BasePage {
 
   /**
    * Get all billing items info from the page (label text for all radio buttons).
-   * Useful for debugging and logging.
+   * Web-first auto-wait applied before counting to avoid race condition.
    * @returns Array of label texts
    */
   async getAllBillingItemTexts(): Promise<string[]> {
     const labels = this.page.locator('label[for^="outid_"]');
+    await labels.first().waitFor({ state: 'visible', timeout: 10_000 }).catch(() => {});
     const count = await labels.count();
     const texts: string[] = [];
     for (let i = 0; i < count; i++) {

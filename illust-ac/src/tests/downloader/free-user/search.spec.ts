@@ -10,7 +10,7 @@ import { captureEvidenceWithUrl, enableAdBlocker } from '../../../utils/helpers'
 test.describe('Search & Filters — Free User (Logged In Account)', () => {
   // Session Free User được tự động inject bởi project cấu hình (chromium-free-user / firefox-free-user)
 
-  const sampleImagePath = path.resolve(__dirname, '../../../test-data/sample-search.jpg');
+  const sampleImagePath = path.resolve(__dirname, '../../../../test-data/sample-search.jpg');
 
   test.beforeEach(async ({ page, homePage }) => {
     // Kích hoạt Ad Blocker 2 tầng (Network Abort + CSS Hidden)

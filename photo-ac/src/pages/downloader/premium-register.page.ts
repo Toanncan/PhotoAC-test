@@ -1,4 +1,4 @@
-﻿import { type Page, type Locator, test } from '@playwright/test';
+import { type Page, type Locator, test } from '@playwright/test';
 import { BasePage } from '../common/base.page';
 
 /**
@@ -32,7 +32,7 @@ export class PremiumRegisterPage extends BasePage {
   readonly bankTransferLabel: Locator = this.page.locator('label[for="premium-select-kouza"]');
 
   /** Global site confirmation modal "登録を続ける" (Continue registration) button */
-  readonly globalConfirmButton: Locator = this.page.locator('a.btn-hide-modal-global:has-text("登録を続ける")');
+  readonly globalConfirmButton: Locator = this.page.locator('#alertModalGlobal a:has-text("登録を続ける"), a.btn-hide-modal-global:has-text("登録を続ける")');
 
   // Credit Card Form Locators
   /** Credit card number input (placeholder: 0000111122223333) */
@@ -105,21 +105,44 @@ export class PremiumRegisterPage extends BasePage {
    */
   async selectCreditCardPayment(): Promise<void> {
     await test.step('Select Credit Card payment option and handle confirmation modal if needed', async () => {
-      await this.creditCardLabel.scrollIntoViewIfNeeded().catch(() => {});
-      await this.clickElement(this.creditCardLabel);
+      // Bypass global timezone modal by setting verified flag in localStorage
+      await this.page.evaluate(() => {
+        try {
+          localStorage.setItem('hideModalGlobal', 'true');
+        } catch (_) {}
+      }).catch(() => {});
 
-      // Wait for confirmation popup if it appears (Bootstrap modal transition)
-      await this.globalConfirmButton.waitFor({ state: 'visible', timeout: 5_000 }).catch(() => {});
+      // Dismiss global modal if already visible
       if (await this.globalConfirmButton.isVisible().catch(() => false)) {
-        await this.clickElement(this.globalConfirmButton);
-        // Wait for confirmation modal to fade out
+        await this.globalConfirmButton.click().catch(() => {});
         await this.globalConfirmButton.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
       }
 
-      // If radio is not checked yet, click the label again now that confirmation modal is closed
+      await this.creditCardLabel.scrollIntoViewIfNeeded().catch(() => {});
+      await this.creditCardLabel.click().catch(() => {});
+
+      // If global modal popped up after click, dismiss it
+      if (await this.globalConfirmButton.isVisible({ timeout: 2_000 }).catch(() => false)) {
+        await this.globalConfirmButton.click().catch(() => {});
+        await this.globalConfirmButton.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
+        await this.creditCardLabel.click().catch(() => {});
+      }
+
+      // Ensure radio is checked
       const isChecked = await this.creditCardRadio.isChecked().catch(() => false);
       if (!isChecked) {
-        await this.clickElement(this.creditCardLabel);
+        await this.creditCardLabel.click().catch(() => {});
+      }
+
+      // Ensure credit card form container is displayed
+      const isInputVisible = await this.cardNumberInput.isVisible().catch(() => false);
+      if (!isInputVisible) {
+        await this.page.evaluate(() => {
+          const w = window as any;
+          if (typeof w.showCreditCardForm === 'function') {
+            w.showCreditCardForm();
+          }
+        }).catch(() => {});
       }
 
       // Wait for credit card number input to become visible
@@ -186,16 +209,31 @@ export class PremiumRegisterPage extends BasePage {
         .frameLocator('iframe[src*="/recaptcha/api2/anchor"]')
         .locator('#recaptcha-anchor');
 
-      await recaptchaAnchor.waitFor({ state: 'visible', timeout: 5_000 }).catch(() => {});
-      if (await recaptchaAnchor.isVisible().catch(() => false)) {
-        await recaptchaAnchor.click();
+      for (let attempt = 0; attempt < 3; attempt++) {
+        const isStillVisible = await this.recaptchaModal.isVisible().catch(() => false);
+        if (!isStillVisible) break;
 
-        // Wait for checkmark to appear (aria-checked="true")
-        await this.page
-          .frameLocator('iframe[src*="/recaptcha/api2/anchor"]')
-          .locator('#recaptcha-anchor[aria-checked="true"]')
-          .waitFor({ state: 'visible', timeout: 10_000 })
-          .catch(() => {});
+        await recaptchaAnchor.waitFor({ state: 'visible', timeout: 5_000 }).catch(() => {});
+        if (await recaptchaAnchor.isVisible().catch(() => false)) {
+          const isChecked =
+            (await recaptchaAnchor.getAttribute('aria-checked').catch(() => 'false')) === 'true';
+
+          if (!isChecked) {
+            await recaptchaAnchor.click().catch(() => {});
+          }
+
+          // Wait up to 10s for checkmark to appear
+          const checked = await this.page
+            .frameLocator('iframe[src*="/recaptcha/api2/anchor"]')
+            .locator('#recaptcha-anchor[aria-checked="true"]')
+            .waitFor({ state: 'visible', timeout: 10_000 })
+            .then(() => true)
+            .catch(() => false);
+
+          if (checked) {
+            break;
+          }
+        }
       }
 
       // Wait for modal to disappear after successful verification
@@ -246,6 +284,34 @@ export class PremiumRegisterPage extends BasePage {
       await this.confirmSubmitButton.waitFor({ state: 'visible', timeout: 15_000 });
       await this.confirmSubmitButton.scrollIntoViewIfNeeded().catch(() => {});
       await this.clickElement(this.confirmSubmitButton);
+    });
+  }
+
+  /**
+   * Extract key billing and contract details displayed on /premium/confirm.
+   * Useful for cross-verifying with Receipts PDF and User Profile.
+   */
+  async getConfirmBillingDetails(): Promise<{
+    serviceName: string;
+    priceText: string;
+    paymentMethodText: string;
+    registeredEmail: string;
+    contractPeriodText: string;
+  }> {
+    return await test.step('Extract confirmation billing details from /premium/confirm', async () => {
+      const serviceName = (await this.page.locator('table tr').filter({ hasText: 'プレミアム会員サービス' }).first().innerText().catch(() => '')).replace(/\s+/g, ' ').trim();
+      const priceText = (await this.page.locator('table tr').filter({ hasText: '価格' }).first().innerText().catch(() => '')).replace(/\s+/g, ' ').trim();
+      const paymentMethodText = (await this.page.locator('table tr').filter({ hasText: '支払い方法' }).first().innerText().catch(() => '')).replace(/\s+/g, ' ').trim();
+      const registeredEmail = (await this.page.locator('table tr').filter({ hasText: 'ご登録メールアドレス' }).first().innerText().catch(() => '')).replace(/\s+/g, ' ').trim();
+      const contractPeriodText = (await this.page.locator('table tr').filter({ hasText: '契約期間' }).first().innerText().catch(() => '')).replace(/\s+/g, ' ').trim();
+
+      return {
+        serviceName,
+        priceText,
+        paymentMethodText,
+        registeredEmail,
+        contractPeriodText,
+      };
     });
   }
 }

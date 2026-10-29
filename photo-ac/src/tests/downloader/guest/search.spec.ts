@@ -10,7 +10,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   // cô lập context không mang thông tin đăng nhập
   test.use({ storageState: { cookies: [], origins: [] } });
 
-  const sampleImagePath = path.resolve(__dirname, '../../../test-data/sample-search.jpg');
+  const sampleImagePath = path.resolve(__dirname, '../../../../test-data/sample-search.jpg');
 
   test.beforeEach(async ({ page, homePage }) => {
     // Targeted Network Mocking: Luôn duy trì hạn mức tìm kiếm (search_zancnt: 4)
@@ -640,7 +640,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
       await expect(searchResultPage.getActiveFilterBadge('2人')).toBeVisible();
 
       // Lưu bằng chứng trạng thái bước 1: Lọc 2 người
-      await captureEvidenceWithUrl(page, testInfo, 'Combined-Filter-2人');
+      await captureEvidenceWithUrl(page, testInfo, 'Filter-2人');
     });
 
     await test.step('Tích chọn Model Release: 取得済のみ trên toolbar', async () => {
@@ -652,7 +652,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
       expect(count).toBeGreaterThan(0);
 
       // Lưu bằng chứng trạng thái bước 2: Kết hợp 2 người + Model Release
-      await captureEvidenceWithUrl(page, testInfo, 'Combined-Filter-2人-ModelRelease');
+      await captureEvidenceWithUrl(page, testInfo, 'Filter-2人-ModelRelease');
     });
   });
 
@@ -675,7 +675,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
       await expect(searchResultPage.getActiveFilterBadge('横長')).toBeVisible();
 
       // Lưu bằng chứng bước 1: Chiều ngang
-      await captureEvidenceWithUrl(page, testInfo, 'Combined-Filter-横長');
+      await captureEvidenceWithUrl(page, testInfo, 'Filter-横長');
     });
 
     await test.step('Chọn không có người: 無人 (0 models) trên toolbar', async () => {
@@ -684,7 +684,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
       await expect(searchResultPage.getActiveFilterBadge('無人')).toBeVisible();
 
       // Lưu bằng chứng bước 2: Chiều ngang + Không có người
-      await captureEvidenceWithUrl(page, testInfo, 'Combined-Filter-横長-無人');
+      await captureEvidenceWithUrl(page, testInfo, 'Filter-横長-無人');
     });
 
     await test.step('Tích chọn loại trừ AI: exclude_ai=on trên toolbar', async () => {
@@ -696,7 +696,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
       expect(count).toBeGreaterThan(0);
 
       // Lưu bằng chứng bước 3: Chiều ngang + Không có người + Loại trừ AI
-      await captureEvidenceWithUrl(page, testInfo, 'Combined-Filter-横長-無人-ExcludeAI');
+      await captureEvidenceWithUrl(page, testInfo, 'Filter-横長-無人-ExcludeAI');
     });
   });
 
@@ -814,10 +814,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-028: Kiểm tra trang Trends hiển thị danh sách ảnh, sắp xếp và bảo toàn tham số khi phân trang
-   * @tags @regression @guest
+   * TC-SEARCH-GUEST-028: Kiểm tra trang Trends hiển thị danh sách ảnh
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-028: Kiểm tra trang Trends hiển thị danh sách ảnh, sắp xếp và bảo toàn tham số khi phân trang @regression @guest', async ({
+  test('TC-SEARCH-GUEST-028: Kiểm tra trang Trends hiển thị danh sách ảnh @guest', async ({
     page,
     trendsPage,
     searchResultPage,
@@ -870,10 +870,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
 
   // NHÓM 5: SẮP XẾP & PHÂN TRANG
   /**
-   * TC-SEARCH-GUEST-029: Sắp xếp kết quả theo "新着順" (Mới nhất) và giữ nguyên sắp xếp khi sang Trang 2
+   * TC-SEARCH-GUEST-029: Sắp xếp kết quả theo "新着順" (Mới nhất)
    * @tags @guest
    */
-  test('TC-SEARCH-GUEST-029: Sắp xếp kết quả theo "新着順" (Mới nhất) và giữ nguyên sắp xếp khi sang Trang 2 @guest', async ({
+  test('TC-SEARCH-GUEST-029: Sắp xếp kết quả theo "新着順" (Mới nhất) @guest', async ({
     page,
     homePage,
     searchResultPage,
@@ -954,13 +954,13 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
       await captureEvidenceWithUrl(page, testInfo, 'Default-70-items-p1');
     });
 
-    await test.step('2. Click nút Next và verify sang trang 2 tiếp tục hiển thị trong giới hạn tối đa 70 ảnh', async () => {
+    await test.step('2. Click nút Next và verify sang trang 2 tiếp tục hiển thị tối đa 70 ảnh', async () => {
       await searchResultPage.goToNextPage();
       await expect(page).toHaveURL(/p=2/);
       expect(await searchResultPage.getActivePageNumber()).toBe('2');
       const countPage2 = await searchResultPage.getResultCount();
       expect(countPage2, 'Trang 2 phải có ảnh hiển thị').toBeGreaterThan(0);
-      expect(countPage2, 'Trang 2 không được vượt quá giới hạn 70 ảnh').toBeLessThanOrEqual(70);
+      expect(countPage2, 'Trang 2 không được vượt quá 70 ảnh').toBeLessThanOrEqual(70);
 
       await captureEvidenceWithUrl(page, testInfo, 'Default-70-items-p2');
     });
@@ -972,7 +972,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
       expect(await searchResultPage.getActivePageNumber()).toBe('1');
       const countBackToPage1 = await searchResultPage.getResultCount();
       expect(countBackToPage1, 'Quay lại trang 1 phải có ảnh hiển thị').toBeGreaterThan(0);
-      expect(countBackToPage1, 'Quay lại trang 1 không được vượt quá giới hạn 70 ảnh').toBeLessThanOrEqual(70);
+      expect(countBackToPage1, 'Quay lại trang 1 không được vượt quá 70 ảnh').toBeLessThanOrEqual(70);
 
       await captureEvidenceWithUrl(page, testInfo, 'Default-70-items-back-p1');
     });
@@ -1192,13 +1192,13 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   // NHÓM 12: TƯƠNG TÁC ẢNH KẾT QUẢ & CÁC TRANG NHÓM (GROUP SITES)
   /**
    * TC-SEARCH-GUEST-037: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập
-   * @tags @guest @regression
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-037: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập @guest @regression', async ({
+  test('TC-SEARCH-GUEST-037: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập @guest', async ({
     page,
     searchResultPage,
   }, testInfo) => {
-    // Note: Deep-link URL được sử dụng theo yêu cầu kiểm thử để cố định bộ dữ liệu ổn định (creator=acworks, layout=vertical)
+
     await test.step('Truy cập trang tìm kiếm với từ khóa "秋" và lọc creator=acworks, layout=vertical', async () => {
       await searchResultPage.navigate('/main/search?q=%E7%A7%8B&creator=acworks&layout=vertical');
       await searchResultPage.waitForResultDisplay();
@@ -1229,10 +1229,10 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
   });
 
   /**
-   * TC-SEARCH-GUEST-038: Click vào tác phẩm của các trang nhóm (Design AC, Illust AC, Silhouette AC, Video AC) ở cuối trang hiển thị popup tương ứng
-   * @tags @guest @regression
+   * TC-SEARCH-GUEST-038: Click Related image (Design AC, Illust AC, Silhouette AC, Video AC)
+   * @tags @guest
    */
-  test('TC-SEARCH-GUEST-038: Click tác phẩm của các trang nhóm (Design, Illust, Silhouette, Video) hiển thị popup tương ứng @guest @regression', async ({
+  test('TC-SEARCH-GUEST-038: Click Related image (Design, Illust, Silhouette, Video) hiển thị popup tương ứng @guest', async ({
     page,
     searchResultPage,
   }, testInfo) => {
@@ -1242,7 +1242,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
     });
 
     for (const site of GROUP_SITES) {
-      await test.step(`Click vào tác phẩm ${site.name} -> Verify hiển thị popup thông báo và nút tải tương ứng`, async () => {
+      await test.step(`Click vào Related Image ${site.name} -> Verify hiển thị popup thông báo và nút tải tương ứng`, async () => {
         await searchResultPage.clickGroupSiteItem(site.service, 0);
 
         await expect(searchResultPage.relatedSearchModal).toBeVisible({ timeout: 10_000 });
@@ -1250,7 +1250,7 @@ test.describe('Search Feature — Guest (No-Login User)', () => {
         await expect(searchResultPage.relatedModalDownloadButton).toBeVisible();
         await expect(searchResultPage.relatedModalDownloadButton).toHaveAttribute('href', new RegExp(site.expectedDomain));
 
-        await captureEvidenceWithUrl(page, testInfo, `Guest-GroupSite-${site.service}-Modal`);
+        await captureEvidenceWithUrl(page, testInfo, `Related Image-${site.service}-Modal`);
 
         await searchResultPage.closeRelatedSearchModal();
       });
