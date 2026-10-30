@@ -209,36 +209,40 @@ export class PremiumRegisterPage extends BasePage {
         .frameLocator('iframe[src*="/recaptcha/api2/anchor"]')
         .locator('#recaptcha-anchor');
 
-      for (let attempt = 0; attempt < 3; attempt++) {
-        const isStillVisible = await this.recaptchaModal.isVisible().catch(() => false);
-        if (!isStillVisible) break;
-
-        await recaptchaAnchor.waitFor({ state: 'visible', timeout: 5_000 }).catch(() => {});
-        if (await recaptchaAnchor.isVisible().catch(() => false)) {
-          const isChecked =
-            (await recaptchaAnchor.getAttribute('aria-checked').catch(() => 'false')) === 'true';
-
-          if (!isChecked) {
-            await recaptchaAnchor.click().catch(() => {});
-          }
-
-          // Wait up to 10s for checkmark to appear
-          const checked = await this.page
-            .frameLocator('iframe[src*="/recaptcha/api2/anchor"]')
-            .locator('#recaptcha-anchor[aria-checked="true"]')
-            .waitFor({ state: 'visible', timeout: 10_000 })
-            .then(() => true)
-            .catch(() => false);
-
-          if (checked) {
-            break;
-          }
-        }
+      await recaptchaAnchor.waitFor({ state: 'visible', timeout: 10_000 }).catch(() => {});
+      if (!(await recaptchaAnchor.isVisible().catch(() => false))) {
+        return false;
       }
 
-      // Wait for modal to disappear after successful verification
-      await this.recaptchaModal.waitFor({ state: 'hidden', timeout: 15_000 }).catch(() => {});
-      return true;
+      let isChecked =
+        (await recaptchaAnchor.getAttribute('aria-checked').catch(() => 'false')) === 'true';
+
+      if (!isChecked) {
+        await recaptchaAnchor.click().catch(() => {});
+      }
+
+      // Wait up to 25s for checkmark to appear
+      let checked = await this.page
+        .frameLocator('iframe[src*="/recaptcha/api2/anchor"]')
+        .locator('#recaptcha-anchor[aria-checked="true"]')
+        .waitFor({ state: 'visible', timeout: 25_000 })
+        .then(() => true)
+        .catch(() => false);
+
+      // If expired or not checked, retry clicking once more
+      if (!checked && (await this.recaptchaModal.isVisible().catch(() => false))) {
+        await recaptchaAnchor.click().catch(() => {});
+        checked = await this.page
+          .frameLocator('iframe[src*="/recaptcha/api2/anchor"]')
+          .locator('#recaptcha-anchor[aria-checked="true"]')
+          .waitFor({ state: 'visible', timeout: 25_000 })
+          .then(() => true)
+          .catch(() => false);
+      }
+
+      // Wait for modal to automatically hide after Ajax verification triggers doPurchase()
+      await this.recaptchaModal.waitFor({ state: 'hidden', timeout: 20_000 }).catch(() => {});
+      return checked;
     });
   }
 

@@ -187,6 +187,7 @@ export class PhotoDetailPage extends BasePage {
   /** Modal shown after adding photo to collection */
   readonly collectionAddedModalTitle: Locator = this.page.locator('#modal-mycollection-added .modal-title');
   readonly collectionAddModalContent: Locator = this.page.locator('#modal-mycollection-added .modal-body');
+  readonly collectionAddModallContentWarning: Locator = this.page.locator('#modal-mycollection-added .modal-body .alert.alert-warning');
   readonly closeCollectionAddModalButton: Locator = this.page.locator('#modal-mycollection-added .modal-header button.close').first();
 
   /** Like button */

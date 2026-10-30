@@ -100,6 +100,11 @@ test.describe('Download — Free User', () => {
       });
 
       await test.step('Click nút Bookmark lần 2 : Hiển thị thông báo đã add collection', async () => {
+        await expect(photoDetailPage.bookmarkButton).toBeVisible();
+        await photoDetailPage.clickBookmark();
+
+        await expect(photoDetailPage.collectionAddedModalTitle).toBeVisible({ timeout: 10_000 });
+        await expect(photoDetailPage.collectionAddedModalTitle).toContainText('コレクションに追加');
 
       });
 
