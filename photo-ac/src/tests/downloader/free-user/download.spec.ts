@@ -78,7 +78,7 @@ test.describe('Download — Free User', () => {
   /**
    * TC-DOWNLOAD-FREE-004: Free User thêm ảnh vào Bookmark, kiểm tra trong Collection và xóa ảnh khỏi Bookmark
    */
-  test('TC-DOWNLOAD-FREE-004: Free User thêm ảnh vào Bookmarks, kiểm tra trong Collection và xóa ảnh @free-user @bookmark', async ({
+  test.only('TC-DOWNLOAD-FREE-004: Free User thêm ảnh vào Bookmarks, kiểm tra trong Collection và xóa ảnh @free-user @bookmark', async ({
     page,
     photoDetailPage,
     bookmarksPage,
@@ -93,10 +93,12 @@ test.describe('Download — Free User', () => {
 
       await test.step('Xác minh modal thông báo thêm vào collection hiển thị', async () => {
         await expect(photoDetailPage.collectionAddedModalTitle).toBeVisible({ timeout: 10_000 });
-        await expect(photoDetailPage.collectionAddedModalTitle).toContainText('コレクションに追加');
-        await expect(photoDetailPage.collectionAddModalContent).toContainText('コレクションに追加しました。保存先：お気に入り');
+        await expect(photoDetailPage.collectionAddedModalTitle).toHaveText('コレクションに追加');
+        const contentText = (await photoDetailPage.collectionAddModalContent.innerText()).replace(/\s+/g, '');
+        expect(contentText).toBe("コレクションに追加しました。保存先：お気に入り");
         await captureEvidenceWithUrl(page, testInfo, 'collectionAddModal');
 
+        await photoDetailPage.closeCollectionAddModal();
       });
 
       await test.step('Click nút Bookmark lần 2 : Hiển thị thông báo đã add collection', async () => {
@@ -104,8 +106,12 @@ test.describe('Download — Free User', () => {
         await photoDetailPage.clickBookmark();
 
         await expect(photoDetailPage.collectionAddedModalTitle).toBeVisible({ timeout: 10_000 });
-        await expect(photoDetailPage.collectionAddedModalTitle).toContainText('コレクションに追加');
+        await expect(photoDetailPage.collectionAddedModalTitle).toHaveText('コレクションに追加');
+        const warningText = (await photoDetailPage.collectionAddModalContent.innerText()).replace(/\s+/g, '');
+        expect(warningText).toBe('この画像ははすでにコレクションに追加されました。他の画像を選択してください。');
+        await captureEvidenceWithUrl(page, testInfo, 'collectionModal-warning');
 
+        await photoDetailPage.closeCollectionAddModal();
       });
 
       await test.step('Đi tới thư mục Collection và kiểm tra ảnh có ID tương ứng', async () => {

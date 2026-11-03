@@ -26,8 +26,8 @@ test.describe.serial('Premium Registration, Receipt & Profile Flow', () => {
   test.afterAll(async () => {
     // Teardown: Clean up temporary disposable mailbox after all 3 tests finish
     if (sharedMailTm) {
-      await sharedMailTm.deleteAccount().catch(() => {});
-      await sharedMailTm.dispose().catch(() => {});
+      await sharedMailTm.deleteAccount().catch(() => { });
+      await sharedMailTm.dispose().catch(() => { });
     }
   });
 
@@ -44,7 +44,7 @@ test.describe.serial('Premium Registration, Receipt & Profile Flow', () => {
     await page.addInitScript(() => {
       try {
         localStorage.setItem('hideModalGlobal', 'true');
-      } catch (_) {}
+      } catch (_) { }
     });
 
     // Bước 1: Khởi tạo tài khoản Free User mới qua Mail.tm
@@ -60,7 +60,7 @@ test.describe.serial('Premium Registration, Receipt & Profile Flow', () => {
 
     // Bước 2: Đồng bộ phiên đăng nhập Free User sang Photo-AC qua SSO Login
     await test.step('Đồng bộ phiên đăng nhập Free User sang Photo-AC qua SSO Login', async () => {
-      const baseUrl = envConfig.baseUrl || 'https://test-lien.photo-ac.com';
+      const baseUrl = envConfig.baseUrl;
       const loginUrl = `https://test-accounts.ac-illust.com/login?serviceURL=${encodeURIComponent(
         `${baseUrl}/auth/sso_login?redirect_to=${encodeURIComponent(`${baseUrl}/`)}`
       )}&lang=jp`;
