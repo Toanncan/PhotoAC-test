@@ -75,6 +75,19 @@ export class LoginPage extends BasePage {
   }
 
   /**
+   * Fill credentials and submit on the currently opened login form (without navigating away).
+   * Useful for SSO redirection screens or modals where the form is already presented.
+   * @param email - User email address
+   * @param password - User password
+   */
+  async submitCredentials(email: string, password: string): Promise<void> {
+    await test.step('Fill and submit credentials on current login form', async () => {
+      await this.fillInput(this.emailInput, email);
+      await this.fillInput(this.passwordInput, password);
+      await this.clickElement(this.submitDowloaderButton);
+    });
+  }
+  /**
    * Perform a full login flow: navigate to login page, fill credentials, submit.
    * @param email - User email address
    * @param password - User password
@@ -93,7 +106,7 @@ export class LoginPage extends BasePage {
       await this.page.waitForURL(/\/(user|$)/, { waitUntil: 'domcontentloaded', timeout: 30_000 });
       await this.closePhotoAiModelContent();
       // Wait for user dropdown container to ensure session cookies and UI are fully ready
-      await this.page.locator('#user-info-dropdown').waitFor({ state: 'attached', timeout: 15_000 }).catch(() => {});
+      await this.page.locator('#user-info-dropdown').waitFor({ state: 'attached', timeout: 15_000 }).catch(() => { });
     });
   }
 

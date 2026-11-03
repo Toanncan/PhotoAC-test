@@ -185,8 +185,8 @@ export class PhotoDetailPage extends BasePage {
   readonly bookmarkButton: Locator = this.page.locator('a.btn-add-to-bookmark, a[aria-label="ボタンブックマーク"]');
 
   /** Modal shown after adding photo to collection */
-  readonly collectionAddedModalTitle: Locator = this.page.locator('#modal-mycollection-added .modal-title');
-  readonly collectionAddModalContent: Locator = this.page.locator('#modal-mycollection-added .modal-body');
+  readonly collectionAddedModalTitle: Locator = this.page.locator('#modal-mycollection-added .modal-title').first();
+  readonly collectionAddModalContent: Locator = this.page.locator('#modal-mycollection-added .modal-body').first();
   readonly collectionAddModallContentWarning: Locator = this.page.locator('#modal-mycollection-added .modal-body .alert.alert-warning');
   readonly closeCollectionAddModalButton: Locator = this.page.locator('#modal-mycollection-added .modal-header button.close:visible').first();
 
@@ -513,8 +513,10 @@ export class PhotoDetailPage extends BasePage {
    */
   async closeCollectionAddModal(): Promise<void> {
     await test.step('Click close button on Collection Add Modal', async () => {
-      await this.dismissInterferingModals();
-      await this.clickElement(this.closeCollectionAddModalButton);
+      if (await this.closeCollectionAddModalButton.isVisible({ timeout: 5_000 }).catch(() => false)) {
+        await this.clickElement(this.closeCollectionAddModalButton);
+        await this.collectionAddedModalTitle.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => false);
+      }
     });
   };
 

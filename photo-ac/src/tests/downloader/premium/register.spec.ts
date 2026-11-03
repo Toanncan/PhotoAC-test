@@ -5,11 +5,6 @@ import { MailTmHelper } from '../../../utils/mail-tm.helper';
 
 /**
  * Test Suite: Premium Subscription, Receipt & Profile Flow
- *
- * Kiểm thử luồng nghiệp vụ cốt lõi chuẩn hóa thành 3 Test Cases tuần tự:
- * 1. TC-[Register-Premium]-[FreeUser]-[001]: Đăng ký Free User mới & Nâng cấp Premium qua thẻ tín dụng.
- * 2. TC-[Register-Premium]-[FreeUser]-[002]: Kiểm tra tạo Hóa đơn điện tử tự động, tải file PDF và đối soát dữ liệu.
- * 3. TC-[Register-Premium]-[FreeUser]-[003]: Kiểm tra Hồ sơ Hội viên (/user/profile/edit) và Email xác nhận gửi về User.
  */
 test.describe.serial('Premium Registration, Receipt & Profile Flow', () => {
   // Isolate session: Always begin with clean guest cookies so fresh Free User account is generated
@@ -20,8 +15,8 @@ test.describe.serial('Premium Registration, Receipt & Profile Flow', () => {
   let sharedEmail = '';
   let sharedCookies: any[] = [];
   let confirmedTotalAmount = '';
-  const testCompanyName = 'AC Testing Corp';
-  const testPersonName = 'Tuan QA';
+  const testCompanyName = 'AC Works';
+  const testPersonName = 'QA team';
 
   test.afterAll(async () => {
     // Teardown: Clean up temporary disposable mailbox after all 3 tests finish
@@ -31,12 +26,13 @@ test.describe.serial('Premium Registration, Receipt & Profile Flow', () => {
     }
   });
 
-  // ── TEST CASE 001: ĐĂNG KÝ FREE USER MỚI & NÂNG CẤP PREMIUM QUA THẺ VISA ──
-  test('TC-[Register-Premium]-[FreeUser]-[001]: Đăng ký Free User mới & Nâng cấp Premium qua thẻ tín dụng @smoke @premium', async ({
+  // ── TEST CASE 001: ĐĂNG KÝ FREE USER MỚI & NÂNG CẤP PREMIUM QUA THẺ Credit card ──
+  test('TC-[Register-Premium]-[FreeUser]-[001]: Đăng ký Free User mới & Nâng cấp Premium qua Credit card @premium', async ({
     page,
     context,
     registerPage,
     premiumRegisterPage,
+    loginPage,
   }) => {
     test.setTimeout(240_000);
 
@@ -49,7 +45,7 @@ test.describe.serial('Premium Registration, Receipt & Profile Flow', () => {
 
     // Bước 1: Khởi tạo tài khoản Free User mới qua Mail.tm
     const newUser = await registerPage.registerNewFreeUserAccount({
-      password: 'FreeUser@2026!',
+      password: '12345678',
       usernamePrefix: 'acfree',
       navigateToTopPage: false,
     });
@@ -69,9 +65,7 @@ test.describe.serial('Premium Registration, Receipt & Profile Flow', () => {
 
       // Nếu dừng lại ở trang đăng nhập của Accounts, điền thông tin để đăng nhập
       if (page.url().includes('test-accounts.ac-illust.com/login')) {
-        await page.getByPlaceholder('メールアドレス').fill(newUser.email);
-        await page.getByPlaceholder('パスワード').fill(newUser.password);
-        await page.getByRole('button', { name: 'ログイン' }).click();
+        await loginPage.submitCredentials(newUser.email, newUser.password);
       }
 
       await page.waitForURL(new RegExp(baseUrl.replace(/https?:\/\//, '')), { timeout: 30_000 });

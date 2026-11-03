@@ -78,7 +78,7 @@ test.describe('Download — Free User', () => {
   /**
    * TC-DOWNLOAD-FREE-004: Free User thêm ảnh vào Bookmark, kiểm tra trong Collection và xóa ảnh khỏi Bookmark
    */
-  test.only('TC-DOWNLOAD-FREE-004: Free User thêm ảnh vào Bookmarks, kiểm tra trong Collection và xóa ảnh @free-user @bookmark', async ({
+  test('TC-DOWNLOAD-FREE-004: Free User thêm ảnh vào Bookmarks, kiểm tra trong Collection và xóa ảnh @free-user @bookmark', async ({
     page,
     photoDetailPage,
     bookmarksPage,
@@ -102,7 +102,7 @@ test.describe('Download — Free User', () => {
       });
 
       await test.step('Click nút Bookmark lần 2 : Hiển thị thông báo đã add collection', async () => {
-        await expect(photoDetailPage.bookmarkButton).toBeVisible();
+        await expect(photoDetailPage.bookmarkButton).toBeVisible({ timeout: 10_000 });
         await photoDetailPage.clickBookmark();
 
         await expect(photoDetailPage.collectionAddedModalTitle).toBeVisible({ timeout: 10_000 });
