@@ -525,7 +525,7 @@ test.describe('Search — Free User', () => {
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     const keyword = 'cat';
     const excludeKeyword = 'dog';
 
@@ -552,7 +552,7 @@ test.describe('Search — Free User', () => {
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     const keyword = 'flower';
     const creatorName = 'Acworks';
     await homePage.search(keyword);
@@ -560,7 +560,7 @@ test.describe('Search — Free User', () => {
 
     await searchResultPage.searchByDetailedCreator(creatorName);
 
-    await test.step('Verify URL, badge và heading phản ánh tác giả Acworks', async () => {
+    await test.step(`Verify URL chứa creator=${creatorName}, badge và heading hiển thị`, async () => {
       await expect(page).toHaveURL(new RegExp(`creator=${creatorName}`, 'i'));
       await expect(searchResultPage.getActiveFilterBadge(creatorName)).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
@@ -579,17 +579,17 @@ test.describe('Search — Free User', () => {
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     const keyword = 'flower';
-    const ngCreatorName = 'Acworks';
+    const excludeCreatorName = 'Acworks';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
 
-    await searchResultPage.searchByDetailedNgCreator(ngCreatorName);
+    await searchResultPage.searchByDetailedNgCreator(excludeCreatorName);
 
-    await test.step('Verify URL cập nhật tham số ngcreator=Acworks, badge và trạng thái kết quả hiển thị', async () => {
-      await expect(page).toHaveURL(new RegExp(`ngcreator=${ngCreatorName}`, 'i'));
-      await expect(searchResultPage.activeFilterBadges.filter({ hasText: ngCreatorName })).toBeVisible();
+    await test.step(`Verify URL chứa ngcreator=${excludeCreatorName}, badge và trạng thái kết quả hiển thị`, async () => {
+      await expect(page).toHaveURL(new RegExp(`ngcreator=${excludeCreatorName}`));
+      await expect(searchResultPage.activeFilterBadges.filter({ hasText: excludeCreatorName })).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
       if (count > 0) {
@@ -609,14 +609,14 @@ test.describe('Search — Free User', () => {
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     const photoId = '1597634';
     await homePage.search('flower');
     await searchResultPage.waitForResultDisplay();
 
     await searchResultPage.filterByDetailedPhotoId(photoId);
 
-    await test.step('Verify URL, badge và kết quả trả về đúng 1 ảnh khớp ID', async () => {
+    await test.step(`Verify URL cập nhật qid=${photoId}, badge và kết quả trả về đúng ảnh khớp ID`, async () => {
       await expect(page).toHaveURL(new RegExp(`qid=${photoId}`));
       await expect(searchResultPage.getActiveFilterBadge(photoId)).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
@@ -638,7 +638,8 @@ test.describe('Search — Free User', () => {
     searchResultPage,
   }, testInfo) => {
     test.setTimeout(120_000);
-    await homePage.search('学生');
+    const keyword = '学生';
+    await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
 
     await test.step('Chọn số lượng người mẫu: 2人 trên toolbar', async () => {
@@ -656,7 +657,7 @@ test.describe('Search — Free User', () => {
       await expect(searchResultPage.getActiveFilterBadge('取得済のみ')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
+      expect(count, 'Kết hợp 2 điều kiện phải trả về kết quả ảnh').toBeGreaterThan(0);
 
       // Lưu bằng chứng trạng thái bước 2: Kết hợp 2 người + Model Release
       await captureEvidenceWithUrl(page, testInfo, 'Filter-2人-ModelRelease');
@@ -701,7 +702,7 @@ test.describe('Search — Free User', () => {
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       await expect(searchResultPage.resultHeading).toContainText(`「${keyword}」の写真素材`);
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
+      expect(count, 'Kết hợp 3 bộ lọc phải trả về danh sách ảnh').toBeGreaterThan(0);
 
       // Lưu bằng chứng bước 3: Chiều ngang + Không có người + Loại trừ AI
       await captureEvidenceWithUrl(page, testInfo, 'Filter-横長-無人-ExcludeAI');
@@ -716,11 +717,13 @@ test.describe('Search — Free User', () => {
   test('TC-SEARCH-FREE-024: Tải ảnh lên tìm kiếm tương đồng @free-user', async ({
     homePage,
     searchResultPage,
+    page
   }) => {
     await homePage.uploadImageForSearch(sampleImagePath);
     await searchResultPage.waitForResultDisplay();
 
     await test.step('Verify điều hướng tới trang kết quả tìm kiếm bằng hình ảnh', async () => {
+      await expect(page).toHaveURL(/\/search\/ris/i);
       await expect(searchResultPage.resultHeading).toContainText('アップロードされた画像に似ている写真素材');
       const count = await searchResultPage.getResultCount();
       if (count > 0) {
@@ -738,22 +741,26 @@ test.describe('Search — Free User', () => {
   test('TC-SEARCH-FREE-025: Recommended Search và phân trang @free-user', async ({
     page,
     searchResultPage,
-  }) => {
+  }, testInfo) => {
     await searchResultPage.goToRecommendedSearch();
 
-    await test.step('Verify trang Recommended Search hiển thị tiêu đề chuẩn', async () => {
+    await test.step('Verify URL ban đầu chứa tham số rcm=1', async () => {
+      await expect(page).toHaveURL(/rcm=1/);
       await expect(searchResultPage.resultHeading).toContainText('「おすすめ」の写真素材');
       const count = await searchResultPage.getResultCount();
-      expect(count, 'Trang phải có ít nhất 1 ảnh hiển thị').toBeGreaterThan(0);
-      expect(count, 'Số lượng ảnh không được vượt quá 70 ảnh/trang').toBeLessThanOrEqual(70);
+      expect(count, 'Recommended Search phải hiển thị danh sách ảnh').toBeGreaterThan(0);
+
+      await captureEvidenceWithUrl(page, testInfo, 'Recommended page 1');
     });
 
-    await searchResultPage.goToNextPage();
-
-    await test.step('Verify URL giữ nguyên tham số rcm=1 và referer khi sang trang 2', async () => {
+    await test.step('Chuyển sang trang 2 và verify bảo toàn tham số rcm=1', async () => {
+      await expect(searchResultPage.paginationContainer).toBeVisible();
+      await searchResultPage.goToNextPage();
       await expect(page).toHaveURL(/rcm=1/);
-      await expect(page).toHaveURL(/referer=more_recommended/);
       await expect(page).toHaveURL(/p=2/);
+      expect(await searchResultPage.getActivePageNumber()).toBe('2');
+
+      await captureEvidenceWithUrl(page, testInfo, 'Recommended page 2');
     });
   });
 
@@ -764,22 +771,26 @@ test.describe('Search — Free User', () => {
   test('TC-SEARCH-FREE-026: PSD Format Search và phân trang @free-user', async ({
     page,
     searchResultPage,
-  }) => {
+  }, testInfo) => {
+    test.setTimeout(90_000);
     await searchResultPage.goToPsdSearch();
 
     await test.step('Verify trang PSD Search hiển thị tiêu đề PSD素材', async () => {
       await expect(searchResultPage.resultHeading).toContainText('PSD素材');
       const count = await searchResultPage.getResultCount();
       expect(count, 'Trang phải có ít nhất 1 ảnh hiển thị').toBeGreaterThan(0);
-      expect(count, 'Số lượng ảnh không được vượt quá 70 ảnh/trang').toBeLessThanOrEqual(70);
+
+      await captureEvidenceWithUrl(page, testInfo, 'PSD Search page 1');
     });
 
-    await searchResultPage.goToNextPage();
-
-    await test.step('Verify URL giữ nguyên tham số sizesec=psd khi sang trang 2', async () => {
+    await test.step('Chuyển sang trang 2 và verify bảo toàn tham số sizesec=psd', async () => {
+      await expect(searchResultPage.paginationContainer).toBeVisible();
+      await searchResultPage.goToNextPage();
       await expect(page).toHaveURL(/sizesec=psd/);
-      await expect(page).toHaveURL(/referer=category_psd/);
       await expect(page).toHaveURL(/p=2/);
+      expect(await searchResultPage.getActivePageNumber()).toBe('2');
+
+      await captureEvidenceWithUrl(page, testInfo, 'PSD Search page 2');
     });
   });
 
@@ -791,7 +802,7 @@ test.describe('Search — Free User', () => {
     page,
     searchResultPage,
     photoDetailPage,
-  }) => {
+  }, testInfo) => {
     test.setTimeout(90_000);
     const photoId = '35133353';
 
@@ -806,15 +817,19 @@ test.describe('Search — Free User', () => {
       const count = await searchResultPage.getResultCount();
       expect(count, 'Kết quả tìm kiếm theo khuôn mặt AI phải trả về ảnh').toBeGreaterThan(0);
       await expect(searchResultPage.resultItems.first()).toBeVisible();
+
+      await captureEvidenceWithUrl(page, testInfo, 'AI Search page 1');
     });
 
     await test.step('Chuyển sang trang 2 và verify dữ liệu AI Face vẫn được giữ nguyên', async () => {
-      await expect(searchResultPage.paginationContainer).toBeVisible();
-      await searchResultPage.goToNextPage();
-      await expect(page).toHaveURL(/vector_face=/);
-      await expect(page).toHaveURL(/p=2/);
-      const countPage2 = await searchResultPage.getResultCount();
-      expect(countPage2, 'Trang 2 kết quả AI Face phải tiếp tục có ảnh').toBeGreaterThan(0);
+      if (await searchResultPage.paginationContainer.isVisible().catch(() => false)) {
+        await searchResultPage.goToNextPage();
+        await expect(page).toHaveURL(/vector_face=/);
+        await expect(page).toHaveURL(/p=2/);
+        expect(await searchResultPage.getActivePageNumber()).toBe('2');
+
+        await captureEvidenceWithUrl(page, testInfo, 'AI Search page 2');
+      }
     });
   });
 

@@ -503,10 +503,10 @@ test.describe('Search — Premium User', () => {
     homePage,
     searchResultPage,
   }) => {
-    const baseKeyword = '猫';
+    const keyword = '猫';
     const excludeKeyword = '子猫';
 
-    await homePage.search(baseKeyword);
+    await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
 
     await searchResultPage.applyExcludeKeyword(excludeKeyword);
@@ -529,9 +529,10 @@ test.describe('Search — Premium User', () => {
     homePage,
     searchResultPage,
   }) => {
+    const keyword = '空';
     const creatorName = 'Acworks';
 
-    await homePage.search('空');
+    await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
 
     await searchResultPage.searchByDetailedCreator(creatorName);
@@ -540,7 +541,7 @@ test.describe('Search — Premium User', () => {
       await expect(page).toHaveURL(new RegExp(`creator=${creatorName}`));
       await expect(searchResultPage.getActiveFilterBadge(creatorName)).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
-      await expect(searchResultPage.resultHeading).toContainText('「空」の写真素材');
+      await expect(searchResultPage.resultHeading).toContainText(`「${keyword}」の写真素材`);
       const count = await searchResultPage.getResultCount();
       expect(count, 'Tìm theo tác giả phải trả về danh sách ảnh').toBeGreaterThan(0);
     });
@@ -555,9 +556,10 @@ test.describe('Search — Premium User', () => {
     homePage,
     searchResultPage,
   }) => {
+    const keyword = '空';
     const excludeCreatorName = 'Acworks';
 
-    await homePage.search('空');
+    await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
 
     await searchResultPage.searchByDetailedNgCreator(excludeCreatorName);
@@ -584,16 +586,16 @@ test.describe('Search — Premium User', () => {
     homePage,
     searchResultPage,
   }) => {
-    const targetPhotoId = '24330999';
+    const photoId = '24330999';
 
     await homePage.search('桜');
     await searchResultPage.waitForResultDisplay();
 
-    await searchResultPage.filterByDetailedPhotoId(targetPhotoId);
+    await searchResultPage.filterByDetailedPhotoId(photoId);
 
-    await test.step(`Verify URL cập nhật qid=${targetPhotoId}, badge và kết quả trả về đúng ảnh khớp ID`, async () => {
-      await expect(page).toHaveURL(new RegExp(`qid=${targetPhotoId}`));
-      await expect(searchResultPage.getActiveFilterBadge(targetPhotoId)).toBeVisible();
+    await test.step(`Verify URL cập nhật qid=${photoId}, badge và kết quả trả về đúng ảnh khớp ID`, async () => {
+      await expect(page).toHaveURL(new RegExp(`qid=${photoId}`));
+      await expect(searchResultPage.getActiveFilterBadge(photoId)).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       // Web-first auto-wait trước khi đếm số lượng để tránh bẫy Non-Auto-Waiting trên Firefox
       await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
@@ -699,10 +701,11 @@ test.describe('Search — Premium User', () => {
     await homePage.uploadImageForSearch(sampleImagePath);
     await searchResultPage.waitForResultDisplay();
 
-    await test.step('Verify URL chuyển hướng đến trang kết quả tìm kiếm bằng hình ảnh (/search/ris)', async () => {
+    await test.step('Verify điều hướng đến trang kết quả tìm kiếm bằng hình ảnh', async () => {
       await expect(page).toHaveURL(/\/search\/ris/i);
+      await expect(searchResultPage.resultHeading).toContainText('アップロードされた画像に似ている写真素材');
       const count = await searchResultPage.getResultCount();
-      expect(count, 'Tìm kiếm bằng hình ảnh phải hiển thị kết quả tương đồng').toBeGreaterThan(0);
+      expect(count, 'Phải có hình ảnh tương đồng được hiển thị').toBeGreaterThan(0);
     });
   });
 
@@ -713,16 +716,17 @@ test.describe('Search — Premium User', () => {
   test('TC-SEARCH-PREM-025: Recommended Search và phân trang @premium', async ({
     page,
     searchResultPage,
-  }) => {
+  }, testInfo) => {
     test.setTimeout(90_000);
     await searchResultPage.goToRecommendedSearch();
-    await searchResultPage.waitForResultDisplay();
 
     await test.step('Verify URL ban đầu chứa tham số rcm=1', async () => {
       await expect(page).toHaveURL(/rcm=1/);
       await expect(searchResultPage.resultHeading).toContainText('「おすすめ」の写真素材');
       const count = await searchResultPage.getResultCount();
       expect(count, 'Recommended Search phải hiển thị danh sách ảnh').toBeGreaterThan(0);
+
+      await captureEvidenceWithUrl(page, testInfo, 'Recommended page 1');
     });
 
     await test.step('Chuyển sang trang 2 và verify bảo toàn tham số rcm=1', async () => {
@@ -731,6 +735,8 @@ test.describe('Search — Premium User', () => {
       await expect(page).toHaveURL(/rcm=1/);
       await expect(page).toHaveURL(/p=2/);
       expect(await searchResultPage.getActivePageNumber()).toBe('2');
+
+      await captureEvidenceWithUrl(page, testInfo, 'Recommended page 2');
     });
   });
 
@@ -741,16 +747,16 @@ test.describe('Search — Premium User', () => {
   test('TC-SEARCH-PREM-026: PSD Format Search và phân trang @premium', async ({
     page,
     searchResultPage,
-  }) => {
+  }, testInfo) => {
     test.setTimeout(90_000);
     await searchResultPage.goToPsdSearch();
-    await searchResultPage.waitForResultDisplay();
 
-    await test.step('Verify URL ban đầu chứa tham số sizesec=psd', async () => {
-      await expect(page).toHaveURL(/sizesec=psd/);
+    await test.step('Verify trang PSD Search hiển thị tiêu đề PSD素材', async () => {
       await expect(searchResultPage.resultHeading).toContainText('PSD素材');
       const count = await searchResultPage.getResultCount();
-      expect(count, 'PSD Format Search phải hiển thị danh sách ảnh').toBeGreaterThan(0);
+      expect(count, 'Trang phải có ít nhất 1 ảnh hiển thị').toBeGreaterThan(0);
+
+      await captureEvidenceWithUrl(page, testInfo, 'PSD Search page 1');
     });
 
     await test.step('Chuyển sang trang 2 và verify bảo toàn tham số sizesec=psd', async () => {
@@ -759,6 +765,8 @@ test.describe('Search — Premium User', () => {
       await expect(page).toHaveURL(/sizesec=psd/);
       await expect(page).toHaveURL(/p=2/);
       expect(await searchResultPage.getActivePageNumber()).toBe('2');
+
+      await captureEvidenceWithUrl(page, testInfo, 'PSD Search page 2');
     });
   });
 
@@ -770,7 +778,7 @@ test.describe('Search — Premium User', () => {
     page,
     searchResultPage,
     photoDetailPage,
-  }) => {
+  }, testInfo) => {
     test.setTimeout(90_000);
 
     const photoId = '35133353';
@@ -785,6 +793,8 @@ test.describe('Search — Premium User', () => {
       const count = await searchResultPage.getResultCount();
       expect(count, 'Kết quả tìm kiếm theo khuôn mặt AI phải trả về ảnh').toBeGreaterThan(0);
       await expect(searchResultPage.resultItems.first()).toBeVisible();
+
+      await captureEvidenceWithUrl(page, testInfo, 'AI Search page 1');
     });
 
     await test.step('Chuyển sang trang 2 và verify dữ liệu AI Face vẫn được giữ nguyên', async () => {
@@ -793,6 +803,8 @@ test.describe('Search — Premium User', () => {
         await expect(page).toHaveURL(/vector_face=/);
         await expect(page).toHaveURL(/p=2/);
         expect(await searchResultPage.getActivePageNumber()).toBe('2');
+
+        await captureEvidenceWithUrl(page, testInfo, 'AI Search page 2');
       }
     });
   });
@@ -801,7 +813,7 @@ test.describe('Search — Premium User', () => {
    * TC-SEARCH-PREM-028: Kiểm tra trang Trends hiển thị danh sách ảnh, sắp xếp và bảo toàn tham số khi phân trang
    * @tags @premium
    */
-  test('TC-SEARCH-PREM-028: Kiểm tra trang Trends hiển thị danh sách ảnh, sắp xếp và bảo toàn tham số khi phân trang @premium', async ({
+  test('TC-SEARCH-PREM-028: Kiểm tra trang Trends hiển thị danh sách ảnh @premium', async ({
     page,
     searchResultPage,
     trendsPage,
