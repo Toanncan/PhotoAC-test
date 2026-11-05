@@ -39,7 +39,7 @@ try {
 const { chromium } = playwright;
 
 // ----------------------------------------------------------------------------
-// Danh Sách 30 URLs Từ Google Sheet "VideoAC" (Hàng 43 - 72)
+// Danh Sách 60 URLs Từ Google Sheet "VideoAC" (Hàng 43 - 102)
 // ----------------------------------------------------------------------------
 const SHEET_URLS = [
   // Downloader Pages
@@ -74,7 +74,41 @@ const SHEET_URLS = [
   { stt: 27, category: 'Creator', path: '/creator/bankInfo', fullUrl: 'https://video-ac.com/creator/bankInfo', description: 'Bank Information' },
   { stt: 28, category: 'Creator', path: '/creator/modelreleases', fullUrl: 'https://video-ac.com/creator/modelreleases', description: 'Model Releases' },
   { stt: 29, category: 'Creator', path: '/creator/propertyreleases', fullUrl: 'https://video-ac.com/creator/propertyreleases', description: 'Property Releases' },
-  { stt: 30, category: 'Creator', path: '/creator/account/leave', fullUrl: 'https://video-ac.com/creator/account/leave', description: 'Deactivate Account' }
+  { stt: 30, category: 'Creator', path: '/creator/account/leave', fullUrl: 'https://video-ac.com/creator/account/leave', description: 'Deactivate Account' },
+
+  // Downloader Pages (site test)
+  { stt: 31, category: 'Downloader', path: '/', fullUrl: 'https://test.video-ac.com/', description: 'Home Page' },
+  { stt: 32, category: 'Downloader', path: '/user/dashboard', fullUrl: 'https://test.video-ac.com/user/dashboard', description: 'User Dashboard' },
+  { stt: 33, category: 'Downloader', path: '/user/edit', fullUrl: 'https://test.video-ac.com/user/edit', description: 'User Edit Profile' },
+  { stt: 34, category: 'Downloader', path: '/user/downloads', fullUrl: 'https://test.video-ac.com/user/downloads', description: 'Download History' },
+  { stt: 35, category: 'Downloader', path: '/user/present', fullUrl: 'https://test.video-ac.com/user/present', description: 'User Present' },
+  { stt: 36, category: 'Downloader', path: '/user/receipt', fullUrl: 'https://test.video-ac.com/user/receipt', description: 'User Receipts' },
+  { stt: 37, category: 'Downloader', path: '/user/1', fullUrl: 'https://test.video-ac.com/user/1', description: 'User Detail ID 1' },
+  { stt: 38, category: 'Downloader', path: '/video/discovery?search=%E3%82%AD%E3%83%A9%E3%82%AD%E3%83%A9', fullUrl: 'https://test.video-ac.com/video/discovery?search=%E3%82%AD%E3%83%A9%E3%82%AD%E3%83%A9', description: 'Video Discovery Search' },
+  { stt: 39, category: 'Downloader', path: '/about-us', fullUrl: 'https://test.video-ac.com/about-us', description: 'About Us' },
+  { stt: 40, category: 'Downloader', path: '/privacy-policy/', fullUrl: 'https://test.video-ac.com/privacy-policy/', description: 'Privacy Policy' },
+  { stt: 41, category: 'Downloader', path: '/sitemap', fullUrl: 'https://test.video-ac.com/sitemap', description: 'Sitemap' },
+  { stt: 42, category: 'Downloader', path: null, fullUrl: 'https://www.photo-ac.com/premium/campaign?ref=videoAC', description: 'Premium Campaign' },
+
+  // Creator Pages (site test)
+  { stt: 43, category: 'Creator', path: '/', fullUrl: 'https://test.video-ac.com/', description: 'Creator Home' },
+  { stt: 44, category: 'Creator', path: '/video/discovery?search=%E3%82%AD%E3%83%A9%E3%82%AD%E3%83%A9', fullUrl: 'https://test.video-ac.com/video/discovery?search=%E3%82%AD%E3%83%A9%E3%82%AD%E3%83%A9', description: 'Creator Search' },
+  { stt: 45, category: 'Creator', path: '/creator/dashboard', fullUrl: 'https://test.video-ac.com/creator/dashboard', description: 'Creator Dashboard' },
+  { stt: 46, category: 'Creator', path: '/creator/exchange', fullUrl: 'https://test.video-ac.com/creator/exchange', description: 'Points Exchange' },
+  { stt: 47, category: 'Creator', path: '/creator/news', fullUrl: 'https://test.video-ac.com/creator/news', description: 'Creator News' },
+  { stt: 48, category: 'Creator', path: '/creator/list', fullUrl: 'https://test.video-ac.com/creator/list', description: 'Materials List' },
+  { stt: 49, category: 'Creator', path: '/creator/upload', fullUrl: 'https://test.video-ac.com/creator/upload', description: 'Upload Material' },
+  { stt: 50, category: 'Creator', path: '/creator/comment', fullUrl: 'https://test.video-ac.com/creator/comment', description: 'Manage Comments' },
+  { stt: 51, category: 'Creator', path: '/creator/followers', fullUrl: 'https://test.video-ac.com/creator/followers', description: 'Manage Followers' },
+  { stt: 52, category: 'Creator', path: '/creator/following', fullUrl: 'https://test.video-ac.com/creator/following', description: 'Manage Following' },
+  { stt: 53, category: 'Creator', path: '/creator/account/edit', fullUrl: 'https://test.video-ac.com/creator/account/edit', description: 'Account Settings' },
+  { stt: 54, category: 'Creator', path: '/creator/profile/edit', fullUrl: 'https://test.video-ac.com/creator/profile/edit', description: 'Profile Edit' },
+  { stt: 55, category: 'Creator', path: '/creator/bitcoin', fullUrl: 'https://test.video-ac.com/creator/bitcoin', description: 'Bitcoin Rewards' },
+  { stt: 56, category: 'Creator', path: '/creator/ident', fullUrl: 'https://test.video-ac.com/creator/ident', description: 'Identity Verification' },
+  { stt: 57, category: 'Creator', path: '/creator/bankInfo', fullUrl: 'https://test.video-ac.com/creator/bankInfo', description: 'Bank Information' },
+  { stt: 58, category: 'Creator', path: '/creator/modelreleases', fullUrl: 'https://test.video-ac.com/creator/modelreleases', description: 'Model Releases' },
+  { stt: 59, category: 'Creator', path: '/creator/propertyreleases', fullUrl: 'https://test.video-ac.com/creator/propertyreleases', description: 'Property Releases' },
+  { stt: 60, category: 'Creator', path: '/creator/account/leave', fullUrl: 'https://test.video-ac.com/creator/account/leave', description: 'Deactivate Account' }
 ];
 
 // ANSI Colors for console formatting

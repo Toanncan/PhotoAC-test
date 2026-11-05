@@ -17,10 +17,10 @@ Hệ thống cung cấp đúng **2 Option**:
 ## 📋 Quy Trình Thực Hiện Tự Động Khi Chạy
 
 Khi bạn chọn **1** hoặc **2**:
-1. **Bước 1 (Downloader):** Hệ thống tự động mở trình duyệt và đăng nhập tài khoản Downloader tương ứng ➔ Truy cập và in mã status trả về cho **12 URLs Downloader**.
-2. **Bước 2 (Creator):** Hệ thống mở session mới và tự động đăng nhập tài khoản Creator tương ứng ➔ Truy cập và in mã status trả về cho **18 URLs Creator**.
+1. **Bước 1 (Downloader):** Hệ thống tự động mở trình duyệt và đăng nhập tài khoản Downloader tương ứng ➔ Truy cập và in mã status trả về cho **24 URLs Downloader** (STT 1-12 & STT 31-42).
+2. **Bước 2 (Creator):** Hệ thống mở session mới và tự động đăng nhập tài khoản Creator tương ứng ➔ Truy cập và in mã status trả về cho **36 URLs Creator** (STT 13-30 & STT 43-60).
 3. **Bước 3 (Tổng kết):** In bảng tổng kết Scorecard trực tiếp ra màn hình Console:
-   - Tổng số URLs đã kiểm tra (30 URLs)
+   - Tổng số URLs đã kiểm tra (60 URLs)
    - Số lượng & Tỷ lệ % đạt chuẩn HTTP 200 OK
    - Số lượng chuyển hướng (3xx), lỗi Client (4xx), lỗi Server (5xx)
    - Tổng thời gian thực thi
