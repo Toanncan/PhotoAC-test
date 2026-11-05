@@ -6,7 +6,7 @@ echo "      CAI DAT MOI TRUONG CHO VIDEO-AC STATUS CHECKER            "
 echo "================================================================"
 echo ""
 
-if ! command -v node &> /dev/null; then
+if ! command -v node > /dev/null 2>&1; then
     echo "[ERROR] May cua ban chua cai dat Node.js!"
     echo "Vui long cai dat Node.js tu: https://nodejs.org/ (Chon ban LTS)"
     exit 1
