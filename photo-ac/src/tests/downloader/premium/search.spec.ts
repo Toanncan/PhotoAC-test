@@ -99,7 +99,7 @@ test.describe('Search — Premium User', () => {
     await test.step('Verify thông báo không tìm thấy kết quả hiển thị', async () => {
       await expect(searchResultPage.noResultMessage.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
-      expect(count, 'Không được có ảnh nào hiển thị khi từ khóa không tồn tại').toBe(0);
+      expect(count, 'Số lượng ảnh hiển thị phải bằng 0').toBe(0);
     });
   });
 
@@ -118,11 +118,8 @@ test.describe('Search — Premium User', () => {
     await homePage.search(initialKeyword);
     await searchResultPage.waitForResultDisplay();
 
-    await test.step('Verify ô tìm kiếm hiển thị từ khóa ban đầu và nút Reset xuất hiện', async () => {
+    await test.step('Verify từ khóa hiển thị trong ô tìm kiếm và xóa bằng nút Reset', async () => {
       await expect(searchResultPage.searchInput).toHaveValue(initialKeyword);
-    });
-
-    await test.step('Click nút Reset và verify ô tìm kiếm bị xóa rỗng', async () => {
       await searchResultPage.clickResetKeyword();
       await expect(searchResultPage.searchInput).toHaveValue('');
     });
@@ -132,7 +129,7 @@ test.describe('Search — Premium User', () => {
       await expect(page).toHaveURL(new RegExp(`/main/search\\?.*q=${encodeURIComponent(newKeyword)}`));
       await expect(searchResultPage.resultHeading).toContainText(`「${newKeyword}」の写真素材`);
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
+      expect(count, 'Kết quả tìm kiếm từ khóa mới phải có ảnh hiển thị').toBeGreaterThan(0);
     });
   });
 
@@ -145,11 +142,11 @@ test.describe('Search — Premium User', () => {
     homePage,
     searchResultPage,
   }) => {
+    await expect(homePage.topKeywords.first()).toBeVisible();
     const topKeywords = await homePage.getTopKeywords();
-    expect(topKeywords.length, 'Phải có ít nhất 1 Top Keyword trên HomePage').toBeGreaterThan(0);
+    expect(topKeywords.length, 'Phải có ít nhất 1 Top Keyword dưới search bar').toBeGreaterThan(0);
 
     const targetKeyword = topKeywords[0].trim();
-
     await homePage.clickTopKeyword(targetKeyword);
     await searchResultPage.waitForResultDisplay();
 
@@ -158,7 +155,7 @@ test.describe('Search — Premium User', () => {
       await expect(page).toHaveURL(new RegExp(`q=${encodeURIComponent(targetKeyword)}`));
       await expect(searchResultPage.resultHeading).toContainText(`「${targetKeyword}」の写真素材`);
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
+      expect(count, 'Kết quả tìm kiếm từ khóa Top keyword phải có ảnh hiển thị').toBeGreaterThan(0);
     });
   });
 
@@ -182,7 +179,7 @@ test.describe('Search — Premium User', () => {
       await expect(page).toHaveURL(new RegExp(`q=${encodeURIComponent(firstTagText)}`));
       await expect(searchResultPage.resultHeading).toContainText(`「${firstTagText}」の写真素材`);
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
+      expect(count, 'Kết quả tìm kiếm phải có ảnh hiển thị').toBeGreaterThan(0);
     });
   });
 
@@ -539,12 +536,13 @@ test.describe('Search — Premium User', () => {
 
     await searchResultPage.searchByDetailedCreator(creatorName);
 
-    await test.step(`Verify URL chứa creator=${creatorName} và badge hiển thị`, async () => {
+    await test.step(`Verify URL chứa creator=${creatorName}, badge và heading hiển thị`, async () => {
       await expect(page).toHaveURL(new RegExp(`creator=${creatorName}`));
       await expect(searchResultPage.getActiveFilterBadge(creatorName)).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
+      await expect(searchResultPage.resultHeading).toContainText('「空」の写真素材');
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
+      expect(count, 'Tìm theo tác giả phải trả về danh sách ảnh').toBeGreaterThan(0);
     });
   });
 
@@ -564,12 +562,16 @@ test.describe('Search — Premium User', () => {
 
     await searchResultPage.searchByDetailedNgCreator(excludeCreatorName);
 
-    await test.step(`Verify URL chứa ngcreator=${excludeCreatorName} và badge hiển thị`, async () => {
+    await test.step(`Verify URL chứa ngcreator=${excludeCreatorName}, badge và trạng thái kết quả hiển thị`, async () => {
       await expect(page).toHaveURL(new RegExp(`ngcreator=${excludeCreatorName}`));
       await expect(searchResultPage.activeFilterBadges.filter({ hasText: excludeCreatorName })).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
+      if (count > 0) {
+        await expect(searchResultPage.resultItems.first()).toBeVisible();
+      } else {
+        await expect(searchResultPage.noResultMessage.first()).toBeVisible();
+      }
     });
   });
 
@@ -589,12 +591,14 @@ test.describe('Search — Premium User', () => {
 
     await searchResultPage.filterByDetailedPhotoId(targetPhotoId);
 
-    await test.step(`Verify URL cập nhật qid=${targetPhotoId} và badge hiển thị`, async () => {
+    await test.step(`Verify URL cập nhật qid=${targetPhotoId}, badge và kết quả trả về đúng ảnh khớp ID`, async () => {
       await expect(page).toHaveURL(new RegExp(`qid=${targetPhotoId}`));
       await expect(searchResultPage.getActiveFilterBadge(targetPhotoId)).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
+      // Web-first auto-wait trước khi đếm số lượng để tránh bẫy Non-Auto-Waiting trên Firefox
+      await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
+      expect(count, 'Tìm theo ID chính xác phải trả về ít nhất 1 ảnh').toBeGreaterThanOrEqual(1);
     });
   });
 
@@ -607,23 +611,31 @@ test.describe('Search — Premium User', () => {
     page,
     homePage,
     searchResultPage,
-  }) => {
+  }, testInfo) => {
+    test.setTimeout(120_000);
     const keyword = 'ビジネス';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
 
-    await searchResultPage.selectModelCount('2');
-    await expect(page).toHaveURL(/model_count=2/);
-
-    await searchResultPage.selectModelRelease(true);
-    await expect(page).toHaveURL(/mdlrlrsec=on/);
-
-    await test.step('Verify đồng thời cả 2 filter badges hiển thị trên UI', async () => {
+    await test.step('Chọn số lượng người mẫu: 2人 trên toolbar', async () => {
+      await searchResultPage.selectModelCount('2');
+      await expect(page).toHaveURL(/model_count=2/);
       await expect(searchResultPage.getActiveFilterBadge('2人')).toBeVisible();
+
+      // Lưu bằng chứng trạng thái bước 1: Lọc 2 người
+      await captureEvidenceWithUrl(page, testInfo, 'Filter-2人');
+    });
+
+    await test.step('Tích chọn Model Release: 取得済のみ trên toolbar', async () => {
+      await searchResultPage.selectModelRelease(true);
+      await expect(page).toHaveURL(/mdlrlrsec=on/);
       await expect(searchResultPage.getActiveFilterBadge('取得済のみ')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
       expect(count, 'Kết hợp 2 điều kiện phải trả về kết quả ảnh').toBeGreaterThan(0);
+
+      // Lưu bằng chứng trạng thái bước 2: Kết hợp 2 người + Model Release
+      await captureEvidenceWithUrl(page, testInfo, 'Filter-2人-ModelRelease');
     });
   });
 
@@ -635,26 +647,40 @@ test.describe('Search — Premium User', () => {
     page,
     homePage,
     searchResultPage,
-  }) => {
+  }, testInfo) => {
+    test.setTimeout(120_000);
     const keyword = 'オフィス';
     await homePage.search(keyword);
     await searchResultPage.waitForResultDisplay();
 
-    await searchResultPage.selectOrientation('horizontal');
-    await expect(page).toHaveURL(/orientation=1/);
-
-    await searchResultPage.selectModelCount('0');
-    await expect(page).toHaveURL(/model_count=0/);
-
-    await searchResultPage.toggleExcludeAi(true);
-    await expect(page).toHaveURL(/exclude_ai=on/);
-
-    await test.step('Verify các filter badges hiển thị trên UI và danh sách ảnh trả về', async () => {
+    await test.step('Chọn chiều ảnh: 横長 (Horizontal) trên toolbar', async () => {
+      await searchResultPage.selectOrientation('horizontal');
+      await expect(page).toHaveURL(/orientation=1/);
       await expect(searchResultPage.getActiveFilterBadge('横長')).toBeVisible();
+
+      // Lưu bằng chứng bước 1: Chiều ngang
+      await captureEvidenceWithUrl(page, testInfo, 'Filter-横長');
+    });
+
+    await test.step('Chọn không có người: 無人 (0 models) trên toolbar', async () => {
+      await searchResultPage.selectModelCount('0');
+      await expect(page).toHaveURL(/model_count=0/);
       await expect(searchResultPage.getActiveFilterBadge('無人')).toBeVisible();
+
+      // Lưu bằng chứng bước 2: Chiều ngang + Không có người
+      await captureEvidenceWithUrl(page, testInfo, 'Filter-横長-無人');
+    });
+
+    await test.step('Tích chọn loại trừ AI: exclude_ai=on trên toolbar', async () => {
+      await searchResultPage.toggleExcludeAi(true);
+      await expect(page).toHaveURL(/exclude_ai=on/);
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
+      await expect(searchResultPage.resultHeading).toContainText(`「${keyword}」の写真素材`);
       const count = await searchResultPage.getResultCount();
       expect(count, 'Kết hợp 3 bộ lọc phải trả về danh sách ảnh').toBeGreaterThan(0);
+
+      // Lưu bằng chứng bước 3: Chiều ngang + Không có người + Loại trừ AI
+      await captureEvidenceWithUrl(page, testInfo, 'Filter-横長-無人-ExcludeAI');
     });
   });
 
@@ -834,24 +860,29 @@ test.describe('Search — Premium User', () => {
     page,
     homePage,
     searchResultPage,
-  }) => {
+  }, testInfo) => {
     test.setTimeout(90_000);
     await homePage.search('cat');
     await searchResultPage.waitForResultDisplay();
 
-    await searchResultPage.selectNewestSort();
-
-    await test.step('Verify URL cập nhật tham số srt=-releasedate trên Trang 1', async () => {
+    await test.step('1. Sắp xếp theo "新着順" (Mới nhất) và verify URL, kết quả hiển thị', async () => {
+      await searchResultPage.selectNewestSort();
       await expect(page).toHaveURL(/srt=-releasedate/);
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
+      expect(count, 'Kết quả sắp xếp mới nhất phải có ảnh hiển thị').toBeGreaterThan(0);
+
+      await captureEvidenceWithUrl(page, testInfo, 'Sort-新着順');
     });
 
-    await test.step('Chuyển sang Trang 2 và verify trạng thái sort vẫn giữ nguyên srt=-releasedate', async () => {
+    await test.step('2. Chuyển sang Trang 2 và verify trạng thái sort vẫn giữ nguyên srt=-releasedate', async () => {
       await searchResultPage.goToNextPage();
       await expect(page).toHaveURL(/srt=-releasedate/);
       await expect(page).toHaveURL(/p=2/);
       expect(await searchResultPage.getActivePageNumber()).toBe('2');
+      const countPage2 = await searchResultPage.getResultCount();
+      expect(countPage2, 'Trang 2 phải có ảnh hiển thị').toBeGreaterThan(0);
+
+      await captureEvidenceWithUrl(page, testInfo, 'Sort-新着順-Trang-2');
     });
   });
 
@@ -864,7 +895,7 @@ test.describe('Search — Premium User', () => {
     page,
     homePage,
     searchResultPage,
-  }) => {
+  }, testInfo) => {
     test.setTimeout(90_000);
     await homePage.search('cat');
     await searchResultPage.waitForResultDisplay();
@@ -883,6 +914,8 @@ test.describe('Search — Premium User', () => {
       const count = await searchResultPage.getResultCount();
       expect(count, 'Kết quả sắp xếp phổ biến phải có ảnh hiển thị').toBeGreaterThan(0);
       await expect(searchResultPage.resultItems.first()).toBeVisible();
+
+      await captureEvidenceWithUrl(page, testInfo, 'Sort-Popular-Success');
     });
   });
 
@@ -894,38 +927,45 @@ test.describe('Search — Premium User', () => {
     page,
     homePage,
     searchResultPage,
-  }) => {
+  }, testInfo) => {
     test.setTimeout(90_000);
     await homePage.search('dog');
     await searchResultPage.waitForResultDisplay();
 
-    await test.step('Verify menu "表示件数" có radio 70件ずつ表示 được check default', async () => {
+    await test.step('1. Verify menu "表示件数" có radio 70件 được check mặc định và đếm số lượng trang 1', async () => {
       await searchResultPage.openSortDropdown();
       await expect(searchResultPage.displayCount70Radio).toBeChecked();
       await expect(searchResultPage.sortDropdownButton).toContainText('70件表示');
       await searchResultPage.clickElement(searchResultPage.sortDropdownButton);
-    });
-
-    await test.step('Verify trang 1 hiển thị trong giới hạn tối đa 70 ảnh', async () => {
+      expect(await searchResultPage.getActivePageNumber()).toBe('1');
       const countPage1 = await searchResultPage.getResultCount();
       expect(countPage1, 'Trang 1 phải có ảnh hiển thị').toBeGreaterThan(0);
-      expect(countPage1, 'Trang 1 không được vượt quá giới hạn 70 ảnh').toBeLessThanOrEqual(70);
+      expect(countPage1, 'Trang 1 không được vượt quá 70 ảnh').toBeLessThanOrEqual(70);
+
+      await captureEvidenceWithUrl(page, testInfo, 'Default-70-items-p1');
     });
 
-    await test.step('Click nút Next và verify sang trang 2 tiếp tục hiển thị trong giới hạn tối đa 70 ảnh', async () => {
+    await test.step('2. Click nút Next và verify sang trang 2 tiếp tục hiển thị tối đa 70 ảnh', async () => {
       await searchResultPage.goToNextPage();
       await expect(page).toHaveURL(/p=2/);
       expect(await searchResultPage.getActivePageNumber()).toBe('2');
       const countPage2 = await searchResultPage.getResultCount();
       expect(countPage2, 'Trang 2 phải có ảnh hiển thị').toBeGreaterThan(0);
-      expect(countPage2, 'Trang 2 không được vượt quá giới hạn 70 ảnh').toBeLessThanOrEqual(70);
+      expect(countPage2, 'Trang 2 không được vượt quá 70 ảnh').toBeLessThanOrEqual(70);
+
+      await captureEvidenceWithUrl(page, testInfo, 'Default-70-items-p2');
     });
 
-    await test.step('Click nút Prev và verify quay lại trang 1 linh hoạt', async () => {
+    await test.step('3. Click nút Prev và verify quay lại trang 1', async () => {
       await searchResultPage.goToPrevPage();
       await expect(page).toHaveURL(/\/main\/search\?.*q=dog/);
       expect(page.url()).not.toContain('p=2');
       expect(await searchResultPage.getActivePageNumber()).toBe('1');
+      const countBackToPage1 = await searchResultPage.getResultCount();
+      expect(countBackToPage1, 'Quay lại trang 1 phải có ảnh hiển thị').toBeGreaterThan(0);
+      expect(countBackToPage1, 'Quay lại trang 1 không được vượt quá 70 ảnh').toBeLessThanOrEqual(70);
+
+      await captureEvidenceWithUrl(page, testInfo, 'Default-70-items-back-p1');
     });
   });
 

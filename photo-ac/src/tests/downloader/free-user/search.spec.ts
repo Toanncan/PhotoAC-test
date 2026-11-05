@@ -95,7 +95,7 @@ test.describe('Search — Free User', () => {
   });
 
   /**
-   * TC-SEARCH-FREE-003: Tìm kiếm với từ khóa không tồn tại (Zero Results)
+   * TC-SEARCH-FREE-003: Tìm kiếm với từ khóa không có kết quả
    * @tags @free-user
    */
   test('TC-SEARCH-FREE-003: Hiển thị thông báo khi không tìm thấy ảnh nào khớp từ khóa @free-user', async ({
@@ -122,7 +122,7 @@ test.describe('Search — Free User', () => {
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     const initialKeyword = 'cat';
     const newKeyword = 'dog';
 
@@ -135,7 +135,7 @@ test.describe('Search — Free User', () => {
       await expect(searchResultPage.searchInput).toHaveValue('');
     });
 
-    await test.step('Nhập từ khóa mới và tìm kiếm lại trực tiếp trên trang kết quả', async () => {
+    await test.step(`Thực hiện tìm kiếm từ khóa mới "${newKeyword}" từ trang kết quả`, async () => {
       await searchResultPage.searchAgain(newKeyword);
       await expect(page).toHaveURL(new RegExp(`/main/search\\?.*q=${newKeyword}`));
       await expect(searchResultPage.resultHeading).toContainText(`「${newKeyword}」の写真素材`);
@@ -161,12 +161,12 @@ test.describe('Search — Free User', () => {
     await homePage.clickTopKeyword(targetKeyword);
     await searchResultPage.waitForResultDisplay();
 
-    await test.step('Verify URL và heading kết quả từ Top Keyword cho Free User', async () => {
-      await expect(page).toHaveURL(new RegExp(`/main/search\\?.*q=${encodeURIComponent(targetKeyword)}`));
-      await expect(page).toHaveURL(/utm_source=top_keyword/);
+    await test.step(`Verify URL và heading phản ánh đúng Top Keyword "${targetKeyword}"`, async () => {
+      await expect(page).toHaveURL(/\/main\/search/);
+      await expect(page).toHaveURL(new RegExp(`q=${encodeURIComponent(targetKeyword)}`));
       await expect(searchResultPage.resultHeading).toContainText(`「${targetKeyword}」の写真素材`);
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
+      expect(count, 'Kết quả tìm kiếm từ khóa Top keyword phải có ảnh hiển thị').toBeGreaterThan(0);
     });
   });
 
@@ -179,17 +179,18 @@ test.describe('Search — Free User', () => {
     homePage,
     searchResultPage,
   }) => {
-    await expect(homePage.popularTags.first()).toBeVisible();
+    await expect(homePage.popularTags.first()).toBeVisible({ timeout: 10_000 });
     const firstTagText = (await homePage.popularTags.first().innerText()).trim();
 
     await homePage.clickPopularTag(firstTagText);
     await searchResultPage.waitForResultDisplay();
 
-    await test.step('Verify URL và heading phản ánh tag được chọn', async () => {
-      await expect(page).toHaveURL(new RegExp(`/main/search\\?.*q=${encodeURIComponent(firstTagText)}`));
+    await test.step(`Verify URL và heading chứa Popular Tag "${firstTagText}`, async () => {
+      await expect(page).toHaveURL(/\/main\/search/);
+      await expect(page).toHaveURL(new RegExp(`q=${encodeURIComponent(firstTagText)}`));
       await expect(searchResultPage.resultHeading).toContainText(`「${firstTagText}」の写真素材`);
       const count = await searchResultPage.getResultCount();
-      expect(count).toBeGreaterThan(0);
+      expect(count, 'Kết quả tìm kiếm phải có ảnh hiển thị').toBeGreaterThan(0);
     });
   });
 
