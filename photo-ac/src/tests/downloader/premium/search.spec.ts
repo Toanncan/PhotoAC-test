@@ -166,12 +166,12 @@ test.describe('Search — Premium User', () => {
     homePage,
     searchResultPage,
   }) => {
-    await expect(homePage.topKeywords.first()).toBeVisible();
-    const topKeywords = await homePage.getTopKeywords();
-    expect(topKeywords.length, 'Phải có ít nhất 1 Top Keyword dưới search bar').toBeGreaterThan(0);
-
-    const targetKeyword = topKeywords[0].trim();
-    await test.step(`Click Top Keyword "${targetKeyword}" và đợi kết quả hiển thị`, async () => {
+    let targetKeyword = '';
+    await test.step('Lấy Top Keyword đầu tiên và chuyển đến trang kết quả', async () => {
+      await expect(homePage.topKeywords.first()).toBeVisible();
+      const topKeywords = await homePage.getTopKeywords();
+      expect(topKeywords.length, 'Phải có ít nhất 1 Top Keyword dưới search bar').toBeGreaterThan(0);
+      targetKeyword = topKeywords[0].trim();
       await homePage.clickTopKeyword(targetKeyword);
       await searchResultPage.waitForResultDisplay();
     });
@@ -193,10 +193,10 @@ test.describe('Search — Premium User', () => {
     homePage,
     searchResultPage,
   }) => {
-    await expect(homePage.popularTags.first()).toBeVisible({ timeout: 10_000 });
-    const firstTagText = (await homePage.popularTags.first().innerText()).trim();
-
-    await test.step(`Click Popular Tag "${firstTagText}" và đợi kết quả hiển thị`, async () => {
+    let firstTagText = '';
+    await test.step('Lấy Popular Tag đầu tiên và chuyển đến trang kết quả', async () => {
+      await expect(homePage.popularTags.first()).toBeVisible({ timeout: 10_000 });
+      firstTagText = (await homePage.popularTags.first().innerText()).trim();
       await homePage.clickPopularTag(firstTagText);
       await searchResultPage.waitForResultDisplay();
     });
@@ -265,9 +265,8 @@ test.describe('Search — Premium User', () => {
       await searchResultPage.waitForResultDisplay();
     });
 
-    await searchResultPage.selectPsdFormat();
-
-    await test.step('Verify URL, hiển thị huy hiệu lọc PSD và có kết quả tìm kiếm', async () => {
+    await test.step('Lọc theo định dạng ảnh PSD và verify kết quả hiển thị', async () => {
+      await searchResultPage.selectPsdFormat();
       await expect(page).toHaveURL(/sizesec=psd/);
       await expect(searchResultPage.getActiveFilterBadge('PSD形式ファイル')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
@@ -330,9 +329,8 @@ test.describe('Search — Premium User', () => {
       await searchResultPage.waitForResultDisplay();
     });
 
-    await searchResultPage.selectCategoryFromToolbar('人物');
-
-    await test.step('Verify URL cập nhật tham số danh mục c_names[]=1 hoặc c_id=1 và badge hiển thị', async () => {
+    await test.step('Lọc ảnh theo Danh mục (人物) và verify kết quả hiển thị', async () => {
+      await searchResultPage.selectCategoryFromToolbar('人物');
       await expect(page).toHaveURL(/c_names.*=1|c_id=1/);
       await expect(searchResultPage.getActiveFilterBadge('人物')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
@@ -355,9 +353,8 @@ test.describe('Search — Premium User', () => {
       await searchResultPage.waitForResultDisplay();
     });
 
-    await searchResultPage.selectColor('blue');
-
-    await test.step('Verify URL cập nhật tham số color=0000d6 và badge màu hiển thị', async () => {
+    await test.step('Lọc ảnh theo Màu sắc (青 / Blue) và verify kết quả hiển thị', async () => {
+      await searchResultPage.selectColor('blue');
       await expect(page).toHaveURL(/color=0000d6/);
       await expect(searchResultPage.getActiveColorBadge('0000d6')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
@@ -430,9 +427,8 @@ test.describe('Search — Premium User', () => {
       await searchResultPage.waitForResultDisplay();
     });
 
-    await searchResultPage.selectAge('young');
-
-    await test.step('Verify URL cập nhật tham số age=W và badge hiển thị', async () => {
+    await test.step('Lọc người mẫu theo Độ tuổi (若者) và verify kết quả hiển thị', async () => {
+      await searchResultPage.selectAge('young');
       await expect(page).toHaveURL(/age=W/);
       await expect(searchResultPage.getActiveFilterBadge('若者')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
@@ -455,9 +451,8 @@ test.describe('Search — Premium User', () => {
       await searchResultPage.waitForResultDisplay();
     });
 
-    await searchResultPage.selectModelRelease(true);
-
-    await test.step('Verify URL cập nhật tham số mdlrlrsec=on và badge hiển thị', async () => {
+    await test.step('Lọc ảnh có Giấy phép người mẫu (取得済のみ) và verify kết quả hiển thị', async () => {
+      await searchResultPage.selectModelRelease(true);
       await expect(page).toHaveURL(/mdlrlrsec=on/);
       await expect(searchResultPage.getActiveFilterBadge('取得済のみ')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
@@ -480,9 +475,8 @@ test.describe('Search — Premium User', () => {
       await searchResultPage.waitForResultDisplay();
     });
 
-    await searchResultPage.selectPropertyRelease(true);
-
-    await test.step('Verify URL cập nhật tham số prprlrsec=on và badge hiển thị', async () => {
+    await test.step('Lọc ảnh có Giấy phép tài sản (取得済のみ) và verify kết quả hiển thị', async () => {
+      await searchResultPage.selectPropertyRelease(true);
       await expect(page).toHaveURL(/prprlrsec=on/);
       await expect(searchResultPage.getActiveFilterBadge('取得済のみ')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
@@ -505,9 +499,8 @@ test.describe('Search — Premium User', () => {
       await searchResultPage.waitForResultDisplay();
     });
 
-    await searchResultPage.toggleExcludeAi(true);
-
-    await test.step('Verify URL cập nhật tham số exclude_ai=on và có kết quả hiển thị', async () => {
+    await test.step('Lọc loại trừ ảnh do AI tạo và verify kết quả hiển thị', async () => {
+      await searchResultPage.toggleExcludeAi(true);
       await expect(page).toHaveURL(/exclude_ai=on/);
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
@@ -528,9 +521,8 @@ test.describe('Search — Premium User', () => {
       await searchResultPage.waitForResultDisplay();
     });
 
-    await searchResultPage.toggleExactMatch(true);
-
-    await test.step('Verify URL cập nhật tham số type_search=phrase và có kết quả hiển thị', async () => {
+    await test.step('Lọc tìm kiếm khớp chính xác (完全一致) và verify kết quả hiển thị', async () => {
+      await searchResultPage.toggleExactMatch(true);
       await expect(page).toHaveURL(/type_search=phrase/);
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
@@ -554,9 +546,8 @@ test.describe('Search — Premium User', () => {
       await searchResultPage.waitForResultDisplay();
     });
 
-    await searchResultPage.applyExcludeKeyword(excludeKeyword);
-
-    await test.step(`Verify URL cập nhật nq=${encodeURIComponent(excludeKeyword)} và badge hiển thị`, async () => {
+    await test.step(`Lọc theo Từ khóa loại trừ "${excludeKeyword}" và verify kết quả hiển thị`, async () => {
+      await searchResultPage.applyExcludeKeyword(excludeKeyword);
       await expect(page).toHaveURL(new RegExp(`nq=${encodeURIComponent(excludeKeyword)}`));
       await expect(searchResultPage.getActiveFilterBadge(excludeKeyword)).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
@@ -581,9 +572,8 @@ test.describe('Search — Premium User', () => {
       await searchResultPage.waitForResultDisplay();
     });
 
-    await searchResultPage.searchByDetailedCreator(creatorName);
-
-    await test.step(`Verify URL chứa creator=${creatorName}, badge và heading hiển thị`, async () => {
+    await test.step(`Lọc ảnh theo Tác giả "${creatorName}" và verify kết quả hiển thị`, async () => {
+      await searchResultPage.searchByDetailedCreator(creatorName);
       await expect(page).toHaveURL(new RegExp(`creator=${creatorName}`, 'i'));
       await expect(searchResultPage.getActiveFilterBadge(creatorName)).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
@@ -609,9 +599,8 @@ test.describe('Search — Premium User', () => {
       await searchResultPage.waitForResultDisplay();
     });
 
-    await searchResultPage.searchByDetailedNgCreator(excludeCreatorName);
-
-    await test.step(`Verify URL chứa ngcreator=${excludeCreatorName}, badge và trạng thái kết quả hiển thị`, async () => {
+    await test.step(`Lọc ảnh loại trừ Tác giả "${excludeCreatorName}" và verify kết quả hiển thị`, async () => {
+      await searchResultPage.searchByDetailedNgCreator(excludeCreatorName);
       await expect(page).toHaveURL(new RegExp(`ngcreator=${excludeCreatorName}`));
       await expect(searchResultPage.activeFilterBadges.filter({ hasText: excludeCreatorName })).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
@@ -637,9 +626,8 @@ test.describe('Search — Premium User', () => {
       await searchResultPage.waitForResultDisplay();
     });
 
-    await searchResultPage.filterByDetailedPhotoId(photoId);
-
-    await test.step(`Verify URL cập nhật qid=${photoId}, badge và kết quả trả về đúng ảnh khớp ID`, async () => {
+    await test.step(`Lọc ảnh theo mã ID "${photoId}" và verify kết quả hiển thị`, async () => {
+      await searchResultPage.filterByDetailedPhotoId(photoId);
       await expect(page).toHaveURL(new RegExp(`qid=${photoId}`));
       await expect(searchResultPage.getActiveFilterBadge(photoId)).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
@@ -738,8 +726,10 @@ test.describe('Search — Premium User', () => {
     searchResultPage,
   }) => {
     test.setTimeout(90_000);
-    await homePage.uploadImageForSearch(sampleImagePath);
-    await searchResultPage.waitForResultDisplay();
+    await test.step('Tải ảnh lên tìm kiếm tương đồng và đợi kết quả hiển thị', async () => {
+      await homePage.uploadImageForSearch(sampleImagePath);
+      await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Verify điều hướng đến trang kết quả tìm kiếm bằng hình ảnh', async () => {
       await expect(page).toHaveURL(/\/search\/ris/i);
@@ -757,9 +747,8 @@ test.describe('Search — Premium User', () => {
     searchResultPage,
   }, testInfo) => {
     test.setTimeout(90_000);
-    await searchResultPage.goToRecommendedSearch();
-
-    await test.step('Verify URL ban đầu chứa tham số rcm=1', async () => {
+    await test.step('Truy cập trang Recommended Search và verify danh sách ảnh hiển thị', async () => {
+      await searchResultPage.goToRecommendedSearch();
       await expect(page).toHaveURL(/rcm=1/);
       await expect(searchResultPage.resultHeading).toContainText('「おすすめ」の写真素材');
       const count = await searchResultPage.getResultCount();
@@ -787,9 +776,8 @@ test.describe('Search — Premium User', () => {
     searchResultPage,
   }, testInfo) => {
     test.setTimeout(90_000);
-    await searchResultPage.goToPsdSearch();
-
-    await test.step('Verify trang PSD Search hiển thị tiêu đề PSD素材', async () => {
+    await test.step('Truy cập trang PSD Format Search và verify danh sách ảnh hiển thị', async () => {
+      await searchResultPage.goToPsdSearch();
       await expect(searchResultPage.resultHeading).toContainText('PSD素材');
       const count = await searchResultPage.getResultCount();
       expect(count, 'Trang phải có ít nhất 1 ảnh hiển thị').toBeGreaterThan(0);
@@ -819,7 +807,9 @@ test.describe('Search — Premium User', () => {
     test.setTimeout(90_000);
     const photoId = '35133353';
 
-    await photoDetailPage.goToPhotoDetail(photoId);
+    await test.step(`Truy cập trang chi tiết ảnh photo ID: ${photoId}`, async () => {
+      await photoDetailPage.goToPhotoDetail(photoId);
+    });
 
     await test.step('Click vào thumbnail khuôn mặt AI tại mục "AIで同じモデルの写真を探す"', async () => {
       await photoDetailPage.clickAiFaceThumbnail(0);
@@ -855,9 +845,8 @@ test.describe('Search — Premium User', () => {
     trendsPage,
   }, testInfo) => {
     test.setTimeout(90_000);
-    await trendsPage.goToTrendsPage();
-
-    await test.step('Verify tiêu đề H1 và danh sách ảnh mặc định của trang Trends', async () => {
+    await test.step('Truy cập trang Trends (人気の写真素材) và verify danh sách ảnh mặc định', async () => {
+      await trendsPage.goToTrendsPage();
       await expect(trendsPage.resultHeading).toBeVisible();
       await expect(trendsPage.resultHeading).toHaveText('人気の写真素材');
 
@@ -959,9 +948,8 @@ test.describe('Search — Premium User', () => {
       await searchResultPage.waitForResultDisplay();
     });
 
-    await searchResultPage.selectPopularSort();
-
-    await test.step('Verify URL cập nhật tham số srt=recent_popular', async () => {
+    await test.step('Sắp xếp theo "人気順" (Phổ biến) và verify URL cập nhật tham số srt=recent_popular', async () => {
+      await searchResultPage.selectPopularSort();
       await expect(page).toHaveURL(/srt=recent_popular/);
     });
 
@@ -1145,17 +1133,15 @@ test.describe('Search — Premium User', () => {
   }, testInfo) => {
     await test.step('Verify thanh Sticky Search Bar ban đầu ở đầu trang bị ẩn', async () => {
       await expect(homePage.stickySearchArea).toBeHidden();
+      await captureEvidenceWithUrl(page, testInfo, 'Sticky-Search-Hidden');
     });
-
-    await captureEvidenceWithUrl(page, testInfo, 'Sticky-Search-Hidden');
 
     await test.step('Cuộn trang xuống dưới và verify Sticky Search Bar hiển thị', async () => {
       await homePage.scrollToActivateStickySearch(800);
       await expect(homePage.stickySearchArea).toBeVisible();
       await expect(homePage.stickySearchInput).toBeVisible();
+      await captureEvidenceWithUrl(page, testInfo, 'Sticky-Search-Shown');
     });
-
-    await captureEvidenceWithUrl(page, testInfo, 'Sticky-Search-Shown');
 
     await test.step('Cuộn trang ngược lên đỉnh và verify Sticky Search Bar tự động ẩn đi', async () => {
       await homePage.scrollToTop();
@@ -1224,9 +1210,9 @@ test.describe('Search — Premium User', () => {
       await expect(searchResultPage.getQuickViewDownloadButton('S')).toBeVisible({ timeout: 5_000 });
       await expect(searchResultPage.getQuickViewDownloadButton('M')).toBeVisible({ timeout: 5_000 });
       await expect(searchResultPage.getQuickViewDownloadButton('L')).toBeVisible({ timeout: 5_000 });
-    });
 
-    await captureEvidenceWithUrl(page, testInfo, 'Premium-QuickView-Download-Popup');
+      await captureEvidenceWithUrl(page, testInfo, 'Premium-QuickView-Download-Popup');
+    });
 
     await test.step('Đóng popup QuickView', async () => {
       await searchResultPage.closeQuickViewModal();
