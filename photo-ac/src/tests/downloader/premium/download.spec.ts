@@ -1,4 +1,5 @@
 import { test, expect } from '../../../fixtures/base.fixture';
+import { captureEvidenceWithUrl } from '../../../utils/helpers';
 import { PhotoDetailPage } from '../../../pages/downloader/photo-detail.page';
 
 /**
@@ -17,12 +18,19 @@ test.describe('Download — Premium User', () => {
     });
   });
 
+  // ==========================================
+  // Nhóm 1: Tải ảnh đơn lẻ (Single Download)
+  // ==========================================
+
   /**
    * TC-DOWNLOAD-PREM-001: Premium User tải ảnh Size S thành công
    */
-  test('TC-DOWNLOAD-PREM-001: Premium User tải ảnh Size S thành công @premium @download', async ({
+  test('TC-DOWNLOAD-PREM-001: Tải ảnh Size S thành công', async ({
+    page,
     photoDetailPage,
-  }) => {
+  }, testInfo) => {
+    test.setTimeout(90_000);
+
     await test.step('Click download ảnh Size S và xác minh tải về thành công', async () => {
       await expect(photoDetailPage.premiumDownloadButtonS).toBeVisible();
       const download = await photoDetailPage.downloadAsPremium('S');
@@ -34,36 +42,24 @@ test.describe('Download — Premium User', () => {
 
       const failure = await download.failure();
       expect(failure).toBeNull();
+
+      await captureEvidenceWithUrl(page, testInfo, 'Premium-Download-Size-S-Success');
     });
   });
 
+  // ==========================================
+  // Nhóm 2: Tải hàng loạt (Bulk Download)
+  // ==========================================
+
   /**
-   * TC-DOWNLOAD-PREM-002: Premium User mở tác phẩm bằng công cụ Design AC
+   * TC-DOWNLOAD-PREM-002: Thêm ảnh vào Bulk Download và mở Modal kiểm tra
    */
-  test('TC-DOWNLOAD-PREM-002: Premium User click Mở bằng công cụ Design AC @premium @download', async ({
+  test('TC-DOWNLOAD-PREM-002: Thêm ảnh vào Bulk Download và mở Modal kiểm tra', async ({
     page,
     photoDetailPage,
-  }) => {
-    await test.step('Click button 無料編集ツールで開く', async () => {
-      await expect(photoDetailPage.premiumOpenDesignToolS).toBeVisible();
-      const newPage = await photoDetailPage.clickOpenDesignTool('S');
+  }, testInfo) => {
+    test.setTimeout(90_000);
 
-      if (newPage) {
-        await newPage.waitForLoadState('domcontentloaded');
-        expect(newPage.url()).toMatch(/design-ac|editor/i);
-        await newPage.close();
-      } else {
-        await expect(page).toHaveURL(/design-ac|editor/i);
-      }
-    });
-  });
-
-  /**
-   * TC-DOWNLOAD-PREM-003: Premium User thêm ảnh vào Bulk Download và mở Modal kiểm tra
-   */
-  test('TC-DOWNLOAD-PREM-003: Premium User thêm ảnh vào Bulk Download và mở Modal kiểm tra @premium @download @bulk-download', async ({
-    photoDetailPage,
-  }) => {
     try {
       await test.step('Dọn dẹp danh sách tải hàng loạt nếu có dữ liệu cũ', async () => {
         await photoDetailPage.clearBulkDownloadIfAny();
@@ -77,6 +73,8 @@ test.describe('Download — Premium User', () => {
       await test.step('Xác minh số lượng trên Toolbar Bulk Download hiển thị chính xác', async () => {
         await expect(photoDetailPage.toolbarBulkDownloadCount).toBeVisible();
         await expect(photoDetailPage.toolbarBulkDownloadCount).toContainText('1');
+
+        await captureEvidenceWithUrl(page, testInfo, 'Premium-Bulk-Download-Badge-Count');
       });
 
       await test.step('Click mở Modal Bulk Download và xác minh thông tin tác phẩm', async () => {
@@ -85,6 +83,8 @@ test.describe('Download — Premium User', () => {
         await expect(photoDetailPage.bulkDownloadModalTitle).toContainText('まとめてダウンロードに選択中の素材');
         await expect(photoDetailPage.bulkDownloadModalCount).toHaveText('1');
         await expect(photoDetailPage.bulkDownloadModalItems).toHaveCount(1);
+
+        await captureEvidenceWithUrl(page, testInfo, 'Premium-Bulk-Download-Modal');
       });
 
       await test.step('Xóa ảnh khỏi Modal và xác minh danh sách trống', async () => {
@@ -93,6 +93,8 @@ test.describe('Download — Premium User', () => {
         await expect(photoDetailPage.bulkDownloadModalEmptyMessage).toContainText(
           'まとめてダウンロード素材はまだありません。'
         );
+
+        await captureEvidenceWithUrl(page, testInfo, 'Premium-Bulk-Download-Modal-Empty');
       });
     } finally {
       await photoDetailPage.closeBulkDownloadModal().catch(() => {});
@@ -100,11 +102,14 @@ test.describe('Download — Premium User', () => {
   });
 
   /**
-   * TC-DOWNLOAD-PREM-004: Premium User thực hiện tải hàng loạt (Bulk Download) thành công
+   * TC-DOWNLOAD-PREM-003: Thực hiện tải hàng loạt (Bulk Download) thành công
    */
-  test('TC-DOWNLOAD-PREM-004: Premium User thực hiện tải hàng loạt (Bulk Download) thành công @premium @download @bulk-download', async ({
+  test('TC-DOWNLOAD-PREM-003: Thực hiện tải hàng loạt (Bulk Download) thành công', async ({
+    page,
     photoDetailPage,
-  }) => {
+  }, testInfo) => {
+    test.setTimeout(90_000);
+
     try {
       await test.step('Dọn dẹp danh sách tải hàng loạt nếu có dữ liệu cũ', async () => {
         await photoDetailPage.clearBulkDownloadIfAny();
@@ -130,10 +135,40 @@ test.describe('Download — Premium User', () => {
 
         const failure = await download.failure();
         expect(failure).toBeNull();
+
+        await captureEvidenceWithUrl(page, testInfo, 'Premium-Bulk-Download-Execution-Success');
       });
     } finally {
       await photoDetailPage.closeBulkDownloadModal().catch(() => {});
     }
   });
-});
 
+  // ==========================================
+  // Nhóm 3: Mở bằng công cụ Design AC
+  // ==========================================
+
+  /**
+   * TC-DOWNLOAD-PREM-004: Mở tác phẩm bằng công cụ Design AC
+   */
+  test('TC-DOWNLOAD-PREM-004: Click Mở bằng công cụ Design AC', async ({
+    page,
+    photoDetailPage,
+  }, testInfo) => {
+    test.setTimeout(60_000);
+
+    await test.step('Click button 無料編集ツールで開く', async () => {
+      await expect(photoDetailPage.premiumOpenDesignToolS).toBeVisible();
+      const newPage = await photoDetailPage.clickOpenDesignTool('S');
+
+      if (newPage) {
+        await newPage.waitForLoadState('domcontentloaded');
+        expect(newPage.url()).toMatch(/design-ac|editor/i);
+        await captureEvidenceWithUrl(newPage, testInfo, 'Premium-Design-AC-Opened');
+        await newPage.close();
+      } else {
+        await expect(page).toHaveURL(/design-ac|editor/i);
+        await captureEvidenceWithUrl(page, testInfo, 'Premium-Design-AC-Opened');
+      }
+    });
+  });
+});

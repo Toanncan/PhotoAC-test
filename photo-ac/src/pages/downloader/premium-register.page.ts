@@ -1,4 +1,4 @@
-import { type Page, type Locator, test } from '@playwright/test';
+import { type Page, type Locator } from '@playwright/test';
 import { BasePage } from '../common/base.page';
 
 /**
@@ -104,50 +104,48 @@ export class PremiumRegisterPage extends BasePage {
    * if it appears upon selecting the radio option.
    */
   async selectCreditCardPayment(): Promise<void> {
-    await test.step('Select Credit Card payment option and handle confirmation modal if needed', async () => {
-      // Bypass global timezone modal by setting verified flag in localStorage
-      await this.page.evaluate(() => {
-        try {
-          localStorage.setItem('hideModalGlobal', 'true');
-        } catch (_) {}
-      }).catch(() => {});
+    // Bypass global timezone modal by setting verified flag in localStorage
+    await this.page.evaluate(() => {
+      try {
+        localStorage.setItem('hideModalGlobal', 'true');
+      } catch (_) {}
+    }).catch(() => {});
 
-      // Dismiss global modal if already visible
-      if (await this.globalConfirmButton.isVisible().catch(() => false)) {
-        await this.globalConfirmButton.click().catch(() => {});
-        await this.globalConfirmButton.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
-      }
+    // Dismiss global modal if already visible
+    if (await this.globalConfirmButton.isVisible().catch(() => false)) {
+      await this.globalConfirmButton.click().catch(() => {});
+      await this.globalConfirmButton.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
+    }
 
-      await this.creditCardLabel.scrollIntoViewIfNeeded().catch(() => {});
+    await this.creditCardLabel.scrollIntoViewIfNeeded().catch(() => {});
+    await this.creditCardLabel.click().catch(() => {});
+
+    // If global modal popped up after click, dismiss it
+    if (await this.globalConfirmButton.isVisible({ timeout: 2_000 }).catch(() => false)) {
+      await this.globalConfirmButton.click().catch(() => {});
+      await this.globalConfirmButton.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
       await this.creditCardLabel.click().catch(() => {});
+    }
 
-      // If global modal popped up after click, dismiss it
-      if (await this.globalConfirmButton.isVisible({ timeout: 2_000 }).catch(() => false)) {
-        await this.globalConfirmButton.click().catch(() => {});
-        await this.globalConfirmButton.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
-        await this.creditCardLabel.click().catch(() => {});
-      }
+    // Ensure radio is checked
+    const isChecked = await this.creditCardRadio.isChecked().catch(() => false);
+    if (!isChecked) {
+      await this.creditCardLabel.click().catch(() => {});
+    }
 
-      // Ensure radio is checked
-      const isChecked = await this.creditCardRadio.isChecked().catch(() => false);
-      if (!isChecked) {
-        await this.creditCardLabel.click().catch(() => {});
-      }
+    // Ensure credit card form container is displayed
+    const isInputVisible = await this.cardNumberInput.isVisible().catch(() => false);
+    if (!isInputVisible) {
+      await this.page.evaluate(() => {
+        const w = window as any;
+        if (typeof w.showCreditCardForm === 'function') {
+          w.showCreditCardForm();
+        }
+      }).catch(() => {});
+    }
 
-      // Ensure credit card form container is displayed
-      const isInputVisible = await this.cardNumberInput.isVisible().catch(() => false);
-      if (!isInputVisible) {
-        await this.page.evaluate(() => {
-          const w = window as any;
-          if (typeof w.showCreditCardForm === 'function') {
-            w.showCreditCardForm();
-          }
-        }).catch(() => {});
-      }
-
-      // Wait for credit card number input to become visible
-      await this.cardNumberInput.waitFor({ state: 'visible', timeout: 15_000 });
-    });
+    // Wait for credit card number input to become visible
+    await this.cardNumberInput.waitFor({ state: 'visible', timeout: 15_000 });
   }
 
   /**
@@ -160,33 +158,27 @@ export class PremiumRegisterPage extends BasePage {
     expireYear: string;
     securityCode: string;
   }): Promise<void> {
-    await test.step('Fill Credit Card details', async () => {
-      await this.fillInput(this.cardNumberInput, cardInfo.cardNo);
-      await this.expireMonthSelect.selectOption(cardInfo.expireMonth);
-      await this.expireYearSelect.selectOption(cardInfo.expireYear);
-      await this.fillInput(this.securityCodeInput, cardInfo.securityCode);
-    });
+    await this.fillInput(this.cardNumberInput, cardInfo.cardNo);
+    await this.expireMonthSelect.selectOption(cardInfo.expireMonth);
+    await this.expireYearSelect.selectOption(cardInfo.expireYear);
+    await this.fillInput(this.securityCodeInput, cardInfo.securityCode);
   }
 
   /**
    * Ensure Terms agreement checkbox is checked.
    */
   async ensureTermsAgreed(): Promise<void> {
-    await test.step('Ensure Terms agreement checkbox is checked', async () => {
-      const isChecked = await this.agreeTermsCheckbox.isChecked().catch(() => false);
-      if (!isChecked) {
-        await this.agreeTermsCheckbox.check();
-      }
-    });
+    const isChecked = await this.agreeTermsCheckbox.isChecked().catch(() => false);
+    if (!isChecked) {
+      await this.agreeTermsCheckbox.check();
+    }
   }
 
   /**
    * Click submit button to participate in Premium service.
    */
   async clickSubmitRegistration(): Promise<void> {
-    await test.step('Click Submit Registration button (プレミアム会員サービスに参加する)', async () => {
-      await this.clickElement(this.submitButton);
-    });
+    await this.clickElement(this.submitButton);
   }
 
   /**
@@ -195,55 +187,53 @@ export class PremiumRegisterPage extends BasePage {
    * @param timeoutMs - Maximum time to wait for reCAPTCHA modal to appear (default: 8000ms)
    */
   async handleRecaptchaIfPresent(timeoutMs: number = 8_000): Promise<boolean> {
-    return await test.step('Handle reCAPTCHA challenge modal if present', async () => {
-      const isModalVisible = await this.recaptchaModal
-        .waitFor({ state: 'visible', timeout: timeoutMs })
-        .then(() => true)
-        .catch(() => false);
+    const isModalVisible = await this.recaptchaModal
+      .waitFor({ state: 'visible', timeout: timeoutMs })
+      .then(() => true)
+      .catch(() => false);
 
-      if (!isModalVisible) {
-        return false;
-      }
+    if (!isModalVisible) {
+      return false;
+    }
 
-      const recaptchaAnchor = this.page
-        .frameLocator('iframe[src*="/recaptcha/api2/anchor"]')
-        .locator('#recaptcha-anchor');
+    const recaptchaAnchor = this.page
+      .frameLocator('iframe[src*="/recaptcha/api2/anchor"]')
+      .locator('#recaptcha-anchor');
 
-      await recaptchaAnchor.waitFor({ state: 'visible', timeout: 10_000 }).catch(() => {});
-      if (!(await recaptchaAnchor.isVisible().catch(() => false))) {
-        return false;
-      }
+    await recaptchaAnchor.waitFor({ state: 'visible', timeout: 10_000 }).catch(() => {});
+    if (!(await recaptchaAnchor.isVisible().catch(() => false))) {
+      return false;
+    }
 
-      let isChecked =
-        (await recaptchaAnchor.getAttribute('aria-checked').catch(() => 'false')) === 'true';
+    let isChecked =
+      (await recaptchaAnchor.getAttribute('aria-checked').catch(() => 'false')) === 'true';
 
-      if (!isChecked) {
-        await recaptchaAnchor.click().catch(() => {});
-      }
+    if (!isChecked) {
+      await recaptchaAnchor.click().catch(() => {});
+    }
 
-      // Wait up to 25s for checkmark to appear
-      let checked = await this.page
+    // Wait up to 25s for checkmark to appear
+    let checked = await this.page
+      .frameLocator('iframe[src*="/recaptcha/api2/anchor"]')
+      .locator('#recaptcha-anchor[aria-checked="true"]')
+      .waitFor({ state: 'visible', timeout: 25_000 })
+      .then(() => true)
+      .catch(() => false);
+
+    // If expired or not checked, retry clicking once more
+    if (!checked && (await this.recaptchaModal.isVisible().catch(() => false))) {
+      await recaptchaAnchor.click().catch(() => {});
+      checked = await this.page
         .frameLocator('iframe[src*="/recaptcha/api2/anchor"]')
         .locator('#recaptcha-anchor[aria-checked="true"]')
         .waitFor({ state: 'visible', timeout: 25_000 })
         .then(() => true)
         .catch(() => false);
+    }
 
-      // If expired or not checked, retry clicking once more
-      if (!checked && (await this.recaptchaModal.isVisible().catch(() => false))) {
-        await recaptchaAnchor.click().catch(() => {});
-        checked = await this.page
-          .frameLocator('iframe[src*="/recaptcha/api2/anchor"]')
-          .locator('#recaptcha-anchor[aria-checked="true"]')
-          .waitFor({ state: 'visible', timeout: 25_000 })
-          .then(() => true)
-          .catch(() => false);
-      }
-
-      // Wait for modal to automatically hide after Ajax verification triggers doPurchase()
-      await this.recaptchaModal.waitFor({ state: 'hidden', timeout: 20_000 }).catch(() => {});
-      return checked;
-    });
+    // Wait for modal to automatically hide after Ajax verification triggers doPurchase()
+    await this.recaptchaModal.waitFor({ state: 'hidden', timeout: 20_000 }).catch(() => {});
+    return checked;
   }
 
   /**
@@ -251,28 +241,26 @@ export class PremiumRegisterPage extends BasePage {
    * Iterates through visible select elements, filters valid non-empty options, and selects valid answers.
    */
   async fillQuestionnaire(): Promise<void> {
-    await test.step('Fill questionnaire survey options on /premium/confirm (アンケート)', async () => {
-      const selects = this.questionnaireSelects;
-      const count = await selects.count();
-      for (let i = 0; i < count; i++) {
-        const select = selects.nth(i);
-        if (await select.isVisible().catch(() => false)) {
-          await select.scrollIntoViewIfNeeded().catch(() => {});
-          const validValues = await select
-            .locator('option')
-            .evaluateAll((opts: HTMLOptionElement[]) =>
-              opts.map((o) => o.value).filter((val) => val && val.trim() !== '' && val !== '0')
-            )
-            .catch(() => []);
+    const selects = this.questionnaireSelects;
+    const count = await selects.count();
+    for (let i = 0; i < count; i++) {
+      const select = selects.nth(i);
+      if (await select.isVisible().catch(() => false)) {
+        await select.scrollIntoViewIfNeeded().catch(() => {});
+        const validValues = await select
+          .locator('option')
+          .evaluateAll((opts: HTMLOptionElement[]) =>
+            opts.map((o) => o.value).filter((val) => val && val.trim() !== '' && val !== '0')
+          )
+          .catch(() => []);
 
-          if (validValues.length > 0) {
-            await select.selectOption(validValues[0]).catch(() => {});
-          } else {
-            await select.selectOption({ index: 1 }).catch(() => {});
-          }
+        if (validValues.length > 0) {
+          await select.selectOption(validValues[0]).catch(() => {});
+        } else {
+          await select.selectOption({ index: 1 }).catch(() => {});
         }
       }
-    });
+    }
   }
 
   /**
@@ -280,15 +268,13 @@ export class PremiumRegisterPage extends BasePage {
    * Fills the questionnaire survey and clicks the final submit button.
    */
   async confirmAndFinalizeSubscription(): Promise<void> {
-    await test.step('Fill questionnaire survey and click final submit button on /premium/confirm', async () => {
-      // 1. Fill questionnaire survey dropdowns
-      await this.fillQuestionnaire();
+    // 1. Fill questionnaire survey dropdowns
+    await this.fillQuestionnaire();
 
-      // 2. Click final submission button
-      await this.confirmSubmitButton.waitFor({ state: 'visible', timeout: 15_000 });
-      await this.confirmSubmitButton.scrollIntoViewIfNeeded().catch(() => {});
-      await this.clickElement(this.confirmSubmitButton);
-    });
+    // 2. Click final submission button
+    await this.confirmSubmitButton.waitFor({ state: 'visible', timeout: 15_000 });
+    await this.confirmSubmitButton.scrollIntoViewIfNeeded().catch(() => {});
+    await this.clickElement(this.confirmSubmitButton);
   }
 
   /**
@@ -302,21 +288,19 @@ export class PremiumRegisterPage extends BasePage {
     registeredEmail: string;
     contractPeriodText: string;
   }> {
-    return await test.step('Extract confirmation billing details from /premium/confirm', async () => {
-      const serviceName = (await this.page.locator('table tr').filter({ hasText: 'プレミアム会員サービス' }).first().innerText().catch(() => '')).replace(/\s+/g, ' ').trim();
-      const priceText = (await this.page.locator('table tr').filter({ hasText: '価格' }).first().innerText().catch(() => '')).replace(/\s+/g, ' ').trim();
-      const paymentMethodText = (await this.page.locator('table tr').filter({ hasText: '支払い方法' }).first().innerText().catch(() => '')).replace(/\s+/g, ' ').trim();
-      const registeredEmail = (await this.page.locator('table tr').filter({ hasText: 'ご登録メールアドレス' }).first().innerText().catch(() => '')).replace(/\s+/g, ' ').trim();
-      const contractPeriodText = (await this.page.locator('table tr').filter({ hasText: '契約期間' }).first().innerText().catch(() => '')).replace(/\s+/g, ' ').trim();
+    const serviceName = (await this.page.locator('table tr').filter({ hasText: 'プレミアム会員サービス' }).first().innerText().catch(() => '')).replace(/\s+/g, ' ').trim();
+    const priceText = (await this.page.locator('table tr').filter({ hasText: '価格' }).first().innerText().catch(() => '')).replace(/\s+/g, ' ').trim();
+    const paymentMethodText = (await this.page.locator('table tr').filter({ hasText: '支払い方法' }).first().innerText().catch(() => '')).replace(/\s+/g, ' ').trim();
+    const registeredEmail = (await this.page.locator('table tr').filter({ hasText: 'ご登録メールアドレス' }).first().innerText().catch(() => '')).replace(/\s+/g, ' ').trim();
+    const contractPeriodText = (await this.page.locator('table tr').filter({ hasText: '契約期間' }).first().innerText().catch(() => '')).replace(/\s+/g, ' ').trim();
 
-      return {
-        serviceName,
-        priceText,
-        paymentMethodText,
-        registeredEmail,
-        contractPeriodText,
-      };
-    });
+    return {
+      serviceName,
+      priceText,
+      paymentMethodText,
+      registeredEmail,
+      contractPeriodText,
+    };
   }
 }
 

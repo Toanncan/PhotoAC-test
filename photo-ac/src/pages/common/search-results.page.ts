@@ -1,4 +1,4 @@
-import { type Page, type Locator, test, expect } from '@playwright/test';
+import { type Page, type Locator, expect } from '@playwright/test';
 import { BasePage } from './base.page';
 
 /**
@@ -277,11 +277,9 @@ export class SearchResultPage extends BasePage {
    * @param timeout - Maximum timeout in ms (default 15_000)
    */
   async waitForResultDisplay(timeout: number = 15_000): Promise<void> {
-    await test.step('Wait for search result display', async () => {
-      await this.waitForPageLoadingIconHidden();
-      await this.resultsOrNoResultLocator.waitFor({ state: 'visible', timeout });
-      await this.dismissIntroDialogIfPresent();
-    });
+    await this.waitForPageLoadingIconHidden();
+    await this.resultsOrNoResultLocator.waitFor({ state: 'visible', timeout });
+    await this.dismissIntroDialogIfPresent();
   }
 
   /**
@@ -299,87 +297,71 @@ export class SearchResultPage extends BasePage {
    * Perform a new search from the results page header.
    */
   async searchAgain(keyword: string): Promise<void> {
-    await test.step(`Search again with keyword: "${keyword}"`, async () => {
-      await this.fillInput(this.searchInput, keyword);
-      await this.page.keyboard.press('Enter');
-      await this.waitForResultDisplay();
-    });
+    await this.fillInput(this.searchInput, keyword);
+    await this.page.keyboard.press('Enter');
+    await this.waitForResultDisplay();
   }
 
   /**
    * Click the reset button inside the search input.
    */
   async clickResetKeyword(): Promise<void> {
-    await test.step('Click Reset keyword button', async () => {
-      await this.clickElement(this.resetKeywordButton);
-    });
+    await this.clickElement(this.resetKeywordButton);
   }
 
   /**
    * Open the sort dropdown menu.
    */
   async openSortDropdown(): Promise<void> {
-    await test.step('Open sort dropdown menu', async () => {
-      await this.dismissIntroDialogIfPresent();
-      await this.openToolbarDropdown(this.sortDropdownButton, this.sortRelevanceLabel);
-    });
+    await this.dismissIntroDialogIfPresent();
+    await this.openToolbarDropdown(this.sortDropdownButton, this.sortRelevanceLabel);
   }
 
   /**
    * Click the "新着順" (Newest) sort option.
    */
   async selectNewestSort(): Promise<void> {
-    await test.step('Select "新着順" (Newest) sort', async () => {
-      await this.openToolbarDropdown(this.sortDropdownButton, this.sortNewestLabel);
-      await this.clickElement(this.sortNewestLabel, { force: true, noWaitAfter: true });
-      await this.waitForResultDisplay();
-    });
+    await this.openToolbarDropdown(this.sortDropdownButton, this.sortNewestLabel);
+    await this.clickElement(this.sortNewestLabel, { force: true, noWaitAfter: true });
+    await this.waitForResultDisplay();
   }
 
   /**
    * Click the "人気順" (Popularity) sort option which is blocked for free/guest users.
    */
   async clickPopularSort(): Promise<void> {
-    await test.step('Click "人気順" (Popularity) sort option', async () => {
-      await this.openToolbarDropdown(this.sortDropdownButton, this.sortPopularLabel);
-      await this.clickElement(this.sortPopularLabel, { force: true });
-    });
+    await this.openToolbarDropdown(this.sortDropdownButton, this.sortPopularLabel);
+    await this.clickElement(this.sortPopularLabel, { force: true });
   }
 
   /**
    * Select "人気順" (Popularity) sort option for Premium users and wait for results.
    */
   async selectPopularSort(): Promise<void> {
-    await test.step('Select "人気順" (Popularity) sort for Premium user', async () => {
-      await this.openToolbarDropdown(this.sortDropdownButton, this.sortPopularLabel);
-      await this.clickElement(this.sortPopularLabel, { force: true, noWaitAfter: true });
-      await this.waitForResultDisplay();
-    });
+    await this.openToolbarDropdown(this.sortDropdownButton, this.sortPopularLabel);
+    await this.clickElement(this.sortPopularLabel, { force: true, noWaitAfter: true });
+    await this.waitForResultDisplay();
   }
 
   /**
    * Select "関連性の高い順" (Relevance) sort option and wait for results.
    */
   async selectRelevanceSort(): Promise<void> {
-    await test.step('Select "関連性の高い順" (Relevance) sort', async () => {
-      await this.openToolbarDropdown(this.sortDropdownButton, this.sortRelevanceLabel);
-      await this.clickElement(this.sortRelevanceLabel, { force: true, noWaitAfter: true });
-      await this.waitForResultDisplay();
-    });
+    await this.openToolbarDropdown(this.sortDropdownButton, this.sortRelevanceLabel);
+    await this.clickElement(this.sortRelevanceLabel, { force: true, noWaitAfter: true });
+    await this.waitForResultDisplay();
   }
 
   /**
    * Select display count per page (70, 140, 210 items).
    */
   async selectDisplayCount(count: '70' | '140' | '210'): Promise<void> {
-    await test.step(`Select display count: ${count} items per page`, async () => {
-      const targetLabel = count === '210'
-        ? this.displayCount210Label
-        : (count === '140' ? this.displayCount140Label : this.displayCount70Label);
-      await this.openToolbarDropdown(this.sortDropdownButton, targetLabel);
-      await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
-      await this.waitForResultDisplay();
-    });
+    const targetLabel = count === '210'
+      ? this.displayCount210Label
+      : (count === '140' ? this.displayCount140Label : this.displayCount70Label);
+    await this.openToolbarDropdown(this.sortDropdownButton, targetLabel);
+    await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
+    await this.waitForResultDisplay();
   }
 
   /**
@@ -402,49 +384,39 @@ export class SearchResultPage extends BasePage {
    * Wait for search limit modal to be displayed.
    */
   async waitForSearchLimitModal(): Promise<void> {
-    await test.step('Wait for Search Limit modal to be displayed', async () => {
-      await expect(this.searchLimitModal).toBeVisible({ timeout: 10_000 });
-    });
+    await expect(this.searchLimitModal).toBeVisible({ timeout: 10_000 });
   }
 
   /**
    * Close the search limit modal.
    */
   async closeSearchLimitModal(): Promise<void> {
-    await test.step('Close Search Limit modal', async () => {
-      await this.clickElement(this.searchLimitCloseButton);
-      await expect(this.searchLimitModal).toBeHidden({ timeout: 5_000 });
-    });
+    await this.clickElement(this.searchLimitCloseButton);
+    await expect(this.searchLimitModal).toBeHidden({ timeout: 5_000 });
   }
 
   /**
    * Click premium upgrade link inside search limit modal.
    */
   async clickSearchLimitPremiumLink(): Promise<void> {
-    await test.step('Click premium link in Search Limit modal', async () => {
-      await this.searchLimitPremiumLink.scrollIntoViewIfNeeded().catch(() => { });
-      await this.clickElement(this.searchLimitPremiumLink);
-    });
+    await this.searchLimitPremiumLink.scrollIntoViewIfNeeded().catch(() => { });
+    await this.clickElement(this.searchLimitPremiumLink);
   }
 
   /**
    * Click coupon button inside search limit modal to open coupon dialog.
    */
   async openSearchLimitCouponDialog(): Promise<void> {
-    await test.step('Click coupon button in Search Limit modal', async () => {
-      await this.clickElement(this.searchLimitCouponButton);
-      await expect(this.searchLimitCouponDialog).toBeVisible({ timeout: 5_000 });
-    });
+    await this.clickElement(this.searchLimitCouponButton);
+    await expect(this.searchLimitCouponDialog).toBeVisible({ timeout: 5_000 });
   }
 
   /**
    * Click "戻る" (Back) button inside coupon dialog to return to main search limit view.
    */
   async backFromCouponDialog(): Promise<void> {
-    await test.step('Click "戻る" (Back) button in coupon dialog', async () => {
-      await this.clickElement(this.searchLimitCouponBackButton);
-      await expect(this.searchLimitCouponDialog).toBeHidden({ timeout: 5_000 });
-    });
+    await this.clickElement(this.searchLimitCouponBackButton);
+    await expect(this.searchLimitCouponDialog).toBeHidden({ timeout: 5_000 });
   }
 
   // Pagination Actions
@@ -452,144 +424,134 @@ export class SearchResultPage extends BasePage {
    * Click the Next page button in pagination with ArrowRight keyboard fallback.
    */
   async goToNextPage(): Promise<void> {
-    await test.step('Navigate to next page in pagination', async () => {
-      const currentPage = await this.getActivePageNumber().catch(() => '1');
-      const targetPage = String(Number(currentPage) + 1);
+    const currentPage = await this.getActivePageNumber().catch(() => '1');
+    const targetPage = String(Number(currentPage) + 1);
 
-      // Scroll element into center of viewport to avoid bottom fixed banners (Cookie, Signup CTA)
-      await this.paginationNextButton.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => { });
+    // Scroll element into center of viewport to avoid bottom fixed banners (Cookie, Signup CTA)
+    await this.paginationNextButton.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => { });
 
-      const checkNavigated = async (timeoutMs: number): Promise<boolean> => {
-        return this.page.waitForFunction(
-          (target) => {
-            const activeEl = document.querySelector('ul.ac-pagination li.active a');
-            const url = window.location.href;
-            return (activeEl && activeEl.textContent?.trim() === target) || url.includes(`p=${target}`);
-          },
-          targetPage,
-          { timeout: timeoutMs }
-        ).then(() => true).catch(() => false);
-      };
-
-      let clicked = false;
-      try {
-        // Ưu tiên tương tác người dùng thật: Click nút Next trực tiếp trên giao diện
-        await this.paginationNextButton.click({ timeout: 5_000 });
-        clicked = true;
-      } catch {
-        // Nếu không click được (nút bị che, bị overlay hoặc lỗi tương tác) -> Fallback bấm phím ArrowRight
-        await this.page.keyboard.press('ArrowRight');
-      }
-
-      // Chờ trang chuyển sang targetPage
-      let navigated = await checkNavigated(6_000);
-
-      // Nếu đã click được nhưng sau 6s trang vẫn chưa chuyển (click bị nuốt) -> Thử bấm phím ArrowRight
-      if (!navigated && clicked) {
-        await this.page.keyboard.press('ArrowRight');
-        navigated = await checkNavigated(6_000);
-      }
-
-      await this.waitForResultDisplay();
-    });
-  }
-
-  /**
-   * Navigate to next page using the ArrowRight keyboard shortcut.
-   */
-  async goToNextPageByKeyboard(): Promise<void> {
-    await test.step('Navigate to next page via ArrowRight keyboard shortcut', async () => {
-      const currentPage = await this.getActivePageNumber().catch(() => '1');
-      const targetPage = String(Number(currentPage) + 1);
-      await this.page.keyboard.press('ArrowRight');
-      await this.page.waitForFunction(
+    const checkNavigated = async (timeoutMs: number): Promise<boolean> => {
+      return this.page.waitForFunction(
         (target) => {
           const activeEl = document.querySelector('ul.ac-pagination li.active a');
           const url = window.location.href;
           return (activeEl && activeEl.textContent?.trim() === target) || url.includes(`p=${target}`);
         },
         targetPage,
-        { timeout: 15_000 }
-      ).catch(() => { });
-      await this.waitForResultDisplay();
-    });
+        { timeout: timeoutMs }
+      ).then(() => true).catch(() => false);
+    };
+
+    let clicked = false;
+    try {
+      // Ưu tiên tương tác người dùng thật: Click nút Next trực tiếp trên giao diện
+      await this.paginationNextButton.click({ timeout: 5_000 });
+      clicked = true;
+    } catch {
+      // Nếu không click được (nút bị che, bị overlay hoặc lỗi tương tác) -> Fallback bấm phím ArrowRight
+      await this.page.keyboard.press('ArrowRight');
+    }
+
+    // Chờ trang chuyển sang targetPage
+    let navigated = await checkNavigated(6_000);
+
+    // Nếu đã click được nhưng sau 6s trang vẫn chưa chuyển (click bị nuốt) -> Thử bấm phím ArrowRight
+    if (!navigated && clicked) {
+      await this.page.keyboard.press('ArrowRight');
+      navigated = await checkNavigated(6_000);
+    }
+
+    await this.waitForResultDisplay();
+  }
+
+  /**
+   * Navigate to next page using the ArrowRight keyboard shortcut.
+   */
+  async goToNextPageByKeyboard(): Promise<void> {
+    const currentPage = await this.getActivePageNumber().catch(() => '1');
+    const targetPage = String(Number(currentPage) + 1);
+    await this.page.keyboard.press('ArrowRight');
+    await this.page.waitForFunction(
+      (target) => {
+        const activeEl = document.querySelector('ul.ac-pagination li.active a');
+        const url = window.location.href;
+        return (activeEl && activeEl.textContent?.trim() === target) || url.includes(`p=${target}`);
+      },
+      targetPage,
+      { timeout: 15_000 }
+    ).catch(() => { });
+    await this.waitForResultDisplay();
   }
 
   /**
    * Click the Previous page button in pagination with ArrowLeft keyboard fallback.
    */
   async goToPrevPage(): Promise<void> {
-    await test.step('Navigate to previous page in pagination', async () => {
-      const currentPage = await this.getActivePageNumber().catch(() => '2');
-      const targetPage = String(Math.max(1, Number(currentPage) - 1));
+    const currentPage = await this.getActivePageNumber().catch(() => '2');
+    const targetPage = String(Math.max(1, Number(currentPage) - 1));
 
-      // Scroll element into center of viewport to avoid bottom fixed banners
-      await this.paginationPrevButton.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => { });
+    // Scroll element into center of viewport to avoid bottom fixed banners
+    await this.paginationPrevButton.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => { });
 
-      const checkNavigated = async (timeoutMs: number): Promise<boolean> => {
-        return this.page.waitForFunction(
-          (target) => {
-            const activeEl = document.querySelector('ul.ac-pagination li.active a');
-            const url = window.location.href;
-            return (activeEl && activeEl.textContent?.trim() === target) || (target === '1' && !url.includes('p=2'));
-          },
-          targetPage,
-          { timeout: timeoutMs }
-        ).then(() => true).catch(() => false);
-      };
-
-      let clicked = false;
-      try {
-        // Ưu tiên tương tác người dùng thật: Click nút Prev trực tiếp trên giao diện
-        await this.paginationPrevButton.click({ timeout: 5_000 });
-        clicked = true;
-      } catch {
-        // Nếu không click được -> Fallback bấm phím ArrowLeft
-        await this.page.keyboard.press('ArrowLeft');
-      }
-
-      let navigated = await checkNavigated(6_000);
-
-      if (!navigated && clicked) {
-        await this.page.keyboard.press('ArrowLeft');
-        navigated = await checkNavigated(6_000);
-      }
-
-      await this.waitForResultDisplay();
-    });
-  }
-
-  /**
-   * Navigate to previous page using the ArrowLeft keyboard shortcut.
-   */
-  async goToPrevPageByKeyboard(): Promise<void> {
-    await test.step('Navigate to previous page via ArrowLeft keyboard shortcut', async () => {
-      const currentPage = await this.getActivePageNumber().catch(() => '2');
-      const targetPage = String(Math.max(1, Number(currentPage) - 1));
-      await this.page.keyboard.press('ArrowLeft');
-      await this.page.waitForFunction(
+    const checkNavigated = async (timeoutMs: number): Promise<boolean> => {
+      return this.page.waitForFunction(
         (target) => {
           const activeEl = document.querySelector('ul.ac-pagination li.active a');
           const url = window.location.href;
           return (activeEl && activeEl.textContent?.trim() === target) || (target === '1' && !url.includes('p=2'));
         },
         targetPage,
-        { timeout: 15_000 }
-      ).catch(() => { });
-      await this.waitForResultDisplay();
-    });
+        { timeout: timeoutMs }
+      ).then(() => true).catch(() => false);
+    };
+
+    let clicked = false;
+    try {
+      // Ưu tiên tương tác người dùng thật: Click nút Prev trực tiếp trên giao diện
+      await this.paginationPrevButton.click({ timeout: 5_000 });
+      clicked = true;
+    } catch {
+      // Nếu không click được -> Fallback bấm phím ArrowLeft
+      await this.page.keyboard.press('ArrowLeft');
+    }
+
+    let navigated = await checkNavigated(6_000);
+
+    if (!navigated && clicked) {
+      await this.page.keyboard.press('ArrowLeft');
+      navigated = await checkNavigated(6_000);
+    }
+
+    await this.waitForResultDisplay();
+  }
+
+  /**
+   * Navigate to previous page using the ArrowLeft keyboard shortcut.
+   */
+  async goToPrevPageByKeyboard(): Promise<void> {
+    const currentPage = await this.getActivePageNumber().catch(() => '2');
+    const targetPage = String(Math.max(1, Number(currentPage) - 1));
+    await this.page.keyboard.press('ArrowLeft');
+    await this.page.waitForFunction(
+      (target) => {
+        const activeEl = document.querySelector('ul.ac-pagination li.active a');
+        const url = window.location.href;
+        return (activeEl && activeEl.textContent?.trim() === target) || (target === '1' && !url.includes('p=2'));
+      },
+      targetPage,
+      { timeout: 15_000 }
+    ).catch(() => { });
+    await this.waitForResultDisplay();
   }
 
   /**
    * Click a specific page number link in pagination.
    */
   async goToPageNumber(pageNumber: number): Promise<void> {
-    await test.step(`Navigate to page ${pageNumber} in pagination`, async () => {
-      const pageLink = this.paginationContainer.locator(`a:text-is("${pageNumber}")`);
-      await pageLink.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => { });
-      await this.clickElement(pageLink);
-      await this.waitForResultDisplay();
-    });
+    const pageLink = this.paginationContainer.locator(`a:text-is("${pageNumber}")`);
+    await pageLink.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' })).catch(() => { });
+    await this.clickElement(pageLink);
+    await this.waitForResultDisplay();
   }
 
   /**
@@ -605,15 +567,13 @@ export class SearchResultPage extends BasePage {
    * @param categoryName - Display name (e.g. '人物', 'ビジネス', '動物・生き物', '自然・風景')
    */
   async selectCategoryFromToolbar(categoryName: string): Promise<void> {
-    await test.step(`Select category "${categoryName}" from Toolbar`, async () => {
-      await this.clickElement(this.categoryFilterButton);
-      const ddclSelector = this.page.locator('#filter-dropdown-categories #ddcl-c_names1, #ddcl-c_names1').first();
-      await this.clickElement(ddclSelector);
-      const categoryOption = this.page.locator(`#filter-dropdown-categories label:has-text("${categoryName}")`).first();
-      await this.clickElement(categoryOption, { force: true });
-      await this.page.keyboard.press('Enter');
-      await this.waitForResultDisplay();
-    });
+    await this.clickElement(this.categoryFilterButton);
+    const ddclSelector = this.page.locator('#filter-dropdown-categories #ddcl-c_names1, #ddcl-c_names1').first();
+    await this.clickElement(ddclSelector);
+    const categoryOption = this.page.locator(`#filter-dropdown-categories label:has-text("${categoryName}")`).first();
+    await this.clickElement(categoryOption, { force: true });
+    await this.page.keyboard.press('Enter');
+    await this.waitForResultDisplay();
   }
 
   /**
@@ -622,10 +582,8 @@ export class SearchResultPage extends BasePage {
    * @param categoryName - Category display name
    */
   async searchByCategory(categoryId: number, categoryName: string): Promise<void> {
-    await test.step(`Search by category ID ${categoryId}: "${categoryName}"`, async () => {
-      await this.navigate(`/main/search?c_id=${categoryId}&c_name=${encodeURIComponent(categoryName)}`);
-      await this.waitForResultDisplay();
-    });
+    await this.navigate(`/main/search?c_id=${categoryId}&c_name=${encodeURIComponent(categoryName)}`);
+    await this.waitForResultDisplay();
   }
 
   // Filter Toolbar Actions
@@ -663,13 +621,11 @@ export class SearchResultPage extends BasePage {
    * Clicks "すべてクリア" link when visible and waits for search results to refresh.
    */
   async clearAllFilters(): Promise<void> {
-    await test.step('Clear all active filters "すべてクリア"', async () => {
-      const isClearVisible = await this.clearAllFiltersButton.first().isVisible({ timeout: 1_500 }).catch(() => false);
-      if (isClearVisible) {
-        await this.clickElement(this.clearAllFiltersButton.first());
-        await this.waitForResultDisplay();
-      }
-    });
+    const isClearVisible = await this.clearAllFiltersButton.first().isVisible({ timeout: 1_500 }).catch(() => false);
+    if (isClearVisible) {
+      await this.clickElement(this.clearAllFiltersButton.first());
+      await this.waitForResultDisplay();
+    }
   }
 
   /**
@@ -700,26 +656,22 @@ export class SearchResultPage extends BasePage {
    * @param orientation - 'vertical' (0), 'horizontal' (1), or 'all'
    */
   async selectOrientation(orientation: 'vertical' | 'horizontal' | 'all'): Promise<void> {
-    await test.step(`Filter by orientation: "${orientation}"`, async () => {
-      const targetLabel = orientation === 'vertical'
-        ? this.orientationVerticalLabel
-        : (orientation === 'horizontal' ? this.orientationHorizontalLabel : this.orientationAllLabel);
+    const targetLabel = orientation === 'vertical'
+      ? this.orientationVerticalLabel
+      : (orientation === 'horizontal' ? this.orientationHorizontalLabel : this.orientationAllLabel);
 
-      await this.openToolbarDropdown(this.fileOrientationButton, targetLabel);
-      await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
-      await this.waitForResultDisplay();
-    });
+    await this.openToolbarDropdown(this.fileOrientationButton, targetLabel);
+    await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
+    await this.waitForResultDisplay();
   }
 
   /**
    * Filter by PSD format via the "ファイル・向き" toolbar dropdown.
    */
   async selectPsdFormat(): Promise<void> {
-    await test.step('Filter by PSD format via toolbar', async () => {
-      await this.openToolbarDropdown(this.fileOrientationButton, this.sizesecPsdLabel);
-      await this.clickElement(this.sizesecPsdLabel, { force: true, noWaitAfter: true });
-      await this.waitForResultDisplay();
-    });
+    await this.openToolbarDropdown(this.fileOrientationButton, this.sizesecPsdLabel);
+    await this.clickElement(this.sizesecPsdLabel, { force: true, noWaitAfter: true });
+    await this.waitForResultDisplay();
   }
 
   /**
@@ -727,12 +679,10 @@ export class SearchResultPage extends BasePage {
    * @param size - 'm' (Mサイズ以上) or 'l' (Lサイズ)
    */
   async selectSize(size: 'm' | 'l'): Promise<void> {
-    await test.step(`Filter by image size "${size}" via toolbar`, async () => {
-      const targetLabel = size === 'm' ? this.sizesecMLabel : this.sizesecLLabel;
-      await this.openToolbarDropdown(this.fileOrientationButton, targetLabel);
-      await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
-      await this.waitForResultDisplay();
-    });
+    const targetLabel = size === 'm' ? this.sizesecMLabel : this.sizesecLLabel;
+    await this.openToolbarDropdown(this.fileOrientationButton, targetLabel);
+    await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
+    await this.waitForResultDisplay();
   }
 
   /**
@@ -740,12 +690,10 @@ export class SearchResultPage extends BasePage {
    * @param excludeKeyword - Keyword to exclude
    */
   async applyExcludeKeyword(excludeKeyword: string): Promise<void> {
-    await test.step(`Apply exclude keyword: "${excludeKeyword}"`, async () => {
-      await this.openToolbarDropdown(this.excludeKeywordFilterButton, this.excludeKeywordInput);
-      await this.fillInput(this.excludeKeywordInput, excludeKeyword);
-      await this.page.keyboard.press('Enter');
-      await this.waitForResultDisplay();
-    });
+    await this.openToolbarDropdown(this.excludeKeywordFilterButton, this.excludeKeywordInput);
+    await this.fillInput(this.excludeKeywordInput, excludeKeyword);
+    await this.page.keyboard.press('Enter');
+    await this.waitForResultDisplay();
   }
 
   /**
@@ -754,22 +702,20 @@ export class SearchResultPage extends BasePage {
    * @param count - '0' | '1' | '2' | '3' | '-1'
    */
   async selectModelCount(count: '0' | '1' | '2' | '3' | '-1'): Promise<void> {
-    await test.step(`Filter by model count: "${count}"`, async () => {
-      let targetLabel = this.modelCountAllLabel;
-      if (count === '0') {
-        targetLabel = this.modelCountZeroLabel;
-      } else if (count === '1') {
-        targetLabel = this.modelCountOneLabel;
-      } else if (count === '2') {
-        targetLabel = this.modelCountTwoLabel;
-      } else if (count === '3') {
-        targetLabel = this.modelCountThreePlusLabel;
-      }
+    let targetLabel = this.modelCountAllLabel;
+    if (count === '0') {
+      targetLabel = this.modelCountZeroLabel;
+    } else if (count === '1') {
+      targetLabel = this.modelCountOneLabel;
+    } else if (count === '2') {
+      targetLabel = this.modelCountTwoLabel;
+    } else if (count === '3') {
+      targetLabel = this.modelCountThreePlusLabel;
+    }
 
-      await this.openToolbarDropdown(this.personFilterButton, targetLabel);
-      await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
-      await this.waitForResultDisplay();
-    });
+    await this.openToolbarDropdown(this.personFilterButton, targetLabel);
+    await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
+    await this.waitForResultDisplay();
   }
 
   /**
@@ -777,27 +723,25 @@ export class SearchResultPage extends BasePage {
    * @param age - 'baby' (A) | 'child' (K) | 'young' (W) | 'adult' (O)
    */
   async selectAge(age: 'baby' | 'child' | 'young' | 'adult'): Promise<void> {
-    await test.step(`Filter by age: "${age}" via toolbar`, async () => {
-      let targetLabel = this.ageYoungLabel;
-      switch (age) {
-        case 'baby':
-          targetLabel = this.ageBabyLabel;
-          break;
-        case 'child':
-          targetLabel = this.ageChildLabel;
-          break;
-        case 'young':
-          targetLabel = this.ageYoungLabel;
-          break;
-        case 'adult':
-          targetLabel = this.ageAdultLabel;
-          break;
-      }
+    let targetLabel = this.ageYoungLabel;
+    switch (age) {
+      case 'baby':
+        targetLabel = this.ageBabyLabel;
+        break;
+      case 'child':
+        targetLabel = this.ageChildLabel;
+        break;
+      case 'young':
+        targetLabel = this.ageYoungLabel;
+        break;
+      case 'adult':
+        targetLabel = this.ageAdultLabel;
+        break;
+    }
 
-      await this.openToolbarDropdown(this.personFilterButton, targetLabel);
-      await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
-      await this.waitForResultDisplay();
-    });
+    await this.openToolbarDropdown(this.personFilterButton, targetLabel);
+    await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
+    await this.waitForResultDisplay();
   }
 
   /**
@@ -805,39 +749,37 @@ export class SearchResultPage extends BasePage {
    * @param color - 'red' | 'pink' | 'orange' | 'yellow' | 'green' | 'blue' | 'white' | 'all'
    */
   async selectColor(color: 'red' | 'pink' | 'orange' | 'yellow' | 'green' | 'blue' | 'white' | 'all'): Promise<void> {
-    await test.step(`Filter by color: "${color}"`, async () => {
-      let targetOption = this.colorAllOption;
-      switch (color) {
-        case 'red':
-          targetOption = this.colorRedOption;
-          break;
-        case 'pink':
-          targetOption = this.colorPinkOption;
-          break;
-        case 'orange':
-          targetOption = this.colorOrangeOption;
-          break;
-        case 'yellow':
-          targetOption = this.colorYellowOption;
-          break;
-        case 'green':
-          targetOption = this.colorGreenOption;
-          break;
-        case 'blue':
-          targetOption = this.colorBlueOption;
-          break;
-        case 'white':
-          targetOption = this.colorWhiteOption;
-          break;
-        case 'all':
-        default:
-          targetOption = this.colorAllOption;
-          break;
-      }
-      await this.openToolbarDropdown(this.colorFilterButton, targetOption);
-      await this.clickElement(targetOption, { force: true, noWaitAfter: true });
-      await this.waitForResultDisplay();
-    });
+    let targetOption = this.colorAllOption;
+    switch (color) {
+      case 'red':
+        targetOption = this.colorRedOption;
+        break;
+      case 'pink':
+        targetOption = this.colorPinkOption;
+        break;
+      case 'orange':
+        targetOption = this.colorOrangeOption;
+        break;
+      case 'yellow':
+        targetOption = this.colorYellowOption;
+        break;
+      case 'green':
+        targetOption = this.colorGreenOption;
+        break;
+      case 'blue':
+        targetOption = this.colorBlueOption;
+        break;
+      case 'white':
+        targetOption = this.colorWhiteOption;
+        break;
+      case 'all':
+      default:
+        targetOption = this.colorAllOption;
+        break;
+    }
+    await this.openToolbarDropdown(this.colorFilterButton, targetOption);
+    await this.clickElement(targetOption, { force: true, noWaitAfter: true });
+    await this.waitForResultDisplay();
   }
 
   /**
@@ -845,13 +787,11 @@ export class SearchResultPage extends BasePage {
    * @param enable - true to enable (mdlrlrsec=on), false for all
    */
   async selectModelRelease(enable: boolean = true): Promise<void> {
-    await test.step(`Filter by Model Release: ${enable ? 'Obtained Only' : 'All'}`, async () => {
-      const targetLabel = enable ? this.modelReleaseOnLabel : this.modelReleaseAllLabel;
+    const targetLabel = enable ? this.modelReleaseOnLabel : this.modelReleaseAllLabel;
 
-      await this.openToolbarDropdown(this.displayConditionFilterButton, targetLabel);
-      await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
-      await this.waitForResultDisplay();
-    });
+    await this.openToolbarDropdown(this.displayConditionFilterButton, targetLabel);
+    await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
+    await this.waitForResultDisplay();
   }
 
   /**
@@ -859,13 +799,11 @@ export class SearchResultPage extends BasePage {
    * @param enable - true to enable (prprlrsec=on)
    */
   async selectPropertyRelease(enable: boolean = true): Promise<void> {
-    await test.step(`Filter by Property Release: ${enable ? 'Obtained Only' : 'All'}`, async () => {
-      const targetLabel = enable ? this.propertyReleaseOnLabel : this.propertyReleaseAllLabel;
+    const targetLabel = enable ? this.propertyReleaseOnLabel : this.propertyReleaseAllLabel;
 
-      await this.openToolbarDropdown(this.displayConditionFilterButton, targetLabel);
-      await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
-      await this.waitForResultDisplay();
-    });
+    await this.openToolbarDropdown(this.displayConditionFilterButton, targetLabel);
+    await this.clickElement(targetLabel, { force: true, noWaitAfter: true });
+    await this.waitForResultDisplay();
   }
 
   /**
@@ -873,14 +811,12 @@ export class SearchResultPage extends BasePage {
    * @param enable - true to exclude AI, false to allow AI
    */
   async toggleExcludeAi(enable: boolean = true): Promise<void> {
-    await test.step(`Toggle Exclude AI filter: ${enable}`, async () => {
-      await this.openToolbarDropdown(this.displayConditionFilterButton, this.excludeAiLabel);
-      const isCurrentlyChecked = await this.excludeAiCheckbox.isChecked().catch(() => false);
-      if (isCurrentlyChecked !== enable) {
-        await this.clickElement(this.excludeAiLabel, { force: true, noWaitAfter: true });
-        await this.waitForResultDisplay();
-      }
-    });
+    await this.openToolbarDropdown(this.displayConditionFilterButton, this.excludeAiLabel);
+    const isCurrentlyChecked = await this.excludeAiCheckbox.isChecked().catch(() => false);
+    if (isCurrentlyChecked !== enable) {
+      await this.clickElement(this.excludeAiLabel, { force: true, noWaitAfter: true });
+      await this.waitForResultDisplay();
+    }
   }
 
   /**
@@ -888,14 +824,12 @@ export class SearchResultPage extends BasePage {
    * @param enable - true to enable exact match, false otherwise
    */
   async toggleExactMatch(enable: boolean = true): Promise<void> {
-    await test.step(`Toggle Exact Match filter: ${enable}`, async () => {
-      await this.openToolbarDropdown(this.displayConditionFilterButton, this.exactMatchLabel);
-      const isCurrentlyChecked = await this.exactMatchCheckbox.isChecked().catch(() => false);
-      if (isCurrentlyChecked !== enable) {
-        await this.clickElement(this.exactMatchLabel, { force: true, noWaitAfter: true });
-        await this.waitForResultDisplay();
-      }
-    });
+    await this.openToolbarDropdown(this.displayConditionFilterButton, this.exactMatchLabel);
+    const isCurrentlyChecked = await this.exactMatchCheckbox.isChecked().catch(() => false);
+    if (isCurrentlyChecked !== enable) {
+      await this.clickElement(this.exactMatchLabel, { force: true, noWaitAfter: true });
+      await this.waitForResultDisplay();
+    }
   }
 
   /**
@@ -903,13 +837,11 @@ export class SearchResultPage extends BasePage {
    * @param photoId - Numeric photo ID (e.g. '1597634')
    */
   async filterByDetailedPhotoId(photoId: string): Promise<void> {
-    await test.step(`Filter by Photo ID "${photoId}" via Detailed Search`, async () => {
-      await this.openToolbarDropdown(this.detailedFilterButton, this.detailedPhotoIdInput);
-      await expect(this.detailedPhotoIdInput).toBeVisible({ timeout: 5_000 });
-      await this.detailedPhotoIdInput.fill(photoId);
-      await this.page.keyboard.press('Enter');
-      await this.waitForResultDisplay();
-    });
+    await this.openToolbarDropdown(this.detailedFilterButton, this.detailedPhotoIdInput);
+    await expect(this.detailedPhotoIdInput).toBeVisible({ timeout: 5_000 });
+    await this.detailedPhotoIdInput.fill(photoId);
+    await this.page.keyboard.press('Enter');
+    await this.waitForResultDisplay();
   }
 
   /**
@@ -917,15 +849,13 @@ export class SearchResultPage extends BasePage {
    * @param creatorName - Creator display name (defaults to 'Acworks')
    */
   async searchByDetailedCreator(creatorName: string = 'Acworks'): Promise<void> {
-    await test.step(`Search by Creator "${creatorName}" via Detailed Search`, async () => {
-      const creatorPlaceholder = this.page.locator('#filter-dropdown-detail span:has-text("クリエイター名を入力")').first();
-      await this.openToolbarDropdown(this.detailedFilterButton, creatorPlaceholder);
-      await this.clickElement(creatorPlaceholder, { force: true });
-      await this.page.keyboard.type(creatorName);
-      await this.page.keyboard.press('Enter');
-      await this.page.keyboard.press('Enter');
-      await this.waitForResultDisplay();
-    });
+    const creatorPlaceholder = this.page.locator('#filter-dropdown-detail span:has-text("クリエイター名を入力")').first();
+    await this.openToolbarDropdown(this.detailedFilterButton, creatorPlaceholder);
+    await this.clickElement(creatorPlaceholder, { force: true });
+    await this.page.keyboard.type(creatorName);
+    await this.page.keyboard.press('Enter');
+    await this.page.keyboard.press('Enter');
+    await this.waitForResultDisplay();
   }
 
   /**
@@ -933,15 +863,13 @@ export class SearchResultPage extends BasePage {
    * @param ngCreatorName - Creator name to exclude (defaults to 'Acworks')
    */
   async searchByDetailedNgCreator(ngCreatorName: string = 'Acworks'): Promise<void> {
-    await test.step(`Search excluding Creator "${ngCreatorName}" via Detailed Search`, async () => {
-      const ngPlaceholder = this.page.locator('#filter-dropdown-detail .placeholder:has-text("除外クリエイター名を入力"), #filter-dropdown-detail .tag-editor').first();
-      await this.openToolbarDropdown(this.detailedFilterButton, ngPlaceholder);
-      await this.clickElement(ngPlaceholder, { force: true });
-      await this.page.keyboard.type(ngCreatorName);
-      await this.page.keyboard.press('Enter');
-      await this.page.keyboard.press('Enter');
-      await this.waitForResultDisplay();
-    });
+    const ngPlaceholder = this.page.locator('#filter-dropdown-detail .placeholder:has-text("除外クリエイター名を入力"), #filter-dropdown-detail .tag-editor').first();
+    await this.openToolbarDropdown(this.detailedFilterButton, ngPlaceholder);
+    await this.clickElement(ngPlaceholder, { force: true });
+    await this.page.keyboard.type(ngCreatorName);
+    await this.page.keyboard.press('Enter');
+    await this.page.keyboard.press('Enter');
+    await this.waitForResultDisplay();
   }
 
   /**
@@ -949,34 +877,28 @@ export class SearchResultPage extends BasePage {
    * @param params - Object containing search parameters (e.g. { q: 'cat', orientation: 0, srt: '-releasedate' })
    */
   async searchWithCombinedParams(params: Record<string, string | number>): Promise<void> {
-    await test.step(`Search with combined params: ${JSON.stringify(params)}`, async () => {
-      const searchParams = new URLSearchParams();
-      for (const [key, value] of Object.entries(params)) {
-        searchParams.set(key, String(value));
-      }
-      await this.navigate(`/main/search?${searchParams.toString()}`);
-      await this.waitForResultDisplay();
-    });
+    const searchParams = new URLSearchParams();
+    for (const [key, value] of Object.entries(params)) {
+      searchParams.set(key, String(value));
+    }
+    await this.navigate(`/main/search?${searchParams.toString()}`);
+    await this.waitForResultDisplay();
   }
 
   /**
    * Navigate to Recommended Search (おすすめ検索 - rcm=1&referer=more_recommended).
    */
   async goToRecommendedSearch(): Promise<void> {
-    await test.step('Navigate to Recommended Search page', async () => {
-      await this.navigate('/main/search?rcm=1&referer=more_recommended');
-      await this.waitForResultDisplay();
-    });
+    await this.navigate('/main/search?rcm=1&referer=more_recommended');
+    await this.waitForResultDisplay();
   }
 
   /**
    * Navigate to PSD Format Search (PSD素材検索 - sizesec=psd&referer=category_psd).
    */
   async goToPsdSearch(): Promise<void> {
-    await test.step('Navigate to PSD Format Search page', async () => {
-      await this.navigate('/main/search?sizesec=psd&referer=category_psd');
-      await this.waitForResultDisplay();
-    });
+    await this.navigate('/main/search?sizesec=psd&referer=category_psd');
+    await this.waitForResultDisplay();
   }
 
 
@@ -986,17 +908,15 @@ export class SearchResultPage extends BasePage {
    * @param index - Index of figure item (default 0)
    */
   async openDetailPageForItem(index: number = 0): Promise<void> {
-    await test.step(`Open detail page for item index ${index}`, async () => {
-      const figure = this.resultFigures.nth(index);
-      await figure.hover();
-      const detailLink = figure.locator('a.link-to-detail');
-      await expect(detailLink).toBeAttached({ timeout: 10_000 });
-      await detailLink.evaluate((el: HTMLAnchorElement) => {
-        el.removeAttribute('target');
-        el.removeAttribute('rel');
-      });
-      await this.clickElement(detailLink, { force: true });
+    const figure = this.resultFigures.nth(index);
+    await figure.hover();
+    const detailLink = figure.locator('a.link-to-detail');
+    await expect(detailLink).toBeAttached({ timeout: 10_000 });
+    await detailLink.evaluate((el: HTMLAnchorElement) => {
+      el.removeAttribute('target');
+      el.removeAttribute('rel');
     });
+    await this.clickElement(detailLink, { force: true });
   }
 
   /**
@@ -1004,13 +924,11 @@ export class SearchResultPage extends BasePage {
    * @param index - Index of figure item (default 0)
    */
   async openQuickViewForItem(index: number = 0): Promise<void> {
-    await test.step(`Open QuickView modal for item index ${index}`, async () => {
-      const figure = this.resultFigures.nth(index);
-      await figure.hover();
-      const qvOverlay = figure.locator('.link-to-detail.quickview');
-      await this.clickElement(qvOverlay, { force: true });
-      await expect(this.quickViewModal).toBeVisible({ timeout: 10_000 });
-    });
+    const figure = this.resultFigures.nth(index);
+    await figure.hover();
+    const qvOverlay = figure.locator('.link-to-detail.quickview');
+    await this.clickElement(qvOverlay, { force: true });
+    await expect(this.quickViewModal).toBeVisible({ timeout: 10_000 });
   }
 
   /**
@@ -1025,15 +943,13 @@ export class SearchResultPage extends BasePage {
    * Close QuickView modal via close button or Escape key.
    */
   async closeQuickViewModal(): Promise<void> {
-    await test.step('Close QuickView modal', async () => {
-      const isCloseBtnVisible = await this.quickViewCloseButton.isVisible().catch(() => false);
-      if (isCloseBtnVisible) {
-        await this.clickElement(this.quickViewCloseButton);
-      } else {
-        await this.page.keyboard.press('Escape');
-      }
-      await expect(this.quickViewModal).toBeHidden({ timeout: 5_000 });
-    });
+    const isCloseBtnVisible = await this.quickViewCloseButton.isVisible().catch(() => false);
+    if (isCloseBtnVisible) {
+      await this.clickElement(this.quickViewCloseButton);
+    } else {
+      await this.page.keyboard.press('Escape');
+    }
+    await expect(this.quickViewModal).toBeHidden({ timeout: 5_000 });
   }
 
   /**
@@ -1043,44 +959,40 @@ export class SearchResultPage extends BasePage {
    * @param index - Index of item to click (default 0)
    */
   async clickGroupSiteItem(service: 'design' | 'illust' | 'silhouette' | 'video', index: number = 0): Promise<void> {
-    await test.step(`Click ${service} group site item index ${index}`, async () => {
-      let container: Locator;
-      let items: Locator;
-      switch (service) {
-        case 'design':
-          container = this.designListContainer;
-          items = this.designItems;
-          break;
-        case 'illust':
-          container = this.illustListContainer;
-          items = this.illustItems;
-          break;
-        case 'silhouette':
-          container = this.silhouetteListContainer;
-          items = this.silhouetteItems;
-          break;
-        case 'video':
-          container = this.videoListContainer;
-          items = this.videoItems;
-          break;
-      }
+    let container: Locator;
+    let items: Locator;
+    switch (service) {
+      case 'design':
+        container = this.designListContainer;
+        items = this.designItems;
+        break;
+      case 'illust':
+        container = this.illustListContainer;
+        items = this.illustItems;
+        break;
+      case 'silhouette':
+        container = this.silhouetteListContainer;
+        items = this.silhouetteItems;
+        break;
+      case 'video':
+        container = this.videoListContainer;
+        items = this.videoItems;
+        break;
+    }
 
-      await container.scrollIntoViewIfNeeded();
-      const targetItem = items.nth(index);
-      await expect(targetItem).toBeVisible({ timeout: 15_000 });
-      await this.clickElement(targetItem);
-      await expect(this.relatedSearchModal).toBeVisible({ timeout: 10_000 });
-    });
+    await container.scrollIntoViewIfNeeded();
+    const targetItem = items.nth(index);
+    await expect(targetItem).toBeVisible({ timeout: 15_000 });
+    await this.clickElement(targetItem);
+    await expect(this.relatedSearchModal).toBeVisible({ timeout: 10_000 });
   }
 
   /**
    * Close the related search modal (#relatedSearchModal).
    */
   async closeRelatedSearchModal(): Promise<void> {
-    await test.step('Close related search modal', async () => {
-      await this.clickElement(this.relatedModalCloseButton);
-      await expect(this.relatedSearchModal).toBeHidden({ timeout: 5_000 });
-    });
+    await this.clickElement(this.relatedModalCloseButton);
+    await expect(this.relatedSearchModal).toBeHidden({ timeout: 5_000 });
   }
 
 

@@ -12,9 +12,8 @@
 
 //   /**
 //    * TC-AUTH-001: Đăng nhập thành công với Downloader hợp lệ
-//    * @tags @smoke @regression
 //    */
-//   // test('TC-AUTH-001: Đăng nhập thành công với Downloader hợp lệ @smoke', async ({
+//   // test('TC-AUTH-001: Đăng nhập thành công với Downloader hợp lệ', async ({
 //   //   loginPage,
 //   //   page,
 //   // }) => {
@@ -35,9 +34,8 @@
 
 //   /**
 //    * TC-AUTH-002: Hiển thị lỗi khi đăng nhập với password sai
-//    * @tags @regression
 //    */
-//   // test('TC-AUTH-002: Hiển thị thông báo lỗi khi password không đúng @regression', async ({
+//   // test('TC-AUTH-002: Hiển thị thông báo lỗi khi password không đúng', async ({
 //   //   loginPage,
 //   // }) => {
 //   //   // Arrange
@@ -57,9 +55,8 @@
 
 //   // /**
 //   //  * TC-AUTH-003: Không đăng nhập được khi email trống
-//   //  * @tags @regression
 //   //  */
-//   // test('TC-AUTH-003: Không thể submit form khi email bị bỏ trống @regression', async ({
+//   // test('TC-AUTH-003: Không thể submit form khi email bị bỏ trống', async ({
 //   //   loginPage,
 //   //   page,
 //   // }) => {

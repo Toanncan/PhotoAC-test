@@ -27,7 +27,7 @@ test.describe.serial('Premium Registration, Receipt & Profile Flow', () => {
   });
 
   // ── TEST CASE 001: ĐĂNG KÝ FREE USER MỚI & NÂNG CẤP PREMIUM QUA THẺ Credit card ──
-  test('TC-[Register-Premium]-[FreeUser]-[001]: Đăng ký Free User mới & Nâng cấp Premium qua Credit card @premium', async ({
+  test('TC-[Register-Premium]-[FreeUser]-[001]: Đăng ký Free User mới & Nâng cấp Premium qua Credit card', async ({
     page,
     context,
     registerPage,
@@ -145,7 +145,7 @@ test.describe.serial('Premium Registration, Receipt & Profile Flow', () => {
   });
 
   // ── TEST CASE 002: KIỂM TRA HÓA ĐƠN PDF TẠI /user/receipts ─────────────────
-  test('TC-[Register-Premium]-[FreeUser]-[002]: Kiểm tra tạo Hóa đơn điện tử tự động, tải file PDF và đối soát dữ liệu @premium', async ({
+  test('TC-[Register-Premium]-[FreeUser]-[002]: Kiểm tra tạo Hóa đơn điện tử tự động, tải file PDF và đối soát dữ liệu', async ({
     page,
     context,
     receiptsPage,
@@ -200,7 +200,7 @@ test.describe.serial('Premium Registration, Receipt & Profile Flow', () => {
   });
 
   // ── TEST CASE 003: KIỂM TRA HỒ SƠ PROFILE VÀ EMAIL XÁC NHẬN ────────────────
-  test('TC-[Register-Premium]-[FreeUser]-[003]: Kiểm tra Hồ sơ Hội viên (/user/profile/edit) và Email xác nhận gửi về User @premium', async ({
+  test('TC-[Register-Premium]-[FreeUser]-[003]: Kiểm tra Hồ sơ Hội viên (/user/profile/edit) và Email xác nhận gửi về User', async ({
     page,
     context,
     profileEditPage,

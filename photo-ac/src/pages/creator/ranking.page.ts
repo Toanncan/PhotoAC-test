@@ -1,4 +1,4 @@
-﻿import { type Page, type Locator, test } from '@playwright/test';
+import { type Page, type Locator } from '@playwright/test';
 import { BasePage } from '../common/base.page';
 
 
@@ -122,9 +122,7 @@ export class RankingPage extends BasePage {
    * Navigate to the Creator Ranking page.
    */
   async goToRankingPage(): Promise<void> {
-    await test.step('Navigate to Creator Ranking page', async () => {
-      await this.navigate(this.PAGE_URL);
-    });
+    await this.navigate(this.PAGE_URL);
   }
 
   /**
@@ -133,28 +131,24 @@ export class RankingPage extends BasePage {
    * @param tableIndex - 0-based index of the table
    */
   async getTableRowLabels(tableIndex: number): Promise<string[]> {
-    return await test.step(`Get row labels from table ${tableIndex + 1}`, async () => {
-      const rows = this.rankingTables.nth(tableIndex).getByRole('row');
-      const count = await rows.count();
-      const labels: string[] = [];
-      for (let i = 1; i < count; i++) {
-        const cells = rows.nth(i).getByRole('cell');
-        const firstCellText = await cells.first().textContent();
-        if (firstCellText) {
-          labels.push(firstCellText.trim());
-        }
+    const rows = this.rankingTables.nth(tableIndex).getByRole('row');
+    const count = await rows.count();
+    const labels: string[] = [];
+    for (let i = 1; i < count; i++) {
+      const cells = rows.nth(i).getByRole('cell');
+      const firstCellText = await cells.first().textContent();
+      if (firstCellText) {
+        labels.push(firstCellText.trim());
       }
-      return labels;
-    });
+    }
+    return labels;
   }
 
   /**
    * Get the total number of ranking tables on the page.
    */
   async getTableCount(): Promise<number> {
-    return await test.step('Count ranking tables on page', async () => {
-      return this.rankingTables.count();
-    });
+    return this.rankingTables.count();
   }
 
   /**
@@ -162,18 +156,16 @@ export class RankingPage extends BasePage {
    * Returns text from all column headers for assertion.
    */
   async getAllColumnHeaderTexts(): Promise<string[]> {
-    return await test.step('Get all column header texts', async () => {
-      const headers = this.page.getByRole('columnheader');
-      const count = await headers.count();
-      const texts: string[] = [];
-      for (let i = 0; i < count; i++) {
-        const text = await headers.nth(i).textContent();
-        if (text) {
-          texts.push(text.trim());
-        }
+    const headers = this.page.getByRole('columnheader');
+    const count = await headers.count();
+    const texts: string[] = [];
+    for (let i = 0; i < count; i++) {
+      const text = await headers.nth(i).textContent();
+      if (text) {
+        texts.push(text.trim());
       }
-      return texts;
-    });
+    }
+    return texts;
   }
 
   /**
@@ -181,13 +173,11 @@ export class RankingPage extends BasePage {
    * Used to verify no font fallback (tofu/garbled) rendering.
    */
   async getFontFamiliesOnPage(): Promise<string[]> {
-    return await test.step('Evaluate font families on page elements', async () => {
-      return this.page.evaluate(() => {
-        const elements = Array.from(document.querySelectorAll('h1, h2, th, td')).slice(0, 20);
-        return elements
-          .map((el) => window.getComputedStyle(el).fontFamily)
-          .filter((font, index, self) => self.indexOf(font) === index); // unique
-      });
+    return this.page.evaluate(() => {
+      const elements = Array.from(document.querySelectorAll('h1, h2, th, td')).slice(0, 20);
+      return elements
+        .map((el) => window.getComputedStyle(el).fontFamily)
+        .filter((font, index, self) => self.indexOf(font) === index); // unique
     });
   }
 
@@ -196,21 +186,19 @@ export class RankingPage extends BasePage {
    * Returns list of suspicious text nodes found.
    */
   async getGarbledTextElements(): Promise<string[]> {
-    return await test.step('Scan for garbled/tofu characters on page', async () => {
-      return this.page.evaluate(() => {
-        const allTextNodes: string[] = [];
-        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-        let node = walker.nextNode();
-        while (node) {
-          const text = node.textContent?.trim() ?? '';
-          // Tofu char □ = U+25A1 or replacement char  = U+FFFD
-          if (text && (text.includes('\u25A1') || text.includes('\uFFFD') || text.includes('????'))) {
-            allTextNodes.push(text.substring(0, 100));
-          }
-          node = walker.nextNode();
+    return this.page.evaluate(() => {
+      const allTextNodes: string[] = [];
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      let node = walker.nextNode();
+      while (node) {
+        const text = node.textContent?.trim() ?? '';
+        // Tofu char □ = U+25A1 or replacement char  = U+FFFD
+        if (text && (text.includes('\u25A1') || text.includes('\uFFFD') || text.includes('????'))) {
+          allTextNodes.push(text.substring(0, 100));
         }
-        return allTextNodes;
-      });
+        node = walker.nextNode();
+      }
+      return allTextNodes;
     });
   }
 }

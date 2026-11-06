@@ -1,5 +1,5 @@
 import { test, expect } from '../../../fixtures/base.fixture';
-import { enableAdBlocker } from '../../../utils/helpers';
+import { captureEvidenceWithUrl, enableAdBlocker } from '../../../utils/helpers';
 import { PhotoDetailPage } from '../../../pages/downloader/photo-detail.page';
 
 /**
@@ -22,10 +22,12 @@ test.describe('Download — Guest User (No login)', () => {
   /**
    * TC-DOWNLOAD-GUEST-001: Guest click button Download -> Yêu cầu đăng nhập
    */
-  test('TC-DOWNLOAD-GUEST-001: Click Download hiển thị yêu cầu đăng nhập @guest', async ({
+  test('TC-DOWNLOAD-GUEST-001: Click Download hiển thị yêu cầu đăng nhập', async ({
     page,
     photoDetailPage,
-  }) => {
+  }, testInfo) => {
+    test.setTimeout(60_000);
+
     await test.step('Chọn kích thước ảnh Size S', async () => {
       await photoDetailPage.selectSize('S');
     });
@@ -37,16 +39,20 @@ test.describe('Download — Guest User (No login)', () => {
 
       await photoDetailPage.clickGuestDownload();
       await expect(page).toHaveURL(/login|signup/);
+
+      await captureEvidenceWithUrl(page, testInfo, 'Guest-Download-Login-Redirect');
     });
   });
 
   /**
    * TC-DOWNLOAD-GUEST-002: Guest click button まとめてダウンロード (Bulk download) -> Yêu cầu đăng nhập
    */
-  test('TC-DOWNLOAD-GUEST-002: Click Bulk Download hiển thị yêu cầu đăng nhập @guest', async ({
+  test('TC-DOWNLOAD-GUEST-002: Click button まとめてダウンロード hiển thị yêu cầu đăng nhập', async ({
     page,
     photoDetailPage,
-  }) => {
+  }, testInfo) => {
+    test.setTimeout(60_000);
+
     await test.step('Click button まとめてダウンロード và xác minh yêu cầu đăng nhập', async () => {
       await expect(photoDetailPage.guestBulkDownloadButton).toBeVisible();
       const href = await photoDetailPage.guestBulkDownloadButton.getAttribute('href');
@@ -54,15 +60,20 @@ test.describe('Download — Guest User (No login)', () => {
 
       await photoDetailPage.clickGuestBulkDownload();
       await expect(page).toHaveURL(/login|signup/);
+
+      await captureEvidenceWithUrl(page, testInfo, 'Guest-Bulk-Download-Login-Redirect');
     });
   });
 
   /**
    * TC-DOWNLOAD-GUEST-003: Guest click button 今すぐ購入 (Extra license) -> Hiển thị popover yêu cầu đăng nhập
    */
-  test('TC-DOWNLOAD-GUEST-003: Click Buy Extra License hiển thị popover yêu cầu đăng nhập @guest', async ({
+  test('TC-DOWNLOAD-GUEST-003: Click button 今すぐ購入 hiển thị popover yêu cầu đăng nhập', async ({
+    page,
     photoDetailPage,
-  }) => {
+  }, testInfo) => {
+    test.setTimeout(60_000);
+
     await test.step('Click button 今すぐ購入 (Extra license)', async () => {
       await expect(photoDetailPage.guestBuyExtraLicenseButton).toBeVisible();
       await photoDetailPage.clickGuestBuyExtraLicense();
@@ -72,6 +83,8 @@ test.describe('Download — Guest User (No login)', () => {
       await expect(photoDetailPage.guestPopover).toBeVisible();
       await expect(photoDetailPage.guestPopover).toContainText('先にログインをお願いします');
       await expect(photoDetailPage.guestPopover).toContainText('無料会員登録');
+
+      await captureEvidenceWithUrl(page, testInfo, 'Guest-Extra-License-Login-Popover');
     });
   });
 });

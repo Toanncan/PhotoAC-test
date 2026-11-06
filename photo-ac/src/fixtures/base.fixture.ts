@@ -82,11 +82,8 @@ export const test = base.extend<PageFixtures>({
     await allure.suite(path.basename(testInfo.file, path.extname(testInfo.file)));
     await allure.subSuite(browserName);
 
-    // Allure categorization & parameters
+    // Allure categorization (Environment & URL are handled in global-setup environment.properties)
     await allure.layer('e2e');
-    await allure.tag('ui');
-    await allure.parameter('Environment', envConfig.env);
-    await allure.parameter('Base URL', envConfig.baseUrl);
 
     await use();
   }, { auto: true }],

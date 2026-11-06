@@ -127,7 +127,8 @@ Moi Page Object:
 - Khai bao tat ca locators o dau class (readonly).
 - Constructor nhan `page: Page` tu Playwright.
 - Cac method mo ta hanh vi nguoi dung (khong phai thao tac DOM).
-- Khong co assertion — assertion chi o test class.
+- Khong co assertion — assertion chi o test class (ngoai tru Web-First auto-wait truoc khi thao tac).
+- **Tuyet doi KHONG dung `test.step` trong Page Object class**: Page Object chi lam nhiem vu tuong tac UI va lay du lieu. Mien cuong nhet `test.step` vao Page lam roi thu bac Allure, lai ngon ngu (step tieng Anh xen vao luong tieng Viet cua test) va vi pham nguyen ly Don Trach Nhiem (Single Responsibility).
 
 ### `src/fixtures/auth.fixture.ts`
 Fixture quan ly dang nhap & Multi-Role Architecture:
@@ -167,10 +168,23 @@ Cac test spec:
   - Creator flows: `src/tests/creator/<feature>.spec.ts`.
   - **TUYỆT ĐỐI CẤM** tạo file `.spec.ts` trực tiếp ở thư mục cha `src/tests/downloader/` (tránh phá vỡ cơ chế project routing của Playwright).
 - **Tên file spec tinh gọn**: Đặt theo tính năng (`search.spec.ts`, `download.spec.ts`), không lặp lại tên role trong file name.
+- **Quy tắc Đồng bộ hóa Đa vai trò (Cross-Role Parity - BẮT BUỘC)**:
+  - Khi scaffold hoặc mở rộng các test spec đa vai trò (ví dụ: `guest`, `free-user`, `premium` cho `search.spec.ts` hoặc `download.spec.ts`):
+  - **Toàn bộ các test case có cùng luồng kiểm thử UI** (nhập từ khóa, bộ lọc Toolbar, phân trang, reset, liên kết nhóm...) **BẮT BUỘC phải code GIỐNG NHAU 100% (Identical)**:
+    - Cùng tên biến và kiểu dữ liệu (`keyword`, `creatorName`, `photoId`, `count`...).
+    - Cùng bộ từ khóa test data chuẩn (không pha trộn tiếng Anh ở role này và tiếng Nhật ở role khác).
+    - Cùng số lượng bước, thứ tự và câu chữ mô tả trong `test.step()` (không gắn tên role vào step chung).
+    - Cùng assertions, custom error messages, và Web-First waiting.
+    - Cùng timeout (`test.setTimeout(90_000)` hoặc `120_000`).
+    - Cùng format tên screenshot Allure (`kebab-case` có gạch nối: `Filter-縦長`).
+  - **Chỉ được phép phân hóa ở các ca kiểm thử đặc thù phân quyền** (Feature Gate chặn/cho phép, hạn mức tìm kiếm, Quickview modal vs trang chi tiết).
 - Import `test` va `expect` tu `base.fixture.ts` (dùng `../../../fixtures/base.fixture` hoặc alias `@fixtures/base.fixture`).
 - Su dung Page Objects — khong goi truc tiep tren `page`.
 - Moi test doc lap — khong phu thuoc test khac.
 - Test data unique moi lan chay.
+- **Không để Dead Parameter**: Cấm truyền `testInfo` vào hàm test nếu bên trong không dùng để chụp screenshot `captureEvidenceWithUrl`.
+- **Khong gan tag (`@smoke`, `@regression`, `@role`) trong tieu de test**: Tieu de test phai ngan gon, ro rang, khong chua tag lam roi giao dien Allure Report.
+- **Gop buoc Tim kiem & Doi ket qua**: Luon gop `await homePage.search(keyword)` va `await searchResultPage.waitForResultDisplay()` vao cung mot `test.step('Tìm kiếm từ khóa "..." và đợi kết quả hiển thị')`. CẤM tach thanh 2 step rieng gay loang bao cao Allure.
 
 ### `test-data/*.json`
 Du lieu test ngoai:
@@ -253,6 +267,12 @@ Du lieu test ngoai:
 | Login lai trong moi test | Dung `auth.fixture.ts` voi `storageState` |
 | `console.log()` de debug | Logger hoac bo di khi deliver |
 | 1 file spec qua lon | Tach theo module/feature |
+| Cung 1 tinh nang nhung giua cac role code khac bien, khac keyword, khac step (Cross-Role Drift) | Dong bo 100% bien, test data, step, expect va timeouts giua cac role |
+| Thua tham so `testInfo` khi khong chup evidence | Xoa bo tham so thua (Dead Parameter) |
+| Dat ten screenshot Allure co khoang trang (`Filter 縦長`) | Dung kebab-case co gach noi (`Filter-縦長`) |
+| Boc `test.step()` ben trong Page Object class | Chi dat `test.step()` trong test spec; Page class chi chua locators va UI actions |
+| Gan the `@smoke`, `@regression`, `@role` vao tieu de test | Tieu de test ngan gon, sach se; quan ly role/suite qua thu muc va project Playwright |
+| Tach roi `homePage.search()` va `waitForResultDisplay()` thanh 2 step Allure | Gop chung vao 1 `test.step` hanh dong tim kiem hoan chinh de Allure report gon gang |
 
 ---
 
