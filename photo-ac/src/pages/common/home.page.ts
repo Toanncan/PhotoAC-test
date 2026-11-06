@@ -1,4 +1,4 @@
-import { type Page, test } from '@playwright/test';
+import { type Page } from '@playwright/test';
 import { BasePage } from './base.page';
 
 /**
@@ -93,9 +93,7 @@ export class HomePage extends BasePage {
    * Navigate directly to the dashboard root.
    */
   async goToHomePage(): Promise<void> {
-    await test.step('Navigate to HomePage', async () => {
-      await this.navigate('/');
-    });
+    await this.navigate('/');
   }
 
   /**
@@ -110,35 +108,29 @@ export class HomePage extends BasePage {
    * @param keyword - Search keyword
    */
   async search(keyword: string): Promise<void> {
-    await test.step(`Search with keyword: "${keyword}"`, async () => {
-      await this.fillInput(this.searchInput, keyword);
-      if (await this.searchSubmitButton.isVisible().catch(() => false)) {
-        await this.searchSubmitButton.click({ noWaitAfter: true }).catch(async () => {
-          await this.searchInput.press('Enter', { noWaitAfter: true });
-        });
-      } else {
+    await this.fillInput(this.searchInput, keyword);
+    if (await this.searchSubmitButton.isVisible().catch(() => false)) {
+      await this.searchSubmitButton.click({ noWaitAfter: true }).catch(async () => {
         await this.searchInput.press('Enter', { noWaitAfter: true });
-      }
-    });
+      });
+    } else {
+      await this.searchInput.press('Enter', { noWaitAfter: true });
+    }
   }
 
   /**
    * Open the user menu dropdown.
    */
   async openUserMenu(): Promise<void> {
-    await test.step('Open user menu dropdown', async () => {
-      await this.clickElement(this.userMenu);
-    });
+    await this.clickElement(this.userMenu);
   }
 
   /**
    * Log out by clicking the logout button/link.
    */
   async logout(): Promise<void> {
-    await test.step('Logout from HomePage', async () => {
-      await this.openUserMenu();
-      await this.clickElement(this.logoutButton);
-    });
+    await this.openUserMenu();
+    await this.clickElement(this.logoutButton);
   }
 
   /**
@@ -153,10 +145,8 @@ export class HomePage extends BasePage {
    * @param keyword - The keyword text to click (e.g. '女性', 'ビジネス', '犬')
    */
   async clickTopKeyword(keyword: string): Promise<void> {
-    await test.step(`Click Top Keyword: "${keyword}"`, async () => {
-      const keywordChip = this.topKeywords.filter({ hasText: keyword }).first();
-      await this.clickElement(keywordChip, { noWaitAfter: true });
-    });
+    const keywordChip = this.topKeywords.filter({ hasText: keyword }).first();
+    await this.clickElement(keywordChip, { noWaitAfter: true });
   }
 
   /**
@@ -171,31 +161,25 @@ export class HomePage extends BasePage {
    * @param tag - Tag name to click (e.g. 'オフィス', '炎', 'コスモス')
    */
   async clickPopularTag(tag: string): Promise<void> {
-    await test.step(`Click Popular Tag: "${tag}"`, async () => {
-      const tagElement = this.popularTags.filter({ hasText: tag }).first();
-      await tagElement.scrollIntoViewIfNeeded().catch(() => { });
-      await this.clickElement(tagElement, { noWaitAfter: true });
-    });
+    const tagElement = this.popularTags.filter({ hasText: tag }).first();
+    await tagElement.scrollIntoViewIfNeeded().catch(() => { });
+    await this.clickElement(tagElement, { noWaitAfter: true });
   }
 
   /**
    * Open the Image Search upload modal (画像検索).
    */
   async openImageSearchModal(): Promise<void> {
-    await test.step('Open Image Search upload modal', async () => {
-      await this.clickElement(this.imageSearchButton);
-      await this.uploadFileModal.waitFor({ state: 'visible', timeout: 5_000 });
-    });
+    await this.clickElement(this.imageSearchButton);
+    await this.uploadFileModal.waitFor({ state: 'visible', timeout: 5_000 });
   }
 
   /**
    * Close the Image Search upload modal.
    */
   async closeImageSearchModal(): Promise<void> {
-    await test.step('Close Image Search upload modal', async () => {
-      await this.clickElement(this.uploadModalCloseButton);
-      await this.uploadFileModal.waitFor({ state: 'hidden', timeout: 5_000 });
-    });
+    await this.clickElement(this.uploadModalCloseButton);
+    await this.uploadFileModal.waitFor({ state: 'hidden', timeout: 5_000 });
   }
 
   /**
@@ -203,23 +187,21 @@ export class HomePage extends BasePage {
    * @param filePath - Absolute path to the sample image file (.jpg or .png)
    */
   async uploadImageForSearch(filePath: string): Promise<void> {
-    await test.step(`Upload image for search: "${filePath}"`, async () => {
-      await this.openImageSearchModal();
+    await this.openImageSearchModal();
 
-      // Photo-AC requires isFileInputClicked = true to trigger uploadImageAjax on change
-      await this.page.evaluate(() => {
-        (window as any).isFileInputClicked = true;
-      });
-
-      // Wait for navigation triggered by window.location.href to /search/ris
-      await Promise.all([
-        this.page.waitForURL(/\/search\/ris/i, { timeout: 30_000, waitUntil: 'domcontentloaded' }),
-        (async () => {
-          await this.fileUploadInput.setInputFiles(filePath);
-          await this.fileUploadInput.dispatchEvent('change').catch(() => { });
-        })(),
-      ]);
+    // Photo-AC requires isFileInputClicked = true to trigger uploadImageAjax on change
+    await this.page.evaluate(() => {
+      (window as any).isFileInputClicked = true;
     });
+
+    // Wait for navigation triggered by window.location.href to /search/ris
+    await Promise.all([
+      this.page.waitForURL(/\/search\/ris/i, { timeout: 30_000, waitUntil: 'domcontentloaded' }),
+      (async () => {
+        await this.fileUploadInput.setInputFiles(filePath);
+        await this.fileUploadInput.dispatchEvent('change').catch(() => { });
+      })(),
+    ]);
   }
 
   /**
@@ -227,19 +209,15 @@ export class HomePage extends BasePage {
    * @param categoryName - Name of the category (e.g. '人物', 'ビジネス', '自然・風景')
    */
   async clickCategory(categoryName: string): Promise<void> {
-    await test.step(`Click Category: "${categoryName}" from HomePage`, async () => {
-      const categoryLink = this.categoryLinks.filter({ hasText: categoryName }).first();
-      await this.clickElement(categoryLink, { noWaitAfter: true });
-    });
+    const categoryLink = this.categoryLinks.filter({ hasText: categoryName }).first();
+    await this.clickElement(categoryLink, { noWaitAfter: true });
   }
 
   /**
    * Toggle AI Search (AI検索) ON or OFF.
    */
   async toggleAiSearch(): Promise<void> {
-    await test.step('Toggle AI Search state', async () => {
-      await this.clickElement(this.searchByAiButton);
-    });
+    await this.clickElement(this.searchByAiButton);
   }
 
   /**
@@ -248,14 +226,12 @@ export class HomePage extends BasePage {
   async dismissSemanticSearchModal(): Promise<void> {
     const isVisible = await this.semanticSearchModal.waitFor({ state: 'visible', timeout: 3000 }).then(() => true).catch(() => false);
     if (isVisible) {
-      await test.step('Dismiss Semantic Search Modal', async () => {
-        if (await this.semanticSearchModalCloseButton.isVisible().catch(() => false)) {
-          await this.semanticSearchModalCloseButton.click().catch(() => { });
-        }
-        await this.page.keyboard.press('Escape').catch(() => { });
-        await this.semanticSearchModal.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => { });
-        await this.page.locator('.modal-backdrop').waitFor({ state: 'detached', timeout: 5000 }).catch(() => { });
-      });
+      if (await this.semanticSearchModalCloseButton.isVisible().catch(() => false)) {
+        await this.semanticSearchModalCloseButton.click().catch(() => { });
+      }
+      await this.page.keyboard.press('Escape').catch(() => { });
+      await this.semanticSearchModal.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => { });
+      await this.page.locator('.modal-backdrop').waitFor({ state: 'detached', timeout: 5000 }).catch(() => { });
     }
   }
 
@@ -266,20 +242,18 @@ export class HomePage extends BasePage {
    * @param naturalQuery - Descriptive search query (e.g. 'オフィスでパソコンを開くビジネスマン')
    */
   async searchWithAi(naturalQuery: string): Promise<void> {
-    await test.step(`Search with AI using query: "${naturalQuery}"`, async () => {
-      await this.dismissSemanticSearchModal();
+    await this.dismissSemanticSearchModal();
 
-      const isAiOn = await this.aiSearchOnIcon.isVisible().catch(() => false);
-      const isDisabled = await this.searchByAiButton.isDisabled().catch(() => false);
+    const isAiOn = await this.aiSearchOnIcon.isVisible().catch(() => false);
+    const isDisabled = await this.searchByAiButton.isDisabled().catch(() => false);
 
-      // Only toggle if not already ON and not disabled
-      if (!isAiOn && !isDisabled) {
-        await this.toggleAiSearch();
-      }
+    // Only toggle if not already ON and not disabled
+    if (!isAiOn && !isDisabled) {
+      await this.toggleAiSearch();
+    }
 
-      await this.fillInput(this.searchInput, naturalQuery);
-      await this.searchInput.press('Enter');
-    });
+    await this.fillInput(this.searchInput, naturalQuery);
+    await this.searchInput.press('Enter');
   }
 
   /**
@@ -287,34 +261,30 @@ export class HomePage extends BasePage {
    * @param scrollDistance - Scroll distance in pixels (default 800)
    */
   async scrollToActivateStickySearch(scrollDistance = 800): Promise<void> {
-    await test.step('Scroll down to activate Sticky Header Search Bar', async () => {
-      await this.page.evaluate((y) => {
-        window.scrollTo(0, y);
-        document.documentElement.scrollTop = y;
-        if ((window as any).jQuery) {
-          (window as any).jQuery(window).trigger('scroll');
-        }
-        window.dispatchEvent(new Event('scroll'));
-      }, scrollDistance);
-      await this.stickySearchArea.waitFor({ state: 'visible', timeout: 10_000 });
-    });
+    await this.page.evaluate((y) => {
+      window.scrollTo(0, y);
+      document.documentElement.scrollTop = y;
+      if ((window as any).jQuery) {
+        (window as any).jQuery(window).trigger('scroll');
+      }
+      window.dispatchEvent(new Event('scroll'));
+    }, scrollDistance);
+    await this.stickySearchArea.waitFor({ state: 'visible', timeout: 10_000 });
   }
 
   /**
    * Scroll back to the top of the page (scrollTop = 0) to deactivate/hide the Sticky Header Search Bar.
    */
   async scrollToTop(): Promise<void> {
-    await test.step('Scroll back to top of page', async () => {
-      await this.page.evaluate(() => {
-        window.scrollTo(0, 0);
-        document.documentElement.scrollTop = 0;
-        if ((window as any).jQuery) {
-          (window as any).jQuery(window).trigger('scroll');
-        }
-        window.dispatchEvent(new Event('scroll'));
-      });
-      await this.stickySearchArea.waitFor({ state: 'hidden', timeout: 10_000 });
+    await this.page.evaluate(() => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      if ((window as any).jQuery) {
+        (window as any).jQuery(window).trigger('scroll');
+      }
+      window.dispatchEvent(new Event('scroll'));
     });
+    await this.stickySearchArea.waitFor({ state: 'hidden', timeout: 10_000 });
   }
 
   /**
@@ -322,16 +292,14 @@ export class HomePage extends BasePage {
    * @param keyword - Search keyword
    */
   async searchViaStickyBar(keyword: string): Promise<void> {
-    await test.step(`Search via Sticky Search Bar with keyword: "${keyword}"`, async () => {
-      await this.fillInput(this.stickySearchInput, keyword);
-      if (await this.stickySearchSubmitButton.isVisible().catch(() => false)) {
-        await this.stickySearchSubmitButton.click({ noWaitAfter: true }).catch(async () => {
-          await this.stickySearchInput.press('Enter', { noWaitAfter: true });
-        });
-      } else {
+    await this.fillInput(this.stickySearchInput, keyword);
+    if (await this.stickySearchSubmitButton.isVisible().catch(() => false)) {
+      await this.stickySearchSubmitButton.click({ noWaitAfter: true }).catch(async () => {
         await this.stickySearchInput.press('Enter', { noWaitAfter: true });
-      }
-    });
+      });
+    } else {
+      await this.stickySearchInput.press('Enter', { noWaitAfter: true });
+    }
   }
 }
 

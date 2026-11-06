@@ -1,4 +1,4 @@
-import { type Page, type Locator, test } from '@playwright/test';
+import { type Page, type Locator } from '@playwright/test';
 import { BasePage } from '../common/base.page';
 
 /**
@@ -114,10 +114,8 @@ export class UploadPage extends BasePage {
    * Navigate directly to Creator Photo Upload page.
    */
   async goToUploadPage(): Promise<void> {
-    await test.step('Navigate to Creator Upload page', async () => {
-      await this.navigate(this.PAGE_URL);
-      await this.waitForPageLoad();
-    });
+    await this.navigate(this.PAGE_URL);
+    await this.waitForPageLoad();
   }
 
   /**
@@ -125,64 +123,52 @@ export class UploadPage extends BasePage {
    * @param filePath - Absolute path to the photo file
    */
   async setUploadFile(filePath: string): Promise<void> {
-    await test.step(`Upload photo file: ${filePath}`, async () => {
-      await this.fileInput.setInputFiles(filePath);
-    });
+    await this.fileInput.setInputFiles(filePath);
   }
 
   /**
    * Check all 5 mandatory confirmation checklist items.
    */
   async checkAllChecklists(): Promise<void> {
-    await test.step('Check all 5 mandatory confirmation checklists', async () => {
-      const labels = [
-        this.labelCopyright,
-        this.labelPermission,
-        this.labelFacility,
-        this.labelMorality,
-        this.labelTerms,
-      ];
+    const labels = [
+      this.labelCopyright,
+      this.labelPermission,
+      this.labelFacility,
+      this.labelMorality,
+      this.labelTerms,
+    ];
 
-      for (const label of labels) {
-        await this.clickElement(label);
-      }
-    });
+    for (const label of labels) {
+      await this.clickElement(label);
+    }
   }
 
   /**
    * Click the primary submit upload button (投稿する).
    */
   async clickSubmitUpload(): Promise<void> {
-    await test.step('Click 投稿する button', async () => {
-      await this.clickElement(this.submitUploadButton);
-    });
+    await this.clickElement(this.submitUploadButton);
   }
 
   /**
    * Click confirm upload inside the warning modal (アップロード).
    */
   async confirmUploadInModal(): Promise<void> {
-    await test.step('Confirm upload in modal (アップロード)', async () => {
-      await this.clickElement(this.confirmModalUploadButton);
-    });
+    await this.clickElement(this.confirmModalUploadButton);
   }
 
   /**
    * Click cancel inside the warning modal (キャンセル).
    */
   async cancelUploadInModal(): Promise<void> {
-    await test.step('Cancel upload in modal (キャンセル)', async () => {
-      await this.clickElement(this.confirmModalCancelButton);
-    });
+    await this.clickElement(this.confirmModalCancelButton);
   }
 
   /**
    * Remove the uploaded file from the selection queue.
    */
   async removeUploadedFile(): Promise<void> {
-    await test.step('Remove uploaded file from queue', async () => {
-      await this.clickElement(this.removeFileButton);
-    });
+    await this.clickElement(this.removeFileButton);
   }
 
   // Actions — Step 2: Data Edit Page
@@ -192,9 +178,7 @@ export class UploadPage extends BasePage {
    * @param title - Photo title string (max 20 chars)
    */
   async fillTitle(title: string): Promise<void> {
-    await test.step(`Fill photo title: ${title}`, async () => {
-      await this.fillInput(this.photoTitleInput, title);
-    });
+    await this.fillInput(this.photoTitleInput, title);
   }
 
   /**
@@ -202,11 +186,9 @@ export class UploadPage extends BasePage {
    * @param tag - Tag text
    */
   async addTag(tag: string): Promise<void> {
-    await test.step(`Add tag: ${tag}`, async () => {
-      await this.clickElement(this.tagEditor);
-      await this.tagEditorInput.fill(tag);
-      await this.tagEditorInput.press('Enter');
-    });
+    await this.clickElement(this.tagEditor);
+    await this.tagEditorInput.fill(tag);
+    await this.tagEditorInput.press('Enter');
   }
 
   /**
@@ -214,11 +196,9 @@ export class UploadPage extends BasePage {
    * @param tags - Array of tag strings (at least 5 tags required)
    */
   async addTags(tags: string[]): Promise<void> {
-    await test.step(`Add ${tags.length} tags to photo`, async () => {
-      for (const tag of tags) {
-        await this.addTag(tag);
-      }
-    });
+    for (const tag of tags) {
+      await this.addTag(tag);
+    }
   }
 
   /**
@@ -226,22 +206,18 @@ export class UploadPage extends BasePage {
    * @param categoryLabel - Optional Locator for category label
    */
   async selectCategory(categoryLabel?: Locator): Promise<void> {
-    await test.step('Select photo category', async () => {
-      const target = categoryLabel || this.categoryNatureLabel;
-      await this.clickElement(target);
-    });
+    const target = categoryLabel || this.categoryNatureLabel;
+    await this.clickElement(target);
   }
 
   /**
    * Submit and save photo metadata, auto-accepting completion alert.
    */
   async savePhotoData(): Promise<void> {
-    await test.step('Click 保存 button and accept confirmation alert', async () => {
-      const dialogPromise = this.page.waitForEvent('dialog', { timeout: 30_000 });
-      await this.clickElement(this.saveEditButton);
-      const dialog = await dialogPromise;
-      await dialog.accept().catch(() => {});
-    });
+    const dialogPromise = this.page.waitForEvent('dialog', { timeout: 30_000 });
+    await this.clickElement(this.saveEditButton);
+    const dialog = await dialogPromise;
+    await dialog.accept().catch(() => {});
   }
 
 

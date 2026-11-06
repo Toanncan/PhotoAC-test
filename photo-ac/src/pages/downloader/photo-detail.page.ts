@@ -1,4 +1,4 @@
-import { type Page, type Locator, test, expect } from '@playwright/test';
+import { type Page, type Locator, expect } from '@playwright/test';
 import { BasePage } from '../common/base.page';
 
 /**
@@ -185,9 +185,10 @@ export class PhotoDetailPage extends BasePage {
   readonly bookmarkButton: Locator = this.page.locator('a.btn-add-to-bookmark, a[aria-label="ボタンブックマーク"]');
 
   /** Modal shown after adding photo to collection */
-  readonly collectionAddedModalTitle: Locator = this.page.locator('#modal-mycollection-added .modal-title');
-  readonly collectionAddModalContent: Locator = this.page.locator('#modal-mycollection-added .modal-body');
-  readonly closeCollectionAddModalButton: Locator = this.page.locator('#modal-mycollection-added .modal-header button.close').first();
+  readonly collectionAddedModalTitle: Locator = this.page.locator('#modal-mycollection-added .modal-title').first();
+  readonly collectionAddModalContent: Locator = this.page.locator('#modal-mycollection-added .modal-body').first();
+  readonly collectionAddModallContentWarning: Locator = this.page.locator('#modal-mycollection-added .modal-body .alert.alert-warning');
+  readonly closeCollectionAddModalButton: Locator = this.page.locator('#modal-mycollection-added .modal-header button.close:visible').first();
 
   /** Like button */
   readonly likeButton: Locator = this.page.locator('a[aria-label="ボタンのような"]');
@@ -237,10 +238,8 @@ export class PhotoDetailPage extends BasePage {
    * @param photoId - Material ID of the photo
    */
   async goToPhotoDetail(photoId: string): Promise<void> {
-    await test.step(`Navigate to photo detail page (ID: ${photoId})`, async () => {
-      await this.navigate(`/main/detail/${photoId}`);
-      await this.waitForPageLoad();
-    });
+    await this.navigate(`/main/detail/${photoId}`);
+    await this.waitForPageLoad();
   }
 
   /**
@@ -257,64 +256,50 @@ export class PhotoDetailPage extends BasePage {
    * Select a download size radio option.
    */
   async selectSize(size: 'S' | 'M' | 'L'): Promise<void> {
-    await test.step(`Select download size: ${size}`, async () => {
-      const radio = size === 'S' ? this.radioSizeS : size === 'M' ? this.radioSizeM : this.radioSizeL;
-      await this.clickElement(radio);
-    });
+    const radio = size === 'S' ? this.radioSizeS : size === 'M' ? this.radioSizeM : this.radioSizeL;
+    await this.clickElement(radio);
   }
 
   /**
    * Click guest download button.
    */
   async clickGuestDownload(): Promise<void> {
-    await test.step('Click Guest Download button', async () => {
-      await this.clickElement(this.guestDownloadButton);
-    });
+    await this.clickElement(this.guestDownloadButton);
   }
 
   /**
    * Click guest bulk download button.
    */
   async clickGuestBulkDownload(): Promise<void> {
-    await test.step('Click Guest Bulk Download button', async () => {
-      await this.clickElement(this.guestBulkDownloadButton);
-    });
+    await this.clickElement(this.guestBulkDownloadButton);
   }
 
   /**
    * Click guest "今すぐ購入" (Buy Extra License) button.
    */
   async clickGuestBuyExtraLicense(): Promise<void> {
-    await test.step('Click Guest Buy Extra License button', async () => {
-      await this.clickElement(this.guestBuyExtraLicenseButton);
-    });
+    await this.clickElement(this.guestBuyExtraLicenseButton);
   }
 
   /**
    * Click Free User "まとめてダウンロード" (Bulk download) icon button.
    */
   async clickFreeBulkDownload(): Promise<void> {
-    await test.step('Click Free User Bulk Download icon button', async () => {
-      await this.clickElement(this.freeBulkDownloadButton);
-    });
+    await this.clickElement(this.freeBulkDownloadButton);
   }
 
   /**
    * Click Free User "今すぐ購入" (Buy Extra License) button.
    */
   async clickFreeBuyExtraLicense(): Promise<void> {
-    await test.step('Click Free User Buy Extra License button', async () => {
-      await this.clickElement(this.freeBuyExtraLicenseButton);
-    });
+    await this.clickElement(this.freeBuyExtraLicenseButton);
   }
 
   /**
    * Click Free User "ライセンスまとめて購入" (Cart) icon button.
    */
   async clickFreeCart(): Promise<void> {
-    await test.step('Click Free User Cart (Bulk license) icon button', async () => {
-      await this.clickElement(this.freeCartButton);
-    });
+    await this.clickElement(this.freeCartButton);
   }
 
   /**
@@ -323,21 +308,19 @@ export class PhotoDetailPage extends BasePage {
    * @returns Playwright Download object
    */
   async downloadAsPremium(size: 'S' | 'M' | 'L'): Promise<import('@playwright/test').Download> {
-    return await test.step(`Download photo as Premium User (Size: ${size})`, async () => {
-      const downloadBtn =
-        size === 'S'
-          ? this.premiumDownloadButtonS
-          : size === 'M'
-            ? this.premiumDownloadButtonM
-            : this.premiumDownloadButtonL;
+    const downloadBtn =
+      size === 'S'
+        ? this.premiumDownloadButtonS
+        : size === 'M'
+          ? this.premiumDownloadButtonM
+          : this.premiumDownloadButtonL;
 
-      const [download] = await Promise.all([
-        this.page.waitForEvent('download', { timeout: 30_000 }),
-        this.clickElement(downloadBtn),
-      ]);
+    const [download] = await Promise.all([
+      this.page.waitForEvent('download', { timeout: 30_000 }),
+      this.clickElement(downloadBtn),
+    ]);
 
-      return download;
-    });
+    return download;
   }
 
   /**
@@ -346,22 +329,20 @@ export class PhotoDetailPage extends BasePage {
    * @returns Newly opened tab/page in Design AC if opened in new tab, or null if on current page
    */
   async clickOpenDesignTool(size: 'S' | 'M' | 'L' = 'S'): Promise<Page | null> {
-    return await test.step(`Click Open Design Tool button for Size ${size}`, async () => {
-      const btn =
-        size === 'S'
-          ? this.premiumOpenDesignToolS
-          : size === 'M'
-            ? this.premiumOpenDesignToolM
-            : this.premiumOpenDesignToolL;
+    const btn =
+      size === 'S'
+        ? this.premiumOpenDesignToolS
+        : size === 'M'
+          ? this.premiumOpenDesignToolM
+          : this.premiumOpenDesignToolL;
 
-      // May open in new tab or navigate current page
-      const [newPage] = await Promise.all([
-        this.page.context().waitForEvent('page', { timeout: 15_000 }).catch(() => null),
-        this.clickElement(btn),
-      ]);
+    // May open in new tab or navigate current page
+    const [newPage] = await Promise.all([
+      this.page.context().waitForEvent('page', { timeout: 15_000 }).catch(() => null),
+      this.clickElement(btn),
+    ]);
 
-      return newPage;
-    });
+    return newPage;
   }
 
   // First Download & Campaign Offer Methods
@@ -408,66 +389,64 @@ export class PhotoDetailPage extends BasePage {
    * @returns Playwright Download object
    */
   async downloadAsFreeUser(size: 'S' | 'M' | 'L' = 'S'): Promise<import('@playwright/test').Download> {
-    return await test.step(`Download photo as Free User (Size: ${size})`, async () => {
+    await this.dismissInterferingModals();
+    await this.freeDownloadButton.scrollIntoViewIfNeeded().catch(() => { });
+    await this.dismissInterferingModals();
+
+    // Click main download button to trigger timer / rewarded ad modal
+    await this.clickElement(this.freeDownloadButton);
+
+    // Handle Google Rewarded Ad / Interstitial overlay if present
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const isTimerVisible = await this.timerModal.isVisible().catch(() => false);
+      if (isTimerVisible) break;
+
       await this.dismissInterferingModals();
-      await this.freeDownloadButton.scrollIntoViewIfNeeded().catch(() => { });
-      await this.dismissInterferingModals();
 
-      // Click main download button to trigger timer / rewarded ad modal
-      await this.clickElement(this.freeDownloadButton);
+      // Try frame locator for close button
+      const frameClose = this.page
+        .frameLocator('iframe[id*="Rewarded_Ads"], iframe[id*="aswift"]')
+        .locator('text=閉じる, [aria-label="閉じる"]')
+        .first();
 
-      // Handle Google Rewarded Ad / Interstitial overlay if present
-      for (let attempt = 0; attempt < 5; attempt++) {
-        const isTimerVisible = await this.timerModal.isVisible().catch(() => false);
-        if (isTimerVisible) break;
-
-        await this.dismissInterferingModals();
-
-        // Try frame locator for close button
-        const frameClose = this.page
-          .frameLocator('iframe[id*="Rewarded_Ads"], iframe[id*="aswift"]')
-          .locator('text=閉じる, [aria-label="閉じる"]')
-          .first();
-
-        if (await frameClose.isVisible({ timeout: 1500 }).catch(() => false)) {
-          await frameClose.click().catch(() => { });
-        } else {
-          // Fallback: Click top-right coordinates (1535, 110) for Rewarded Ad and (1251, 308) for banner dialogs
-          await this.page.mouse.click(1535, 110).catch(() => { });
-          await this.page.mouse.click(1251, 308).catch(() => { });
-        }
-
-        // Also dismiss any survey/banner popup appearing concurrently
-        await this.dismissInterferingModals();
-
-        // If timer modal is still hidden and download button is interactive, click again
-        const isNowVisible = await this.timerModal.isVisible().catch(() => false);
-        if (!isNowVisible && (await this.freeDownloadButton.isVisible().catch(() => false))) {
-          await this.clickElement(this.freeDownloadButton).catch(() => { });
-        }
+      if (await frameClose.isVisible({ timeout: 1500 }).catch(() => false)) {
+        await frameClose.click().catch(() => { });
+      } else {
+        // Fallback: Click top-right coordinates (1535, 110) for Rewarded Ad and (1251, 308) for banner dialogs
+        await this.page.mouse.click(1535, 110).catch(() => { });
+        await this.page.mouse.click(1251, 308).catch(() => { });
       }
 
-      // Ensure timer modal is visible
-      await this.timerModal.waitFor({ state: 'visible', timeout: 20_000 });
+      // Also dismiss any survey/banner popup appearing concurrently
+      await this.dismissInterferingModals();
 
-      // Select size if specified
-      const sizeRadio = this.page.locator(`#timerModal input[value="${size.toLowerCase()}"], #timerModal input#${size.toLowerCase()}`);
-      if (await sizeRadio.isVisible().catch(() => false)) {
-        await sizeRadio.check().catch(() => { });
+      // If timer modal is still hidden and download button is interactive, click again
+      const isNowVisible = await this.timerModal.isVisible().catch(() => false);
+      if (!isNowVisible && (await this.freeDownloadButton.isVisible().catch(() => false))) {
+        await this.clickElement(this.freeDownloadButton).catch(() => { });
       }
+    }
 
-      // Wait for countdown to finish and download button to become active
-      const downloadBtn = this.timerModalDownloadButton;
-      await downloadBtn.waitFor({ state: 'visible', timeout: 35_000 });
+    // Ensure timer modal is visible
+    await this.timerModal.waitFor({ state: 'visible', timeout: 20_000 });
 
-      // Wait for download event and click
-      const [download] = await Promise.all([
-        this.page.waitForEvent('download', { timeout: 35_000 }),
-        downloadBtn.click({ force: true }),
-      ]);
+    // Select size if specified
+    const sizeRadio = this.page.locator(`#timerModal input[value="${size.toLowerCase()}"], #timerModal input#${size.toLowerCase()}`);
+    if (await sizeRadio.isVisible().catch(() => false)) {
+      await sizeRadio.check().catch(() => { });
+    }
 
-      return download;
-    });
+    // Wait for countdown to finish and download button to become active
+    const downloadBtn = this.timerModalDownloadButton;
+    await downloadBtn.waitFor({ state: 'visible', timeout: 35_000 });
+
+    // Wait for download event and click
+    const [download] = await Promise.all([
+      this.page.waitForEvent('download', { timeout: 35_000 }),
+      downloadBtn.click({ force: true }),
+    ]);
+
+    return download;
   }
 
   /**
@@ -484,67 +463,57 @@ export class PhotoDetailPage extends BasePage {
    * Wait for First Download Completed promotional offer modal and click it to navigate to Premium campaign page.
    */
   async clickFirstDownloadPremiumOffer(): Promise<void> {
-    await test.step('Click First Download Premium half-price offer banner', async () => {
-      // 1. Wait for First Download completed modal
-      await this.page.waitForSelector('#firstDownloadedModal', { state: 'visible', timeout: 25_000 });
+    // 1. Wait for First Download completed modal
+    await this.page.waitForSelector('#firstDownloadedModal', { state: 'visible', timeout: 25_000 });
 
-      // 2. Click the promotional coupon link/image and wait for navigation to premium campaign
-      await Promise.all([
-        this.page.waitForURL(/premium\/campaign/, { timeout: 30_000 }),
-        this.firstDownloadCouponLink.click({ force: true }),
-      ]);
-      await this.waitForPageLoad();
-    });
+    // 2. Click the promotional coupon link/image and wait for navigation to premium campaign
+    await Promise.all([
+      this.page.waitForURL(/premium\/campaign/, { timeout: 30_000 }),
+      this.firstDownloadCouponLink.click({ force: true }),
+    ]);
+    await this.waitForPageLoad();
   }
 
   /**
    * Click Bookmark button to add photo to collection.
    */
   async clickBookmark(): Promise<void> {
-    await test.step('Click Bookmark button', async () => {
-      await this.dismissInterferingModals();
-      await this.clickElement(this.bookmarkButton);
-    });
+    await this.dismissInterferingModals();
+    await this.clickElement(this.bookmarkButton);
   }
 
   /**
    * Click close button on collectionModal
    */
   async closeCollectionAddModal(): Promise<void> {
-    await test.step('Click close button on Collection Add Modal', async () => {
-      await this.dismissInterferingModals();
+    if (await this.closeCollectionAddModalButton.isVisible({ timeout: 5_000 }).catch(() => false)) {
       await this.clickElement(this.closeCollectionAddModalButton);
-    });
-  };
+      await this.collectionAddedModalTitle.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => false);
+    }
+  }
 
   /**
    * Click Like button.
    */
   async clickLike(): Promise<void> {
-    await test.step('Click Like button', async () => {
-      await this.dismissInterferingModals();
-      await this.clickElement(this.likeButton);
-    });
+    await this.dismissInterferingModals();
+    await this.clickElement(this.likeButton);
   }
 
   /**
    * Click Share button to toggle share popover.
    */
   async clickShare(): Promise<void> {
-    await test.step('Click Share button to open popover', async () => {
-      await this.dismissInterferingModals();
-      await this.clickElement(this.shareButton);
-    });
+    await this.dismissInterferingModals();
+    await this.clickElement(this.shareButton);
   }
 
   /**
    * Click Heart / Fan registration button.
    */
   async clickHeartFan(): Promise<void> {
-    await test.step('Click Fan (Heart) registration button', async () => {
-      await this.dismissInterferingModals();
-      await this.clickElement(this.heartFanButton);
-    });
+    await this.dismissInterferingModals();
+    await this.clickElement(this.heartFanButton);
   }
 
   /**
@@ -562,52 +531,44 @@ export class PhotoDetailPage extends BasePage {
    * Click Facebook share option and wait for the popup window to open.
    */
   async clickShareFacebook(): Promise<Page> {
-    return await test.step('Click Facebook share option', async () => {
-      await this.ensureSharePopoverVisible();
-      const [popup] = await Promise.all([
-        this.page.waitForEvent('popup', { timeout: 15_000 }),
-        this.shareFacebookLink.first().click(),
-      ]);
-      return popup;
-    });
+    await this.ensureSharePopoverVisible();
+    const [popup] = await Promise.all([
+      this.page.waitForEvent('popup', { timeout: 15_000 }),
+      this.shareFacebookLink.first().click(),
+    ]);
+    return popup;
   }
 
   /**
    * Click X (Twitter) share option and wait for the popup window to open.
    */
   async clickShareX(): Promise<Page> {
-    return await test.step('Click X (Twitter) share option', async () => {
-      await this.ensureSharePopoverVisible();
-      const [popup] = await Promise.all([
-        this.page.waitForEvent('popup', { timeout: 15_000 }),
-        this.shareXLink.first().click(),
-      ]);
-      return popup;
-    });
+    await this.ensureSharePopoverVisible();
+    const [popup] = await Promise.all([
+      this.page.waitForEvent('popup', { timeout: 15_000 }),
+      this.shareXLink.first().click(),
+    ]);
+    return popup;
   }
 
   /**
    * Click Pinterest share option and wait for the popup window to open.
    */
   async clickSharePinterest(): Promise<Page> {
-    return await test.step('Click Pinterest share option', async () => {
-      await this.ensureSharePopoverVisible();
-      const [popup] = await Promise.all([
-        this.page.waitForEvent('popup', { timeout: 15_000 }),
-        this.sharePinterestLink.first().click(),
-      ]);
-      return popup;
-    });
+    await this.ensureSharePopoverVisible();
+    const [popup] = await Promise.all([
+      this.page.waitForEvent('popup', { timeout: 15_000 }),
+      this.sharePinterestLink.first().click(),
+    ]);
+    return popup;
   }
 
   /**
    * Click Copy Link option inside share popover.
    */
   async clickShareCopyUrl(): Promise<void> {
-    await test.step('Click Copy URL option', async () => {
-      await this.ensureSharePopoverVisible();
-      await this.clickElement(this.shareCopyUrlButton.first());
-    });
+    await this.ensureSharePopoverVisible();
+    await this.clickElement(this.shareCopyUrlButton.first());
   }
 
   /**
@@ -616,16 +577,14 @@ export class PhotoDetailPage extends BasePage {
    * @param index - Index of the face thumbnail (defaults to 0)
    */
   async clickAiFaceThumbnail(index: number = 0): Promise<void> {
-    await test.step(`Click AI Face thumbnail index ${index}`, async () => {
-      const faceLink = this.faceItemLinks.nth(index);
-      await expect(faceLink).toBeVisible({ timeout: 15_000 });
-      await faceLink.evaluate((el: HTMLAnchorElement) => {
-        el.removeAttribute('target');
-        el.removeAttribute('rel');
-      });
-      await this.clickElement(faceLink);
-      await this.page.waitForLoadState('domcontentloaded').catch(() => { });
+    const faceLink = this.faceItemLinks.nth(index);
+    await expect(faceLink).toBeVisible({ timeout: 15_000 });
+    await faceLink.evaluate((el: HTMLAnchorElement) => {
+      el.removeAttribute('target');
+      el.removeAttribute('rel');
     });
+    await this.clickElement(faceLink);
+    await this.page.waitForLoadState('domcontentloaded').catch(() => { });
   }
 
 
@@ -635,49 +594,43 @@ export class PhotoDetailPage extends BasePage {
    * @param size - 'S' | 'M' | 'L' (defaults to 'S')
    */
   async addToBulkDownload(size: 'S' | 'M' | 'L' = 'S'): Promise<void> {
-    await test.step(`Add photo to Bulk Download list (Size: ${size})`, async () => {
-      const btn =
-        size === 'S'
-          ? this.premiumBulkDownloadAddButtonS
-          : size === 'M'
-            ? this.premiumBulkDownloadAddButtonM
-            : this.premiumBulkDownloadAddButtonL;
+    const btn =
+      size === 'S'
+        ? this.premiumBulkDownloadAddButtonS
+        : size === 'M'
+          ? this.premiumBulkDownloadAddButtonM
+          : this.premiumBulkDownloadAddButtonL;
 
-      await this.dismissInterferingModals();
-      await Promise.all([
-        this.page
-          .waitForResponse(
-            res => res.url().includes('/image/download_select/') && res.status() === 200,
-            { timeout: 15_000 }
-          )
-          .catch(() => null),
-        this.clickElement(btn),
-      ]);
-    });
+    await this.dismissInterferingModals();
+    await Promise.all([
+      this.page
+        .waitForResponse(
+          res => res.url().includes('/image/download_select/') && res.status() === 200,
+          { timeout: 15_000 }
+        )
+        .catch(() => null),
+      this.clickElement(btn),
+    ]);
   }
 
   /**
    * Open the Bulk Download modal by clicking the folder icon on the floating sidebar.
    */
   async openBulkDownloadModal(): Promise<void> {
-    await test.step('Open Bulk Download modal from floating sidebar', async () => {
-      await this.dismissInterferingModals();
-      await this.clickElement(this.toolbarBulkDownloadButton.first());
-      await this.bulkDownloadModal.waitFor({ state: 'visible', timeout: 15_000 });
-    });
+    await this.dismissInterferingModals();
+    await this.clickElement(this.toolbarBulkDownloadButton.first());
+    await this.bulkDownloadModal.waitFor({ state: 'visible', timeout: 15_000 });
   }
 
   /**
    * Close the Bulk Download modal.
    */
   async closeBulkDownloadModal(): Promise<void> {
-    await test.step('Close Bulk Download modal', async () => {
-      if (await this.bulkDownloadModal.isVisible().catch(() => false)) {
-        await this.bulkDownloadModalCloseButton.click({ force: true }).catch(() => { });
-        await this.page.keyboard.press('Escape').catch(() => { });
-        await this.bulkDownloadModal.waitFor({ state: 'hidden', timeout: 10_000 }).catch(() => { });
-      }
-    });
+    if (await this.bulkDownloadModal.isVisible().catch(() => false)) {
+      await this.bulkDownloadModalCloseButton.click({ force: true }).catch(() => { });
+      await this.page.keyboard.press('Escape').catch(() => { });
+      await this.bulkDownloadModal.waitFor({ state: 'hidden', timeout: 10_000 }).catch(() => { });
+    }
   }
 
   /**
@@ -685,16 +638,14 @@ export class PhotoDetailPage extends BasePage {
    * @param photoId - ID of photo to remove (defaults to Acworks default ID)
    */
   async removePhotoFromBulkModal(photoId: string = PhotoDetailPage.ACWORKS_DEFAULT_PHOTO_ID): Promise<void> {
-    await test.step(`Remove photo (ID: ${photoId}) from Bulk Download modal`, async () => {
-      const removeBtn = this.page.locator(`#bulkDownloadModal .img-remove[attrid="${photoId}"]`).first();
-      const targetBtn = (await removeBtn.count()) > 0
-        ? removeBtn
-        : this.bulkDownloadModalRemoveButton.first();
+    const removeBtn = this.page.locator(`#bulkDownloadModal .img-remove[attrid="${photoId}"]`).first();
+    const targetBtn = (await removeBtn.count()) > 0
+      ? removeBtn
+      : this.bulkDownloadModalRemoveButton.first();
 
-      await targetBtn.waitFor({ state: 'attached', timeout: 10_000 });
-      await targetBtn.dispatchEvent('click');
-      await targetBtn.waitFor({ state: 'detached', timeout: 10_000 }).catch(() => { });
-    });
+    await targetBtn.waitFor({ state: 'attached', timeout: 10_000 });
+    await targetBtn.dispatchEvent('click');
+    await targetBtn.waitFor({ state: 'detached', timeout: 10_000 }).catch(() => { });
   }
 
   /**
@@ -702,42 +653,38 @@ export class PhotoDetailPage extends BasePage {
    * @returns Playwright Download object
    */
   async downloadBulkAsPremium(): Promise<import('@playwright/test').Download> {
-    return await test.step('Execute bulk download and wait for download event', async () => {
-      await this.bulkDownloadModalSubmitButton.waitFor({ state: 'visible', timeout: 15_000 });
-      const [download] = await Promise.all([
-        this.page.waitForEvent('download', { timeout: 60_000 }),
-        this.clickElement(this.bulkDownloadModalSubmitButton),
-      ]);
-      return download;
-    });
+    await this.bulkDownloadModalSubmitButton.waitFor({ state: 'visible', timeout: 15_000 });
+    const [download] = await Promise.all([
+      this.page.waitForEvent('download', { timeout: 60_000 }),
+      this.clickElement(this.bulkDownloadModalSubmitButton),
+    ]);
+    return download;
   }
 
   /**
    * Clean up all items from Bulk Download folder if any exist.
    */
   async clearBulkDownloadIfAny(): Promise<void> {
-    await test.step('Clean up bulk download list if not empty', async () => {
-      const isModalVisible = await this.bulkDownloadModal.isVisible().catch(() => false);
-      if (!isModalVisible) {
-        const hasToolbar = await this.toolbarBulkDownloadButton.first().isVisible().catch(() => false);
-        if (hasToolbar) {
-          await this.toolbarBulkDownloadButton.first().click().catch(() => { });
-          await this.bulkDownloadModal.waitFor({ state: 'visible', timeout: 5000 }).catch(() => { });
-        }
+    const isModalVisible = await this.bulkDownloadModal.isVisible().catch(() => false);
+    if (!isModalVisible) {
+      const hasToolbar = await this.toolbarBulkDownloadButton.first().isVisible().catch(() => false);
+      if (hasToolbar) {
+        await this.toolbarBulkDownloadButton.first().click().catch(() => { });
+        await this.bulkDownloadModal.waitFor({ state: 'visible', timeout: 5000 }).catch(() => { });
       }
+    }
 
-      while ((await this.bulkDownloadModalItems.count()) > 0) {
-        const item = this.bulkDownloadModalItems.first();
-        const removeBtn = item.locator('.img-remove');
-        if (await removeBtn.count()) {
-          await removeBtn.dispatchEvent('click').catch(() => { });
-          await item.waitFor({ state: 'detached', timeout: 5000 }).catch(() => { });
-        } else {
-          break;
-        }
+    while ((await this.bulkDownloadModalItems.count()) > 0) {
+      const item = this.bulkDownloadModalItems.first();
+      const removeBtn = item.locator('.img-remove');
+      if (await removeBtn.count()) {
+        await removeBtn.dispatchEvent('click').catch(() => { });
+        await item.waitFor({ state: 'detached', timeout: 5000 }).catch(() => { });
+      } else {
+        break;
       }
+    }
 
-      await this.closeBulkDownloadModal().catch(() => { });
-    });
+    await this.closeBulkDownloadModal().catch(() => { });
   }
 }

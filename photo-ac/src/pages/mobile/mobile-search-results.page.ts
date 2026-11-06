@@ -1,4 +1,4 @@
-﻿import { type Page, type Locator, test, expect } from '@playwright/test';
+import { type Page, type Locator, expect } from '@playwright/test';
 import { SearchResultPage } from '../common/search-results.page';
 
 /**
@@ -54,30 +54,26 @@ export class MobileSearchResultPage extends SearchResultPage {
    * Open the mobile filter drawer by clicking "詳細検索 ▼" and auto-wait for it to become active.
    */
   async openMobileFilterDrawer(): Promise<void> {
-    await test.step('Open mobile filter drawer via "詳細検索 ▼"', async () => {
-      await this.dismissCookieBannerIfPresent();
-      await this.dismissIntroDialogIfPresent();
+    await this.dismissCookieBannerIfPresent();
+    await this.dismissIntroDialogIfPresent();
 
-      // Check if drawer is already active
-      const isActive = await this.filterDrawer.evaluate((el) => el.classList.contains('active')).catch(() => false);
-      if (!isActive) {
-        await this.clickElement(this.detailedSearchButton);
-        await expect(this.filterDrawer).toHaveClass(/active/, { timeout: 10_000 });
-      }
-    });
+    // Check if drawer is already active
+    const isActive = await this.filterDrawer.evaluate((el) => el.classList.contains('active')).catch(() => false);
+    if (!isActive) {
+      await this.clickElement(this.detailedSearchButton);
+      await expect(this.filterDrawer).toHaveClass(/active/, { timeout: 10_000 });
+    }
   }
 
   /**
    * Close the mobile filter drawer.
    */
   async closeMobileFilterDrawer(): Promise<void> {
-    await test.step('Close mobile filter drawer', async () => {
-      const isActive = await this.filterDrawer.evaluate((el) => el.classList.contains('active')).catch(() => false);
-      if (isActive) {
-        await this.clickElement(this.closeDrawerButton);
-        await expect(this.filterDrawer).not.toHaveClass(/active/, { timeout: 10_000 });
-      }
-    });
+    const isActive = await this.filterDrawer.evaluate((el) => el.classList.contains('active')).catch(() => false);
+    if (isActive) {
+      await this.clickElement(this.closeDrawerButton);
+      await expect(this.filterDrawer).not.toHaveClass(/active/, { timeout: 10_000 });
+    }
   }
 
   /**
@@ -85,16 +81,14 @@ export class MobileSearchResultPage extends SearchResultPage {
    * Auto-submits upon clicking the radio label.
    */
   async selectOrientationMobile(orientation: 'vertical' | 'horizontal' | 'all'): Promise<void> {
-    await test.step(`Mobile: Filter by orientation "${orientation}"`, async () => {
-      await this.openMobileFilterDrawer();
+    await this.openMobileFilterDrawer();
 
-      const targetLabel = orientation === 'vertical'
-        ? this.mobileOrientationVerticalLabel
-        : (orientation === 'horizontal' ? this.mobileOrientationHorizontalLabel : this.mobileOrientationAllLabel);
+    const targetLabel = orientation === 'vertical'
+      ? this.mobileOrientationVerticalLabel
+      : (orientation === 'horizontal' ? this.mobileOrientationHorizontalLabel : this.mobileOrientationAllLabel);
 
-      await this.clickElement(targetLabel);
-      await this.waitForResultDisplay();
-    });
+    await this.clickElement(targetLabel);
+    await this.waitForResultDisplay();
   }
 
   /**
@@ -102,16 +96,14 @@ export class MobileSearchResultPage extends SearchResultPage {
    * Auto-submits upon clicking the sort label.
    */
   async selectSortMobile(sort: 'newest' | 'relevance' | 'popular'): Promise<void> {
-    await test.step(`Mobile: Select sort option "${sort}"`, async () => {
-      await this.openMobileFilterDrawer();
+    await this.openMobileFilterDrawer();
 
-      const targetLabel = sort === 'newest'
-        ? this.mobileSortNewestLabel
-        : (sort === 'popular' ? this.mobileSortPopularLabel : this.mobileSortRelevanceLabel);
+    const targetLabel = sort === 'newest'
+      ? this.mobileSortNewestLabel
+      : (sort === 'popular' ? this.mobileSortPopularLabel : this.mobileSortRelevanceLabel);
 
-      await this.clickElement(targetLabel);
-      await this.waitForResultDisplay();
-    });
+    await this.clickElement(targetLabel);
+    await this.waitForResultDisplay();
   }
 }
 

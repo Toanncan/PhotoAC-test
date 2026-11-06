@@ -1,4 +1,4 @@
-﻿import { type Page, type Locator, test, expect } from '@playwright/test';
+import { type Page, type Locator, expect } from '@playwright/test';
 import { BasePage } from './base.page';
 import { MailTmHelper } from '../../utils/mail-tm.helper';
 
@@ -111,13 +111,11 @@ export class RegisterPage extends BasePage {
    * Navigate to the home page and click Download User Registration from header.
    */
   async goToFreeUserRegisterPage(): Promise<void> {
-    await test.step('Điều hướng đến trang đăng ký Download Free User từ Header', async () => {
-      await this.navigate('/');
-      await this.waitForPageLoad();
-      await this.clickElement(this.registerHeaderButton);
-      await this.clickElement(this.downloadUserRegisterLink);
-      await this.page.waitForLoadState('domcontentloaded');
-    });
+    await this.navigate('/');
+    await this.waitForPageLoad();
+    await this.clickElement(this.registerHeaderButton);
+    await this.clickElement(this.downloadUserRegisterLink);
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   /**
@@ -125,11 +123,9 @@ export class RegisterPage extends BasePage {
    * @param email - Valid email address to register
    */
   async submitProvisionalRegistration(email: string): Promise<void> {
-    await test.step(`Nhập email (${email}) và gửi yêu cầu đăng ký tạm`, async () => {
-      await this.fillInput(this.emailInput, email);
-      await this.clickElement(this.nextButton);
-      await this.page.waitForLoadState('domcontentloaded');
-    });
+    await this.fillInput(this.emailInput, email);
+    await this.clickElement(this.nextButton);
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   /**
@@ -137,10 +133,8 @@ export class RegisterPage extends BasePage {
    * @param email - Valid email address to register
    */
   async registerFreeUserProvisional(email: string): Promise<void> {
-    await test.step(`Đăng ký tài khoản Free User mới với email: ${email}`, async () => {
-      await this.goToFreeUserRegisterPage();
-      await this.submitProvisionalRegistration(email);
-    });
+    await this.goToFreeUserRegisterPage();
+    await this.submitProvisionalRegistration(email);
   }
 
   /**
@@ -160,32 +154,28 @@ export class RegisterPage extends BasePage {
     activationUrl: string,
     password: string
   ): Promise<void> {
-    await test.step('Truy cập link kích hoạt và thiết lập mật khẩu hoàn tất tài khoản', async () => {
-      await this.page.goto(activationUrl, { waitUntil: 'domcontentloaded' });
+    await this.page.goto(activationUrl, { waitUntil: 'domcontentloaded' });
 
-      // Wait for password setting form to appear
-      await expect(this.passwordInput).toBeVisible({ timeout: 15_000 });
-      await this.fillInput(this.passwordInput, password);
+    // Wait for password setting form to appear
+    await expect(this.passwordInput).toBeVisible({ timeout: 15_000 });
+    await this.fillInput(this.passwordInput, password);
 
-      await expect(this.passwordConfirmInput).toBeVisible({ timeout: 10_000 });
-      await this.fillInput(this.passwordConfirmInput, password);
+    await expect(this.passwordConfirmInput).toBeVisible({ timeout: 10_000 });
+    await this.fillInput(this.passwordConfirmInput, password);
 
-      await this.clickElement(this.submitPasswordButton);
-      await this.page.waitForLoadState('domcontentloaded');
+    await this.clickElement(this.submitPasswordButton);
+    await this.page.waitForLoadState('domcontentloaded');
 
-      // Verify that final registration is completed
-      await expect(this.finalSuccessHeading).toBeVisible({ timeout: 15_000 });
-    });
+    // Verify that final registration is completed
+    await expect(this.finalSuccessHeading).toBeVisible({ timeout: 15_000 });
   }
 
   /**
    * Click 'トップページ' link to navigate back to Photo-AC with newly registered session.
    */
   async navigateToTopPageAfterRegistration(): Promise<void> {
-    await test.step('Click link トップページ để trở về Photo-AC với phiên đăng nhập mới', async () => {
-      await this.clickElement(this.topPageLink);
-      await this.page.waitForLoadState('domcontentloaded');
-    });
+    await this.clickElement(this.topPageLink);
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   // Common Reusable Flow: Complete End-to-End Registration
@@ -212,45 +202,43 @@ export class RegisterPage extends BasePage {
     const usernamePrefix = options?.usernamePrefix || 'acfree';
     const shouldGoToTop = options?.navigateToTopPage ?? true;
 
-    return await test.step('COMMON FLOW: Đăng ký tài khoản Free User mới hoàn chỉnh', async () => {
-      const mailTm = new MailTmHelper();
+    const mailTm = new MailTmHelper();
 
-      // Step 1: Create disposable email
-      const account = await mailTm.createAccount({ usernamePrefix });
-      const email = account.address;
+    // Step 1: Create disposable email
+    const account = await mailTm.createAccount({ usernamePrefix });
+    const email = account.address;
 
-      // Step 2: Submit email on Photo-AC
-      await this.registerFreeUserProvisional(email);
-      await expect(this.provisionalSuccessHeading).toBeVisible({ timeout: 10_000 });
+    // Step 2: Submit email on Photo-AC
+    await this.registerFreeUserProvisional(email);
+    await expect(this.provisionalSuccessHeading).toBeVisible({ timeout: 10_000 });
 
-      // Step 3: Wait for verification email from Photo-AC
-      const activationEmail = await mailTm.waitForEmail({
-        subjectContains: '仮登録完了',
-        timeoutMs: 60_000,
-      });
-
-      // Step 4: Extract activation URL
-      const activationUrl = mailTm.extractActivationLink(activationEmail);
-      if (!activationUrl) {
-        throw new Error(
-          `[RegisterPage] Failed to extract activation link from email: "${activationEmail.subject}"`
-        );
-      }
-
-      // Step 5: Fill password and confirm password on password-setting page
-      await this.setPasswordAndCompleteRegistration(activationUrl, defaultPassword);
-
-      // Step 6: Navigate back to Top Page if requested
-      if (shouldGoToTop) {
-        await this.navigateToTopPageAfterRegistration();
-      }
-
-      return {
-        email,
-        password: defaultPassword,
-        mailTm,
-      };
+    // Step 3: Wait for verification email from Photo-AC
+    const activationEmail = await mailTm.waitForEmail({
+      subjectContains: '仮登録完了',
+      timeoutMs: 60_000,
     });
+
+    // Step 4: Extract activation URL
+    const activationUrl = mailTm.extractActivationLink(activationEmail);
+    if (!activationUrl) {
+      throw new Error(
+        `[RegisterPage] Failed to extract activation link from email: "${activationEmail.subject}"`
+      );
+    }
+
+    // Step 5: Fill password and confirm password on password-setting page
+    await this.setPasswordAndCompleteRegistration(activationUrl, defaultPassword);
+
+    // Step 6: Navigate back to Top Page if requested
+    if (shouldGoToTop) {
+      await this.navigateToTopPageAfterRegistration();
+    }
+
+    return {
+      email,
+      password: defaultPassword,
+      mailTm,
+    };
   }
 }
 

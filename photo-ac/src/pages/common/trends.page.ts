@@ -1,4 +1,4 @@
-import { type Page, type Locator, test, expect } from '@playwright/test';
+import { type Page, type Locator, expect } from '@playwright/test';
 import { BasePage } from './base.page';
 
 /**
@@ -54,10 +54,8 @@ export class TrendsPage extends BasePage {
    * Navigate directly to the Trends page (/main/trends).
    */
   async goToTrendsPage(): Promise<void> {
-    await test.step('Navigate to Trends Page (/main/trends)', async () => {
-      await this.navigate(this.PAGE_URL);
-      await this.waitForResultDisplay();
-    });
+    await this.navigate(this.PAGE_URL);
+    await this.waitForResultDisplay();
   }
 
   // Wait & Result Methods
@@ -66,10 +64,8 @@ export class TrendsPage extends BasePage {
    * @param timeout - Maximum timeout in ms (default 15_000)
    */
   async waitForResultDisplay(timeout: number = 15_000): Promise<void> {
-    await test.step('Wait for Trends result display', async () => {
-      await this.waitForPageLoadingIconHidden();
-      await expect(this.resultItems.first()).toBeVisible({ timeout });
-    });
+    await this.waitForPageLoadingIconHidden();
+    await expect(this.resultItems.first()).toBeVisible({ timeout });
   }
 
   /**
@@ -88,11 +84,9 @@ export class TrendsPage extends BasePage {
    * @param sort - 'dlrank' (ダウンロード数順 - default) or '-releasedate' (新着順)
    */
   async selectSort(sort: 'dlrank' | '-releasedate'): Promise<void> {
-    await test.step(`Select sort option on Trends page: "${sort}"`, async () => {
-      await this.sortSelect.selectOption(sort);
-      await this.page.waitForLoadState('domcontentloaded');
-      await this.waitForResultDisplay();
-    });
+    await this.sortSelect.selectOption(sort);
+    await this.page.waitForLoadState('domcontentloaded');
+    await this.waitForResultDisplay();
   }
 
   /**
@@ -100,11 +94,9 @@ export class TrendsPage extends BasePage {
    * @param count - '70' | '140' | '210'
    */
   async selectDisplayCount(count: '70' | '140' | '210'): Promise<void> {
-    await test.step(`Select display count on Trends page: ${count} items`, async () => {
-      await this.pageSizeSelect.selectOption(count);
-      await this.page.waitForLoadState('domcontentloaded');
-      await this.waitForResultDisplay();
-    });
+    await this.pageSizeSelect.selectOption(count);
+    await this.page.waitForLoadState('domcontentloaded');
+    await this.waitForResultDisplay();
   }
 
   // Pagination Methods
@@ -112,22 +104,18 @@ export class TrendsPage extends BasePage {
    * Navigate to the next page in pagination.
    */
   async goToNextPage(): Promise<void> {
-    await test.step('Navigate to next page in pagination', async () => {
-      await this.paginationNextButton.scrollIntoViewIfNeeded().catch(() => {});
-      await this.clickElement(this.paginationNextButton);
-      await this.waitForResultDisplay();
-    });
+    await this.paginationNextButton.scrollIntoViewIfNeeded().catch(() => {});
+    await this.clickElement(this.paginationNextButton);
+    await this.waitForResultDisplay();
   }
 
   /**
    * Navigate to the previous page in pagination.
    */
   async goToPrevPage(): Promise<void> {
-    await test.step('Navigate to previous page in pagination', async () => {
-      await this.paginationPrevButton.scrollIntoViewIfNeeded().catch(() => {});
-      await this.clickElement(this.paginationPrevButton);
-      await this.waitForResultDisplay();
-    });
+    await this.paginationPrevButton.scrollIntoViewIfNeeded().catch(() => {});
+    await this.clickElement(this.paginationPrevButton);
+    await this.waitForResultDisplay();
   }
 
   /**
@@ -143,16 +131,14 @@ export class TrendsPage extends BasePage {
    * @param keyword - Keyword string
    */
   async searchAgain(keyword: string): Promise<void> {
-    await test.step(`Search from Trends page with keyword: "${keyword}"`, async () => {
-      await this.fillInput(this.searchInput, keyword);
-      if (await this.searchSubmitButton.isVisible().catch(() => false)) {
-        await this.searchSubmitButton.click({ noWaitAfter: true }).catch(async () => {
-          await this.searchInput.press('Enter', { noWaitAfter: true });
-        });
-      } else {
+    await this.fillInput(this.searchInput, keyword);
+    if (await this.searchSubmitButton.isVisible().catch(() => false)) {
+      await this.searchSubmitButton.click({ noWaitAfter: true }).catch(async () => {
         await this.searchInput.press('Enter', { noWaitAfter: true });
-      }
-      await this.page.waitForLoadState('domcontentloaded');
-    });
+      });
+    } else {
+      await this.searchInput.press('Enter', { noWaitAfter: true });
+    }
+    await this.page.waitForLoadState('domcontentloaded');
   }
 }

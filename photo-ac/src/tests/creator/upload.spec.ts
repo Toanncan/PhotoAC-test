@@ -234,7 +234,7 @@ test.describe('Creator Photo Upload @creator @upload', () => {
     }
   });
 
-  test('TC-UPLOAD-CREATOR-007: Tìm kiếm ảnh đã tải lên trên danh sách「投稿写真一覧」theo từ khóa hoặc ID @regression @creator', async ({
+  test('TC-UPLOAD-CREATOR-007: Tìm kiếm ảnh đã tải lên trên danh sách「投稿写真一覧」theo từ khóa hoặc ID', async ({
     creatorPhotoListPage,
     page,
   }) => {
@@ -264,7 +264,7 @@ test.describe('Creator Photo Upload @creator @upload', () => {
     });
   });
 
-  test('TC-UPLOAD-CREATOR-008: Chỉnh sửa thông tin ảnh (Edit) và xác nhận cập nhật thành công @regression @creator', async ({
+  test('TC-UPLOAD-CREATOR-008: Chỉnh sửa thông tin ảnh (Edit) và xác nhận cập nhật thành công', async ({
     uploadPage,
     creatorPhotoListPage,
     page,
@@ -305,7 +305,7 @@ test.describe('Creator Photo Upload @creator @upload', () => {
     });
   });
 
-  test('TC-UPLOAD-CREATOR-009: Xóa ảnh đã tải lên (Delete) qua modal xác nhận và kiểm tra ảnh bị xóa khỏi danh sách @regression @creator', async ({
+  test('TC-UPLOAD-CREATOR-009: Xóa ảnh đã tải lên (Delete) qua modal xác nhận và kiểm tra ảnh bị xóa khỏi danh sách', async ({
     uploadPage,
     creatorPhotoListPage,
     page,

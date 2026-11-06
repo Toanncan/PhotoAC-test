@@ -1,4 +1,4 @@
-import { type Page, test } from '@playwright/test';
+import { type Page } from '@playwright/test';
 import { BasePage } from '../common/base.page';
 
 
@@ -35,11 +35,9 @@ export class ReceiptsPage extends BasePage {
    * Navigate directly to the receipts page.
    */
   async goToReceiptsPage(): Promise<void> {
-    await test.step('Navigate to Receipts page (/user/receipts)', async () => {
-      await this.navigate('/user/receipts');
-      await this.page.waitForURL(/\/user\/receipts/, { waitUntil: 'domcontentloaded', timeout: 30_000 });
-      await this.waitForPageLoad();
-    });
+    await this.navigate('/user/receipts');
+    await this.page.waitForURL(/\/user\/receipts/, { waitUntil: 'domcontentloaded', timeout: 30_000 });
+    await this.waitForPageLoad();
   }
 
   /**
@@ -48,10 +46,8 @@ export class ReceiptsPage extends BasePage {
    * @param personName - Person in charge name (担当者名)
    */
   async fillRecipientInfo(companyName: string, personName: string): Promise<void> {
-    await test.step(`Fill recipient info: company="${companyName}", person="${personName}"`, async () => {
-      await this.fillInput(this.companyNameInput, companyName);
-      await this.fillInput(this.personNameInput, personName);
-    });
+    await this.fillInput(this.companyNameInput, companyName);
+    await this.fillInput(this.personNameInput, personName);
   }
 
   /**
@@ -59,19 +55,17 @@ export class ReceiptsPage extends BasePage {
    * The button triggers an AJAX save and shows a native alert: 宛名を保存しました。
    */
   async saveRecipientInfo(): Promise<void> {
-    await test.step('Click 宛名保存 and handle JS alert', async () => {
-      const dialogPromise = this.page
-        .waitForEvent('dialog', { timeout: 4_000 })
-        .then(async (dialog) => {
-          await dialog.accept().catch(() => {});
-        })
-        .catch(() => {});
+    const dialogPromise = this.page
+      .waitForEvent('dialog', { timeout: 4_000 })
+      .then(async (dialog) => {
+        await dialog.accept().catch(() => {});
+      })
+      .catch(() => {});
 
-      await this.clickElement(this.saveRecipientButton);
-      await dialogPromise;
-      // Allow brief moment for AJAX state to settle
-      await this.page.waitForLoadState('domcontentloaded').catch(() => {});
-    });
+    await this.clickElement(this.saveRecipientButton);
+    await dialogPromise;
+    // Allow brief moment for AJAX state to settle
+    await this.page.waitForLoadState('domcontentloaded').catch(() => {});
   }
 
   /**
@@ -81,18 +75,16 @@ export class ReceiptsPage extends BasePage {
    * @param index - 0-based index of the radio button to select
    */
   async selectBillingItemByIndex(index: number): Promise<void> {
-    await test.step(`Select billing item at index ${index}`, async () => {
-      const radio = this.page.locator(`#outid_${index}`);
-      const label = this.page.locator(`label[for="outid_${index}"]`);
+    const radio = this.page.locator(`#outid_${index}`);
+    const label = this.page.locator(`label[for="outid_${index}"]`);
 
-      await radio.or(label).first().waitFor({ state: 'visible', timeout: 10_000 });
+    await radio.or(label).first().waitFor({ state: 'visible', timeout: 10_000 });
 
-      if (await label.isVisible().catch(() => false)) {
-        await this.clickElement(label);
-      } else {
-        await this.clickElement(radio);
-      }
-    });
+    if (await label.isVisible().catch(() => false)) {
+      await this.clickElement(label);
+    } else {
+      await this.clickElement(radio);
+    }
   }
 
   /**
@@ -101,11 +93,9 @@ export class ReceiptsPage extends BasePage {
    * @returns Download object
    */
   async downloadReceiptPdf(): Promise<import('@playwright/test').Download> {
-    return test.step('Click ダウンロード and wait for PDF download', async () => {
-      const downloadPromise = this.page.waitForEvent('download', { timeout: 30_000 });
-      await this.clickElement(this.downloadButton);
-      return downloadPromise;
-    });
+    const downloadPromise = this.page.waitForEvent('download', { timeout: 30_000 });
+    await this.clickElement(this.downloadButton);
+    return downloadPromise;
   }
 
   /**

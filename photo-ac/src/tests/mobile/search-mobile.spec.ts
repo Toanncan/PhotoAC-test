@@ -30,7 +30,7 @@ test.describe('Search Feature — Mobile (Guest User)', () => {
    * TC-SEARCH-MOBILE-001: Tìm kiếm từ khóa hợp lệ trên Mobile
    * @tags @smoke @mobile @guest
    */
-  test('TC-SEARCH-MOBILE-001: Guest tìm kiếm từ khóa hợp lệ trên Mobile: hiển thị kết quả @smoke @mobile @guest', async ({
+  test('TC-SEARCH-MOBILE-001: Guest tìm kiếm từ khóa hợp lệ trên Mobile: hiển thị kết quả', async ({
     page,
     homePage,
     mobileSearchResultPage,
@@ -58,7 +58,7 @@ test.describe('Search Feature — Mobile (Guest User)', () => {
    * TC-SEARCH-MOBILE-002: Lọc theo hướng ảnh dọc (縦長) qua Drawer 詳細検索
    * @tags @regression @mobile @guest
    */
-  test('TC-SEARCH-MOBILE-002: Lọc theo hướng ảnh (縦長 - Vertical) qua Drawer 詳細検索 trên Mobile @regression @mobile @guest', async ({
+  test('TC-SEARCH-MOBILE-002: Lọc theo hướng ảnh (縦長 - Vertical) qua Drawer 詳細検索 trên Mobile', async ({
     page,
     homePage,
     mobileSearchResultPage,
@@ -86,7 +86,7 @@ test.describe('Search Feature — Mobile (Guest User)', () => {
    * TC-SEARCH-MOBILE-003: Sắp xếp theo ngày phát hành mới nhất (新着順) qua Drawer trên Mobile
    * @tags @regression @mobile @guest
    */
-  test('TC-SEARCH-MOBILE-003: Sắp xếp theo ngày phát hành (新着順) qua Drawer trên Mobile @regression @mobile @guest', async ({
+  test('TC-SEARCH-MOBILE-003: Sắp xếp theo ngày phát hành (新着順) qua Drawer trên Mobile', async ({
     page,
     homePage,
     mobileSearchResultPage,
@@ -113,7 +113,7 @@ test.describe('Search Feature — Mobile (Guest User)', () => {
    * TC-SEARCH-MOBILE-004: Tìm kiếm từ khóa không có kết quả trên Mobile
    * @tags @negative @mobile @guest
    */
-  test('TC-SEARCH-MOBILE-004: Tìm kiếm từ khóa không tồn tại hiển thị thông báo không có kết quả trên Mobile @negative @mobile @guest', async ({
+  test('TC-SEARCH-MOBILE-004: Tìm kiếm từ khóa không tồn tại hiển thị thông báo không có kết quả trên Mobile', async ({
     page,
     homePage,
     mobileSearchResultPage,
@@ -137,7 +137,7 @@ test.describe('Search Feature — Mobile (Guest User)', () => {
    * TC-SEARCH-MOBILE-005: Tìm kiếm lại với từ khóa mới từ ô input search trên Mobile
    * @tags @regression @mobile @guest
    */
-  test('TC-SEARCH-MOBILE-005: Tìm kiếm lại với từ khóa mới từ ô input search trên Mobile @regression @mobile @guest', async ({
+  test('TC-SEARCH-MOBILE-005: Tìm kiếm lại với từ khóa mới từ ô input search trên Mobile', async ({
     page,
     homePage,
     mobileSearchResultPage,

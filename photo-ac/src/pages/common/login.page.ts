@@ -1,4 +1,4 @@
-import { type Page, test } from '@playwright/test';
+import { type Page } from '@playwright/test';
 import { BasePage } from './base.page';
 
 /**
@@ -57,21 +57,29 @@ export class LoginPage extends BasePage {
    * Navigate to the home page and click the Login link.
    */
   async goToDownloaderLoginPage(): Promise<void> {
-    await test.step('Navigate to login with downloader', async () => {
-      await this.navigate('/');
-      await this.waitForPageLoad();
-      await this.clickElement(this.loginButton);
-      await this.clickElement(this.downloaderLoginButton);
-    })
+    await this.navigate('/');
+    await this.waitForPageLoad();
+    await this.clickElement(this.loginButton);
+    await this.clickElement(this.downloaderLoginButton);
   }
 
   async goToCreatorLoginPage(): Promise<void> {
-    await test.step('Navigate to login with creator', async () => {
-      await this.navigate('/');
-      await this.waitForPageLoad();
-      await this.clickElement(this.loginButton);
-      await this.clickElement(this.creatorLoginButton);
-    });
+    await this.navigate('/');
+    await this.waitForPageLoad();
+    await this.clickElement(this.loginButton);
+    await this.clickElement(this.creatorLoginButton);
+  }
+
+  /**
+   * Fill credentials and submit on the currently opened login form (without navigating away).
+   * Useful for SSO redirection screens or modals where the form is already presented.
+   * @param email - User email address
+   * @param password - User password
+   */
+  async submitCredentials(email: string, password: string): Promise<void> {
+    await this.fillInput(this.emailInput, email);
+    await this.fillInput(this.passwordInput, password);
+    await this.clickElement(this.submitDowloaderButton);
   }
 
   /**
@@ -80,21 +88,16 @@ export class LoginPage extends BasePage {
    * @param password - User password
    */
   async loginAsDownloader(email: string, password: string): Promise<void> {
-    await test.step(`Login with downloader, account : ${email}`, async () => {
-      await this.goToDownloaderLoginPage();
+    await this.goToDownloaderLoginPage();
+    await this.fillInput(this.emailInput, email);
+    await this.fillInput(this.passwordInput, password);
+    await this.clickElement(this.submitDowloaderButton);
 
-      await test.step('Fill login credentials', async () => {
-        await this.fillInput(this.emailInput, email);
-        await this.fillInput(this.passwordInput, password);
-        await this.clickElement(this.submitDowloaderButton);
-      })
-
-      // Wait for redirect to complete after login — ensures session cookies are fully established
-      await this.page.waitForURL(/\/(user|$)/, { waitUntil: 'domcontentloaded', timeout: 30_000 });
-      await this.closePhotoAiModelContent();
-      // Wait for user dropdown container to ensure session cookies and UI are fully ready
-      await this.page.locator('#user-info-dropdown').waitFor({ state: 'attached', timeout: 15_000 }).catch(() => {});
-    });
+    // Wait for redirect to complete after login — ensures session cookies are fully established
+    await this.page.waitForURL(/\/(user|$)/, { waitUntil: 'domcontentloaded', timeout: 30_000 });
+    await this.closePhotoAiModelContent();
+    // Wait for user dropdown container to ensure session cookies and UI are fully ready
+    await this.page.locator('#user-info-dropdown').waitFor({ state: 'attached', timeout: 15_000 }).catch(() => { });
   }
 
   /**
@@ -103,22 +106,11 @@ export class LoginPage extends BasePage {
    * @param password - Creator password
    */
   async loginAsCreator(email: string, password: string): Promise<void> {
-    await test.step(`Login as Creator with account: ${email}`, async () => {
-      await this.goToCreatorLoginPage();
-
-      await test.step('Fill login credentials', async () => {
-        await this.fillInput(this.creatorEmailInput, email);
-        await this.fillInput(this.creatorPasswordInput, password);
-      });
-
-      await test.step('Submit login form', async () => {
-        await this.clickElement(this.submitCreatorButton);
-      });
-
-      await test.step('Wait for redirect to Creator Dashboard', async () => {
-        await this.page.waitForURL(/\/creator/, { waitUntil: 'domcontentloaded', timeout: 30_000 });
-      });
-    });
+    await this.goToCreatorLoginPage();
+    await this.fillInput(this.creatorEmailInput, email);
+    await this.fillInput(this.creatorPasswordInput, password);
+    await this.clickElement(this.submitCreatorButton);
+    await this.page.waitForURL(/\/creator/, { waitUntil: 'domcontentloaded', timeout: 30_000 });
   }
 
   /**

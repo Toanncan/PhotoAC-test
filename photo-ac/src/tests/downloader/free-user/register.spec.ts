@@ -8,7 +8,7 @@ test.describe('Free User Registration Flow', () => {
   // Isolate session: Registration must start with a clean Guest session
   test.use({ storageState: { cookies: [], origins: [] } });
 
-  test('TC-REGISTER-FREE-001: Đăng ký tài khoản Free User mới thành công từ A-Z @smoke @register', async ({
+  test('TC-REGISTER-FREE-001: Đăng ký tài khoản Free User mới thành công từ A-Z', async ({
     registerPage,
   }) => {
     test.setTimeout(120_000);

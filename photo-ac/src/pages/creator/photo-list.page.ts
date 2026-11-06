@@ -1,4 +1,4 @@
-import { type Page, type Locator, test } from '@playwright/test';
+import { type Page, type Locator } from '@playwright/test';
 import { BasePage } from '../common/base.page';
 
 /**
@@ -59,10 +59,8 @@ export class CreatorPhotoListPage extends BasePage {
    * Navigate directly to Creator Photo List page.
    */
   async goToPhotoListPage(): Promise<void> {
-    await test.step('Navigate to Creator Photo List page (/creator/list)', async () => {
-      await this.navigate(this.PAGE_URL);
-      await this.waitForPageLoad();
-    });
+    await this.navigate(this.PAGE_URL);
+    await this.waitForPageLoad();
   }
 
   // Action Methods
@@ -71,69 +69,55 @@ export class CreatorPhotoListPage extends BasePage {
    * @param keyword - Search keyword
    */
   async searchPhoto(keyword: string): Promise<void> {
-    await test.step(`Search photos with keyword: ${keyword}`, async () => {
-      await this.fillInput(this.photoSearchInput, keyword);
-      await this.clickElement(this.photoSearchButton);
-      await this.page.waitForLoadState('domcontentloaded');
-    });
+    await this.fillInput(this.photoSearchInput, keyword);
+    await this.clickElement(this.photoSearchButton);
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   /**
    * Click edit link for the first photo in the list.
    */
   async clickFirstPhotoEdit(): Promise<void> {
-    await test.step('Click 編集 link for first photo', async () => {
-      await this.clickElement(this.firstPhotoEditLink);
-      await this.page.waitForLoadState('domcontentloaded');
-    });
+    await this.clickElement(this.firstPhotoEditLink);
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   /**
    * Click delete link for the first photo to open confirm modal.
    */
   async clickFirstPhotoDelete(): Promise<void> {
-    await test.step('Click 削除 link to open confirmation modal', async () => {
-      await this.clickElement(this.firstPhotoDeleteLink);
-    });
+    await this.clickElement(this.firstPhotoDeleteLink);
   }
 
   /**
    * Confirm deletion inside confirm dialog (OK button).
    */
   async confirmDeletePhoto(): Promise<void> {
-    await test.step('Confirm deletion by clicking OK button', async () => {
-      await this.clickElement(this.deleteModalConfirmButton);
-      await this.page.waitForLoadState('domcontentloaded');
-    });
+    await this.clickElement(this.deleteModalConfirmButton);
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   /**
    * Cancel deletion inside confirm dialog (キャンセル button).
    */
   async cancelDeletePhoto(): Promise<void> {
-    await test.step('Cancel deletion by clicking キャンセル button', async () => {
-      await this.clickElement(this.deleteModalCancelButton);
-    });
+    await this.clickElement(this.deleteModalCancelButton);
   }
 
   /**
    * Get title text of the first photo in list.
    */
   async getFirstPhotoTitle(): Promise<string> {
-    return await test.step('Get title of first photo', async () => {
-      const titleCell = this.page
-        .locator('//tr[td[contains(text(), "タイトル")]]/td[2]')
-        .first();
-      return (await titleCell.innerText()).trim();
-    });
+    const titleCell = this.page
+      .locator('//tr[td[contains(text(), "タイトル")]]/td[2]')
+      .first();
+    return (await titleCell.innerText()).trim();
   }
 
   /**
    * Get ID of the first photo from its delete button data-id attribute.
    */
   async getFirstPhotoId(): Promise<string | null> {
-    return await test.step('Get ID of first photo', async () => {
-      return await this.firstPhotoDeleteLink.getAttribute('data-id');
-    });
+    return await this.firstPhotoDeleteLink.getAttribute('data-id');
   }
 }
