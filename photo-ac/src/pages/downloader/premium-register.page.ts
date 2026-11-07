@@ -3,7 +3,6 @@ import { BasePage } from '../common/base.page';
 
 /**
  * PremiumRegisterPage — Page Object for the Premium registration / campaign checkout page.
- * Handles payment method selection (Credit Card, etc.), card input form, and subscription submission.
  */
 export class PremiumRegisterPage extends BasePage {
   // Header & Campaign Locators
@@ -108,29 +107,29 @@ export class PremiumRegisterPage extends BasePage {
     await this.page.evaluate(() => {
       try {
         localStorage.setItem('hideModalGlobal', 'true');
-      } catch (_) {}
-    }).catch(() => {});
+      } catch (_) { }
+    }).catch(() => { });
 
     // Dismiss global modal if already visible
     if (await this.globalConfirmButton.isVisible().catch(() => false)) {
-      await this.globalConfirmButton.click().catch(() => {});
-      await this.globalConfirmButton.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
+      await this.globalConfirmButton.click().catch(() => { });
+      await this.globalConfirmButton.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => { });
     }
 
-    await this.creditCardLabel.scrollIntoViewIfNeeded().catch(() => {});
-    await this.creditCardLabel.click().catch(() => {});
+    await this.creditCardLabel.scrollIntoViewIfNeeded().catch(() => { });
+    await this.creditCardLabel.click().catch(() => { });
 
     // If global modal popped up after click, dismiss it
     if (await this.globalConfirmButton.isVisible({ timeout: 2_000 }).catch(() => false)) {
-      await this.globalConfirmButton.click().catch(() => {});
-      await this.globalConfirmButton.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => {});
-      await this.creditCardLabel.click().catch(() => {});
+      await this.globalConfirmButton.click().catch(() => { });
+      await this.globalConfirmButton.waitFor({ state: 'hidden', timeout: 5_000 }).catch(() => { });
+      await this.creditCardLabel.click().catch(() => { });
     }
 
     // Ensure radio is checked
     const isChecked = await this.creditCardRadio.isChecked().catch(() => false);
     if (!isChecked) {
-      await this.creditCardLabel.click().catch(() => {});
+      await this.creditCardLabel.click().catch(() => { });
     }
 
     // Ensure credit card form container is displayed
@@ -141,7 +140,7 @@ export class PremiumRegisterPage extends BasePage {
         if (typeof w.showCreditCardForm === 'function') {
           w.showCreditCardForm();
         }
-      }).catch(() => {});
+      }).catch(() => { });
     }
 
     // Wait for credit card number input to become visible
@@ -200,7 +199,7 @@ export class PremiumRegisterPage extends BasePage {
       .frameLocator('iframe[src*="/recaptcha/api2/anchor"]')
       .locator('#recaptcha-anchor');
 
-    await recaptchaAnchor.waitFor({ state: 'visible', timeout: 10_000 }).catch(() => {});
+    await recaptchaAnchor.waitFor({ state: 'visible', timeout: 10_000 }).catch(() => { });
     if (!(await recaptchaAnchor.isVisible().catch(() => false))) {
       return false;
     }
@@ -209,7 +208,7 @@ export class PremiumRegisterPage extends BasePage {
       (await recaptchaAnchor.getAttribute('aria-checked').catch(() => 'false')) === 'true';
 
     if (!isChecked) {
-      await recaptchaAnchor.click().catch(() => {});
+      await recaptchaAnchor.click().catch(() => { });
     }
 
     // Wait up to 25s for checkmark to appear
@@ -222,7 +221,7 @@ export class PremiumRegisterPage extends BasePage {
 
     // If expired or not checked, retry clicking once more
     if (!checked && (await this.recaptchaModal.isVisible().catch(() => false))) {
-      await recaptchaAnchor.click().catch(() => {});
+      await recaptchaAnchor.click().catch(() => { });
       checked = await this.page
         .frameLocator('iframe[src*="/recaptcha/api2/anchor"]')
         .locator('#recaptcha-anchor[aria-checked="true"]')
@@ -232,7 +231,7 @@ export class PremiumRegisterPage extends BasePage {
     }
 
     // Wait for modal to automatically hide after Ajax verification triggers doPurchase()
-    await this.recaptchaModal.waitFor({ state: 'hidden', timeout: 20_000 }).catch(() => {});
+    await this.recaptchaModal.waitFor({ state: 'hidden', timeout: 20_000 }).catch(() => { });
     return checked;
   }
 
@@ -246,7 +245,7 @@ export class PremiumRegisterPage extends BasePage {
     for (let i = 0; i < count; i++) {
       const select = selects.nth(i);
       if (await select.isVisible().catch(() => false)) {
-        await select.scrollIntoViewIfNeeded().catch(() => {});
+        await select.scrollIntoViewIfNeeded().catch(() => { });
         const validValues = await select
           .locator('option')
           .evaluateAll((opts: HTMLOptionElement[]) =>
@@ -255,9 +254,9 @@ export class PremiumRegisterPage extends BasePage {
           .catch(() => []);
 
         if (validValues.length > 0) {
-          await select.selectOption(validValues[0]).catch(() => {});
+          await select.selectOption(validValues[0]).catch(() => { });
         } else {
-          await select.selectOption({ index: 1 }).catch(() => {});
+          await select.selectOption({ index: 1 }).catch(() => { });
         }
       }
     }
@@ -273,7 +272,7 @@ export class PremiumRegisterPage extends BasePage {
 
     // 2. Click final submission button
     await this.confirmSubmitButton.waitFor({ state: 'visible', timeout: 15_000 });
-    await this.confirmSubmitButton.scrollIntoViewIfNeeded().catch(() => {});
+    await this.confirmSubmitButton.scrollIntoViewIfNeeded().catch(() => { });
     await this.clickElement(this.confirmSubmitButton);
   }
 

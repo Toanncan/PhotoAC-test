@@ -3,11 +3,6 @@ import { BasePage } from '../common/base.page';
 
 /**
  * BookmarksPage — Page Object for User Bookmarks and Collections management.
- * Routes:
- * - /user/bookmarks/               (Bookmarks main folder list)
- * - /user/bookmarks/collection/:id (Individual collection folder with saved photos)
- *
- * Applicable Role: Free User, Premium User
  */
 export class BookmarksPage extends BasePage {
   // Page URLs
@@ -97,7 +92,7 @@ export class BookmarksPage extends BasePage {
     });
 
     await trash.click();
-    await item.waitFor({ state: 'detached', timeout: 15_000 }).catch(() => {});
+    await item.waitFor({ state: 'detached', timeout: 15_000 }).catch(() => { });
     await this.waitForPageLoad();
   }
 

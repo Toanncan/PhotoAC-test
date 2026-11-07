@@ -601,7 +601,7 @@ test.describe('Search — Guest', () => {
 
     await test.step(`Lọc ảnh loại trừ Tác giả "${excludeCreatorName}" và verify kết quả hiển thị`, async () => {
       await searchResultPage.searchByDetailedNgCreator(excludeCreatorName);
-      await expect(page).toHaveURL(new RegExp(`ngcreator=${excludeCreatorName}`));
+      await expect(page).toHaveURL(new RegExp(`ngcreator=${excludeCreatorName}`, 'i'));
       await expect(searchResultPage.activeFilterBadges.filter({ hasText: excludeCreatorName })).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
