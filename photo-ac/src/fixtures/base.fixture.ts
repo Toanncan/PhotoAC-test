@@ -11,7 +11,7 @@ import { SearchResultPage } from '../pages/common/search-results.page';
 import { PhotoDetailPage } from '../pages/downloader/photo-detail.page';
 import { PremiumRegisterPage } from '../pages/downloader/premium-register.page';
 import { RegisterPage } from '../pages/common/register.page';
-import { TrendsPage } from '../pages/common/trends.page';
+import { TrendsPage } from '../pages/downloader/trends.page';
 import { BookmarksPage } from '../pages/downloader/bookmarks.page';
 import { CreatorPhotoListPage } from '../pages/creator/photo-list.page';
 import { envConfig } from '../utils/env.config';
