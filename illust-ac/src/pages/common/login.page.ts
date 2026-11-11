@@ -1,16 +1,11 @@
-import { type Page, test, expect } from '@playwright/test';
+import { type Page, expect } from '@playwright/test';
 import { BasePage } from './base.page';
 
 /**
  * LoginPage — Page Object for the login screen.
- *
- * NOTE: Locators below are based on common photo-ac UI patterns.
- * If any locator fails, use Playwright MCP to inspect the actual DOM
- * and update accordingly.
  */
 export class LoginPage extends BasePage {
   // Locators
-
   /** Login link/button in the header navigation */
   private readonly loginButton = this.page.getByRole('button', { name: /ログイン/ }).first();
 
@@ -41,7 +36,6 @@ export class LoginPage extends BasePage {
   private readonly errorMessage = this.page.locator('[class*="error"], [class*="alert"], [class*="message"]')
     .filter({ hasText: /invalid|incorrect|failed|error/i });
 
-
   constructor(page: Page) {
     super(page);
   }
@@ -50,23 +44,19 @@ export class LoginPage extends BasePage {
    * Navigate to the home page and click the Login link.
    */
   async goToDownloaderLoginPage(): Promise<void> {
-    await test.step('Navigate to login with downloader', async () => {
-      await this.navigate('/');
-      await this.waitForPageLoad();
-      await this.clickElement(this.loginButton);
-      await this.clickElement(this.downloaderLoginButton);
-    })
+    await this.navigate('/');
+    await this.waitForPageLoad();
+    await this.clickElement(this.loginButton);
+    await this.clickElement(this.downloaderLoginButton);
   }
 
   async goToCreatorLoginPage(): Promise<void> {
-    await test.step('Navigate to login with creator', async () => {
-      await this.navigate('/');
-      await this.waitForPageLoad();
-      await this.clickElement(this.loginButton);
-      await this.clickElement(this.creatorLoginButton);
-      await expect(this.creatorDialog).toBeVisible({ timeout: 15_000 });
-      await expect(this.creatorEmailInput).toBeVisible({ timeout: 15_000 });
-    });
+    await this.navigate('/');
+    await this.waitForPageLoad();
+    await this.clickElement(this.loginButton);
+    await this.clickElement(this.creatorLoginButton);
+    await expect(this.creatorDialog).toBeVisible({ timeout: 15_000 });
+    await expect(this.creatorEmailInput).toBeVisible({ timeout: 15_000 });
   }
 
   /**
@@ -75,21 +65,16 @@ export class LoginPage extends BasePage {
    * @param password - User password
    */
   async loginAsDownloader(email: string, password: string): Promise<void> {
-    await test.step(`Login with downloader, account : ${email}`, async () => {
-      await this.goToDownloaderLoginPage();
+    await this.goToDownloaderLoginPage();
+    await this.fillInput(this.emailInput, email);
+    await this.fillInput(this.passwordInput, password);
+    await this.clickElement(this.submitDownloaderButton);
 
-      await test.step('Fill login credentials', async () => {
-        await this.fillInput(this.emailInput, email);
-        await this.fillInput(this.passwordInput, password);
-        await this.clickElement(this.submitDownloaderButton);
-      })
-
-      // Wait for redirect and user menu to be visible — ensures session cookies are fully established
-      await this.page.waitForURL(/\/(user|$)/, { waitUntil: 'domcontentloaded', timeout: 30_000 });
-      await this.closePhotoAiModelContent();
-      // Wait for user info menu to confirm login succeeded — non-blocking fallback if selector differs
-      await this.page.locator('#user-info-dropdown, [class*="user-menu"], .user-nav').first().waitFor({ state: 'visible', timeout: 15_000 }).catch(() => {});
-    })
+    // Wait for redirect and user menu to be visible — ensures session cookies are fully established
+    await this.page.waitForURL(/\/(user|$)/, { waitUntil: 'domcontentloaded', timeout: 30_000 });
+    await this.closePhotoAiModelContent();
+    // Wait for user info menu to confirm login succeeded — non-blocking fallback if selector differs
+    await this.page.locator('#user-info-dropdown, [class*="user-menu"], .user-nav').first().waitFor({ state: 'visible', timeout: 15_000 }).catch(() => {});
   }
 
   /**
@@ -98,22 +83,11 @@ export class LoginPage extends BasePage {
    * @param password - Creator password
    */
   async loginAsCreator(email: string, password: string): Promise<void> {
-    await test.step(`Login as Creator with account: ${email}`, async () => {
-      await this.goToCreatorLoginPage();
-
-      await test.step('Fill login credentials', async () => {
-        await this.fillInput(this.creatorEmailInput, email);
-        await this.fillInput(this.creatorPasswordInput, password);
-      });
-
-      await test.step('Submit login form', async () => {
-        await this.clickElement(this.submitCreatorButton);
-      });
-
-      await test.step('Wait for redirect to Creator Dashboard', async () => {
-        await this.page.waitForURL(/\/creator/, { waitUntil: 'domcontentloaded', timeout: 30_000 });
-      });
-    });
+    await this.goToCreatorLoginPage();
+    await this.fillInput(this.creatorEmailInput, email);
+    await this.fillInput(this.creatorPasswordInput, password);
+    await this.clickElement(this.submitCreatorButton);
+    await this.page.waitForURL(/\/creator/, { waitUntil: 'domcontentloaded', timeout: 30_000 });
   }
 
   /**
@@ -123,5 +97,4 @@ export class LoginPage extends BasePage {
   async getErrorMessage(): Promise<string> {
     return this.getText(this.errorMessage);
   }
-
 }

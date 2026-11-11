@@ -1,8 +1,8 @@
-﻿// import { test, expect } from '../../fixtures/base.fixture';
+// import { test, expect } from '../../fixtures/base.fixture';
 
 // /**
 //  * Login Feature Test Suite
-//  * Tests for authentication functionality on photo-ac.
+//  * Tests for authentication functionality on illust-ac.
 //  *
 //  * NOTE: These tests run WITHOUT storageState (unauthenticated context)
 //  * to test the login flow itself.
@@ -11,10 +11,9 @@
 //   // test.use({ storageState: { cookies: [], origins: [] } }); // Override to run unauthenticated
 
 //   /**
-//    * TC-AUTH-001: Đăng nhập thành công với Downloader hợp lệ
-//    * @tags @smoke @regression
+//    * TC-AUTH-DOWN-001: Đăng nhập thành công với Downloader hợp lệ
 //    */
-//   // test('TC-AUTH-001: Đăng nhập thành công với Downloader hợp lệ @smoke', async ({
+//   // test('TC-AUTH-DOWN-001: Đăng nhập thành công với Downloader hợp lệ', async ({
 //   //   loginPage,
 //   //   page,
 //   // }) => {
@@ -34,10 +33,9 @@
 //   // });
 
 //   /**
-//    * TC-AUTH-002: Hiển thị lỗi khi đăng nhập với password sai
-//    * @tags @regression
+//    * TC-AUTH-DOWN-002: Hiển thị lỗi khi đăng nhập với password sai
 //    */
-//   // test('TC-AUTH-002: Hiển thị thông báo lỗi khi password không đúng @regression', async ({
+//   // test('TC-AUTH-DOWN-002: Hiển thị thông báo lỗi khi password không đúng', async ({
 //   //   loginPage,
 //   // }) => {
 //   //   // Arrange
@@ -45,7 +43,7 @@
 //   //   const wrongPassword = 'WrongPassword_Invalid_999!';
 
 //   //   // Act
-//   //   await loginPage.login(email, wrongPassword);
+//   //   await loginPage.loginAsDownloader(email, wrongPassword);
 
 //   //   // Assert
 //   //   const errorMessage = await loginPage.getErrorMessage();
@@ -55,16 +53,15 @@
 //   //   ).toBeGreaterThan(0);
 //   // });
 
-//   // /**
-//   //  * TC-AUTH-003: Không đăng nhập được khi email trống
-//   //  * @tags @regression
-//   //  */
-//   // test('TC-AUTH-003: Không thể submit form khi email bị bỏ trống @regression', async ({
+//   /**
+//    * TC-AUTH-DOWN-003: Không đăng nhập được khi email trống
+//    */
+//   // test('TC-AUTH-DOWN-003: Không thể submit form khi email bị bỏ trống', async ({
 //   //   loginPage,
 //   //   page,
 //   // }) => {
 //   //   // Arrange & Act
-//   //   await loginPage.login('', 'somePassword123!');
+//   //   await loginPage.loginAsDownloader('', 'somePassword123!');
 
 //   //   // Assert — should still be on login page or show validation error
 //   //   const currentUrl = page.url();

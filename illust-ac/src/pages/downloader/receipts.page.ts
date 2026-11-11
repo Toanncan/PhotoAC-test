@@ -1,6 +1,5 @@
-import { type Page, test } from '@playwright/test';
+import { type Page } from '@playwright/test';
 import { BasePage } from '../common/base.page';
-
 
 export class ReceiptsPage extends BasePage {
   // Locators
@@ -32,10 +31,8 @@ export class ReceiptsPage extends BasePage {
    * Navigate directly to the receipts page.
    */
   async goToReceiptsPage(): Promise<void> {
-    await test.step('Navigate to Receipts page (/user/receipts)', async () => {
-      await this.navigate('/user/receipts');
-      await this.page.waitForURL(/\/user\/receipts/, { waitUntil: 'domcontentloaded', timeout: 30_000 });
-    });
+    await this.navigate('/user/receipts');
+    await this.page.waitForURL(/\/user\/receipts/, { waitUntil: 'domcontentloaded', timeout: 30_000 });
   }
 
   /**
@@ -44,10 +41,8 @@ export class ReceiptsPage extends BasePage {
    * @param personName - Person in charge name (担当者名)
    */
   async fillRecipientInfo(companyName: string, personName: string): Promise<void> {
-    await test.step(`Fill recipient info: company="${companyName}", person="${personName}"`, async () => {
-      await this.fillInput(this.companyNameInput, companyName);
-      await this.fillInput(this.personNameInput, personName);
-    });
+    await this.fillInput(this.companyNameInput, companyName);
+    await this.fillInput(this.personNameInput, personName);
   }
 
   /**
@@ -55,13 +50,11 @@ export class ReceiptsPage extends BasePage {
    * The button triggers an AJAX save and shows a native alert: 宛名を保存しました。
    */
   async saveRecipientInfo(): Promise<void> {
-    await test.step('Click 宛名保存 and handle JS alert', async () => {
-      // Set up dialog handler BEFORE clicking to catch the native alert
-      this.page.once('dialog', async (dialog) => {
-        await dialog.accept();
-      });
-      await this.clickElement(this.saveRecipientButton);
+    // Set up dialog handler BEFORE clicking to catch the native alert
+    this.page.once('dialog', async (dialog) => {
+      await dialog.accept();
     });
+    await this.clickElement(this.saveRecipientButton);
   }
 
   /**
@@ -70,11 +63,9 @@ export class ReceiptsPage extends BasePage {
    * @param index - 0-based index of the radio button to select
    */
   async selectBillingItemByIndex(index: number): Promise<void> {
-    await test.step(`Select billing item at index ${index}`, async () => {
-      const radio = this.page.locator(`#outid_${index}`);
-      await radio.waitFor({ state: 'visible', timeout: 10_000 });
-      await radio.click();
-    });
+    const radio = this.page.locator(`#outid_${index}`);
+    await radio.waitFor({ state: 'visible', timeout: 10_000 });
+    await radio.click();
   }
 
   /**
@@ -83,11 +74,9 @@ export class ReceiptsPage extends BasePage {
    * @returns Download object
    */
   async downloadReceiptPdf(): Promise<import('@playwright/test').Download> {
-    return test.step('Click ダウンロード and wait for PDF download', async () => {
-      const downloadPromise = this.page.waitForEvent('download', { timeout: 30_000 });
-      await this.clickElement(this.downloadButton);
-      return downloadPromise;
-    });
+    const downloadPromise = this.page.waitForEvent('download', { timeout: 30_000 });
+    await this.clickElement(this.downloadButton);
+    return downloadPromise;
   }
 
   /**
@@ -129,12 +118,10 @@ export class ReceiptsPage extends BasePage {
    */
   async getBillingAmountText(index: number): Promise<string> {
     const labelText = await this.getRadioLabelText(index);
-    // Match Japanese Yen patterns, excluding year patterns like 2026年
     const amountRegex = /[¥￥]\s*([\d,]+)|([\d,]+)\s*円/;
     const match = labelText.match(amountRegex);
     if (match) {
       const amount = (match[1] || match[2]).replace(/,/g, '');
-      // Filter out year-like numbers (4 digits starting with 19xx or 20xx)
       if (!/^(19|20)\d{2}$/.test(amount)) {
         return amount;
       }
@@ -154,7 +141,6 @@ export class ReceiptsPage extends BasePage {
     let match;
     while ((match = amountRegex.exec(pageText)) !== null) {
       const amount = (match[1] || match[2]).replace(/,/g, '');
-      // Filter out year-like numbers (4 digits starting with 19xx or 20xx)
       if (!/^(19|20)\d{2}$/.test(amount)) {
         amounts.push(amount);
       }
@@ -169,11 +155,9 @@ export class ReceiptsPage extends BasePage {
    * @returns Numeric amount string, or empty string if not found
    */
   async getFirstBillingAmount(index: number = 0): Promise<string> {
-    // Try extracting from radio label first
     const labelAmount = await this.getBillingAmountText(index);
     if (labelAmount) return labelAmount;
 
-    // Fallback: scan entire page for amounts
     const pageAmounts = await this.getAllAmountsOnPage();
     return pageAmounts.length > 0 ? pageAmounts[0] : '';
   }
@@ -194,4 +178,3 @@ export class ReceiptsPage extends BasePage {
     return texts;
   }
 }
-

@@ -1,11 +1,12 @@
 import { test, expect } from '../../../fixtures/base.fixture';
+import { captureEvidenceWithUrl } from '../../../utils/helpers';
 import { IllustDetailPage } from '../../../pages/downloader/illust-detail.page';
 
 /**
  * Test Suite: Download & Detail Interactions — Premium User on AC-Illust
  * 100% tương tác UI thật, kiểm thử trên tác phẩm creator Acworks (ID: 640040).
  */
-test.describe('Download & Detail Interactions — Premium User @premium @download', () => {
+test.describe('Download & Detail Interactions — Premium User', () => {
   // Session Premium User được inject tự động từ project cấu hình (chromium-premium / firefox-premium)
 
   test.beforeEach(async ({ illustDetailPage }) => {
@@ -20,9 +21,10 @@ test.describe('Download & Detail Interactions — Premium User @premium @downloa
   /**
    * TC-DOWNLOAD-PREM-001: Premium User chọn định dạng JPEG và tải ảnh thành công
    */
-  test('TC-DOWNLOAD-PREM-001: Premium User tải tranh định dạng JPEG thành công @premium @download', async ({
+  test('TC-DOWNLOAD-PREM-001: Tải tranh định dạng JPEG thành công', async ({
+    page,
     illustDetailPage,
-  }) => {
+  }, testInfo) => {
     await test.step('Chọn định dạng JPEG và xác minh nút tải trực tiếp sẵn sàng', async () => {
       await illustDetailPage.selectFormat('JPEG');
       await expect(illustDetailPage.premiumDownloadLinkJpeg).toBeVisible();
@@ -38,15 +40,18 @@ test.describe('Download & Detail Interactions — Premium User @premium @downloa
 
       const failure = await download.failure();
       expect(failure).toBeNull();
+
+      await captureEvidenceWithUrl(page, testInfo, 'Premium-Download-JPEG-Success');
     });
   });
 
   /**
    * TC-DOWNLOAD-PREM-002: Premium User chọn định dạng Vector AI và tải file thành công
    */
-  test('TC-DOWNLOAD-PREM-002: Premium User tải định dạng Vector AI thành công @premium @download', async ({
+  test('TC-DOWNLOAD-PREM-002: Tải định dạng Vector AI thành công', async ({
+    page,
     illustDetailPage,
-  }) => {
+  }, testInfo) => {
     await test.step('Chọn định dạng Vector AI và xác minh nút tải trực tiếp sẵn sàng', async () => {
       await illustDetailPage.selectFormat('AI');
       await expect(illustDetailPage.premiumDownloadLinkAi).toBeVisible();
@@ -62,16 +67,18 @@ test.describe('Download & Detail Interactions — Premium User @premium @downloa
 
       const failure = await download.failure();
       expect(failure).toBeNull();
+
+      await captureEvidenceWithUrl(page, testInfo, 'Premium-Download-Vector-Success');
     });
   });
 
   /**
    * TC-DOWNLOAD-PREM-003: Premium User mở tác phẩm bằng công cụ Design AC Editor
    */
-  test('TC-DOWNLOAD-PREM-003: Premium User mở công cụ chỉnh sửa trực tuyến Design AC @premium @editor', async ({
+  test('TC-DOWNLOAD-PREM-003: Mở công cụ chỉnh sửa trực tuyến Design AC', async ({
     page,
     illustDetailPage,
-  }) => {
+  }, testInfo) => {
     await test.step('Click mở công cụ chỉnh sửa Design AC và xác minh chuyển hướng/mở tab thành công', async () => {
       await expect(illustDetailPage.openDesignToolLink).toBeVisible();
       await expect(illustDetailPage.openDesignToolLink).toHaveAttribute('href', /editor=true/);
@@ -80,9 +87,11 @@ test.describe('Download & Detail Interactions — Premium User @premium @downloa
       if (newPage) {
         await newPage.waitForLoadState('domcontentloaded');
         expect(newPage.url()).toMatch(/design-ac|editor/i);
+        await captureEvidenceWithUrl(newPage, testInfo, 'Premium-Design-AC-Editor-Opened');
         await newPage.close();
       } else {
         await expect(page).toHaveURL(/design-ac|editor/i);
+        await captureEvidenceWithUrl(page, testInfo, 'Premium-Design-AC-Editor-Opened');
       }
     });
   });
@@ -90,9 +99,10 @@ test.describe('Download & Detail Interactions — Premium User @premium @downloa
   /**
    * TC-DOWNLOAD-PREM-004: Premium User kiểm tra các tính năng thanh tác vụ nổi và chia sẻ SNS
    */
-  test('TC-DOWNLOAD-PREM-004: Premium User kiểm tra thanh tác vụ nổi và liên kết chia sẻ SNS @premium @social', async ({
+  test('TC-DOWNLOAD-PREM-004: Kiểm tra thanh tác vụ nổi và liên kết chia sẻ SNS', async ({
+    page,
     illustDetailPage,
-  }) => {
+  }, testInfo) => {
     await test.step('Xác minh các liên kết trên thanh tác vụ nổi (まとめて ダウンロード & ダウンロード 履歴)', async () => {
       await expect(illustDetailPage.floatingBulkDownload).toBeAttached();
       await expect(illustDetailPage.floatingDownloadHistory).toBeAttached();
@@ -102,6 +112,7 @@ test.describe('Download & Detail Interactions — Premium User @premium @downloa
       await expect(illustDetailPage.shareFacebookButton).toBeAttached();
       await expect(illustDetailPage.shareTwitterButton).toBeAttached();
       await expect(illustDetailPage.sharePinterestButton).toBeAttached();
+      await captureEvidenceWithUrl(page, testInfo, 'Premium-Floating-Toolbar-SNS');
     });
   });
 });

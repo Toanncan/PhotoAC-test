@@ -1,4 +1,4 @@
-import { type Page, type Locator, test } from '@playwright/test';
+import { type Page, type Locator } from '@playwright/test';
 import { BasePage } from '../common/base.page';
 
 /**
@@ -155,10 +155,8 @@ export class IllustDetailPage extends BasePage {
    * @param id - Illustration ID (defaults to ACWORKS_DEFAULT_ILLUST_ID)
    */
   async goToDetailPage(id: string = IllustDetailPage.ACWORKS_DEFAULT_ILLUST_ID): Promise<void> {
-    await test.step(`Navigate to illustration detail page with ID: ${id}`, async () => {
-      await this.navigate(`/main/detail.php?id=${id}`);
-      await this.waitForPageLoad();
-    });
+    await this.navigate(`/main/detail.php?id=${id}`);
+    await this.waitForPageLoad();
   }
 
   // Action Methods
@@ -167,29 +165,25 @@ export class IllustDetailPage extends BasePage {
    * @param format - Desired format
    */
   async selectFormat(format: 'JPEG' | 'PNG' | 'AI'): Promise<void> {
-    await test.step(`Select download format: ${format}`, async () => {
-      let target: Locator;
-      if (format === 'JPEG') target = this.formatRadioJpeg;
-      else if (format === 'PNG') target = this.formatRadioPng;
-      else target = this.formatRadioAi;
+    let target: Locator;
+    if (format === 'JPEG') target = this.formatRadioJpeg;
+    else if (format === 'PNG') target = this.formatRadioPng;
+    else target = this.formatRadioAi;
 
-      await target.waitFor({ state: 'attached' });
-      const isInput = await target.evaluate(el => el.tagName.toLowerCase() === 'input').catch(() => false);
-      if (isInput) {
-        await target.check({ force: true }).catch(async () => {
-          await target.click({ force: true });
-        });
-      }
-    });
+    await target.waitFor({ state: 'attached' });
+    const isInput = await target.evaluate(el => el.tagName.toLowerCase() === 'input').catch(() => false);
+    if (isInput) {
+      await target.check({ force: true }).catch(async () => {
+        await target.click({ force: true });
+      });
+    }
   }
 
   /**
    * Click main download button.
    */
   async clickDownload(): Promise<void> {
-    await test.step('Click main download button', async () => {
-      await this.clickElement(this.downloadButton);
-    });
+    await this.clickElement(this.downloadButton);
   }
 
   /**
@@ -198,24 +192,22 @@ export class IllustDetailPage extends BasePage {
    * @returns Playwright Download object
    */
   async downloadAsPremium(format: 'JPEG' | 'PNG' | 'AI' = 'JPEG'): Promise<import('@playwright/test').Download> {
-    return await test.step(`Download illustration as Premium User (Format: ${format})`, async () => {
-      let downloadLink: Locator;
-      if (format === 'JPEG') {
-        downloadLink = this.premiumDownloadLinkJpeg;
-      } else if (format === 'PNG') {
-        downloadLink = this.premiumDownloadLinkPng;
-      } else {
-        downloadLink = this.premiumDownloadLinkAi;
-      }
+    let downloadLink: Locator;
+    if (format === 'JPEG') {
+      downloadLink = this.premiumDownloadLinkJpeg;
+    } else if (format === 'PNG') {
+      downloadLink = this.premiumDownloadLinkPng;
+    } else {
+      downloadLink = this.premiumDownloadLinkAi;
+    }
 
-      await downloadLink.waitFor({ state: 'visible', timeout: 15_000 });
-      const [download] = await Promise.all([
-        this.page.waitForEvent('download', { timeout: 35_000 }),
-        downloadLink.click({ force: true }),
-      ]);
+    await downloadLink.waitFor({ state: 'visible', timeout: 15_000 });
+    const [download] = await Promise.all([
+      this.page.waitForEvent('download', { timeout: 35_000 }),
+      downloadLink.click({ force: true }),
+    ]);
 
-      return download;
-    });
+    return download;
   }
 
   /**
@@ -227,17 +219,15 @@ export class IllustDetailPage extends BasePage {
    * @returns Playwright Download object
    */
   async downloadAsFreeUser(format: 'JPEG' = 'JPEG'): Promise<import('@playwright/test').Download> {
-    return await test.step(`Download illustration as Free User (Format: ${format})`, async () => {
-      await this.selectFormat(format);
-      await this.downloadButton.scrollIntoViewIfNeeded().catch(() => {});
+    await this.selectFormat(format);
+    await this.downloadButton.scrollIntoViewIfNeeded().catch(() => {});
 
-      const [download] = await Promise.all([
-        this.page.waitForEvent('download', { timeout: 45_000 }),
-        this.downloadButton.click({ force: true }),
-      ]);
+    const [download] = await Promise.all([
+      this.page.waitForEvent('download', { timeout: 45_000 }),
+      this.downloadButton.click({ force: true }),
+    ]);
 
-      return download;
-    });
+    return download;
   }
 
   /**
@@ -245,43 +235,34 @@ export class IllustDetailPage extends BasePage {
    * @returns Newly opened Page if opened in new tab, or null if navigated in current tab
    */
   async clickOpenDesignTool(): Promise<Page | null> {
-    return await test.step('Click Open Design AC editor link', async () => {
-      await this.openDesignToolLink.waitFor({ state: 'visible', timeout: 15_000 });
+    await this.openDesignToolLink.waitFor({ state: 'visible', timeout: 15_000 });
 
-      const [newPage] = await Promise.all([
-        this.page.context().waitForEvent('page', { timeout: 15_000 }).catch(() => null),
-        this.clickElement(this.openDesignToolLink),
-      ]);
+    const [newPage] = await Promise.all([
+      this.page.context().waitForEvent('page', { timeout: 15_000 }).catch(() => null),
+      this.clickElement(this.openDesignToolLink),
+    ]);
 
-      return newPage;
-    });
+    return newPage;
   }
 
   /**
    * Click bookmark button.
    */
   async clickBookmark(): Promise<void> {
-    await test.step('Click Bookmark button', async () => {
-      await this.clickElement(this.bookmarkButton);
-    });
+    await this.clickElement(this.bookmarkButton);
   }
 
   /**
    * Click Like button.
    */
   async clickLike(): Promise<void> {
-    await test.step('Click Like button', async () => {
-      await this.clickElement(this.likeButton);
-    });
+    await this.clickElement(this.likeButton);
   }
 
   /**
    * Click Fan registration button.
    */
   async clickFan(): Promise<void> {
-    await test.step('Click Fan button', async () => {
-      await this.clickElement(this.fanButton);
-    });
+    await this.clickElement(this.fanButton);
   }
 }
-

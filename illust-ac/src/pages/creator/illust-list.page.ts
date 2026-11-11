@@ -1,4 +1,4 @@
-import { type Page, type Locator, test } from '@playwright/test';
+import { type Page, type Locator } from '@playwright/test';
 import { BasePage } from '../common/base.page';
 
 /**
@@ -73,10 +73,8 @@ export class CreatorIllustListPage extends BasePage {
    * Navigate directly to Creator Illustration List page.
    */
   async goToIllustListPage(): Promise<void> {
-    await test.step('Navigate to Creator Illustration List page (/creator/upload_lst.php)', async () => {
-      await this.navigate(this.PAGE_URL);
-      await this.waitForPageLoad();
-    });
+    await this.navigate(this.PAGE_URL);
+    await this.waitForPageLoad();
   }
 
   // Action Methods
@@ -85,24 +83,20 @@ export class CreatorIllustListPage extends BasePage {
    * @param keyword - Search keyword
    */
   async searchIllustrations(keyword: string): Promise<void> {
-    await test.step(`Search illustrations with keyword: ${keyword}`, async () => {
-      await this.fillInput(this.searchInput, keyword);
-      if (await this.searchButton.isVisible()) {
-        await this.clickElement(this.searchButton);
-      } else {
-        await this.searchInput.press('Enter');
-      }
-      await this.page.waitForLoadState('domcontentloaded');
-    });
+    await this.fillInput(this.searchInput, keyword);
+    if (await this.searchButton.isVisible()) {
+      await this.clickElement(this.searchButton);
+    } else {
+      await this.searchInput.press('Enter');
+    }
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   /**
    * Open delete request modal for the first item in list.
    */
   async openFirstItemDeleteModal(): Promise<void> {
-    await test.step('Open delete request modal for the first illustration item', async () => {
-      await this.clickElement(this.firstDeleteRequestButton);
-      await this.deleteModal.waitFor({ state: 'visible', timeout: 10_000 });
-    });
+    await this.clickElement(this.firstDeleteRequestButton);
+    await this.deleteModal.waitFor({ state: 'visible', timeout: 10_000 });
   }
 }

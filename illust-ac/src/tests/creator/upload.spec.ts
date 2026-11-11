@@ -10,7 +10,7 @@ import { test, expect } from '../../fixtures/base.fixture';
  *
  * Applicable Role: Creator
  */
-test.describe('Creator Illustration Upload & Management @creator @upload', () => {
+test.describe('Creator Illustration Upload & Management', () => {
   test.describe.configure({ mode: 'serial' });
   const sampleJpegPath = path.resolve(__dirname, '../../../test-data/sample-search.jpg');
 

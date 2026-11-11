@@ -1,4 +1,4 @@
-import { type Page, type Locator, test } from '@playwright/test';
+import { type Page, type Locator } from '@playwright/test';
 import { BasePage } from '../common/base.page';
 
 /**
@@ -31,30 +31,25 @@ export class BookmarksPage extends BasePage {
     super(page);
   }
 
-  // Navigation Methods
   /**
    * Navigate directly to the user's bookmarks list page (/user/bookmarks/).
    */
   async goToBookmarksPage(): Promise<void> {
-    await test.step('Navigate to Bookmarks page (/user/bookmarks/)', async () => {
-      await this.navigate(this.BOOKMARKS_URL);
-      await this.waitForPageLoad();
-    });
+    await this.navigate(this.BOOKMARKS_URL);
+    await this.waitForPageLoad();
   }
 
   /**
    * Navigate directly to the first collection folder in bookmarks.
    */
   async goToFirstCollectionFolder(): Promise<void> {
-    await test.step('Navigate to first collection folder in bookmarks', async () => {
-      await this.goToBookmarksPage();
-      const firstLink = this.collectionLinks.first();
-      await firstLink.waitFor({ state: 'attached', timeout: 15_000 });
-      const href = await firstLink.getAttribute('href');
-      if (href) {
-        await this.navigate(href);
-        await this.waitForPageLoad();
-      }
-    });
+    await this.goToBookmarksPage();
+    const firstLink = this.collectionLinks.first();
+    await firstLink.waitFor({ state: 'attached', timeout: 15_000 });
+    const href = await firstLink.getAttribute('href');
+    if (href) {
+      await this.navigate(href);
+      await this.waitForPageLoad();
+    }
   }
 }
