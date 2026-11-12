@@ -1,4 +1,4 @@
-import { type Page, type Locator, test } from '@playwright/test';
+import { type Page, type Locator } from '@playwright/test';
 import { BasePage } from '../common/base.page';
 
 /**
@@ -82,10 +82,8 @@ export class UploadPage extends BasePage {
    * Navigate directly to Creator Upload page.
    */
   async goToUploadPage(): Promise<void> {
-    await test.step('Navigate to Creator Upload page (/creator/upload.php)', async () => {
-      await this.navigate(this.PAGE_URL);
-      await this.waitForPageLoad();
-    });
+    await this.navigate(this.PAGE_URL);
+    await this.waitForPageLoad();
   }
 
   // Action Methods
@@ -95,10 +93,8 @@ export class UploadPage extends BasePage {
    * @param filePath - Absolute or relative path to JPEG file
    */
   async setJpegFile(filePath: string): Promise<void> {
-    await test.step(`Upload JPEG file: ${filePath}`, async () => {
-      await this.jpegFileInput.setInputFiles(filePath);
-      await this.jpegFileInput.dispatchEvent('change').catch(() => {});
-    });
+    await this.jpegFileInput.setInputFiles(filePath);
+    await this.jpegFileInput.dispatchEvent('change').catch(() => {});
   }
 
   /**
@@ -108,46 +104,42 @@ export class UploadPage extends BasePage {
    * @param selectFirstCategory - Whether to check the first category checkbox
    */
   async fillIllustrationMetadata(title: string, tags: string, selectFirstCategory: boolean = true): Promise<void> {
-    await test.step(`Fill illustration metadata - Title: "${title}", Tags: "${tags}"`, async () => {
-      if (title) {
-        await this.fillInput(this.titleInput, title);
-      }
-      if (tags) {
-        await this.fillInput(this.tagsTextarea, tags);
-      }
-      if (selectFirstCategory) {
-        const isChecked = await this.firstCategoryCheckbox.isChecked();
-        if (!isChecked) {
-          const checkboxId = await this.firstCategoryCheckbox.getAttribute('id');
-          if (checkboxId) {
-            const label = this.page.locator(`label[for="${checkboxId}"]`);
-            if (await label.isVisible().catch(() => false)) {
-              await label.click();
-            } else {
-              await this.firstCategoryCheckbox.evaluate((el: HTMLInputElement) => {
-                el.checked = true;
-                el.dispatchEvent(new Event('change', { bubbles: true }));
-              });
-            }
+    if (title) {
+      await this.fillInput(this.titleInput, title);
+    }
+    if (tags) {
+      await this.fillInput(this.tagsTextarea, tags);
+    }
+    if (selectFirstCategory) {
+      const isChecked = await this.firstCategoryCheckbox.isChecked();
+      if (!isChecked) {
+        const checkboxId = await this.firstCategoryCheckbox.getAttribute('id');
+        if (checkboxId) {
+          const label = this.page.locator(`label[for="${checkboxId}"]`);
+          if (await label.isVisible().catch(() => false)) {
+            await label.click();
           } else {
-            await this.firstCategoryCheckbox.check({ force: true }).catch(async () => {
-              await this.firstCategoryCheckbox.evaluate((el: HTMLInputElement) => {
-                el.checked = true;
-                el.dispatchEvent(new Event('change', { bubbles: true }));
-              });
+            await this.firstCategoryCheckbox.evaluate((el: HTMLInputElement) => {
+              el.checked = true;
+              el.dispatchEvent(new Event('change', { bubbles: true }));
             });
           }
+        } else {
+          await this.firstCategoryCheckbox.check({ force: true }).catch(async () => {
+            await this.firstCategoryCheckbox.evaluate((el: HTMLInputElement) => {
+              el.checked = true;
+              el.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+          });
         }
       }
-    });
+    }
   }
 
   /**
    * Submit the upload form.
    */
   async submitForm(): Promise<void> {
-    await test.step('Submit illustration upload form (新規投稿)', async () => {
-      await this.clickElement(this.submitUploadButton);
-    });
+    await this.clickElement(this.submitUploadButton);
   }
 }

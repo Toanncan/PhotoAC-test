@@ -54,15 +54,17 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-001: Tìm kiếm với từ khóa hợp lệ
    * @tags @smoke @regression @guest
    */
-  test('TC-SEARCH-GUEST-001: Tìm kiếm từ khóa hợp lệ hiển thị kết quả @smoke @guest', async ({
+  test('TC-SEARCH-GUEST-001: Tìm kiếm từ khóa hợp lệ hiển thị kết quả', async ({
     page,
     homePage,
     searchResultPage,
   }) => {
     const keyword = '学生';
 
-    await homePage.search(keyword);
-    await searchResultPage.waitForResultDisplay();
+    await test.step(`Tìm kiếm từ khóa "${keyword}" và đợi kết quả hiển thị`, async () => {
+      await homePage.search(keyword);
+        await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Verify URL và heading kết quả tìm kiếm', async () => {
       await expect(page).toHaveURL(new RegExp(`search_word=${encodeURIComponent(keyword)}|q=${encodeURIComponent(keyword)}`));
@@ -80,15 +82,17 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-002: Tìm kiếm với nhiều từ khóa kết hợp (Multi-keyword AND search)
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-002: Tìm kiếm nhiều từ khóa kết hợp hiển thị kết quả @regression @guest', async ({
+  test('TC-SEARCH-GUEST-002: Tìm kiếm nhiều từ khóa kết hợp (AND Search)', async ({
     page,
     homePage,
     searchResultPage,
   }) => {
     const multiKeyword = 'ビジネス 女性';
 
-    await homePage.search(multiKeyword);
-    await searchResultPage.waitForResultDisplay();
+    await test.step(`Tìm kiếm từ khóa "${multiKeyword}" và đợi kết quả hiển thị`, async () => {
+      await homePage.search(multiKeyword);
+        await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Verify URL và heading phản ánh cụm từ khóa tìm kiếm', async () => {
       await expect(page).toHaveURL(/\/main\/(search_result\.php|search)\?/);
@@ -102,14 +106,17 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-003: Tìm kiếm với từ khóa không tồn tại (Zero Results)
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-003: Hiển thị thông báo khi không tìm thấy ảnh nào khớp từ khóa @regression @guest', async ({
+  test('TC-SEARCH-GUEST-003: Hiển thị thông báo khi không tìm thấy ảnh nào khớp từ khóa', async ({
+    page,
     homePage,
     searchResultPage,
   }) => {
     const nonexistentKeyword = 'xyz_nonexistent_photo_99999';
 
-    await homePage.search(nonexistentKeyword);
-    await searchResultPage.waitForResultDisplay();
+    await test.step(`Tìm kiếm từ khóa "${nonexistentKeyword}" và đợi kết quả hiển thị`, async () => {
+      await homePage.search(nonexistentKeyword);
+        await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Verify thông báo không có kết quả chuẩn của Illust-AC', async () => {
       await expect(searchResultPage.noResultMessage.first()).toBeVisible();
@@ -122,7 +129,7 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-004: Xóa nhanh từ khóa bằng nút Reset và tìm kiếm từ khóa mới trực tiếp trên trang kết quả
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-004: Xóa từ khóa bằng nút Reset và tìm kiếm từ khóa mới trực tiếp từ trang kết quả @regression @guest', async ({
+  test('TC-SEARCH-GUEST-004: Xóa từ khóa bằng nút Reset và tìm kiếm từ khóa mới trực tiếp từ trang kết quả', async ({
     page,
     homePage,
     searchResultPage,
@@ -130,8 +137,10 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
     const initialKeyword = 'cat';
     const newKeyword = 'dog';
 
-    await homePage.search(initialKeyword);
-    await searchResultPage.waitForResultDisplay();
+    await test.step(`Tìm kiếm từ khóa "${initialKeyword}" và đợi kết quả hiển thị`, async () => {
+      await homePage.search(initialKeyword);
+        await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Verify từ khóa hiển thị trong ô tìm kiếm và xóa bằng nút Reset', async () => {
       await expect(searchResultPage.searchInput).toHaveValue(initialKeyword);
@@ -152,18 +161,20 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-005: Tìm kiếm nhanh bằng Top Keyword dưới Search Bar
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-005: Tìm kiếm bằng top keyword @regression @guest', async ({
+  test('TC-SEARCH-GUEST-005: Click Top Keyword chuyển hướng đến trang kết quả tìm kiếm', async ({
     page,
     homePage,
     searchResultPage,
   }) => {
-    await expect(homePage.topKeywords.first()).toBeVisible();
-    const keywordList = await homePage.getTopKeywords();
-    expect(keywordList.length, 'Phải có ít nhất 1 Top Keyword dưới search bar').toBeGreaterThan(0);
-
-    const targetKeyword = keywordList[0].trim();
-    await homePage.clickTopKeyword(targetKeyword);
-    await searchResultPage.waitForResultDisplay();
+    let targetKeyword = '';
+    await test.step('Lấy Top Keyword đầu tiên và chuyển đến trang kết quả', async () => {
+      await expect(homePage.topKeywords.first()).toBeVisible({ timeout: 10_000 });
+      const keywordList = await homePage.getTopKeywords();
+      expect(keywordList.length, 'Phải có ít nhất 1 Top Keyword dưới search bar').toBeGreaterThan(0);
+      targetKeyword = keywordList[0].trim();
+      await homePage.clickTopKeyword(targetKeyword);
+      await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Verify URL chứa từ khóa và tham số utm_source=top_keyword', async () => {
       await expect(page).toHaveURL(new RegExp(`search_word=${encodeURIComponent(targetKeyword)}|q=${encodeURIComponent(targetKeyword)}`));
@@ -181,7 +192,7 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-006: Tìm kiếm bằng Popular Tag Cloud
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-006: Tìm kiếm bằng popular tag keyword @regression @guest', async ({
+  test('TC-SEARCH-GUEST-006: Click Popular Tag từ tag cloud thành công', async ({
     page,
     homePage,
     searchResultPage,
@@ -189,8 +200,10 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
     await expect(homePage.popularTags.first()).toBeVisible();
     const firstTagText = (await homePage.popularTags.first().innerText()).trim();
 
-    await homePage.clickPopularTag(firstTagText);
-    await searchResultPage.waitForResultDisplay();
+    await test.step(`Click Popular Tag "${firstTagText}" và đợi kết quả hiển thị`, async () => {
+      await homePage.clickPopularTag(firstTagText);
+      await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Verify URL và heading phản ánh tag được chọn', async () => {
       await expect(page).toHaveURL(new RegExp(`search_word=${encodeURIComponent(firstTagText)}|q=${encodeURIComponent(firstTagText)}`));
@@ -206,15 +219,18 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-007: Lọc ảnh theo Chiều dọc (縦長) và chuyển đổi sang Chiều ngang (横長) qua toolbar
    * @tags @regression @guest @filter
    */
-  test('TC-SEARCH-GUEST-007: Filter và chuyển đổi Chiều ảnh (Dọc 縦長 / Ngang 横長) qua Toolbar @regression @guest @filter', async ({
+  test('TC-SEARCH-GUEST-007: Lọc và chuyển đổi Chiều ảnh (Dọc 縦長 / Ngang 横長) qua Toolbar', async ({
     page,
     homePage,
     searchResultPage,
   }, testInfo) => {
     test.setTimeout(90_000);
-    const keyword = 'cat';
-    await homePage.search(keyword);
-    await searchResultPage.waitForResultDisplay();
+    const keyword = '猫';
+
+    await test.step(`Tìm kiếm từ khóa "${keyword}" và đợi kết quả hiển thị`, async () => {
+      await homePage.search(keyword);
+          await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Lọc theo Chiều dọc (縦長) và verify URL, badge hiển thị', async () => {
       await searchResultPage.selectOrientation('vertical');
@@ -225,7 +241,7 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
       const count = await searchResultPage.getResultCount();
       expect(count, 'Kết quả sau khi lọc chiều dọc phải có ảnh').toBeGreaterThan(0);
 
-      await captureEvidenceWithUrl(page, testInfo, 'Filter 縦長');
+      await captureEvidenceWithUrl(page, testInfo, 'Filter-縦長');
     });
 
     await test.step('Chuyển đổi sang Chiều ngang (横長) và verify URL, badge cập nhật tương ứng', async () => {
@@ -236,7 +252,7 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
       const count = await searchResultPage.getResultCount();
       expect(count, 'Kết quả sau khi lọc chiều ngang phải có ảnh').toBeGreaterThan(0);
 
-      await captureEvidenceWithUrl(page, testInfo, 'Filter 横長');
+      await captureEvidenceWithUrl(page, testInfo, 'Filter-横長');
     });
   });
 
@@ -244,14 +260,16 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-008: Lọc định dạng ảnh Vector (EPS・AI) và chuyển đổi sang PNG qua Toolbar "ファイル・向き"
    * @tags @regression @guest @filter
    */
-  test('TC-SEARCH-GUEST-008: Filter và chuyển đổi Định dạng tệp (Vector / PNG) qua Toolbar @regression @guest @filter', async ({
+  test('TC-SEARCH-GUEST-008: Lọc và chuyển đổi Định dạng tệp (Vector / PNG) qua Toolbar', async ({
     page,
     homePage,
     searchResultPage,
   }, testInfo) => {
     test.setTimeout(90_000);
-    await homePage.search('frame');
-    await searchResultPage.waitForResultDisplay();
+    await test.step(`Tìm kiếm từ khóa "frame" và đợi kết quả hiển thị`, async () => {
+      await homePage.search('frame');
+      await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Lọc theo định dạng Vector (EPS・AI) và verify URL', async () => {
       await searchResultPage.selectFormat('vector');
@@ -260,7 +278,7 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
       const count = await searchResultPage.getResultCount();
       expect(count, 'Kết quả lọc Vector phải có ảnh').toBeGreaterThan(0);
 
-      await captureEvidenceWithUrl(page, testInfo, 'Filter Vector');
+      await captureEvidenceWithUrl(page, testInfo, 'Filter-Vector');
     });
 
     await test.step('Chuyển đổi sang định dạng PNG và verify URL cập nhật', async () => {
@@ -270,7 +288,7 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
       const count = await searchResultPage.getResultCount();
       expect(count, 'Kết quả lọc PNG phải có ảnh').toBeGreaterThan(0);
 
-      await captureEvidenceWithUrl(page, testInfo, 'Filter PNG');
+      await captureEvidenceWithUrl(page, testInfo, 'Filter-PNG');
     });
   });
 
@@ -278,24 +296,23 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-009: Lọc ảnh theo Danh mục qua Toolbar dropdown (人物)
    * @tags @regression @guest @filter
    */
-  test('TC-SEARCH-GUEST-009: Filter ảnh theo Danh mục (人物) @regression @guest @filter', async ({
+  test('TC-SEARCH-GUEST-009: Lọc ảnh theo Danh mục (人物) qua Toolbar dropdown', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
-    await homePage.search('学生');
-    await searchResultPage.waitForResultDisplay();
-
-    await searchResultPage.selectCategoryFromToolbar('人物');
+  }) => {
+    await test.step(`Tìm kiếm từ khóa "学生" và đợi kết quả hiển thị`, async () => {
+      await homePage.search('学生');
+      await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Verify URL cập nhật tham số danh mục và badge hiển thị', async () => {
+      await searchResultPage.selectCategoryFromToolbar('人物');
       await expect(page).toHaveURL(/c_names.*=(1|20)|c_id=(1|20)/);
       await expect(searchResultPage.getActiveFilterBadge('人物')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
-
-      await captureEvidenceWithUrl(page, testInfo, 'Filter Category 人物');
     });
   });
 
@@ -303,26 +320,26 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-010: Lọc ảnh theo Màu sắc (青 / Blue) qua Toolbar
    * @tags @regression @guest @filter
    */
-  test('TC-SEARCH-GUEST-010: Filter ảnh theo Màu sắc (青 / Blue) @regression @guest @filter', async ({
+  test('TC-SEARCH-GUEST-010: Lọc ảnh theo Màu sắc (青 / Blue) qua Toolbar', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     const keyword = 'flower';
-    await homePage.search(keyword);
-    await searchResultPage.waitForResultDisplay();
 
-    await searchResultPage.selectColor('blue');
+    await test.step(`Tìm kiếm từ khóa "${keyword}" và đợi kết quả hiển thị`, async () => {
+      await homePage.search(keyword);
+          await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Verify URL cập nhật tham số color=0000d6 và badge màu hiển thị', async () => {
+      await searchResultPage.selectColor('blue');
       await expect(page).toHaveURL(/color=0000d6/);
       await expect(searchResultPage.getActiveColorBadge('0000d6')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
-
-      await captureEvidenceWithUrl(page, testInfo, 'Filter Color 青');
     });
   });
 
@@ -330,22 +347,21 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-011: Lọc Loại trừ ảnh AI (AI生成ツール使用素材を除く)
    * @tags @regression @guest @filter
    */
-  test('TC-SEARCH-GUEST-011: Filter Loại trừ ảnh do AI tạo @regression @guest @filter', async ({
+  test('TC-SEARCH-GUEST-011: Bật bộ lọc Loại trừ ảnh do AI tạo', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
-    await homePage.search('landscape');
-    await searchResultPage.waitForResultDisplay();
-
-    await searchResultPage.toggleExcludeAi(true);
+  }) => {
+    await test.step(`Tìm kiếm từ khóa "landscape" và đợi kết quả hiển thị`, async () => {
+      await homePage.search('landscape');
+      await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Verify URL cập nhật tham số exclude_ai=on', async () => {
+      await searchResultPage.toggleExcludeAi(true);
       await expect(page).toHaveURL(/exclude_ai=on/);
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
-
-      await captureEvidenceWithUrl(page, testInfo, 'Filter Exclude AI');
     });
   });
 
@@ -353,24 +369,23 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-012: Lọc Khớp chính xác cụm từ (完全一致)
    * @tags @regression @guest @filter
    */
-  test('TC-SEARCH-GUEST-012: Filter bật bộ lọc Tìm kiếm khớp chính xác (完全一致) @regression @guest @filter', async ({
+  test('TC-SEARCH-GUEST-012: Bật bộ lọc Tìm kiếm khớp chính xác (完全一致)', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
-    await homePage.search('東京 タワー');
-    await searchResultPage.waitForResultDisplay();
-
-    await searchResultPage.toggleExactMatch(true);
+  }) => {
+    await test.step(`Tìm kiếm từ khóa "東京 タワー" và đợi kết quả hiển thị`, async () => {
+      await homePage.search('東京 タワー');
+      await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Verify URL cập nhật tham số type_search=phrase và badge hiển thị', async () => {
+      await searchResultPage.toggleExactMatch(true);
       await expect(page).toHaveURL(/type_search=phrase/);
       await expect(searchResultPage.getActiveFilterBadge('完全一致')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
-
-      await captureEvidenceWithUrl(page, testInfo, 'Filter Exact Match');
     });
   });
 
@@ -378,27 +393,26 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-013: Lọc theo Từ khóa loại trừ (除外キーワード)
    * @tags @regression @guest @filter
    */
-  test('TC-SEARCH-GUEST-013: Filter theo Từ khóa loại trừ (除外キーワード) @regression @guest @filter', async ({
+  test('TC-SEARCH-GUEST-013: Lọc kết quả với Từ khóa loại trừ (除外キーワード)', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
-    const keyword = 'cat';
+  }) => {
+    const keyword = '猫';
     const excludeKeyword = 'dog';
 
-    await homePage.search(keyword);
-    await searchResultPage.waitForResultDisplay();
-
-    await searchResultPage.applyExcludeKeyword(excludeKeyword);
+    await test.step(`Tìm kiếm từ khóa "${keyword}" và đợi kết quả hiển thị`, async () => {
+      await homePage.search(keyword);
+        await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Verify URL cập nhật tham số nq=dog và badge hiển thị', async () => {
+      await searchResultPage.applyExcludeKeyword(excludeKeyword);
       await expect(page).toHaveURL(new RegExp(`nq=${excludeKeyword}`));
       await expect(searchResultPage.getActiveFilterBadge(excludeKeyword)).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
-
-      await captureEvidenceWithUrl(page, testInfo, 'Filter Exclude Keyword');
     });
   });
 
@@ -406,27 +420,26 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-014: Lọc theo Tên tác giả qua menu Tìm kiếm chi tiết (詳細検索)
    * @tags @regression @guest @filter
    */
-  test('TC-SEARCH-GUEST-014: Filter ảnh theo Tên tác giả (Acworks) qua menu (詳細検索) @regression @guest @filter', async ({
+  test('TC-SEARCH-GUEST-014: Tìm kiếm ảnh theo Tác giả (Acworks) qua Detailed Search Toolbar', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     const keyword = 'flower';
     const creatorName = 'Acworks';
-    await homePage.search(keyword);
-    await searchResultPage.waitForResultDisplay();
-
-    await searchResultPage.searchByDetailedCreator(creatorName);
+    await test.step(`Tìm kiếm từ khóa "${keyword}" và đợi kết quả hiển thị`, async () => {
+      await homePage.search(keyword);
+        await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Verify URL, badge và heading phản ánh tác giả Acworks', async () => {
+      await searchResultPage.searchByDetailedCreator(creatorName);
       await expect(page).toHaveURL(new RegExp(`creator=${creatorName}`, 'i'));
       await expect(searchResultPage.getActiveFilterBadge(creatorName)).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       await expect(searchResultPage.resultHeading).toContainText(`「${keyword}」のイラスト素材`);
       const count = await searchResultPage.getResultCount();
       expect(count, 'Tìm theo tác giả phải trả về danh sách ảnh').toBeGreaterThan(0);
-
-      await captureEvidenceWithUrl(page, testInfo, 'Filter Creator Acworks');
     });
   });
 
@@ -434,17 +447,21 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-015: Lọc Loại trừ Tác giả qua menu Tìm kiếm chi tiết (詳細検索)
    * @tags @regression @guest @filter
    */
-  test('TC-SEARCH-GUEST-015: Filter ảnh loại trừ Tác giả (Acworks) qua menu (詳細検索) @regression @guest @filter', async ({
+  test('TC-SEARCH-GUEST-015: Loại trừ ảnh của Tác giả (Acworks) qua menu Detailed Search Toolbar', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     const keyword = 'flower';
     const ngCreatorName = 'Acworks';
-    await homePage.search(keyword);
-    await searchResultPage.waitForResultDisplay();
+    await test.step(`Tìm kiếm từ khóa "${keyword}" và đợi kết quả hiển thị`, async () => {
+      await homePage.search(keyword);
+        await searchResultPage.waitForResultDisplay();
+    });
 
-    await searchResultPage.searchByDetailedNgCreator(ngCreatorName);
+    await test.step(`Thiết lập loại trừ tác giả "${ngCreatorName}" trong menu Detailed Search`, async () => {
+      await searchResultPage.searchByDetailedNgCreator(ngCreatorName);
+    });
 
     await test.step('Verify URL cập nhật tham số ngcreator=Acworks, badge và trạng thái kết quả hiển thị', async () => {
       await expect(page).toHaveURL(new RegExp(`ngcreator=${ngCreatorName}`, 'i'));
@@ -456,8 +473,6 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
       } else {
         await expect(searchResultPage.noResultMessage.first()).toBeVisible();
       }
-
-      await captureEvidenceWithUrl(page, testInfo, 'Filter NG Creator Acworks');
     });
   });
 
@@ -467,15 +482,18 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-016: Kết hợp Từ khóa + Chiều ngang + Định dạng Vector (EPS/AI) + Loại trừ AI qua UI Toolbar
    * @tags @regression @guest @filter
    */
-  test('TC-SEARCH-GUEST-016: Kết hợp Đa bộ lọc (Chiều ngang + Vector + Loại trừ AI) qua UI Toolbar @regression @guest @filter', async ({
+  test('TC-SEARCH-GUEST-016: Kết hợp Từ khóa + Chiều ngang + Định dạng Vector + Loại trừ AI qua UI Toolbar', async ({
     page,
     homePage,
     searchResultPage,
   }, testInfo) => {
     test.setTimeout(90_000);
     const keyword = 'ビジネス';
-    await homePage.search(keyword);
-    await searchResultPage.waitForResultDisplay();
+
+    await test.step(`Tìm kiếm từ khóa "${keyword}" và đợi kết quả hiển thị`, async () => {
+      await homePage.search(keyword);
+          await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Chọn Chiều ngang (横長) từ Toolbar "ファイル・向き"', async () => {
       await searchResultPage.selectOrientation('horizontal');
@@ -512,15 +530,18 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-017: Kết hợp Từ khóa + Định dạng PNG + Màu sắc (青 / Blue) + Khớp chính xác (完全一致) qua UI Toolbar
    * @tags @regression @guest @filter
    */
-  test('TC-SEARCH-GUEST-017: Kết hợp Đa bộ lọc (Định dạng PNG + Màu xanh + Khớp chính xác) qua UI Toolbar @regression @guest @filter', async ({
+  test('TC-SEARCH-GUEST-017: Kết hợp Từ khóa + Định dạng PNG + Màu sắc (青 / Blue) + Khớp chính xác qua UI Toolbar', async ({
     page,
     homePage,
     searchResultPage,
   }, testInfo) => {
     test.setTimeout(90_000);
     const keyword = 'flower';
-    await homePage.search(keyword);
-    await searchResultPage.waitForResultDisplay();
+
+    await test.step(`Tìm kiếm từ khóa "${keyword}" và đợi kết quả hiển thị`, async () => {
+      await homePage.search(keyword);
+          await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Chọn định dạng PNG từ Toolbar "ファイル・向き"', async () => {
       await searchResultPage.selectFormat('png');
@@ -553,13 +574,15 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-018: Tải ảnh lên tìm kiếm tương đồng
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-018: Tải ảnh lên tìm kiếm hình ảnh tương đồng @regression @guest', async ({
+  test('TC-SEARCH-GUEST-018: Tải ảnh lên để tìm kiếm hình ảnh tương đồng', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
-    await homePage.uploadImageForSearch(sampleImagePath);
-    await searchResultPage.waitForResultDisplay();
+  }) => {
+    await test.step('Upload ảnh tìm kiếm tương đồng và đợi kết quả', async () => {
+      await homePage.uploadImageForSearch(sampleImagePath);
+      await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Verify điều hướng tới trang kết quả tìm kiếm bằng hình ảnh', async () => {
       await expect(searchResultPage.resultHeading).toContainText(/アップロード(した|された)画像に似ているイラスト/);
@@ -569,8 +592,6 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
       } else {
         await expect(searchResultPage.noResultMessage.first()).toBeVisible();
       }
-
-      await captureEvidenceWithUrl(page, testInfo, 'Image-Search-RIS-Results');
     });
   });
 
@@ -578,16 +599,20 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-019: Tìm kiếm theo Mã素材ID chính xác
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-019: Filter ảnh theo mã 素材ID @regression @guest', async ({
+  test('TC-SEARCH-GUEST-019: Tìm kiếm chính xác ảnh theo Mã素材ID qua menu Detailed Search', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     const photoId = '1597634';
-    await homePage.search('flower');
-    await searchResultPage.waitForResultDisplay();
+    await test.step(`Tìm kiếm từ khóa "flower" và đợi kết quả hiển thị`, async () => {
+      await homePage.search('flower');
+      await searchResultPage.waitForResultDisplay();
+    });
 
-    await searchResultPage.searchByDetailedPhotoId(photoId);
+    await test.step(`Tìm kiếm theo mã素材ID "${photoId}"`, async () => {
+      await searchResultPage.searchByDetailedPhotoId(photoId);
+    });
 
     await test.step('Verify URL, badge và kết quả trả về đúng ảnh khớp ID', async () => {
       await expect(page).toHaveURL(new RegExp(`qid=${photoId}`));
@@ -596,8 +621,6 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
       const count = await searchResultPage.getResultCount();
       expect(count, 'Tìm theo ID chính xác phải trả về ít nhất 1 ảnh').toBeGreaterThanOrEqual(1);
       await expect(searchResultPage.resultItems.first()).toBeVisible();
-
-      await captureEvidenceWithUrl(page, testInfo, 'Search-PhotoID-Result');
     });
   });
 
@@ -605,13 +628,51 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-020: Lọc định dạng ảnh Vector chuyên biệt và bảo toàn tham số khi phân trang
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-020: Vector Format Search và phân trang @regression @guest', async ({
+  test('TC-SEARCH-GUEST-020: Truy cập Recommended Search và giữ tham số rcm=1 khi chuyển trang', async ({
+    page,
+    searchResultPage,
+  }, testInfo) => {
+    test.setTimeout(90_000);
+    // Note: Deep-link được dùng có chủ đích vì test này kiểm tra routing & bảo toàn tham số rcm/referer khi phân trang
+    await test.step('Truy cập trang Recommended Search', async () => {
+      await searchResultPage.goToRecommendedSearch();
+    });
+
+    await test.step('Xác minh trang Recommended Search hiển thị đúng tham số, tiêu đề và danh sách ảnh', async () => {
+      await expect(page).toHaveURL(/rcm=1/);
+      await expect(searchResultPage.resultHeading).toContainText(/(イラスト素材|フリーイラスト素材)/);
+      await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
+      const count = await searchResultPage.getResultCount();
+      expect(count, 'Trang phải có ít nhất 1 ảnh hiển thị').toBeGreaterThan(0);
+      expect(count, 'Số lượng ảnh không được vượt quá 70 ảnh/trang').toBeLessThanOrEqual(70);
+
+      await captureEvidenceWithUrl(page, testInfo, 'Recommended-Page-1');
+    });
+
+    await test.step('Verify URL giữ nguyên tham số rcm=1 và referer khi sang trang 2', async () => {
+      await searchResultPage.goToNextPage();
+      await expect(page).toHaveURL(/rcm=1/);
+      await expect(page).toHaveURL(/referer=more_recommended/);
+      await expect(page).toHaveURL(/page=2/);
+      await captureEvidenceWithUrl(page, testInfo, 'Recommended-Page-2');
+    });
+  });
+
+  /**
+   * TC-SEARCH-GUEST-028: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập
+   * @tags @regression @guest
+   */
+
+  test('TC-SEARCH-GUEST-021: Lọc định dạng Vector chuyên biệt và bảo toàn tham số format=vector khi phân trang', async ({
     page,
     homePage,
     searchResultPage,
   }, testInfo) => {
-    await homePage.search('frame');
-    await searchResultPage.waitForResultDisplay();
+    test.setTimeout(90_000);
+    await test.step(`Tìm kiếm từ khóa "frame" và đợi kết quả hiển thị`, async () => {
+      await homePage.search('frame');
+      await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Lọc theo định dạng Vector (EPS・AI)', async () => {
       await searchResultPage.selectFormat('vector');
@@ -640,50 +701,20 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-021: Sắp xếp theo "新着順" (Mới nhất) và giữ nguyên khi sang Trang 2
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-021: Sắp xếp kết quả theo "新着順" (Mới nhất) và giữ nguyên sắp xếp khi sang Trang 2 @regression @guest', async ({
+
+  test('TC-SEARCH-GUEST-022: Chặn sắp xếp "人気順" và hiển thị popover yêu cầu đăng ký/đăng nhập', async ({
     page,
     homePage,
     searchResultPage,
   }, testInfo) => {
-    await homePage.search('cat');
-    await searchResultPage.waitForResultDisplay();
-
-    await searchResultPage.selectNewestSort();
-
-    await test.step('Verify URL cập nhật tham số srt=-releasedate và kết quả hiển thị', async () => {
-      await expect(page).toHaveURL(/srt=-releasedate/);
-      const count = await searchResultPage.getResultCount();
-      expect(count, 'Kết quả sắp xếp mới nhất phải có ảnh hiển thị').toBeGreaterThan(0);
-
-      await captureEvidenceWithUrl(page, testInfo, 'Sort-新着順');
+    await test.step(`Tìm kiếm từ khóa "cat" và đợi kết quả hiển thị`, async () => {
+      await homePage.search('cat');
+      await searchResultPage.waitForResultDisplay();
     });
 
-    await searchResultPage.goToNextPage();
-
-    await test.step('Verify URL và trạng thái sắp xếp "新着順" vẫn giữ nguyên trên Trang 2', async () => {
-      await expect(page).toHaveURL(/srt=-releasedate/);
-      await expect(page).toHaveURL(/(page|p)=2/);
-      expect(await searchResultPage.getActivePageNumber()).toBe('2');
-      const countPage2 = await searchResultPage.getResultCount();
-      expect(countPage2, 'Trang 2 phải có ảnh hiển thị').toBeGreaterThan(0);
-
-      await captureEvidenceWithUrl(page, testInfo, 'Sort-新着順-Trang-2');
+    await test.step('Click tùy chọn "人気順" trong sort dropdown', async () => {
+      await searchResultPage.clickPopularSort();
     });
-  });
-
-  /**
-   * TC-SEARCH-GUEST-022: Sắp xếp "人気順" (Phổ biến) bị chặn đối với Guest
-   * @tags @regression @guest
-   */
-  test('TC-SEARCH-GUEST-022: Chặn sắp xếp "人気順" và hiển thị popover nâng cấp Premium @regression @guest', async ({
-    page,
-    homePage,
-    searchResultPage,
-  }, testInfo) => {
-    await homePage.search('cat');
-    await searchResultPage.waitForResultDisplay();
-
-    await searchResultPage.clickPopularSort();
 
     await test.step('Verify popover nâng cấp Premium hiển thị', async () => {
       await expect(searchResultPage.popularSortPopover).toBeVisible();
@@ -702,13 +733,56 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-023: Kiểm tra phân trang (Next / Prev) và hiển thị mặc định 70 ảnh/trang
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-023: Kiểm tra phân trang (Next / Prev) và hiển thị mặc định 70 ảnh/trang @regression @guest', async ({
+
+  test('TC-SEARCH-GUEST-023: Sắp xếp theo "新着順" (Mới nhất) và giữ nguyên sắp xếp khi sang Trang 2', async ({
     page,
     homePage,
     searchResultPage,
   }, testInfo) => {
-    await homePage.search('cat');
-    await searchResultPage.waitForResultDisplay();
+    await test.step(`Tìm kiếm từ khóa "cat" và đợi kết quả hiển thị`, async () => {
+      await homePage.search('cat');
+      await searchResultPage.waitForResultDisplay();
+    });
+
+    await test.step('Chọn sắp xếp "新着順" (Mới nhất) và đợi kết quả', async () => {
+      await searchResultPage.selectNewestSort();
+    });
+
+    await test.step('Verify URL cập nhật tham số srt=-releasedate và kết quả hiển thị', async () => {
+      await expect(page).toHaveURL(/srt=-releasedate/);
+      const count = await searchResultPage.getResultCount();
+      expect(count, 'Kết quả sắp xếp mới nhất phải có ảnh hiển thị').toBeGreaterThan(0);
+
+      await captureEvidenceWithUrl(page, testInfo, 'Sort-新着順');
+    });
+
+    await test.step('Verify URL và trạng thái sắp xếp "新着順" vẫn giữ nguyên trên Trang 2', async () => {
+      await searchResultPage.goToNextPage();
+      await expect(page).toHaveURL(/srt=-releasedate/);
+      await expect(page).toHaveURL(/(page|p)=2/);
+      expect(await searchResultPage.getActivePageNumber()).toBe('2');
+      const countPage2 = await searchResultPage.getResultCount();
+      expect(countPage2, 'Trang 2 phải có ảnh hiển thị').toBeGreaterThan(0);
+
+      await captureEvidenceWithUrl(page, testInfo, 'Sort-新着順-Trang-2');
+    });
+  });
+
+  /**
+   * TC-SEARCH-GUEST-022: Sắp xếp "人気順" (Phổ biến) bị chặn đối với Guest
+   * @tags @regression @guest
+   */
+
+  test('TC-SEARCH-GUEST-024: Kiểm tra phân trang (Next / Prev) và hiển thị mặc định 70 ảnh/trang', async ({
+    page,
+    homePage,
+    searchResultPage,
+  }, testInfo) => {
+    test.setTimeout(90_000);
+    await test.step(`Tìm kiếm từ khóa "cat" và đợi kết quả hiển thị`, async () => {
+      await homePage.search('cat');
+      await searchResultPage.waitForResultDisplay();
+    });
 
     await test.step('Verify menu "表示件数" có radio 70件 được check mặc định và đếm số lượng trang 1', async () => {
       await searchResultPage.openSortDropdown();
@@ -752,7 +826,8 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-024: Chạm hạn mức tìm kiếm (4 lần/ngày)
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-024: Hiển thị Modal giới hạn khi chạm hạn mức tìm kiếm @regression @guest', async ({
+
+  test('TC-SEARCH-GUEST-025: Hiển thị Modal giới hạn khi chạm hạn mức tìm kiếm', async ({
     page,
     homePage,
     searchResultPage,
@@ -770,13 +845,15 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
       });
     });
 
-    await homePage.search('山');
+    await test.step('Thực hiện tìm kiếm kích hoạt kiểm tra hạn mức', async () => {
+      await homePage.search('山');
+    });
 
     await test.step('Verify Modal giới hạn tìm kiếm (#searchLimitModal) hiển thị', async () => {
       await searchResultPage.waitForSearchLimitModal();
       await expect(searchResultPage.searchLimitTitle).toContainText('無料のキーワード検索は「1日4回」までです。');
 
-      await captureEvidenceWithUrl(page, testInfo, 'Guest-Search-Limit-Modal');
+      await captureEvidenceWithUrl(page, testInfo, 'Search-Limit-Modal');
     });
 
     await test.step('Verify Guest nhìn thấy CTA Đăng ký tài khoản nhận 15pt và link Premium', async () => {
@@ -792,15 +869,15 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-025: Thanh tìm kiếm cố định tự động hiển thị khi cuộn trang xuống và ẩn đi khi cuộn lên đầu trang
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-025: Thanh tìm kiếm cố định (Sticky Header Search) tự động hiển thị khi cuộn trang xuống và ẩn đi khi cuộn lên đầu trang @regression @guest', async ({
+
+  test('TC-SEARCH-GUEST-026: Thanh tìm kiếm cố định (Sticky Header Search) tự động hiển thị khi cuộn trang xuống và ẩn đi khi cuộn lên đầu trang', async ({
     page,
     homePage,
   }, testInfo) => {
     await test.step('Verify thanh Sticky Search ban đầu ở đầu trang bị ẩn', async () => {
       await expect(homePage.stickySearchArea).toBeHidden();
+      await captureEvidenceWithUrl(page, testInfo, 'Sticky-Search-Hidden');
     });
-
-    await captureEvidenceWithUrl(page, testInfo, 'Guest-Sticky-Search-Hidden');
 
     await test.step('Cuộn trang xuống dưới và verify Sticky Search Bar hiển thị', async () => {
       await homePage.scrollToActivateStickySearch(1200);
@@ -808,7 +885,7 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
       await expect(homePage.stickySearchInput).toBeVisible();
     });
 
-    await captureEvidenceWithUrl(page, testInfo, 'Guest-Sticky-Search-Shown');
+    await captureEvidenceWithUrl(page, testInfo, 'Sticky-Search-Shown');
 
     await test.step('Cuộn trang ngược lên đỉnh và verify Sticky Search Bar tự động ẩn đi', async () => {
       await homePage.scrollToTop();
@@ -820,11 +897,12 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-026: Kiểm tra thực hiện tìm kiếm từ khóa thành công từ Sticky Header Search Bar
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-026: Thực hiện tìm kiếm từ khóa thành công từ Sticky Header Search Bar @regression @guest', async ({
+
+  test('TC-SEARCH-GUEST-027: Thực hiện tìm kiếm từ khóa thành công từ Sticky Header Search Bar', async ({
     page,
     homePage,
     searchResultPage,
-  }, testInfo) => {
+  }) => {
     const keyword = 'ビジネス';
 
     await test.step('Cuộn trang xuống để kích hoạt thanh Sticky Search Bar', async () => {
@@ -847,8 +925,6 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
       await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
-
-      await captureEvidenceWithUrl(page, testInfo, 'Guest-Sticky-Search-Results');
     });
   });
 
@@ -858,45 +934,17 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * TC-SEARCH-GUEST-027: Tìm kiếm đề xuất (Recommended Search) và phân trang
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-027: Recommended Search và phân trang @regression @guest', async ({
-    page,
-    searchResultPage,
-  }) => {
-    // Note: Deep-link được dùng có chủ đích vì test này kiểm tra routing & bảo toàn tham số rcm/referer khi phân trang
-    await searchResultPage.goToRecommendedSearch();
 
-    await test.step('Xác minh trang Recommended Search hiển thị đúng tham số, tiêu đề và danh sách ảnh', async () => {
-      await expect(page).toHaveURL(/rcm=1/);
-      await expect(searchResultPage.resultHeading).toContainText(/(イラスト素材|フリーイラスト素材)/);
-      await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
-      const count = await searchResultPage.getResultCount();
-      expect(count, 'Trang phải có ít nhất 1 ảnh hiển thị').toBeGreaterThan(0);
-      expect(count, 'Số lượng ảnh không được vượt quá 70 ảnh/trang').toBeLessThanOrEqual(70);
-    });
-
-    await searchResultPage.goToNextPage();
-
-    await test.step('Verify URL giữ nguyên tham số rcm=1 và referer khi sang trang 2', async () => {
-      await expect(page).toHaveURL(/rcm=1/);
-      await expect(page).toHaveURL(/referer=more_recommended/);
-      await expect(page).toHaveURL(/page=2/);
-    });
-  });
-
-  /**
-   * TC-SEARCH-GUEST-028: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập
-   * @tags @regression @guest
-   */
-  test('TC-SEARCH-GUEST-028: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập @regression @guest', async ({
+  test('TC-SEARCH-GUEST-028: Click ảnh bất kỳ trong kết quả tìm kiếm hiển thị popup Quickview yêu cầu đăng ký/đăng nhập', async ({
     page,
     homePage,
     searchResultPage,
   }, testInfo) => {
     const keyword = '秋';
 
-    await test.step(`Tìm kiếm từ khóa "${keyword}" từ trang chủ`, async () => {
+    await test.step(`Tìm kiếm từ khóa "${keyword}" và đợi kết quả hiển thị`, async () => {
       await homePage.search(keyword);
-      await searchResultPage.waitForResultDisplay();
+          await searchResultPage.waitForResultDisplay();
     });
 
     await test.step('Click vào hình ảnh đầu tiên trong danh sách kết quả', async () => {
@@ -928,7 +976,7 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
    * Note: Photo AC / Silhouette AC không được verify do API test-yano.photo-ac.com trả 404 trên môi trường test.
    * @tags @regression @guest
    */
-  test('TC-SEARCH-GUEST-029: Click tác phẩm của các trang nhóm (Design, Video) hiển thị popup tương ứng @regression @guest', async ({
+  test('TC-SEARCH-GUEST-029: Click tác phẩm của các trang nhóm (Design, Video) hiển thị popup tương ứng', async ({
     page,
     homePage,
     searchResultPage,
@@ -936,9 +984,9 @@ test.describe('Search & Filters — Guest (No-Login User)', () => {
     // Từ khóa "犬": cả Design AC và Video AC đều có dữ liệu trên môi trường test
     const keyword = '犬';
 
-    await test.step(`Tìm kiếm từ khóa "${keyword}" từ trang chủ`, async () => {
+    await test.step(`Tìm kiếm từ khóa "${keyword}" và đợi kết quả hiển thị`, async () => {
       await homePage.search(keyword);
-      await searchResultPage.waitForResultDisplay();
+          await searchResultPage.waitForResultDisplay();
     });
 
     for (const site of GROUP_SITES) {

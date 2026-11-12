@@ -3,8 +3,8 @@
 // /**
 //  * Ranking Page Tests — Creator Portal
 //  *
-//  * Test URL: https://test-lien.photo-ac.com/creator/ranking
-//  * Account: Creator (toancan3695@gmail.com)
+//  * Test URL: https://test-lien.ac-illust.com/creator/ranking
+//  * Account: Creator
 //  *
 //  * Test objectives:
 //  * 1. Verify ranking page loads and displays all 4 ranking sections
@@ -12,9 +12,8 @@
 //  * 3. Verify no font rendering errors (tofu/garbled characters)
 //  */
 // test.describe('Creator Ranking Page', () => {
-//   // TC01: Page Navigation & Heading
-
-//   test('TC01 - Trang ranking hiển thị đúng heading và URL', async ({ rankingPage, page }) => {
+//   // TC-RANKING-CREATOR-001: Page Navigation & Heading
+//   test('TC-RANKING-CREATOR-001: Trang ranking hiển thị đúng heading và URL', async ({ rankingPage, page }) => {
 //     // Act
 //     await rankingPage.goToRankingPage();
 
@@ -29,9 +28,8 @@
 //     });
 //   });
 
-//   // TC02: All 4 Ranking Sections Present
-
-//   // test('TC02 - Bốn section ranking đều hiển thị đầy đủ', async ({ rankingPage }) => {
+//   // TC-RANKING-CREATOR-002: All 4 Ranking Sections Present
+//   // test('TC-RANKING-CREATOR-002: Bốn section ranking đều hiển thị đầy đủ', async ({ rankingPage }) => {
 //   //   // Act
 //   //   await rankingPage.goToRankingPage();
 
@@ -42,9 +40,8 @@
 //   //   await expect(rankingPage.uploadNiceFanRankingSection).toBeVisible();
 //   // });
 
-//   // TC03: Table Count Correct
-
-//   // test('TC03 - Trang có đúng 4 bảng ranking', async ({ rankingPage }) => {
+//   // TC-RANKING-CREATOR-003: Table Count Correct
+//   // test('TC-RANKING-CREATOR-003: Trang có đúng 4 bảng ranking', async ({ rankingPage }) => {
 //   //   // Act
 //   //   await rankingPage.goToRankingPage();
 //   //   const tableCount = await rankingPage.getTableCount();
@@ -53,160 +50,129 @@
 //   //   expect(tableCount).toBe(4);
 //   // });
 
-//   // TC04: Column Headers Not Empty
-
-//   // test('TC04 - Column headers của tất cả bảng không trống và không bị lỗi font', async ({
+//   // TC-RANKING-CREATOR-004: Column Headers Not Empty
+//   // test('TC-RANKING-CREATOR-004: Column headers của tất cả bảng không trống và không bị lỗi font', async ({
 //   //   rankingPage,
 //   // }) => {
 //   //   // Act
 //   //   await rankingPage.goToRankingPage();
 //   //   const headerTexts = await rankingPage.getAllColumnHeaderTexts();
 
-//   //   // Assert — Column headers exist
+//   //   // Assert — Headers present and non-empty
 //   //   expect(headerTexts.length).toBeGreaterThan(0);
-
-//   //   // Expected column headers across all 4 tables
-//   //   const expectedHeaders = ['期間', '【前日】', '【週間】', '【月間】', '【通算】'];
-//   //   for (const expected of expectedHeaders) {
-//   //     expect(
-//   //       headerTexts.some((h) => h === expected),
-//   //       `Column header "${expected}" should be present`,
-//   //     ).toBe(true);
+//   //   for (const header of headerTexts) {
+//   //     expect(header.length).toBeGreaterThan(0);
 //   //   }
 //   // });
 
-//   // TC05: Table 4 Headers (写真総数/NICE!/ファン)
-
-//   // test('TC05 - Bảng 4 (写真掲載数・NICE!数・ファン数) có đúng các cột', async ({
+//   // TC-RANKING-CREATOR-005: Table 4 Columns Correct
+//   // test('TC-RANKING-CREATOR-005: Bảng 4 (写真掲載数・NICE!数・ファン数) có đúng các cột', async ({
 //   //   rankingPage,
 //   // }) => {
 //   //   // Act
 //   //   await rankingPage.goToRankingPage();
 
-//   //   // Assert — Table 4 unique headers visible
+//   //   // Assert — Table 4 headers visible
 //   //   await expect(rankingPage.uploadCountHeader).toBeVisible();
 //   //   await expect(rankingPage.niceCountHeader).toBeVisible();
 //   //   await expect(rankingPage.fanCountHeader).toBeVisible();
 //   // });
 
-//   // TC06: Download Ranking Table Structure
-
-//   // test('TC06 - Bảng Download Ranking có đầy đủ row ダウンロード数 và ランキング', async ({
+//   // TC-RANKING-CREATOR-006: Download Ranking Rows
+//   // test('TC-RANKING-CREATOR-006: Bảng Download Ranking có đầy đủ row ダウンロード数 và ランキング', async ({
 //   //   rankingPage,
 //   // }) => {
 //   //   // Act
 //   //   await rankingPage.goToRankingPage();
 
-//   //   // Assert — Download count row and ranking row exist
+//   //   // Assert — Rows visible in first table
 //   //   await expect(rankingPage.downloadCountRow).toBeVisible();
 //   //   await expect(rankingPage.downloadRankingRow).toBeVisible();
 //   // });
 
-//   // TC07: Font Rendering — No Tofu Characters
-
-//   // test('TC07 - Không có lỗi font (không có ký tự tofu/garbled trên trang)', async ({
+//   // TC-RANKING-CREATOR-007: Font Rendering (No Tofu / Replacement Chars)
+//   // test('TC-RANKING-CREATOR-007: Không có lỗi font (không có ký tự tofu/garbled trên trang)', async ({
 //   //   rankingPage,
 //   // }) => {
 //   //   // Act
 //   //   await rankingPage.goToRankingPage();
-//   //   const garbledTexts = await rankingPage.getGarbledTextElements();
+//   //   const garbled = await rankingPage.getGarbledTextElements();
 
-//   //   // Assert — No garbled/tofu characters found
+//   //   // Assert — No garbled characters found
 //   //   expect(
-//   //     garbledTexts,
-//   //     `Found garbled text on ranking page: ${garbledTexts.join(', ')}`,
+//   //     garbled,
+//   //     `Found ${garbled.length} garbled/tofu text elements: ${JSON.stringify(garbled)}`,
 //   //   ).toHaveLength(0);
 //   // });
 
-//   // TC08: Font Family Applied Correctly
-
-//   // test('TC08 - Font family được áp dụng đúng (Meiryo/Japanese fonts)', async ({
+//   // TC-RANKING-CREATOR-008: Font Family Applied Correctly
+//   // test('TC-RANKING-CREATOR-008: Font family được áp dụng đúng (Meiryo/Japanese fonts)', async ({
 //   //   rankingPage,
 //   // }) => {
 //   //   // Act
 //   //   await rankingPage.goToRankingPage();
-//   //   const fontFamilies = await rankingPage.getFontFamiliesOnPage();
+//   //   const fonts = await rankingPage.getFontFamiliesOnPage();
 
-//   //   // Assert — At least one Japanese font family is used
-//   //   const hasJapaneseFont = fontFamilies.some(
-//   //     (font) =>
-//   //       /メイリオ|Meiryo|ヒラギノ|Hiragino|Noto/i.test(font),
+//   //   // Assert — At least one font matches Japanese system fonts
+//   //   const hasJapaneseFont = fonts.some((font) =>
+//   //     /メイリオ|Meiryo|ヒラギノ|Hiragino|Noto/i.test(font),
 //   //   );
-//   //   expect(
-//   //     hasJapaneseFont,
-//   //     `Expected Japanese font family. Found: ${fontFamilies.join(' | ')}`,
-//   //   ).toBe(true);
+//   //   expect(hasJapaneseFont, `Fonts found: ${fonts.join(', ')}`).toBe(true);
 //   // });
 
-//   // TC09: Row Labels Rendered Correctly
-
-//   // test('TC09 - Row labels của tất cả bảng render đúng (không trống)', async ({
+//   // TC-RANKING-CREATOR-009: Row Labels Render Correctly (Not Empty)
+//   // test('TC-RANKING-CREATOR-009: Row labels của tất cả bảng render đúng (không trống)', async ({
 //   //   rankingPage,
 //   // }) => {
 //   //   // Act
 //   //   await rankingPage.goToRankingPage();
 
-//   //   // Check row labels for all 4 tables
+//   //   // Verify Table 1 (Download Ranking) row labels
 //   //   const table1Labels = await rankingPage.getTableRowLabels(0);
-//   //   const table2Labels = await rankingPage.getTableRowLabels(1);
-//   //   const table3Labels = await rankingPage.getTableRowLabels(2);
-//   //   const table4Labels = await rankingPage.getTableRowLabels(3);
-
-//   //   // Assert — Each table has row labels
-//   //   expect(table1Labels.length).toBeGreaterThan(0);
-//   //   expect(table2Labels.length).toBeGreaterThan(0);
-//   //   expect(table3Labels.length).toBeGreaterThan(0);
-//   //   expect(table4Labels.length).toBeGreaterThan(0);
-
-//   //   // Assert — Known expected row labels are present
+//   //   expect(table1Labels.length).toBeGreaterThanOrEqual(2);
 //   //   expect(table1Labels).toContain('ダウンロード数');
 //   //   expect(table1Labels).toContain('ランキング');
+
+//   //   // Verify Table 2 (License Sales) row labels
+//   //   const table2Labels = await rankingPage.getTableRowLabels(1);
+//   //   expect(table2Labels.length).toBeGreaterThanOrEqual(2);
+//   //   expect(table2Labels).toContain('ダウンロード数');
 //   //   expect(table2Labels).toContain('獲得ポイント数');
+
+//   //   // Verify Table 3 (Page Views) row labels
+//   //   const table3Labels = await rankingPage.getTableRowLabels(2);
+//   //   expect(table3Labels.length).toBeGreaterThanOrEqual(2);
 //   //   expect(table3Labels).toContain('PV数');
-//   //   expect(table4Labels).toContain('数');
-//   //   expect(table4Labels).toContain('ランキング');
+//   //   expect(table3Labels).toContain('ランキング');
 //   // });
 
-//   // TC10: Daily Report Section Present
-
-//   // test('TC10 - Section "毎日レポート" hiển thị và các checkbox hoạt động', async ({
+//   // TC-RANKING-CREATOR-010: Daily Report Checkboxes
+//   // test('TC-RANKING-CREATOR-010: Section "毎日レポート" hiển thị và các checkbox hoạt động', async ({
 //   //   rankingPage,
 //   // }) => {
 //   //   // Act
 //   //   await rankingPage.goToRankingPage();
 
-//   //   // Assert — Report section heading visible
+//   //   // Assert — Checkboxes visible
 //   //   await expect(rankingPage.dailyReportHeading).toBeVisible();
-
-//   //   // Assert — Checkboxes present
 //   //   await expect(rankingPage.dailyReportCheckbox).toBeVisible();
 //   //   await expect(rankingPage.monthlyReportCheckbox).toBeVisible();
 //   // });
 
-//   // TC11: Font Bug on Login Page — "口グイン" instead of "ログイン"
-//   // // BUG DETECTED: On /auth/login, the "ログイン" button text is rendered as "口グイン"
-//   // // in the DOM (katakana ロ → kanji 口 font fallback). This test verifies the fix.
-
-//   // test('TC11 - Trang login không có lỗi font "口グイン" (ロ bị render thành 口)', async ({
+//   // TC-RANKING-CREATOR-011: No '口グイン' Bug on Login Page
+//   // test('TC-RANKING-CREATOR-011: Trang login không có lỗi font "口グイン" (ロ bị render thành 口)', async ({
 //   //   page,
 //   // }) => {
-//   //   // Act — Navigate to creator login page (without using loginAsCreator)
-//   //   await page.goto('/auth/login');
-//   //   await page.waitForLoadState('networkidle');
+//   //   // Navigate directly to the login page
+//   //   await page.goto('/login');
 
-//   //   // Assert — Page body text should NOT contain "口グイン" (garbled font)
-//   //   const bodyText = await page.locator('body').innerText();
-//   //   expect(
-//   //     bodyText,
-//   //     'Found garbled font: "口グイン" instead of "ログイン" — font rendering bug detected',
-//   //   ).not.toContain('口グイン');
+//   //   // Get all text content on the page
+//   //   const pageContent = await page.content();
 
-//   //   // Assert — "ログイン" button should render with correct text in DOM
-//   //   const loginButtonText = await page.locator('button[type="submit"]').first().textContent();
-//   //   expect(
-//   //     loginButtonText?.trim(),
-//   //     `Expected "ログイン" but found "${loginButtonText?.trim()}" — font rendering issue`,
-//   //   ).toBe('ログイン');
+//   //   // Assert — Should NOT contain 口グイン (Kanji 口 instead of Katakana ロ)
+//   //   // Correct Katakana: ログイン (U+30ED U+30B0 U+30A4 U+30F3)
+//   //   // Buggy Kanji:      口グイン (U+53E3 U+30B0 U+30A4 U+30F3)
+//   //   const hasKanjiBug = pageContent.includes('\u53E3\u30B0\u30A4\u30F3');
+//   //   expect(hasKanjiBug, 'Found "口グイン" (Kanji 口 used instead of Katakana ロ)').toBe(false);
 //   // });
 // });
-

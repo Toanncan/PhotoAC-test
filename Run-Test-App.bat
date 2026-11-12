@@ -28,7 +28,7 @@ if errorlevel 1 goto :check_java_install
 :start_server
 :: 4. Kiem tra va giai phong cong 4000 neu dang bi chiem
 for /f "tokens=5" %%a in ('netstat -aon ^| findstr :4000 ^| findstr LISTENING 2^>nul') do (
-    echo [INFO] Dang giai phong cong 4000 tu tien trinh cu (PID: %%a)...
+    echo [INFO] Dang giai phong cong 4000 tu tien trinh PID %%a...
     taskkill /f /pid %%a >nul 2>nul
 )
 

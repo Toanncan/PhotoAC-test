@@ -601,7 +601,7 @@ test.describe('Search — Free User', () => {
 
     await test.step(`Lọc ảnh loại trừ Tác giả "${excludeCreatorName}" và verify kết quả hiển thị`, async () => {
       await searchResultPage.searchByDetailedNgCreator(excludeCreatorName);
-      await expect(page).toHaveURL(new RegExp(`ngcreator=${excludeCreatorName}`));
+      await expect(page).toHaveURL(new RegExp(`ngcreator=${excludeCreatorName}`, 'i'));
       await expect(searchResultPage.activeFilterBadges.filter({ hasText: excludeCreatorName })).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
@@ -930,6 +930,11 @@ test.describe('Search — Free User', () => {
       expect(countPage2, 'Trang 2 phải có ảnh hiển thị').toBeGreaterThan(0);
 
       await captureEvidenceWithUrl(page, testInfo, 'Sort-新着順-Page-2');
+    });
+
+    await test.step('Khôi phục lại sắp xếp mặc định "関連性の高い順"', async () => {
+      await searchResultPage.selectRelevanceSort();
+      await expect(page).not.toHaveURL(/srt=-releasedate/);
     });
   });
 

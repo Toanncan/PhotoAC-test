@@ -3,8 +3,6 @@ import { BasePage } from '../common/base.page';
 
 /**
  * PhotoDetailPage — Page Object for the photo detail / download material page (/photo/:id).
- * Handles material details, author information, social interactions (like, fan, bookmark),
- * AI face search, and size-specific downloads (S, M, L).
  */
 export class PhotoDetailPage extends BasePage {
   // Constants

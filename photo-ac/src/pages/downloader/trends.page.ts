@@ -1,5 +1,5 @@
 import { type Page, type Locator, expect } from '@playwright/test';
-import { BasePage } from './base.page';
+import { BasePage } from '../common/base.page';
 
 /**
  * TrendsPage — Page Object for the Trends page (人気の写真素材 - /main/trends).
@@ -74,7 +74,7 @@ export class TrendsPage extends BasePage {
    */
   async getResultCount(options?: { timeout?: number }): Promise<number> {
     const timeout = options?.timeout ?? 10_000;
-    await expect(this.resultItems.first()).toBeVisible({ timeout }).catch(() => {});
+    await expect(this.resultItems.first()).toBeVisible({ timeout }).catch(() => { });
     return this.resultItems.count();
   }
 
@@ -104,7 +104,7 @@ export class TrendsPage extends BasePage {
    * Navigate to the next page in pagination.
    */
   async goToNextPage(): Promise<void> {
-    await this.paginationNextButton.scrollIntoViewIfNeeded().catch(() => {});
+    await this.paginationNextButton.scrollIntoViewIfNeeded().catch(() => { });
     await this.clickElement(this.paginationNextButton);
     await this.waitForResultDisplay();
   }
@@ -113,7 +113,7 @@ export class TrendsPage extends BasePage {
    * Navigate to the previous page in pagination.
    */
   async goToPrevPage(): Promise<void> {
-    await this.paginationPrevButton.scrollIntoViewIfNeeded().catch(() => {});
+    await this.paginationPrevButton.scrollIntoViewIfNeeded().catch(() => { });
     await this.clickElement(this.paginationPrevButton);
     await this.waitForResultDisplay();
   }
