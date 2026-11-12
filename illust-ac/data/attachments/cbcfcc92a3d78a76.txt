@@ -1,0 +1,1 @@
+https://test-lien.ac-illust.com/main/search_result.php?exclude_ai=on&personalized=1&search_word=dog&sl=ja&pp=70&srt=dlrank&nq=&exclude_ai=on&orientation=all&format=all&creator=&ngcreator=&qid=&color=all
