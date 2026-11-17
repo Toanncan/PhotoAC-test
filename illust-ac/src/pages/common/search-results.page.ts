@@ -131,20 +131,27 @@ export class SearchResultPage extends BasePage {
   readonly categoryFloraLabel: Locator = this.page.locator('#filter-dropdown-categories label[for="ddcl-c_names_mf-i0"], #filter-dropdown-categories label:has-text("花・植物")').first();
   readonly categoryBusinessLabel: Locator = this.page.locator('#filter-dropdown-categories label[for="ddcl-c_names_mf-i1"], #filter-dropdown-categories label:has-text("ビジネス")').first();
   readonly categoryPeopleLabel: Locator = this.page.locator('#filter-dropdown-categories label[for="ddcl-c_names_mf-i5"], #filter-dropdown-categories label:has-text("人物")').first();
+  readonly categoryPeopleCheckbox: Locator = this.page.locator('#filter-dropdown-categories #ddcl-c_names_mf-i5, #ddcl-c_names_mf-i5');
   readonly categoryAnimalLabel: Locator = this.page.locator('#filter-dropdown-categories label[for="ddcl-c_names_mf-i6"], #filter-dropdown-categories label:has-text("動物・生き物")').first();
 
   // Filter Option Locators: 2. File & Format (ファイル・向き)
   // NOTE: AC-Illust uses #filter-dropdown-format (NOT sizesec like photo-ac).
   // Format options: All, Vector (EPS/AI), PNG — NO PSD/M/L size filters.
   readonly orientationAllLabel: Locator = this.page.locator('#filter-dropdown-format label[for="orientation-all"]').first();
+  readonly orientationAllRadio: Locator = this.page.locator('#filter-dropdown-format #orientation-all, #orientation-all');
   readonly orientationVerticalLabel: Locator = this.page.locator('#filter-dropdown-format label[for="orientation-0"]').first();
+  readonly orientationVerticalRadio: Locator = this.page.locator('#filter-dropdown-format #orientation-0, #orientation-0');
   readonly orientationHorizontalLabel: Locator = this.page.locator('#filter-dropdown-format label[for="orientation-1"]').first();
+  readonly orientationHorizontalRadio: Locator = this.page.locator('#filter-dropdown-format #orientation-1, #orientation-1');
   /** Format filter: All formats (全て) */
   readonly formatAllLabel: Locator = this.page.locator('#filter-dropdown-format label[for="format-all"]').first();
+  readonly formatAllRadio: Locator = this.page.locator('#filter-dropdown-format #format-all, #format-all');
   /** Format filter: Vector (EPS/AI) */
   readonly formatVectorLabel: Locator = this.page.locator('#filter-dropdown-format label[for="format-vector"]').first();
+  readonly formatVectorRadio: Locator = this.page.locator('#filter-dropdown-format #format-vector, #format-vector');
   /** Format filter: PNG */
   readonly formatPngLabel: Locator = this.page.locator('#filter-dropdown-format label[for="format-png"]').first();
+  readonly formatPngRadio: Locator = this.page.locator('#filter-dropdown-format #format-png, #format-png');
 
   // Filter Option Locators: 3. Color (色)
   readonly colorAllOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-all"], #filter-dropdown-color .bg-all, label[for="color-all"]').first();
@@ -156,6 +163,7 @@ export class SearchResultPage extends BasePage {
   readonly colorLightGreenOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-8cdc2e"], #filter-dropdown-color .bg-8cdc2e').first();
   readonly colorCyanOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-48dbeb"], #filter-dropdown-color .bg-48dbeb').first();
   readonly colorBlueOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-0000d6"], #filter-dropdown-color .bg-0000d6').first();
+  readonly colorBlueRadio: Locator = this.page.locator('#filter-dropdown-color #color-0000d6, #color-0000d6');
   readonly colorWhiteOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-ffffff"], #filter-dropdown-color .bg-ffffff').first();
 
   // Filter Option Locators: 4. Exclude Keyword (除外キーワード)
