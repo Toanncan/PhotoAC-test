@@ -136,6 +136,7 @@ export class SearchResultPage extends BasePage {
 
   // Filter Option Locators: 1. Category (カテゴリー)
   readonly categoryPeopleLabel: Locator = this.page.locator('#filter-dropdown-categories label[for="ddcl-c_names1-i0"], #ddcl-c_names1-ddw label:has-text("人物")').first();
+  readonly categoryPeopleCheckbox: Locator = this.page.locator('#filter-dropdown-categories #ddcl-c_names1-i0, #ddcl-c_names1-i0');
   readonly categoryBusinessLabel: Locator = this.page.locator('#filter-dropdown-categories label[for="ddcl-c_names1-i1"], #ddcl-c_names1-ddw label:has-text("ビジネス")').first();
   readonly categoryAnimalLabel: Locator = this.page.locator('#filter-dropdown-categories label[for="ddcl-c_names1-i2"], #ddcl-c_names1-ddw label:has-text("動物・生き物")').first();
   readonly categoryFloraLabel: Locator = this.page.locator('#filter-dropdown-categories label[for="ddcl-c_names1-i3"], #ddcl-c_names1-ddw label:has-text("花・植物")').first();
@@ -146,10 +147,15 @@ export class SearchResultPage extends BasePage {
   // Filter Option Locators: 2. File & Orientation (ファイル・向き)
   readonly orientationAllLabel: Locator = this.page.locator('#filter-dropdown-sizesec label[for="orientation-all"], label[for="orientation-all"]').first();
   readonly orientationVerticalLabel: Locator = this.page.locator('#filter-dropdown-sizesec label[for="orientation-0"], label[for="orientation-0"]').first();
+  readonly orientationVerticalRadio: Locator = this.page.locator('#filter-dropdown-sizesec #orientation-0, #orientation-0');
   readonly orientationHorizontalLabel: Locator = this.page.locator('#filter-dropdown-sizesec label[for="orientation-1"], label[for="orientation-1"]').first();
+  readonly orientationHorizontalRadio: Locator = this.page.locator('#filter-dropdown-sizesec #orientation-1, #orientation-1');
   readonly sizesecPsdLabel: Locator = this.page.locator('#filter-dropdown-sizesec label[for="sizesec-psd"], label[for="sizesec-psd"]').first();
+  readonly sizesecPsdRadio: Locator = this.page.locator('#filter-dropdown-sizesec #sizesec-psd, #sizesec-psd');
   readonly sizesecMLabel: Locator = this.page.locator('#filter-dropdown-sizesec label[for="sizesec-m"], label[for="sizesec-m"]').first();
+  readonly sizesecMRadio: Locator = this.page.locator('#filter-dropdown-sizesec #sizesec-m, #sizesec-m');
   readonly sizesecLLabel: Locator = this.page.locator('#filter-dropdown-sizesec label[for="sizesec-l"], label[for="sizesec-l"]').first();
+  readonly sizesecLRadio: Locator = this.page.locator('#filter-dropdown-sizesec #sizesec-l, #sizesec-l');
 
   // Filter Option Locators: 3. Color (色)
   readonly colorAllOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-all"], #filter-dropdown-color .bg-all, label[for="color-all"]').first();
@@ -161,17 +167,23 @@ export class SearchResultPage extends BasePage {
   readonly colorLightGreenOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-8cdc2e"], #filter-dropdown-color .bg-8cdc2e').first();
   readonly colorCyanOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-48dbeb"], #filter-dropdown-color .bg-48dbeb').first();
   readonly colorBlueOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-0000d6"], #filter-dropdown-color .bg-0000d6').first();
+  readonly colorBlueRadio: Locator = this.page.locator('#filter-dropdown-color #color-0000d6, #color-0000d6');
   readonly colorWhiteOption: Locator = this.page.locator('#filter-dropdown-color label[for="color-ffffff"], #filter-dropdown-color .bg-ffffff').first();
 
   // Filter Option Locators: 4. Person Specification (人物指定)
   readonly modelCountAllLabel: Locator = this.page.locator('#filter-dropdown-other label[for="model_count-all"], #filter-dropdown-other label[for="model_count--1"]').first();
   readonly modelCountZeroLabel: Locator = this.page.locator('#filter-dropdown-other label[for="model_count-0"]').first(); // 無人 (0 people)
+  readonly modelCountZeroRadio: Locator = this.page.locator('#filter-dropdown-other #model_count-0, #model_count-0');
   readonly modelCountOneLabel: Locator = this.page.locator('#filter-dropdown-other label[for="model_count-1"]').first();   // 1人 (1 person)
+  readonly modelCountOneRadio: Locator = this.page.locator('#filter-dropdown-other #model_count-1, #model_count-1');
   readonly modelCountTwoLabel: Locator = this.page.locator('#filter-dropdown-other label[for="model_count-2"]').first();   // 2人 (2 people)
+  readonly modelCountTwoRadio: Locator = this.page.locator('#filter-dropdown-other #model_count-2, #model_count-2');
   readonly modelCountThreePlusLabel: Locator = this.page.locator('#filter-dropdown-other label[for="model_count-3"]').first(); // 3人以上
+  readonly modelCountThreePlusRadio: Locator = this.page.locator('#filter-dropdown-other #model_count-3, #model_count-3');
   readonly ageBabyLabel: Locator = this.page.locator('#filter-dropdown-other label[for="age-A"]').first();   // 赤ちゃん
   readonly ageChildLabel: Locator = this.page.locator('#filter-dropdown-other label[for="age-K"]').first();  // 子供
   readonly ageYoungLabel: Locator = this.page.locator('#filter-dropdown-other label[for="age-W"]').first();  // 若者
+  readonly ageYoungRadio: Locator = this.page.locator('#filter-dropdown-other #age-W, #age-W');
   readonly ageAdultLabel: Locator = this.page.locator('#filter-dropdown-other label[for="age-O"]').first();  // 大人
 
   // Filter Option Locators: 5. Exclude Keyword (除外キーワード)
@@ -188,8 +200,10 @@ export class SearchResultPage extends BasePage {
   readonly excludeAiCheckbox: Locator = this.page.locator('#filter-dropdown-display #exclude_ai, #exclude_ai');
   readonly excludeAiLabel: Locator = this.page.locator('#filter-dropdown-display label[for="exclude_ai"]').first();
   readonly modelReleaseOnLabel: Locator = this.page.locator('#filter-dropdown-display label[for="mdlrlrsec-on"]').first();
+  readonly modelReleaseOnRadio: Locator = this.page.locator('#filter-dropdown-display #mdlrlrsec-on, #mdlrlrsec-on');
   readonly modelReleaseAllLabel: Locator = this.page.locator('#filter-dropdown-display label[for="mdlrlrsec-all"]').first();
   readonly propertyReleaseOnLabel: Locator = this.page.locator('#filter-dropdown-display label[for="prprlrsec-on"]').first();
+  readonly propertyReleaseOnRadio: Locator = this.page.locator('#filter-dropdown-display #prprlrsec-on, #prprlrsec-on');
   readonly propertyReleaseAllLabel: Locator = this.page.locator('#filter-dropdown-display label[for="prprlrsec-all"]').first();
 
   // AI Search (AI検索) Locators

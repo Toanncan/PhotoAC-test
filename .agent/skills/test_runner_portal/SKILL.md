@@ -35,7 +35,7 @@ HUONG-DAN-SU-DUNG.md        # Tai lieu huong dan 3 buoc cho team non-tech
 1. **Điều khiển linh hoạt:**
    - Chọn Trình duyệt / Role (`chromium-downloader`, `chromium-creator`, `firefox-downloader`, v.v.).
    - Chọn Chế độ: `Headed` (hiện trình duyệt để quan sát) hoặc `Headless` (chạy ngầm).
-   - Chọn Phạm vi: Toàn bộ suite, từng file spec riêng lẻ, hoặc lọc theo tag `@smoke`, `@regression`.
+   - Chọn Phạm vi: Toàn bộ suite hoặc từng file spec riêng lẻ (kèm tính năng lọc tìm file và chạy lại test thất bại).
    - Chọn số lượng worker (song song hoặc tuần tự).
 
 2. **Giám sát Realtime (SSE - Server-Sent Events):**
@@ -55,8 +55,8 @@ HUONG-DAN-SU-DUNG.md        # Tai lieu huong dan 3 buoc cho team non-tech
 ### 1. Thêm Dự Án Hoặc Trình Duyệt Mới
 Khi thêm project mới vào `playwright.config.ts`, cập nhật danh sách project trong `dashboard/server.js` hoặc cấu hình động để UI tự nhận diện.
 
-### 2. Thêm Tùy Chọn Lọc Tags
-Tại `dashboard/public/index.html`, thêm các tùy chọn vào dropdown tag (ví dụ: `@payment`, `@auth`, `@profile`). Lệnh Playwright sẽ tự động thêm flag `--grep <tag>`.
+### 2. Quản Lý Test Case và Phạm Vi Chạy
+Hệ thống quản lý phạm vi kiểm thử thông qua cấu trúc phân tầng: Dự án (Photo-AC / AC-Illust) ➔ Thư mục / Module ➔ File kiểm thử đa chọn (Multi-select) ➔ Vai trò người dùng (Roles). Quy chuẩn dự án không sử dụng tag trong tiêu đề test để đảm bảo báo cáo Allure tinh gọn.
 
 ### 3. Xử Lý Khắc Phục Sự Cố (Troubleshooting)
 - **Lỗi thiếu Java khi tạo Allure:**

@@ -229,6 +229,7 @@ test.describe('Search — Free User', () => {
     await test.step('Lọc theo Chiều dọc (縦長) và verify URL, badge hiển thị', async () => {
       await searchResultPage.selectOrientation('vertical');
       await expect(page).toHaveURL(/orientation=0/);
+      await expect(searchResultPage.orientationVerticalRadio).toBeChecked();
       await expect(searchResultPage.getActiveFilterBadge('縦長')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       await expect(searchResultPage.resultHeading).toContainText(`「${keyword}」の写真素材`);
@@ -241,6 +242,7 @@ test.describe('Search — Free User', () => {
     await test.step('Chuyển đổi sang Chiều ngang (横長) và verify URL, badge cập nhật tương ứng', async () => {
       await searchResultPage.selectOrientation('horizontal');
       await expect(page).toHaveURL(/orientation=1/);
+      await expect(searchResultPage.orientationHorizontalRadio).toBeChecked();
       await expect(searchResultPage.getActiveFilterBadge('横長')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
@@ -268,6 +270,7 @@ test.describe('Search — Free User', () => {
     await test.step('Lọc theo định dạng ảnh PSD và verify kết quả hiển thị', async () => {
       await searchResultPage.selectPsdFormat();
       await expect(page).toHaveURL(/sizesec=psd/);
+      await expect(searchResultPage.sizesecPsdRadio).toBeChecked();
       await expect(searchResultPage.getActiveFilterBadge('PSD形式ファイル')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
@@ -293,6 +296,7 @@ test.describe('Search — Free User', () => {
     await test.step('Lọc theo kích thước M (Mサイズ以上) và verify kết quả', async () => {
       await searchResultPage.selectSize('m');
       await expect(page).toHaveURL(/sizesec=m/);
+      await expect(searchResultPage.sizesecMRadio).toBeChecked();
       await expect(searchResultPage.getActiveFilterBadge('Mサイズ以上がある')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
@@ -305,6 +309,7 @@ test.describe('Search — Free User', () => {
     await test.step('Chuyển đổi sang kích thước L (Lサイズ) và verify kết quả', async () => {
       await searchResultPage.selectSize('l');
       await expect(page).toHaveURL(/sizesec=l/);
+      await expect(searchResultPage.sizesecLRadio).toBeChecked();
       await expect(searchResultPage.getActiveFilterBadge('Lサイズがある')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
@@ -332,6 +337,7 @@ test.describe('Search — Free User', () => {
     await test.step('Lọc ảnh theo Danh mục (人物) và verify kết quả hiển thị', async () => {
       await searchResultPage.selectCategoryFromToolbar('人物');
       await expect(page).toHaveURL(/c_names.*=1|c_id=1/);
+      await expect(searchResultPage.categoryPeopleCheckbox).toBeChecked();
       await expect(searchResultPage.getActiveFilterBadge('人物')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
@@ -356,6 +362,7 @@ test.describe('Search — Free User', () => {
     await test.step('Lọc ảnh theo Màu sắc (青 / Blue) và verify kết quả hiển thị', async () => {
       await searchResultPage.selectColor('blue');
       await expect(page).toHaveURL(/color=0000d6/);
+      await expect(searchResultPage.colorBlueRadio).toBeChecked();
       await expect(searchResultPage.getActiveColorBadge('0000d6')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
@@ -382,6 +389,7 @@ test.describe('Search — Free User', () => {
     await test.step('Lọc ảnh Không có người (無人 / model_count=0) và verify kết quả', async () => {
       await searchResultPage.selectModelCount('0');
       await expect(page).toHaveURL(/model_count=0/);
+      await expect(searchResultPage.modelCountZeroRadio).toBeChecked();
       await expect(searchResultPage.getActiveFilterBadge('無人')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
@@ -393,6 +401,7 @@ test.describe('Search — Free User', () => {
     await test.step('Chuyển đổi sang ảnh có 1 người mẫu (1人 / model_count=1) và verify kết quả', async () => {
       await searchResultPage.selectModelCount('1');
       await expect(page).toHaveURL(/model_count=1/);
+      await expect(searchResultPage.modelCountOneRadio).toBeChecked();
       await expect(searchResultPage.getActiveFilterBadge('1人')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
@@ -404,6 +413,7 @@ test.describe('Search — Free User', () => {
     await test.step('Chuyển đổi sang ảnh có từ 3 người mẫu trở lên (3人以上 / model_count=3) và verify kết quả', async () => {
       await searchResultPage.selectModelCount('3');
       await expect(page).toHaveURL(/model_count=3/);
+      await expect(searchResultPage.modelCountThreePlusRadio).toBeChecked();
       await expect(searchResultPage.getActiveFilterBadge('3人以上')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
@@ -430,6 +440,7 @@ test.describe('Search — Free User', () => {
     await test.step('Lọc người mẫu theo Độ tuổi (若者) và verify kết quả hiển thị', async () => {
       await searchResultPage.selectAge('young');
       await expect(page).toHaveURL(/age=W/);
+      await expect(searchResultPage.ageYoungRadio).toBeChecked();
       await expect(searchResultPage.getActiveFilterBadge('若者')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
@@ -454,6 +465,7 @@ test.describe('Search — Free User', () => {
     await test.step('Lọc ảnh có Giấy phép người mẫu (取得済のみ) và verify kết quả hiển thị', async () => {
       await searchResultPage.selectModelRelease(true);
       await expect(page).toHaveURL(/mdlrlrsec=on/);
+      await expect(searchResultPage.modelReleaseOnRadio).toBeChecked();
       await expect(searchResultPage.getActiveFilterBadge('取得済のみ')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
@@ -478,6 +490,7 @@ test.describe('Search — Free User', () => {
     await test.step('Lọc ảnh có Giấy phép tài sản (取得済のみ) và verify kết quả hiển thị', async () => {
       await searchResultPage.selectPropertyRelease(true);
       await expect(page).toHaveURL(/prprlrsec=on/);
+      await expect(searchResultPage.propertyReleaseOnRadio).toBeChecked();
       await expect(searchResultPage.getActiveFilterBadge('取得済のみ')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
@@ -502,6 +515,7 @@ test.describe('Search — Free User', () => {
     await test.step('Lọc loại trừ ảnh do AI tạo và verify kết quả hiển thị', async () => {
       await searchResultPage.toggleExcludeAi(true);
       await expect(page).toHaveURL(/exclude_ai=on/);
+      await expect(searchResultPage.excludeAiCheckbox).toBeChecked();
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
     });
@@ -524,6 +538,7 @@ test.describe('Search — Free User', () => {
     await test.step('Lọc tìm kiếm khớp chính xác (完全一致) và verify kết quả hiển thị', async () => {
       await searchResultPage.toggleExactMatch(true);
       await expect(page).toHaveURL(/type_search=phrase/);
+      await expect(searchResultPage.exactMatchCheckbox).toBeChecked();
       const count = await searchResultPage.getResultCount();
       expect(count).toBeGreaterThan(0);
     });
@@ -549,6 +564,7 @@ test.describe('Search — Free User', () => {
     await test.step(`Lọc theo Từ khóa loại trừ "${excludeKeyword}" và verify kết quả hiển thị`, async () => {
       await searchResultPage.applyExcludeKeyword(excludeKeyword);
       await expect(page).toHaveURL(new RegExp(`nq=${encodeURIComponent(excludeKeyword)}`));
+      await expect(searchResultPage.excludeKeywordInput).toHaveValue(excludeKeyword);
       await expect(searchResultPage.getActiveFilterBadge(excludeKeyword)).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
@@ -575,6 +591,7 @@ test.describe('Search — Free User', () => {
     await test.step(`Lọc ảnh theo Tác giả "${creatorName}" và verify kết quả hiển thị`, async () => {
       await searchResultPage.searchByDetailedCreator(creatorName);
       await expect(page).toHaveURL(new RegExp(`creator=${creatorName}`, 'i'));
+      await expect(searchResultPage.detailedCreatorInput).toHaveValue(creatorName);
       await expect(searchResultPage.getActiveFilterBadge(creatorName)).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       await expect(searchResultPage.resultHeading).toContainText(`「${keyword}」の写真素材`);
@@ -602,6 +619,7 @@ test.describe('Search — Free User', () => {
     await test.step(`Lọc ảnh loại trừ Tác giả "${excludeCreatorName}" và verify kết quả hiển thị`, async () => {
       await searchResultPage.searchByDetailedNgCreator(excludeCreatorName);
       await expect(page).toHaveURL(new RegExp(`ngcreator=${excludeCreatorName}`, 'i'));
+      await expect(searchResultPage.detailedNgCreatorInput).toHaveValue(excludeCreatorName);
       await expect(searchResultPage.activeFilterBadges.filter({ hasText: excludeCreatorName })).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
@@ -629,6 +647,7 @@ test.describe('Search — Free User', () => {
     await test.step(`Lọc ảnh theo mã ID "${photoId}" và verify kết quả hiển thị`, async () => {
       await searchResultPage.filterByDetailedPhotoId(photoId);
       await expect(page).toHaveURL(new RegExp(`qid=${photoId}`));
+      await expect(searchResultPage.detailedPhotoIdInput).toHaveValue(photoId);
       await expect(searchResultPage.getActiveFilterBadge(photoId)).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       await expect(searchResultPage.resultItems.first()).toBeVisible({ timeout: 10_000 });
@@ -655,6 +674,7 @@ test.describe('Search — Free User', () => {
     await test.step('Chọn số lượng người mẫu: 2人 trên toolbar', async () => {
       await searchResultPage.selectModelCount('2');
       await expect(page).toHaveURL(/model_count=2/);
+      await expect(searchResultPage.modelCountTwoRadio).toBeChecked();
       await expect(searchResultPage.getActiveFilterBadge('2人')).toBeVisible();
 
       await captureEvidenceWithUrl(page, testInfo, 'Filter-2人');
@@ -663,6 +683,7 @@ test.describe('Search — Free User', () => {
     await test.step('Tích chọn Model Release: 取得済のみ trên toolbar', async () => {
       await searchResultPage.selectModelRelease(true);
       await expect(page).toHaveURL(/mdlrlrsec=on/);
+      await expect(searchResultPage.modelReleaseOnRadio).toBeChecked();
       await expect(searchResultPage.getActiveFilterBadge('取得済のみ')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
       const count = await searchResultPage.getResultCount();
@@ -690,21 +711,31 @@ test.describe('Search — Free User', () => {
     await test.step('Lọc theo Chiều ngang (横長)', async () => {
       await searchResultPage.selectOrientation('horizontal');
       await expect(page).toHaveURL(/orientation=1/);
+      await expect(searchResultPage.orientationHorizontalRadio).toBeChecked();
       await expect(searchResultPage.getActiveFilterBadge('横長')).toBeVisible();
+
+      await captureEvidenceWithUrl(page, testInfo, 'Filter-横長');
     });
 
     await test.step('Lọc theo Không có người (無人)', async () => {
       await searchResultPage.selectModelCount('0');
       await expect(page).toHaveURL(/model_count=0/);
+      await expect(searchResultPage.modelCountZeroRadio).toBeChecked();
       await expect(searchResultPage.getActiveFilterBadge('無人')).toBeVisible();
+
+      await captureEvidenceWithUrl(page, testInfo, 'Filter-横長-無人');
     });
 
     await test.step('Bật bộ lọc Loại trừ AI (AI生成を除く)', async () => {
       await searchResultPage.toggleExcludeAi(true);
       await expect(page).toHaveURL(/exclude_ai=on/);
+      await expect(searchResultPage.excludeAiCheckbox).toBeChecked();
     });
 
     await test.step('Verify đồng thời cả 3 bộ lọc đang hoạt động và danh sách kết quả hiển thị', async () => {
+      await expect(searchResultPage.orientationHorizontalRadio).toBeChecked();
+      await expect(searchResultPage.modelCountZeroRadio).toBeChecked();
+      await expect(searchResultPage.excludeAiCheckbox).toBeChecked();
       await expect(searchResultPage.getActiveFilterBadge('横長')).toBeVisible();
       await expect(searchResultPage.getActiveFilterBadge('無人')).toBeVisible();
       await expect(searchResultPage.clearAllFiltersButton.first()).toBeVisible();
@@ -915,6 +946,8 @@ test.describe('Search — Free User', () => {
     await test.step('Sắp xếp theo "新着順" (Mới nhất) và verify URL, kết quả hiển thị', async () => {
       await searchResultPage.selectNewestSort();
       await expect(page).toHaveURL(/srt=-releasedate/);
+      await expect(searchResultPage.sortDropdownButton).toContainText('新着順');
+      await expect(searchResultPage.sortNewestRadio).toBeChecked();
       const count = await searchResultPage.getResultCount();
       expect(count, 'Kết quả sắp xếp mới nhất phải có ảnh hiển thị').toBeGreaterThan(0);
 
@@ -925,6 +958,8 @@ test.describe('Search — Free User', () => {
       await searchResultPage.goToNextPage();
       await expect(page).toHaveURL(/srt=-releasedate/);
       await expect(page).toHaveURL(/p=2/);
+      await expect(searchResultPage.sortDropdownButton).toContainText('新着順');
+      await expect(searchResultPage.sortNewestRadio).toBeChecked();
       expect(await searchResultPage.getActivePageNumber()).toBe('2');
       const countPage2 = await searchResultPage.getResultCount();
       expect(countPage2, 'Trang 2 phải có ảnh hiển thị').toBeGreaterThan(0);
@@ -935,6 +970,8 @@ test.describe('Search — Free User', () => {
     await test.step('Khôi phục lại sắp xếp mặc định "関連性の高い順"', async () => {
       await searchResultPage.selectRelevanceSort();
       await expect(page).not.toHaveURL(/srt=-releasedate/);
+      await expect(searchResultPage.sortDropdownButton).toContainText('関連性の高い順');
+      await expect(searchResultPage.sortRelevanceRadio).toBeChecked();
     });
   });
 
