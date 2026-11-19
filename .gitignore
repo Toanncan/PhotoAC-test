@@ -47,6 +47,7 @@ Thumbs.db
 *.tmp
 *.temp
 *_debug.txt
+test.txt
 debug_output.txt
 page_snapshot.md
 snapshot_*.md
@@ -63,4 +64,4 @@ gmail-token.json
 ac_receipt_no_1910696.pdf
 
 # Test gmail temporary spec
-/src/tests/downloader/test-gmail.spec.ts
+/src/tests/downloader/test-gmail.spec.ts

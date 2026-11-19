@@ -1,0 +1,23 @@
+{
+  "name": "photo-ac-checker",
+  "version": "1.0.0",
+  "description": "Tool độc lập kiểm tra HTTP Status 200 cho toàn bộ 46 links Photo-AC (Public, Creator, Downloader - Hỗ trợ Production và Site Test)",
+  "main": "check-urls.js",
+  "scripts": {
+    "start": "node check-urls.js",
+    "prod": "node check-urls.js 1",
+    "test": "node check-urls.js 2"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.48.0"
+  },
+  "keywords": [
+    "photo-ac",
+    "status-checker",
+    "playwright",
+    "url-checker",
+    "http-status"
+  ],
+  "author": "",
+  "license": "ISC"
+}
